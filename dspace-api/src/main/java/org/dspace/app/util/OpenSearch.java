@@ -7,10 +7,14 @@
  */
 package org.dspace.app.util;
 
-import com.sun.syndication.feed.module.opensearch.OpenSearchModule;
-import com.sun.syndication.feed.module.opensearch.entity.OSQuery;
-import com.sun.syndication.feed.module.opensearch.impl.OpenSearchModuleImpl;
-import com.sun.syndication.io.FeedException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.ConfigurationManager;
@@ -24,13 +28,10 @@ import org.jdom.output.DOMOutputter;
 import org.jdom.output.XMLOutputter;
 import org.w3c.dom.Document;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.sun.syndication.feed.module.opensearch.OpenSearchModule;
+import com.sun.syndication.feed.module.opensearch.entity.OSQuery;
+import com.sun.syndication.feed.module.opensearch.impl.OpenSearchModuleImpl;
+import com.sun.syndication.io.FeedException;
 
 /**
  * Utility Class with static methods for producing OpenSearch-compliant search results,
