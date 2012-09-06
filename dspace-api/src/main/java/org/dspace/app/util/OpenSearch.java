@@ -7,6 +7,10 @@
  */
 package org.dspace.app.util;
 
+import org.dspace.core.Constants;
+import org.dspace.core.Context;
+import org.dspace.handle.HandleManager;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -14,6 +18,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.net.URLEncoder;
+import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
+
+import org.w3c.dom.Document;
 
 import org.apache.log4j.Logger;
 import org.dspace.content.DSpaceObject;
@@ -26,7 +35,11 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.output.DOMOutputter;
 import org.jdom.output.XMLOutputter;
-import org.w3c.dom.Document;
+
+import org.apache.log4j.Logger;
+
+import org.dspace.content.DSpaceObject;
+import org.dspace.core.ConfigurationManager;
 
 import com.sun.syndication.feed.module.opensearch.OpenSearchModule;
 import com.sun.syndication.feed.module.opensearch.entity.OSQuery;
@@ -157,11 +170,11 @@ public class OpenSearch
             return getResults(format, query, totalResults, start, pageSize, scope, results, labels).outputString();
         }
         catch (FeedException e)
-            {
+        {
             log.error(e.toString(), e);
             	throw new IOException("Unable to generate feed", e);
-            }
         }
+    }
     
     /**
      * Returns a formatted set of search results as a document
@@ -186,10 +199,10 @@ public class OpenSearch
             return getResults(format, query, totalResults, start, pageSize, scope, results, labels).outputW3CDom();
         }
         catch (FeedException e)
-        	{
+        {
             log.error(e.toString(), e);
             throw new IOException("Unable to generate feed", e);
-        	}
+        }
     }
 
     private static SyndicationFeed getResults(String format, String query, int totalResults, int start, int pageSize,
@@ -221,7 +234,11 @@ public class OpenSearch
      * @return module
      */
     private static OpenSearchModule openSearchMarkup(String query, int totalResults, int start, int pageSize)
+<<<<<<< HEAD
     { 
+=======
+    {
+>>>>>>> efbf7d2... DS-1244 - XMLUI's OpenSearch implementation refactored.
     	OpenSearchModule osMod = new OpenSearchModuleImpl();
     	osMod.setTotalResults(totalResults);
     	osMod.setStartIndex(start);
@@ -231,15 +248,19 @@ public class OpenSearch
         try
         {
             osq.setSearchTerms(URLEncoder.encode(query, "UTF-8"));
-        	}
+        }
         catch(UnsupportedEncodingException e)
-        	{
+        {
             log.error(e);
+<<<<<<< HEAD
         	}
+=======
+        }
+>>>>>>> efbf7d2... DS-1244 - XMLUI's OpenSearch implementation refactored.
         osq.setStartPage(1 + (start / pageSize));
         osMod.addQuery(osq);
         return osMod;
-        	}
+    }
     
     /**
      * Returns as a document the OpenSearch service document

@@ -201,7 +201,6 @@ public class OpenSearchServlet extends DSpaceServlet
         // format and return results
         Map<String, String> labelMap = getLabels(request);
         Document resultsDoc = OpenSearch.getResultsDoc(format, query, qResults.getHitCount(), qResults.getStart(), qResults.getPageSize(), container, results, labelMap);
-        
         try
         {
             Transformer xf = TransformerFactory.newInstance().newTransformer();
