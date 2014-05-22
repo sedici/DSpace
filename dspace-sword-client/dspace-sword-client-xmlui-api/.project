@@ -1,0 +1,20 @@
+<projectDescription>
+  <name>dspace-sword-client-xmlui-api</name>
+  <comment>The DSpace Common POM contains the basic details for all DSpace based projects. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <projects>
+    <project>dspace-api</project>
+    <project>dspace-stats</project>
+    <project>dspace-sword-api</project>
+    <project>dspace-sword-client-api</project>
+    <project>dspace-xmlui-api</project>
+    <project>dspace-xmlui-wing</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>

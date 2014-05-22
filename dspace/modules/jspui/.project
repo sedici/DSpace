@@ -1,0 +1,19 @@
+<projectDescription>
+  <name>jspui</name>
+  <comment>DSpace JSP-UI :: Web Application. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <projects>
+    <project>dspace-api</project>
+    <project>dspace-discovery-provider</project>
+    <project>dspace-jspui-api</project>
+    <project>dspace-jspui-webapp</project>
+    <project>dspace-stats</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>

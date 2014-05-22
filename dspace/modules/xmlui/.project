@@ -1,0 +1,28 @@
+<projectDescription>
+  <name>xmlui</name>
+  <comment>DSpace/Manakin XML-UI Based Webapplication using the Cocoon and
+      Wing frameworks. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <projects>
+    <project>dspace-api</project>
+    <project>dspace-discovery-provider</project>
+    <project>dspace-discovery-solr</project>
+    <project>dspace-discovery-xmlui-api</project>
+    <project>dspace-discovery-xmlui-webapp</project>
+    <project>dspace-stats</project>
+    <project>dspace-sword-api</project>
+    <project>dspace-sword-client-api</project>
+    <project>dspace-sword-client-xmlui-api</project>
+    <project>dspace-sword-client-xmlui-webapp</project>
+    <project>dspace-xmlui-api</project>
+    <project>dspace-xmlui-webapp</project>
+    <project>dspace-xmlui-wing</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>

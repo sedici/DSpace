@@ -1,0 +1,18 @@
+<projectDescription>
+  <name>sword</name>
+  <comment>DSpace SWORD Deposit Service Provider Web Application. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <projects>
+    <project>dspace-api</project>
+    <project>dspace-discovery-provider</project>
+    <project>dspace-sword-api</project>
+    <project>dspace-sword-webapp</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>
