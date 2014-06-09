@@ -32,6 +32,12 @@
     </scm>
 
     <properties>
+    
+<!-- 		<default.db.name>postgres</default.db.name> -->
+<!-- 		<default.db.driver>org.postgresql.Driver</default.db.driver> -->
+<!-- 		<default.db.url>jdbc:postgresql://localhost:5432/dspace</default.db.url> -->
+<!-- 		<default.db.username>dspace_user</default.db.username> -->
+<!-- 		<default.db.password>dspace_password</default.db.password> -->
         <default.dspace.dir>/dspace</default.dspace.dir>
         <default.mail.server>smtp.example.com</default.mail.server>
         <default.solr.server>http://localhost:8080/solr</default.solr.server>
@@ -168,25 +174,24 @@
                 <dependency>
                     <groupId>com.sun.media</groupId>
                     <artifactId>jai_imageio</artifactId>
-                    <version>1.0_01</version>
+                    <version>1.2</version>
                 </dependency>
                 <dependency>
                     <groupId>javax.media</groupId>
                     <artifactId>jai_core</artifactId>
-                    <version>1.1.2_01</version>
+                    <version>1.1.4</version>
                 </dependency>
             </dependencies>
         </profile>
-
-    </profiles>
-
+	</profiles>
+                  
     <!--
        Builds Overlay Modules for DSpace
     -->
     <modules>
         <module>modules</module>
     </modules>
-
+    
     <build>
         <plugins>
             <!--  overall project assembly -->
@@ -205,10 +210,19 @@
                             <goal>directory-single</goal>
                         </goals>
                     </execution>
+<!-- 					<execution> -->
+<!-- 						<id>bin</id> this is used for inheritance merges -->
+<!-- 						<phase>package</phase> bind to the packaging phase -->
+<!-- 						<goals> -->
+<!-- 							<goal>single</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
                 </executions>
             </plugin>
         </plugins>
+<!-- 		<finalName>dspace-sedici-distribution</finalName> -->
     </build>
+
 
     <dependencies>
         <dependency>
@@ -254,6 +268,7 @@
               </exclusion>
             </exclusions> 
         </dependency>
+        
     </dependencies>
 
 </project>

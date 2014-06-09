@@ -17,6 +17,31 @@
 	<includeBaseDirectory>false</includeBaseDirectory>
 
 	<fileSets>
+<!-- 		<!-- Copio los archivos de conf redefinidos permaneceran --> 
+<!-- 		<fileSet> -->
+<!-- 			<directory>overwritten-files</directory> -->
+<!-- 			<outputDirectory>.</outputDirectory> -->
+<!-- 			<includes> -->
+<!-- 				<include>config/**</include> -->
+<!-- 				<include>etc/**</include> -->
+<!-- 				<include>solr/**</include> -->
+<!-- 				<include>config/dspace.cfg</include> -->
+<!-- 			</includes> -->
+<!-- 			<excludes> -->
+<!-- 				<exclude>config/GeoLiteCity.dat</exclude> -->
+<!-- 			</excludes> -->
+<!-- 			<filtered>true</filtered> -->
+<!-- 		</fileSet> -->
+<!-- 		<fileSet> -->
+<!-- 			<directory>overwritten-files</directory> -->
+<!-- 			<outputDirectory>.</outputDirectory> -->
+<!-- 			<includes> -->
+<!-- 				<include>config/GeoLiteCity.dat</include> -->
+<!-- 			</includes> -->
+<!-- 			<filtered>false</filtered> -->
+<!-- 		</fileSet> -->
+
+<!-- end structure-refactoring-20140514 -->
 		<fileSet>
 			<directory>src/main/config</directory>
 			<outputDirectory>.</outputDirectory>
@@ -51,7 +76,18 @@
             </includes>
             <filtered>true</filtered>
         </fileSet>
+        
+<!-- 		<fileSet> -->
+<!-- 			<directory>dspace-tag-files</directory> -->
+<!-- 			<outputDirectory>.</outputDirectory> -->
+<!-- 			<includes> -->
+<!-- 				<include>config/modules/**</include> -->
+<!-- 				<include>config/dspace.cfg</include> -->
+<!-- 			</includes> -->
+<!-- 			<filtered>true</filtered> -->
+<!-- 		</fileSet> -->
 	</fileSets>
+
 
 	<files>
 		<file>
@@ -67,20 +103,45 @@
 				<exclude>*:war:*</exclude>
 			</excludes>
 			<outputDirectory>lib</outputDirectory>
+<!-- 			<useProjectArtifact>false</useProjectArtifact> -->
 		</dependencySet>
 	</dependencySets>
 
 	<moduleSets>
 		<moduleSet>
 			<includes>
-                            <include>org.dspace.modules:*:war:*</include>
+            	<include>org.dspace.modules:*:war:*</include>
 			</includes>
 
 			<binaries>
-                            <includeDependencies>false</includeDependencies>
-                            <outputDirectory>webapps/${module.artifactId}</outputDirectory>
-                            <unpack>true</unpack>
-                        </binaries>
+                <includeDependencies>false</includeDependencies>
+                <outputDirectory>webapps/${module.artifactId}</outputDirectory>
+                <unpack>true</unpack>
+            </binaries>
+<!-- 		<!-- copia de webapps definidas como modulos dentro distribution  -->
+<!-- 		<moduleSet> -->
+<!-- 			<useAllReactorProjects>false</useAllReactorProjects> -->
+<!-- 			<includes> -->
+<!-- 				<include>*:war:*</include> -->
+<!-- 			</includes> -->
+<!-- 			<binaries> -->
+<!-- 				<includeDependencies>false</includeDependencies> -->
+<!-- 				<outputDirectory>webapps/${module.artifactId}</outputDirectory> -->
+<!-- 				<unpack>true</unpack> -->
+<!-- 			</binaries> -->
+<!-- 		</moduleSet> -->
+	
+<!-- 		<!-- copia de los jars definidos como modulos e incluidos en el Reactor  -->
+<!-- 		<moduleSet> -->
+<!-- 			<useAllReactorProjects>true</useAllReactorProjects> -->
+<!-- 			<includes> -->
+<!-- 				<include>*:jar:*</include> -->
+<!-- 			</includes> -->
+<!-- 			<binaries> -->
+<!-- 				<includeDependencies>false</includeDependencies> -->
+<!-- 				<outputDirectory>lib</outputDirectory> -->
+<!-- 				<unpack>false</unpack> -->
+<!-- 			</binaries> -->
 		</moduleSet>
 	</moduleSets>
 

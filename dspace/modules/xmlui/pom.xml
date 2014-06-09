@@ -195,4 +195,95 @@
 
    </dependencies>
 
+	
+		<!-- Wing framework -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.dspace</groupId> -->
+<!-- 			<artifactId>dspace-xmlui-wing</artifactId> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.dspace</groupId> -->
+<!-- 			<artifactId>dspace-xmlui-api</artifactId> -->
+<!-- 			<exclusions> -->
+<!-- 				<exclusion> -->
+<!-- 					<groupId>org.slf4j</groupId> -->
+<!-- 					<artifactId>slf4j-log4j12</artifactId> -->
+<!-- 				</exclusion> -->
+<!-- 				<exclusion> -->
+<!-- 					<groupId>org.slf4j</groupId> -->
+<!-- 					<artifactId>slf4j-api</artifactId> -->
+<!-- 				</exclusion> -->
+<!-- 			</exclusions> -->
+<!-- 		</dependency> -->
+
+
+<!-- 	<build> -->
+<!-- 		<resources> -->
+<!-- 			<resource> -->
+<!-- 				<directory>src/main/resources</directory> -->
+<!-- 				<filtering>true</filtering> -->
+<!-- 				<includes> -->
+<!-- 					<include>**</include> -->
+<!-- 				</includes> -->
+<!-- 			</resource> -->
+<!-- 		</resources> -->
+
+<!-- 		<plugins> -->
+
+<!-- 			<plugin> -->
+<!-- 				<artifactId>maven-war-plugin</artifactId> -->
+<!-- 				<configuration> -->
+<!-- 					<archiveClasses>false</archiveClasses> -->
+<!-- 					<filters> -->
+<!-- 					<filter>config.prop</filter> -->
+<!-- 					</filters> -->
+<!-- 					<filtering>true</filtering> -->
+<!-- 					<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors> -->
+<!-- 					<webXml>${project.build.directory}/${project.build.finalName}/webxml/WEB-INF/web.xml</webXml> -->
+
+<!-- 					<webResources> -->
+<!-- 					<resource> -->
+<!-- 					<filtering>true</filtering> -->
+<!-- 					<directory>${basedir}/src/main/webapp</directory> -->
+<!-- 					<includes> -->
+<!-- 					<include>**/*.xml</include> -->
+<!-- 					</includes> -->
+<!-- 					<excludes> -->
+<!-- 					<exclude>**/messages*.xml</exclude> -->
+<!-- 					</excludes> -->
+<!-- 					</resource> -->
+<!-- 					</webResources> -->
+
+<!-- 					<overlays> -->
+<!-- 						Se extrae web.xml para filtrar por separado -->
+<!-- 						<overlay> -->
+<!-- 							<groupId>org.dspace.modules</groupId> -->
+<!-- 							<artifactId>xmlui</artifactId> -->
+<!-- 							<includes> -->
+<!-- 								<include>WEB-INF/web.xml</include> -->
+<!-- 							</includes> -->
+<!-- 							<targetPath>webxml/</targetPath> -->
+<!-- 						</overlay> -->
+
+<!-- 						Se copia los archivos del proyecto para que tengan prioridad sobre -->
+<!-- 							los archivos de dspace:xmlui --> 
+<!-- 						<overlay> -->
+<!-- 							empty groupId/artifactId represents the current build -->
+<!-- 						</overlay> -->
+
+<!-- 						Se copian los archivos de dspace:xmlui (sin el web.xml) -->
+<!-- 						<overlay> -->
+<!-- 							<groupId>org.dspace.modules</groupId> -->
+<!-- 							<artifactId>xmlui</artifactId> -->
+<!-- 							<excludes> -->
+<!-- 								<exclude>WEB-INF/web.xml</exclude> -->
+<!-- 							</excludes> -->
+<!-- 						</overlay> -->
+<!-- 					</overlays> -->
+<!-- 				</configuration> -->
+
+<!-- 			</plugin> -->
+
+<!-- 		</plugins> -->
+<!-- 	</build> -->
 </project>

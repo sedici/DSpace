@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 
@@ -34,8 +36,10 @@ import org.dspace.content.Item;
 import org.dspace.content.ItemIterator;
 import org.dspace.content.SupervisedItem;
 import org.dspace.content.WorkspaceItem;
+import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 import org.dspace.eperson.EPerson;
+import org.dspace.eperson.Group;
 import org.xml.sax.SAXException;
 
 /**
@@ -172,10 +176,9 @@ public class Submissions extends AbstractDSpaceTransformer
 
     	if (unfinishedItems.length <= 0 && supervisedItems.length <= 0)
     	{
-            Collection[] collections = Collection.findAuthorized(context, null, Constants.ADD);
-
-            if (collections.length > 0)
-            {
+    		// Verificamos que el usuario logueado sea solamente un Anonymous (tenga un solo grupo y este sea el cero)
+    		Set<Integer> groupIDs = Group.allMemberGroupIDs(context, context.getCurrentUser());
+    		if (groupIDs.size() == 1 && groupIDs.contains(Integer.valueOf(0))) {
                 Division start = division.addDivision("start-submision");
                 start.setHead(T_s_head1);
                 Para p = start.addPara();
@@ -183,7 +186,7 @@ public class Submissions extends AbstractDSpaceTransformer
                 p.addXref(contextPath+"/submit",T_s_info1b);
                 p.addContent(T_s_info1c);
                 return;
-            }
+    		}
     	}
 
     	Division unfinished = division.addDivision("unfinished-submisions");
@@ -370,7 +373,7 @@ public class Submissions extends AbstractDSpaceTransformer
         //Limit to showing just 50 archived submissions, unless overridden
         //(This is a saftey measure for Admins who may have submitted 
         // thousands of items under their account via bulk ingest tools, etc.)
-        int limit = 50;
+        int limit = ConfigurationManager.getIntProperty("xmlui.Submission.Submissions.completed.limit", 50);
         int count = 0;
 
         // Populate table
@@ -422,7 +425,7 @@ public class Submissions extends AbstractDSpaceTransformer
         if(!displayAll && count>limit)
         {
             Para limitedList = completedSubmissions.addPara();
-            limitedList.addContent(T_c_limit);
+            limitedList.addContent(T_c_limit.parameterize(limit));
             limitedList.addXref(contextPath + "/submissions?all", T_c_displayall);
         }    
     }
