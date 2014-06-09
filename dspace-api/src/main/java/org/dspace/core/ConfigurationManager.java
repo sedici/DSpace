@@ -7,16 +7,26 @@
  */
 package org.dspace.core;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.helpers.OptionConverter;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
+import org.apache.log4j.helpers.OptionConverter;
 
 /**
  * Class for reading the DSpace system configuration. The main configuration is

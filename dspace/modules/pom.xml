@@ -20,9 +20,6 @@
       <url>http://scm.dspace.org/svn/repo/tags/dspace-1.8.2</url>
     </scm>
     
-    <!-- 
-         List of enabled DSpace Modules to build/install.
-
 <!--     <properties> -->
         <!-- This is the path to the root [dspace-src] directory. -->
 <!--         <root.basedir>${basedir}/../..</root.basedir> -->

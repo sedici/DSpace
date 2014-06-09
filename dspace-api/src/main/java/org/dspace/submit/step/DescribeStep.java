@@ -158,6 +158,7 @@ public class DescribeStep extends AbstractProcessingStep
         // clear out all item metadata defined on this page
         for (int i = 0; i < inputs.length; i++)
         {
+
         	// Allow the clearing out of the metadata defined for other document types, provided it can change anytime
         	
             if (!inputs[i]
@@ -798,6 +799,10 @@ public class DescribeStep extends AbstractProcessingStep
         {
             // Add to the database if non-empty
             String s = vals.get(i);
+            String selectedLang = LANGUAGE_QUALIFIER;
+            if(is18nable)
+            	selectedLang = langs.get(i);
+        	
             if ((s != null) && !s.equals(""))
             {
                 if (isAuthorityControlled)

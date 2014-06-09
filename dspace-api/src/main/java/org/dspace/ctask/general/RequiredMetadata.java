@@ -18,10 +18,7 @@ import org.dspace.app.util.DCInput;
 import org.dspace.app.util.DCInputSet;
 import org.dspace.app.util.DCInputsReader;
 import org.dspace.app.util.DCInputsReaderException;
-<<<<<<< HEAD
-=======
 import org.dspace.content.Collection;
->>>>>>> structure-refactoring-20140514
 import org.dspace.content.DCValue;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
@@ -83,11 +80,7 @@ public class RequiredMetadata extends AbstractCurationTask
                     handle = "in workflow";
                 }
                 sb.append("Item: ").append(handle);
-<<<<<<< HEAD
-                for (String req : getReqList(item.getOwningCollection().getHandle()))
-=======
                 for (String req : getReqList(item.getOwningCollection()))
->>>>>>> structure-refactoring-20140514
                 {
                     DCValue[] vals = item.getMetadata(req);
                     if (vals.length == 0)

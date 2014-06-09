@@ -71,4 +71,3 @@ fi
 
 # Now invoke Java
 java $JAVA_OPTS -classpath $FULLPATH org.dspace.app.launcher.ScriptLauncher "$@"
-
