@@ -47,6 +47,7 @@ import org.dspace.content.authority.MetadataAuthorityManager;
 import org.dspace.content.authority.ChoiceAuthorityManager;
 import org.dspace.content.authority.Choice;
 import org.dspace.content.authority.Choices;
+import org.dspace.core.I18nUtil;
 
 import org.xml.sax.SAXException;
 
@@ -162,7 +163,7 @@ public class DescribeStep extends AbstractSubmissionStep
                 DCInput[] inputs;
                 try
                 {
-                        inputSet = getInputsReader().getInputs(submission.getCollection().getHandle());
+                        inputSet = getInputsReader().getInputs(submission.getCollection());
                         inputs = inputSet.getPageRows(getPage()-1, submission.hasMultipleTitles(), submission.isPublishedBefore());
                 }
                 catch (DCInputsReaderException se)
@@ -177,18 +178,37 @@ public class DescribeStep extends AbstractSubmissionStep
                 List form = div.addList("submit-describe",List.TYPE_FORM);
                 form.setHead(T_head);
 
+                // Fetch the document type (dc.type)
+                String documentType = "";
+                if( (item.getMetadata("dc.type") != null) && (item.getMetadata("dc.type").length >0) )
+                {
+                    documentType = item.getMetadata("dc.type")[0].value;
+                }
+                
                 // Iterate over all inputs and add it to the form.
                 for(DCInput dcInput : inputs)
                 {
                     String scope = submissionInfo.isInWorkflow() ? DCInput.WORKFLOW_SCOPE : DCInput.SUBMISSION_SCOPE;
                     boolean readonly = dcInput.isReadOnly(scope);
                     
+                	// Omit fields not allowed for this document type
+                    if(!dcInput.isAllowedFor(documentType))
+                    {
+                    	continue;
+                    }
+                    
                     // If the input is invisible in this scope, then skip it.
-                        if (!dcInput.isVisible(scope) && !readonly)
-                        {
-                            continue;
-                        }
+                    if (!dcInput.isVisible(scope) && !readonly)
+                    {
+                        continue;
+                    }
                         
+                    // Omit fields not visible based on user's group
+                    if(!dcInput.isVisibleOnGroup(context))
+                    {
+                    	continue;
+                    }
+                    
                         String schema = dcInput.getSchema();
                         String element = dcInput.getElement();
                         String qualifier = dcInput.getQualifier();
@@ -302,7 +322,7 @@ public class DescribeStep extends AbstractSubmissionStep
         DCInputSet inputSet = null;
         try
         {
-            inputSet = getInputsReader().getInputs(submission.getCollection().getHandle());
+            inputSet = getInputsReader().getInputs(submission.getCollection());
         }
         catch (DCInputsReaderException se)
         {
@@ -311,7 +331,15 @@ public class DescribeStep extends AbstractSubmissionStep
         
         MetadataAuthorityManager mam = MetadataAuthorityManager.getManager();
         DCInput[] inputs = inputSet.getPageRows(getPage()-1, submission.hasMultipleTitles(), submission.isPublishedBefore());
-
+        
+        // Fetch the document type (dc.type)
+        String documentType = "";
+        Item item=submission.getItem();
+        if( (item.getMetadata("dc.type") != null) && (item.getMetadata("dc.type").length >0) )
+        {
+            documentType = item.getMetadata("dc.type")[0].value;
+        }
+        
         for (DCInput input : inputs)
         {
             // If the input is invisible in this scope, then skip it.
@@ -319,6 +347,18 @@ public class DescribeStep extends AbstractSubmissionStep
             if (!input.isVisible(scope) && !input.isReadOnly(scope))
             {
                 continue;
+            }
+            
+           // Omit fields not allowed for this document type
+            if(!input.isAllowedFor(documentType))
+            {
+            	continue;
+            }
+
+            // Omit fields not visible based on user's group
+            if(!input.isVisibleOnGroup(context))
+            {
+            	continue;
             }
 
             String inputType = input.getInputType();
@@ -527,10 +567,9 @@ public class DescribeStep extends AbstractSubmissionStep
                 // for the year, followed by a select box of the months, follewed
                 // by a text box for the day.
                 Composite fullDate = form.addItem().addComposite(fieldName, "submit-date");
-                Text year = fullDate.addText(fieldName+"_year");
+                Text day = fullDate.addText(fieldName+"_day");               
                 Select month = fullDate.addSelect(fieldName+"_month");
-                Text day = fullDate.addText(fieldName+"_day");
-
+                Text year = fullDate.addText(fieldName+"_year");
                 // Set up the full field
                 fullDate.setLabel(dcInput.getLabel());
                 fullDate.setHelp(cleanHints(dcInput.getHints()));
@@ -844,6 +883,10 @@ public class DescribeStep extends AbstractSubmissionStep
                 {
                     textArea.setDisabled();
                 }
+                if(dcInput.isI18nable())
+                {
+                	textArea.setI18nable();
+                }
                 
                 // Setup the field's values
                 if (dcInput.isRepeatable() || dcValues.length > 1)
@@ -852,6 +895,11 @@ public class DescribeStep extends AbstractSubmissionStep
                         {
                                 Instance ti = textArea.addInstance();
                                 ti.setValue(dcValue.value);
+                                if(dcInput.isI18nable())
+                                {
+                                    ti.setLanguageValue(dcValue.language);
+                                }
+                                
                                 if (isAuth)
                                 {
                                     if (dcValue.authority == null || dcValue.authority.equals(""))
@@ -868,6 +916,11 @@ public class DescribeStep extends AbstractSubmissionStep
                 else if (dcValues.length == 1)
                 {
                         textArea.setValue(dcValues[0].value);
+                        if(dcInput.isI18nable())
+                        {
+    	                    textArea.setLanguageValue(dcValues[0].language);
+                        }
+                        
                         if (isAuth)
                         {
                             if (dcValues[0].authority == null || dcValues[0].authority.equals(""))
@@ -1133,6 +1186,9 @@ public class DescribeStep extends AbstractSubmissionStep
                 // as twobox should be listed in a two column format. Since this
                 // decision is not something the Aspect can effect we merely place
                 // as a render hint.
+        	
+        	    ChoiceAuthorityManager cmgr = ChoiceAuthorityManager.getManager();
+        	    
                 Text text = form.addItem().addText(fieldName,"submit-text");
 
                 // Setup the select field
@@ -1175,45 +1231,85 @@ public class DescribeStep extends AbstractSubmissionStep
                 {
                     text.enableDeleteOperation();
                 }
-
+                if(dcInput.isI18nable())
+                {
+                	text.setI18nable();
+                }
+                
                 if (readonly)
                 {
                     text.setDisabled();
                 }
                 
+                String authorityLabel;
+                
                 // Setup the field's values
                 if (dcInput.isRepeatable() || dcValues.length > 1)
                 {
-                        for (DCValue dcValue : dcValues)
-                        {
+                        for (DCValue dcValue : dcValues){
+                        	
+	                        	if (isAuth && (dcValue.authority != null)){
+	                            	authorityLabel=cmgr.getLabel(fieldKey, dcValue.authority, I18nUtil.getEPersonLocale(eperson).getLanguage());
+	                            } else {
+	                            	authorityLabel="";
+	                            };
+	                            
                                 Instance ti = text.addInstance();
-                                ti.setValue(dcValue.value);
-                                if (isAuth)
+                     
+                                ti.setValue(dcValue.value);       
+                                if(dcInput.isI18nable())
                                 {
+                                    ti.setLanguageValue(dcValue.language);
+                                }
+                                
+                                if (isAuth){
+                                	
                                     if (dcValue.authority == null || dcValue.authority.equals(""))
                                     {
-                                        ti.setAuthorityValue("", "blank");
+                                    	
+                                    	if (dcValue.confidence == 300){
+                                    		ti.setAuthorityValue("", "notfound");
+                                    	} else {
+                                    		ti.setAuthorityValue("", "blank");
+                                    	}
+                                    } else { 
+                                    	ti.setAuthorityValue(dcValue.authority +"#"+ authorityLabel, Choices.getConfidenceText(dcValue.confidence));
                                     }
-                                    else
-                                    {
-                                        ti.setAuthorityValue(dcValue.authority, Choices.getConfidenceText(dcValue.confidence));
-                                    }
+                                    //si le saco este sysout no anda, me manda siempre failed
+                                    //System.out.println(Choices.getConfidenceText(dcValue.confidence));
                         }
                 }
                 }
                 else if (dcValues.length == 1)
                 {
-                        text.setValue(dcValues[0].value);
+                	//por aca entran los campos que no son multiples
+	                	if (isAuth && (dcValues[0].authority != null)){
+	                    	authorityLabel=cmgr.getLabel(fieldKey, dcValues[0].authority, I18nUtil.getEPersonLocale(eperson).getLanguage());
+	                    } else {
+	                    	authorityLabel="";
+	                    };
+                        
+	                    text.setValue(dcValues[0].value);
+                        if(dcInput.isI18nable())
+                        {
+    	                    text.setLanguageValue(dcValues[0].language);
+                        }
+	                    
                         if (isAuth)
                         {
                             if (dcValues[0].authority == null || dcValues[0].authority.equals(""))
                             {
-                                text.setAuthorityValue("", "blank");
+                            	if (dcValues[0].confidence == 300){
+                            		text.setAuthorityValue("", Choices.getConfidenceText(dcValues[0].confidence));
+                            	} else {
+                            		text.setAuthorityValue("", "blank");
+                            	}
                             }
-                            else
-                            {
-                                text.setAuthorityValue(dcValues[0].authority, Choices.getConfidenceText(dcValues[0].confidence));
+                            else {  
+                            	text.setAuthorityValue(dcValues[0].authority+'#'+authorityLabel, Choices.getConfidenceText(dcValues[0].confidence));
                             }
+                            
+                             
                 }
         }
         }
@@ -1239,7 +1335,7 @@ public class DescribeStep extends AbstractSubmissionStep
          *
          *
          * However this method will not remove naughty or sexual innuendoes from the
-         * field's hints.
+         * field's hints.lcConfidence
          *
          *
          * @param dirtyHints HTML-ized hints
