@@ -115,7 +115,9 @@ public class XslExtensions {
 			return date;
 		}
 	}
-	
+	/**
+	 * @deprecated usar org.dspace.app.util.Util.encodeBitstreamName()
+	 */
 	public static String codificarURL(String url){
 		if (url == null){
 			try{

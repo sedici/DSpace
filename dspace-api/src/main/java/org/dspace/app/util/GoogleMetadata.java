@@ -39,7 +39,6 @@ import org.dspace.core.Context;
 import org.dspace.handle.HandleManager;
 import org.jdom.Element;
 
-import ar.edu.unlp.sedici.xmlui.xsl.XslExtensions;
 
 /**
  * 
@@ -1062,7 +1061,7 @@ public class GoogleMetadata
 		else
 			bs_filename = the_handle + "-bitstream-" + the_bitstream.getSequenceID();
 
-		path.append(XslExtensions.codificarURL(bs_filename));
+		path.append(Util.encodeBitstreamName(bs_filename));
 		path.append(".pdf?sequence=");
 		path.append(the_bitstream.getSequenceID());
 
