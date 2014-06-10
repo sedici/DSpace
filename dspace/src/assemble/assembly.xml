@@ -17,7 +17,7 @@
 	<includeBaseDirectory>false</includeBaseDirectory>
 
 	<fileSets>
-<!-- 		<!-- Copio los archivos de conf redefinidos permaneceran --> 
+<!-- 		 Copio los archivos de conf redefinidos permaneceran --> 
 <!-- 		<fileSet> -->
 <!-- 			<directory>overwritten-files</directory> -->
 <!-- 			<outputDirectory>.</outputDirectory> -->
@@ -40,7 +40,6 @@
 <!-- 			</includes> -->
 <!-- 			<filtered>false</filtered> -->
 <!-- 		</fileSet> -->
-
 <!-- end structure-refactoring-20140514 -->
 		<fileSet>
 			<directory>src/main/config</directory>
@@ -118,7 +117,7 @@
                 <outputDirectory>webapps/${module.artifactId}</outputDirectory>
                 <unpack>true</unpack>
             </binaries>
-<!-- 		<!-- copia de webapps definidas como modulos dentro distribution  -->
+<!-- 		 copia de webapps definidas como modulos dentro distribution  -->
 <!-- 		<moduleSet> -->
 <!-- 			<useAllReactorProjects>false</useAllReactorProjects> -->
 <!-- 			<includes> -->
@@ -131,7 +130,7 @@
 <!-- 			</binaries> -->
 <!-- 		</moduleSet> -->
 	
-<!-- 		<!-- copia de los jars definidos como modulos e incluidos en el Reactor  -->
+<!-- 		 copia de los jars definidos como modulos e incluidos en el Reactor  -->
 <!-- 		<moduleSet> -->
 <!-- 			<useAllReactorProjects>true</useAllReactorProjects> -->
 <!-- 			<includes> -->
