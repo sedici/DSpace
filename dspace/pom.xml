@@ -223,7 +223,6 @@
 		<finalName>dspace-distribution</finalName>
     </build>
 
-
     <dependencies>
         <dependency>
             <groupId>org.dspace</groupId>

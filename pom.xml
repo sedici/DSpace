@@ -360,6 +360,11 @@
             <artifactId>dspace-api</artifactId>
             <version>${project.version}</version>
          </dependency>
+         <dependency>
+            <groupId>org.dspace.modules</groupId>
+            <artifactId>additions</artifactId>
+            <version>${project.version}</version>
+         </dependency>
           <dependency>
               <groupId>org.dspace</groupId>
               <artifactId>dspace-sword-api</artifactId>

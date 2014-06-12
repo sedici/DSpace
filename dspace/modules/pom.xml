@@ -39,7 +39,7 @@
     <!-- The 'additions' module must *always* be built, as it is included
          as a dependency in most other modules in [src]/dspace/modules -->
     <modules>
-        <module>plugins</module>
+        <module>additions</module>
     </modules>
 	
     <!-- 
@@ -147,12 +147,4 @@
         </profile>
         
     </profiles>
-    <dependencies>
-    	<dependency>
-			<groupId>ar.edu.unlp.sedici</groupId>
-			<artifactId>plugins</artifactId>
-			<version>${project.version}</version>
-			<type>jar</type>
-		</dependency>
-	</dependencies>
 </project>
