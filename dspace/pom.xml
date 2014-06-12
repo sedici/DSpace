@@ -220,7 +220,7 @@
                 </executions>
             </plugin>
         </plugins>
-<!-- 		<finalName>dspace-sedici-distribution</finalName> -->
+		<finalName>dspace-distribution</finalName>
     </build>
 
 

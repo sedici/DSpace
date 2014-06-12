@@ -7,141 +7,135 @@
     http://www.dspace.org/license/
 
 -->
+<!--
+    DSpace Directory Assembly
+    This assembly creates the 'target/dspace-[version]-build/' which can
+    then be installed via Apache Ant.
+-->
 <assembly xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/assembly-1.1.0-SNAPSHOT.xsd">
-	<id>build</id>
-	<formats>
-		<format>dir</format>
-	</formats>
-	<includeBaseDirectory>false</includeBaseDirectory>
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/assembly-1.1.0-SNAPSHOT.xsd">
+   <id>build</id>
+   <formats>
+      <format>dir</format>
+   </formats>
+   <includeBaseDirectory>false</includeBaseDirectory>
 
-	<fileSets>
-<!-- 		 Copio los archivos de conf redefinidos permaneceran --> 
-<!-- 		<fileSet> -->
-<!-- 			<directory>overwritten-files</directory> -->
-<!-- 			<outputDirectory>.</outputDirectory> -->
-<!-- 			<includes> -->
-<!-- 				<include>config/**</include> -->
-<!-- 				<include>etc/**</include> -->
-<!-- 				<include>solr/**</include> -->
-<!-- 				<include>config/dspace.cfg</include> -->
-<!-- 			</includes> -->
-<!-- 			<excludes> -->
-<!-- 				<exclude>config/GeoLiteCity.dat</exclude> -->
-<!-- 			</excludes> -->
-<!-- 			<filtered>true</filtered> -->
-<!-- 		</fileSet> -->
-<!-- 		<fileSet> -->
-<!-- 			<directory>overwritten-files</directory> -->
-<!-- 			<outputDirectory>.</outputDirectory> -->
-<!-- 			<includes> -->
-<!-- 				<include>config/GeoLiteCity.dat</include> -->
-<!-- 			</includes> -->
-<!-- 			<filtered>false</filtered> -->
-<!-- 		</fileSet> -->
-<!-- end structure-refactoring-20140514 -->
-		<fileSet>
-			<directory>src/main/config</directory>
-			<outputDirectory>.</outputDirectory>
-			<includes>
-				<include>build.xml</include>
-			</includes>
-		</fileSet>
-		<fileSet>
-			<outputDirectory>.</outputDirectory>
-			<includes>
-				<include>bin/**</include>
-				<include>config/**</include>
-				<include>docs/**</include>
-				<include>etc/**</include>
-				<include>solr/**</include>
-                <include>build.xml</include>
-				<include>LICENSE*</include>
-				<include>CHANGES</include>
-				<include>KNOWN_BUGS</include>
-				<include>README</include>
-			</includes>
-			<excludes>
-				<exclude>src</exclude>
-				<exclude>config/dspace.cfg</exclude>
-				<exclude>config/modules/**</exclude>
-			</excludes>
-		</fileSet>
-        <fileSet>
-            <outputDirectory>.</outputDirectory>
-            <includes>
-                <include>config/modules/**</include>
-            </includes>
-            <filtered>true</filtered>
-        </fileSet>
-        
-<!-- 		<fileSet> -->
-<!-- 			<directory>dspace-tag-files</directory> -->
-<!-- 			<outputDirectory>.</outputDirectory> -->
-<!-- 			<includes> -->
-<!-- 				<include>config/modules/**</include> -->
-<!-- 				<include>config/dspace.cfg</include> -->
-<!-- 			</includes> -->
-<!-- 			<filtered>true</filtered> -->
-<!-- 		</fileSet> -->
-	</fileSets>
+   <fileSets>
+      <!-- Copy src/main/config/build.xml to resulting directory -->
+      <fileSet>
+         <directory>src/main/config</directory>
+         <outputDirectory>.</outputDirectory>
+         <includes>
+            <include>build.xml</include>
+         </includes>
+      </fileSet>
+      <!-- Copy README and LICENSE files to resulting directory -->
+      <fileSet>
+         <directory>..</directory>
+         <outputDirectory>.</outputDirectory>
+         <includes>
+            <include>LICENSE*</include>
+            <include>README</include>
+         </includes>
+         <excludes>
+            <exclude>LICENSE_HEADER</exclude>
+         </excludes>
+      </fileSet>
+      <!-- Copy necessary subdirectories to resulting directory -->
+      <fileSet>
+         <outputDirectory>.</outputDirectory>
+         <includes>
+            <include>bin/**</include>
+            <include>config/**</include>
+            <include>docs/**</include>
+            <include>etc/**</include>
+            <include>solr/**</include>
+         </includes>
+         <!-- Exclude source code & configs (we'll copy configs below) -->
+         <excludes>
+            <exclude>src</exclude>
+            <exclude>config/dspace.cfg</exclude>
+            <exclude>config/log4j.properties</exclude>
+            <exclude>config/modules/**</exclude>
+         </excludes>
+      </fileSet>
+      <!-- Copy over all module configs & filter them -->
+      <fileSet>
+         <outputDirectory>.</outputDirectory>
+         <includes>
+            <include>config/modules/**</include>
+         </includes>
+         <filtered>true</filtered>
+      </fileSet>
+   </fileSets>
+
+   <!-- Copy over the dspace.cfg and log4j.properties files & filter them -->
+   <files>
+      <file>
+         <source>config/dspace.cfg</source>
+         <outputDirectory>config</outputDirectory>
+         <filtered>true</filtered>
+      </file>
+      <file>
+         <source>config/log4j.properties</source>
+         <outputDirectory>config</outputDirectory>
+         <filtered>true</filtered>
+      </file>
+   </files>
+
+   <!--
+   Still allow anyone to put a JAR dependency into
+   [src]/dspace/pom.xml and have it go into 'lib' directory
+   -->
+   <dependencySets>
+      <dependencySet>
+         <includes>
+            <include>*:jar:*</include>
+         </includes>
+         <outputDirectory>lib</outputDirectory>
+      </dependencySet>
+   </dependencySets>
 
 
-	<files>
-		<file>
-			<source>config/dspace.cfg</source>
-			<outputDirectory>config</outputDirectory>
-			<filtered>true</filtered>
-		</file>
-	</files>
+   <moduleSets>
+      <!--
+      Take all jar modules in [src]/dspace/modules/ dir
+      and add them into 'lib' directory
+      -->
+      <moduleSet>
+         <includes>
+            <include>*:jar:*</include>
+         </includes>
+         <binaries>
+            <includeDependencies>true</includeDependencies>
+            <outputDirectory>lib</outputDirectory>
+            <unpack>false</unpack>
+            <dependencySets>
+               <dependencySet>
+                  <includes>
+                     <include>*:jar:*</include>
+                  </includes>
+                  <outputDirectory>lib</outputDirectory>
+               </dependencySet>
+            </dependencySets>
+         </binaries>
+      </moduleSet>
 
-	<dependencySets>
-		<dependencySet>
-			<excludes>
-				<exclude>*:war:*</exclude>
-			</excludes>
-			<outputDirectory>lib</outputDirectory>
-<!-- 			<useProjectArtifact>false</useProjectArtifact> -->
-		</dependencySet>
-	</dependencySets>
-
-	<moduleSets>
-		<moduleSet>
-			<includes>
-            	<include>org.dspace.modules:*:war:*</include>
-			</includes>
-
-			<binaries>
-                <includeDependencies>false</includeDependencies>
-                <outputDirectory>webapps/${module.artifactId}</outputDirectory>
-                <unpack>true</unpack>
-            </binaries>
-<!-- 		 copia de webapps definidas como modulos dentro distribution  -->
-<!-- 		<moduleSet> -->
-<!-- 			<useAllReactorProjects>false</useAllReactorProjects> -->
-<!-- 			<includes> -->
-<!-- 				<include>*:war:*</include> -->
-<!-- 			</includes> -->
-<!-- 			<binaries> -->
-<!-- 				<includeDependencies>false</includeDependencies> -->
-<!-- 				<outputDirectory>webapps/${module.artifactId}</outputDirectory> -->
-<!-- 				<unpack>true</unpack> -->
-<!-- 			</binaries> -->
-<!-- 		</moduleSet> -->
-	
-<!-- 		 copia de los jars definidos como modulos e incluidos en el Reactor  -->
-<!-- 		<moduleSet> -->
-<!-- 			<useAllReactorProjects>true</useAllReactorProjects> -->
-<!-- 			<includes> -->
-<!-- 				<include>*:jar:*</include> -->
-<!-- 			</includes> -->
-<!-- 			<binaries> -->
-<!-- 				<includeDependencies>false</includeDependencies> -->
-<!-- 				<outputDirectory>lib</outputDirectory> -->
-<!-- 				<unpack>false</unpack> -->
-<!-- 			</binaries> -->
-		</moduleSet>
-	</moduleSets>
+      <!--
+      Take all war modules (in [src]/dspace/modules/) and explode them into
+      'webapps' directory
+      -->
+      <moduleSet>
+         <includes>
+            <include>org.dspace.modules:*:war:*</include>
+         </includes>
+         <binaries>
+            <includeDependencies>false</includeDependencies>
+            <outputDirectory>webapps/${module.artifactId}</outputDirectory>
+            <unpack>true</unpack>
+         </binaries>
+      </moduleSet>
+   </moduleSets>
 
 </assembly>
