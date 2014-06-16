@@ -45,13 +45,9 @@ import org.dspace.core.ConfigurationManager;
 import org.xml.sax.SAXException;
 
 /**
- * Display a single collection. This includes a full text search, browse by
- * list, community display and a list of recent submissions.
+ * Este transformer agrega al dri la coleccion y comunidad padre de un item para que pueda ver desde el item show
+ * <map:transformer name="AddItemCollections" src="org.dspace.app.xmlui.aspect.artifactbrowser.AddItemCollections"/>
  * 
- * @author Scott Phillips
- * @author Kevin Van de Velde (kevin at atmire dot com)
- * @author Mark Diggory (markd at atmire dot com)
- * @author Ben Bosman (ben at atmire dot com)
  */
 public class AddItemCollections extends AbstractDSpaceTransformer implements CacheableProcessingComponent 
 {
@@ -62,23 +58,26 @@ public class AddItemCollections extends AbstractDSpaceTransformer implements Cac
      * Generate the unique caching key.
      * This key must be unique inside the space of this component.
      */
-    public Serializable getKey() {
-        try {
-            DSpaceObject dso = HandleUtil.obtainHandle(objectModel);
+	   public Serializable getKey()
+	    {
+	        try
+	        {
+	            DSpaceObject dso = HandleUtil.obtainHandle(objectModel);
 
-            if (dso == null)
-            {
-                return "0"; // no item, something is wrong.
-            }
-
-            return HashUtil.hash(dso.getHandle() + "full:" + showFullItem(objectModel)+"withCommName");
-        }
-        catch (SQLException sqle)
-        {
-            // Ignore all errors and just return that the component is not cachable.
-            return "0";
-        }
-    }
+	            if (dso == null)
+	            {
+	                return "0";
+	            }
+	                
+	            return HashUtil.hash(dso.getHandle());
+	        }
+	        catch (SQLException sqle)
+	        {
+	            // Ignore all errors and just return that the component is not
+	            // cachable.
+	            return "0";
+	        }
+	    }
 
     /**
      * Generate the cache validity object.
@@ -143,40 +142,4 @@ public class AddItemCollections extends AbstractDSpaceTransformer implements Cac
 
 
     }
-    
-    /**
-     * Determine if the full item should be referenced or just a summary.
-     */
-    public static boolean showFullItem(Map objectModel)
-    {
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        String show = request.getParameter("show");
-
-        if (show != null && show.length() > 0)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Obtain the item's title.
-     */
-    public static String getItemTitle(Item item)
-    {
-        DCValue[] titles = item.getDC("title", Item.ANY, Item.ANY);
-
-        String title;
-        if (titles != null && titles.length > 0)
-        {
-            title = titles[0].value;
-        }
-        else
-        {
-            title = null;
-        }
-        return title;
-    }
-
 }

@@ -1381,7 +1381,7 @@
 
 	<xsl:template match="/dri:document/dri:body/dri:div/dri:p[@rend='item-view-toggle item-view-toggle-bottom']">
 	</xsl:template>
-
+<!-- 
 	<xsl:template match="/dri:document/dri:body/dri:div/dri:referenceSet[@id='aspect.artifactbrowser.ItemViewer.referenceSet.collection-viewer']/dri:reference/dri:referenceSet[@rend='hierarchy']">
 		<xsl:apply-templates select="dri:head"/>
 		<ul id="ds-trail-items">
@@ -1408,7 +1408,7 @@
 		</li>
 		
 	</xsl:template>
-
+ -->
 	<xsl:template match="dri:div[@id='aspect.artifactbrowser.RestrictedItem.div.withdrawn']">
 		<xsl:apply-templates select="dri:head"/>
 		<xsl:apply-templates select="dri:p[@id='aspect.artifactbrowser.RestrictedItem.p.item_status'] "/>
