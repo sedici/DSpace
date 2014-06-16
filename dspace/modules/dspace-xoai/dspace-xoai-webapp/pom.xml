@@ -7,7 +7,7 @@
 	<parent>
 		<artifactId>dspace-xoai</artifactId>
 		<groupId>org.dspace</groupId>
-		<version>1.8.2</version>
+		<version>1.8.3</version>
 	</parent>
 
 	<artifactId>dspace-xoai-webapp</artifactId>

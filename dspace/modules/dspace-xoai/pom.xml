@@ -4,11 +4,10 @@
 	<parent>
 	<artifactId>dspace-parent</artifactId>
 	<groupId>org.dspace</groupId>
-	<version>1.8.2</version>
+	<version>1.8.3</version>
 	</parent>
 	<artifactId>dspace-xoai</artifactId>
 	<packaging>pom</packaging>
-
 
 	<name>Lyncode XOAI</name>
 	<description>Parent project for the OAI API and Webapp</description>

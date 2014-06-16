@@ -13,7 +13,7 @@
 	<parent>
 		<artifactId>modules</artifactId>
 		<groupId>org.dspace</groupId>
-		<version>1.8.2</version>
+		<version>1.8.3</version>
 		<relativePath>..</relativePath>
 	</parent>
 
@@ -102,13 +102,13 @@
 		<dependency>
 			<groupId>org.dspace</groupId>
 			<artifactId>dspace-xoai-webapp</artifactId>
-			<version>1.8.2</version>
+			<version>1.8.3</version>
 			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>org.dspace</groupId>
 			<artifactId>dspace-xoai-api</artifactId>
-			<version>1.8.2</version>
+			<version>1.8.3</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
