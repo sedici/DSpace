@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>dspace-parent</artifactId>
 		<groupId>org.dspace</groupId>
-		<version>1.8.2</version>
+		<version>1.8.3</version>
         <relativePath>..</relativePath>
 	</parent>
 	
@@ -11,19 +11,13 @@
 	<groupId>org.dspace</groupId>
 	<artifactId>dspace-stats</artifactId>
 	<name>DSpace Solr Statistics Logging Client Library</name>
-	<version>1.8.2</version>
+	<version>1.8.3</version>
 	<description>Library of Shared UsageEvent and EventConsumer Tools for Logging to Solr.</description>
 
-	<!--
-		The Subversion repository location is used by Continuum to update
-		against when changes have occured, this spawns a new build cycle and
-		releases snapshots into the snapshot repository below.
-	-->
-	<scm>
-		<connection>scm:svn:http://scm.dspace.org/svn/repo/tags/dspace-1.8.2</connection>
-		<developerConnection>scm:svn:https://scm.dspace.org/svn/repo/tags/dspace-1.8.2</developerConnection>
-		<url>http://scm.dspace.org/svn/repo/tags/dspace-1.8.2</url>
-	</scm>
+	<properties>
+        <!-- This is the path to the root [dspace-src] directory. -->
+        <root.basedir>${basedir}/..</root.basedir>
+    </properties>
 
 	<developers>
 		<developer>

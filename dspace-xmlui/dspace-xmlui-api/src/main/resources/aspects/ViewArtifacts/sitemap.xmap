@@ -29,7 +29,7 @@ and searching the repository.
             <map:transformer name="FeedbackSent" src="org.dspace.app.xmlui.aspect.artifactbrowser.FeedbackSent"/>
             <map:transformer name="Contact" src="org.dspace.app.xmlui.aspect.artifactbrowser.Contact"/>
             <map:transformer name="RestrictedItem" src="org.dspace.app.xmlui.aspect.artifactbrowser.RestrictedItem"/>
-		    <map:transformer name="AddItemCollections" src="org.dspace.app.xmlui.aspect.artifactbrowser.AddItemCollections"/>
+
             <map:transformer name="Statistics" src="org.dspace.app.xmlui.aspect.artifactbrowser.StatisticsViewer"/>
         </map:transformers>
 
@@ -137,7 +137,7 @@ and searching the repository.
                                                   <map:act type="UsageLoggerAction">
                                                     <map:parameter name="type" value="item"/>
                                                     <map:parameter name="eventType" value="view"/>
-                                                  </map:act>                                           
+                                                  </map:act>
                                                   <!-- Implement HTTP If-Modified-Since protocol (commonly used by search
                                                      - engine crawlers): return 304 NOT MODIFIED status if Item's
                                                      - last-modified date is before If-Modified-Since header.
@@ -151,7 +151,6 @@ and searching the repository.
                                                      - transformed pages with the current timestamp, which we cannot override.
                                                      - It won't prevent a spider's If-Modified-Since from working, though.
                                                     -->
-                                                    
                                                   <map:select type="browser">
                                                     <map:when test="spider">
                                                       <map:select type="IfModifiedSinceSelector">
@@ -161,18 +160,15 @@ and searching the repository.
                                                         </map:when>
                                                         <map:otherwise>
                                                             <map:transform type="ItemViewer"/>
-                                                            <map:transform type="AddItemCollections"/>
                                                             <map:serialize type="xml"/>
                                                         </map:otherwise>
                                                       </map:select>
                                                     </map:when>
                                                     <map:otherwise>
                                                         <map:transform type="ItemViewer"/>
-                                                        <map:transform type="AddItemCollections"/>
                                                         <map:serialize type="xml"/>
                                                     </map:otherwise>
                                                   </map:select>
-                                                  
                                                 </map:match>
                                         </map:match>
 

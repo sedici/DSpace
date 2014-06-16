@@ -10,15 +10,16 @@
 	<parent>
 		<groupId>org.dspace</groupId>
 		<artifactId>dspace-parent</artifactId>
-		<version>1.8.2</version>
+		<version>1.8.3</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-    <scm>
-      <connection>scm:svn:https://scm.dspace.org/svn/repo/tags/dspace-1.8.2</connection>
-      <developerConnection>scm:svn:https://scm.dspace.org/svn/repo/tags/dspace-1.8.2</developerConnection>
-      <url>http://scm.dspace.org/svn/repo/tags/dspace-1.8.2</url>
-    </scm>
+
+    <properties>
+        <!-- This is the path to the root [dspace-src] directory. -->
+        <root.basedir>${basedir}/../..</root.basedir>
+    </properties>
+    
     <build>
     	<plugins>
 			<plugin>
@@ -27,15 +28,10 @@
 	                <version>1.9.0</version>
 	                <configuration><skip>true</skip>
 	        		</configuration>
-	        		
 			</plugin>
     	</plugins>
     </build>
-<!--     <properties> -->
-        <!-- This is the path to the root [dspace-src] directory. -->
-<!--         <root.basedir>${basedir}/../..</root.basedir> -->
-<!--     </properties> -->
-
+    
     <!-- The 'additions' module must *always* be built, as it is included
          as a dependency in most other modules in [src]/dspace/modules -->
     <modules>

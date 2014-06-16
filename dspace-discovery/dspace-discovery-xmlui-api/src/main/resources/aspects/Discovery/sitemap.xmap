@@ -42,7 +42,6 @@ and searching the repository.
             <map:transformer name="RelatedItems" src="org.dspace.app.xmlui.aspect.discovery.RelatedItems"/>
 
             <map:transformer name="RestrictedItem" src="org.dspace.app.xmlui.aspect.artifactbrowser.RestrictedItem"/>
-            
         </map:transformers>
                
 
@@ -192,17 +191,7 @@ and searching the repository.
                             <map:serialize type="xml"/>
                         </map:match>
                     </map:match>
-
-                     <!-- Comentamos esta parte porque se solapa con la de viewartifacts, lo que hace insertar dos veces el mismo transformer
-                    <map:match type="HandleAuthorizedMatcher" pattern="!READ">
-                        <map:transform type="RestrictedItem">
-                            <map:parameter name="header" value="xmlui.ArtifactBrowser.RestrictedItem.auth_header"/>
-                            <map:parameter name="message" value="xmlui.ArtifactBrowser.RestrictedItem.auth_message"/>
-                        </map:transform>
-                        <map:serialize type="xml"/>
-                    </map:match>-->
                 </map:match>
-
 
             </map:match> <!-- End match handle/*/** -->
 
