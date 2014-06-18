@@ -4,7 +4,6 @@
    <artifactId>xmlui</artifactId>
    <packaging>war</packaging>
    <name>DSpace XML-UI (Manakin) :: Web Application</name>
-   <url>http://projects.dspace.org/dspace-xmlui</url>
    <description>
       DSpace/Manakin XML-UI Based Webapplication using the Cocoon and
       Wing frameworks
@@ -17,12 +16,10 @@
       <relativePath>..</relativePath>
    </parent>
 
-   <properties>
-        <!-- This is the path to the root [dspace-src] directory. -->
-        <root.basedir>${basedir}/../../..</root.basedir>
-   </properties>
-
    <build>
+       <filters>
+           <filter>${basedir}/../../../${filters.file}</filter>
+       </filters>
       <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -31,7 +28,7 @@
                <archiveClasses>false</archiveClasses>
                <webResources>
                   <resource>
-                     <filtering>true</filtering>
+                     <filtering>false</filtering>
                      <directory>${basedir}/src/main/webapp</directory>
                      <includes>
                         <include>WEB-INF/web.xml</include>
@@ -73,27 +70,6 @@
    </build>
 
    <profiles>
-      <!-- 
-         when activated a dspace.config configuration
-         file location passed on the commandline 
-         (-Ddspace.config=...) can be passed through 
-         to be used as a filter source by projects for 
-         tasks such as updating the ${dspace.dir} in
-         web.xml etc.
-      -->
-      <profile>
-         <id>dspace-config</id>
-         <activation>
-            <property>
-               <name>dspace.config</name>
-            </property>
-         </activation>
-         <build>
-            <filters>
-               <filter>${dspace.config}</filter>
-            </filters>
-         </build>
-      </profile>
       <profile>
          <id>postgres-support</id>
          <activation>
@@ -131,7 +107,6 @@
          <groupId>org.dspace.modules</groupId>
          <artifactId>additions</artifactId>
       </dependency>
-      
 
       <!-- DSpace XMLUI Languages -->
       <dependency>
@@ -188,7 +163,6 @@
       <dependency>
          <groupId>javax.servlet</groupId>
          <artifactId>servlet-api</artifactId>
-         <version>2.3</version>
          <scope>provided</scope>
       </dependency>
 

@@ -20,11 +20,6 @@
         <module>dspace-sword-client-xmlui-webapp</module>
     </modules>
 
-    <properties>
-        <!-- This is the path to the root [dspace-src] directory. -->
-        <root.basedir>${basedir}/..</root.basedir>
-    </properties>
-
     <issueManagement>
       <system>JIRA</system>
       <url>http://jira.dspace.org/jira/browse/SWORD</url>

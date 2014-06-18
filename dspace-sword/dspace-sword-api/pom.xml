@@ -7,7 +7,6 @@
     <description>
         DSpace SWORD Deposit Service Provider Web Application
     </description>
-    <url>http://projects.dspace.org/dspace-sword-api</url>
 
     <!--
        A Parent POM that Maven inherits DSpace Default
@@ -20,11 +19,6 @@
       <relativePath>..</relativePath>
     </parent>
 
-    <properties>
-        <!-- This is the path to the root [dspace-src] directory. -->
-        <root.basedir>${basedir}/../..</root.basedir>
-    </properties>
-	
     <dependencies>
 
         <!-- Leave this out for the moment, as the source is in the tree -->

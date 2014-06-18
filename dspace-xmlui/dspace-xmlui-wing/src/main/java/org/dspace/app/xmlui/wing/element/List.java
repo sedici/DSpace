@@ -84,9 +84,11 @@ public class List extends AbstractWingElement implements WingMergeableElement,
     
     public static final String TYPE_FORM = "form";
 
+    public static final String TYPE_DSO_LIST = "dsolist";
+
     /** All the possible list types collected into one array */
     public static final String[] TYPES = { TYPE_SIMPLE, TYPE_ORDERED,
-            TYPE_BULLETED, TYPE_GLOSS, TYPE_PROGRESS, TYPE_FORM };
+            TYPE_BULLETED, TYPE_GLOSS, TYPE_PROGRESS, TYPE_FORM, TYPE_DSO_LIST };
 
     /** The list's name */
     private String name;
@@ -479,11 +481,11 @@ public class List extends AbstractWingElement implements WingMergeableElement,
     /**
      * Inform this list that it is being merged with an existing element.
      * Practically this means that when this method is being transformed to SAX
-     * it should assume that the element's SAX events have all ready been sent.
+     * it should assume that the element's SAX events have already been sent.
      * In this case the element would only need to transform to SAX the children
      * of this element.
      * 
-     * Further more if the element needs to add any attributes to the SAX
+     * Furthermore, if the element needs to add any attributes to the SAX
      * startElement event it may modify the attributes object passed to make
      * changes.
      * 

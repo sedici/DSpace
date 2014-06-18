@@ -72,6 +72,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
     private static final Message T_administrative_format 			= message("xmlui.administrative.Navigation.administrative_format");
     private static final Message T_administrative_items 			= message("xmlui.administrative.Navigation.administrative_items");
     private static final Message T_administrative_withdrawn  		= message("xmlui.administrative.Navigation.administrative_withdrawn");
+    private static final Message T_administrative_private  		= message("xmlui.administrative.Navigation.administrative_private");
     private static final Message T_administrative_control_panel 	= message("xmlui.administrative.Navigation.administrative_control_panel");
     private static final Message T_administrative_curation              = message("xmlui.administrative.Navigation.administrative_curation");
     
@@ -102,7 +103,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
         // Special case, don't cache anything if the user is logging 
         // in. The problem occures because of timming, this cache key
         // is generated before we know whether the operation has 
-        // succeded or failed. So we don't know whether to cache this 
+        // succeeded or failed. So we don't know whether to cache this 
         // under the user's specific cache or under the anonymous user.
         if (request.getParameter("login_email")    != null ||
             request.getParameter("login_password") != null ||
@@ -291,7 +292,8 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
 	        registries.addItemXref(contextPath+"/admin/format-registry",T_administrative_format);	        
 	        
 	        admin.addItemXref(contextPath+"/admin/item", T_administrative_items);
-            admin.addItemXref(contextPath+"/admin/withdrawn", T_administrative_withdrawn);	        
+            admin.addItemXref(contextPath+"/admin/withdrawn", T_administrative_withdrawn);
+            admin.addItemXref(contextPath+"/admin/private", T_administrative_private);
 	        admin.addItemXref(contextPath+"/admin/panel", T_administrative_control_panel);
             admin.addItemXref(contextPath+"/statistics", T_statistics);
             admin.addItemXref(contextPath+ "/admin/metadataimport", T_administrative_import_metadata);

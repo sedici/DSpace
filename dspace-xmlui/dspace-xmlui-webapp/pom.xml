@@ -4,7 +4,6 @@
     <artifactId>dspace-xmlui-webapp</artifactId>
     <packaging>war</packaging>
     <name>DSpace XML-UI (Manakin) :: Web Application Resources</name>
-    <url>http://projects.dspace.org/dspace-xmlui/dspace-xmlui-webapp</url>
     <description>
         DSpace/Manakin XML-UI Based Web Application using the Cocoon and
         Wing frameworks
@@ -17,12 +16,10 @@
       <relativePath>..</relativePath>
     </parent>
 
-    <properties>
-        <!-- This is the path to the root [dspace-src] directory. -->
-        <root.basedir>${basedir}/../..</root.basedir>
-    </properties>
-
     <build>
+        <filters>
+            <filter>${basedir}/../../${filters.file}</filter>
+        </filters>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -34,7 +31,7 @@
                     <warSourceExcludes>WEB-INF/lib/*.jar</warSourceExcludes>
                     <webResources>
                         <resource>
-                            <filtering>true</filtering>
+                            <filtering>false</filtering>
                             <directory>${basedir}/src/main/webapp</directory>
                             <includes>
                                 <include>WEB-INF/web.xml</include>
@@ -70,26 +67,6 @@
     </build>
 
     <profiles>
-        <!--
-           when activated a dspace.config configuration
-           file location passed on the commandline
-           (-Ddspace.config=...) can be passed through
-           to be used as a filter source by projects for
-           tasks such as updating the ${dspace.dir} in
-           web.xml etc.
-        -->
-        <profile>
-            <activation>
-                <property>
-                    <name>dspace.config</name>
-                </property>
-            </activation>
-            <build>
-                <filters>
-                    <filter>${dspace.config}</filter>
-                </filters>
-            </build>
-        </profile>
         <profile>
             <id>oracle-support</id>
             <activation>

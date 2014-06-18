@@ -346,15 +346,8 @@ public class DCInputsReader
                                                         page.add(field);
                                                         processPageParts(formName, pgNum, nfld, field);
 
-                                                        /*
                                                         // we omit the duplicate validation, allowing multiple fields definition for 
                                                         // the same metadata and different visibility/type-bind
-                                                        String error = checkForDups(formName, field, pages);
-                                                        if (error != null)
-                                                        {
-                                                                throw new SAXException(error);
-                                                        }
-                                                        */
 
                                                 }
                                         }
@@ -623,23 +616,10 @@ public class DCInputsReader
                                                 throw new DCInputsReaderException(errString);
                                         }
                                 }
-								/*
-								// we omit the "required" and "visibility" validation, provided this must be checked in the processing class
+
+                    			// we omit the "required" and "visibility" validation, provided this must be checked in the processing class
                     			// only when it makes sense (if the field isn't visible means that it is not applicable, therefore it can't be required)
-                    			 
-                                // if visibility restricted, make sure field is not required
-                                String visibility = fld.get("visibility");
-                                if (visibility != null && visibility.length() > 0 )
-                                {
-                                        String required = fld.get("required");
-                                        if (required != null && required.length() > 0)
-                                        {
-                                                String errString = "Field '" + fld.get("label") +
-                                                                        "' is required but invisible";
-                                                throw new DCInputsReaderException(errString);
-                                        }
-                                }
-                                */
+
                         }
                 }
         }

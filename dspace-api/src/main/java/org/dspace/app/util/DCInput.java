@@ -7,6 +7,7 @@
  */
 package org.dspace.app.util;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +76,9 @@ public class DCInput
     /** is the entry closed to vocabulary terms? */
     private boolean closedVocabulary = false;
 
+    /** allowed document types */
+    private List<String> typeBind = null;
+
     /** 
      * The scope of the input sets, this restricts hidden metadata fields from 
      * view during workflow processing. 
@@ -129,9 +133,6 @@ public class DCInput
         closedVocabulary = "true".equalsIgnoreCase(closedVocabularyStr)
                             || "yes".equalsIgnoreCase(closedVocabularyStr);
         
-        
-        //comienzo agregados SEDICI
-        
         // parsing of the <type-bind> element (using the colon as split separator)
         typeBind = new ArrayList<String>();
         String typeBindDef = fieldMap.get("type-bind");
@@ -142,6 +143,7 @@ public class DCInput
         	}
         }
         
+		//comienzo agregados SEDICI
         // is i18nable ?
         String i18nableStr = fieldMap.get("i18n");
         i18nable = "true".equalsIgnoreCase(i18nableStr)
@@ -174,7 +176,7 @@ public class DCInput
 	        	visibilityOnGroup.put(restriction, isPositiveRestriction);
         	}
         }
-        
+        //fin agregados SEDICI
     }
 
     /**
@@ -432,9 +434,6 @@ public class DCInput
 	public boolean isClosedVocabulary() {
 		return closedVocabulary;
 	}
-
-	
-	//comienzo agregados SEDICI
 
     /** allowed document types */
     private List<String> typeBind = null;

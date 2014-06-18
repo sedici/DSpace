@@ -4,43 +4,17 @@
 	<artifactId>modules</artifactId>
 	<packaging>pom</packaging>
 	<name>DSpace Addon Modules</name>
-	<url>http://www.dspace.org</url>
 	<description>DSpace Addon Modules</description>
 
 	<parent>
 		<groupId>org.dspace</groupId>
 		<artifactId>dspace-parent</artifactId>
-		<version>1.8.3</version>
+		<version>3.0-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
-
-
-    <properties>
-        <!-- This is the path to the root [dspace-src] directory. -->
-        <root.basedir>${basedir}/../..</root.basedir>
-    </properties>
     
-    <build>
-    	<plugins>
-			<plugin>
-	                <groupId>com.mycila.maven-license-plugin</groupId>
-	                <artifactId>maven-license-plugin</artifactId>
-	                <version>1.9.0</version>
-	                <configuration><skip>true</skip>
-	        		</configuration>
-			</plugin>
-    	</plugins>
-    </build>
-    
-    <!-- The 'additions' module must *always* be built, as it is included
-         as a dependency in most other modules in [src]/dspace/modules -->
-    <modules>
-        <module>dspace-xoai</module>
-        <module>additions</module>
-    </modules>
-	
     <!-- 
-         List of enabled DSpace "addon" / local customization Modules to build/install.
+         List of enabled DSpace Modules to build/install.
          To disable building of modules, you can use the Maven '-P' commandline 
          option along with the profile's id.  For example, the following tells
          Maven to *disable* building of 'dspace-oai' and 'dspace-lni' modules:
@@ -51,6 +25,15 @@
          compiling of the corresponding source module.
     -->
     <profiles>
+       <profile>
+          <id>dspace-additions</id>
+          <activation>
+             <activeByDefault>true</activeByDefault>
+          </activation>
+          <modules>
+             <module>additions</module>
+          </modules>
+       </profile>
         <profile>
             <id>dspace-xmlui</id>
             <activation>
@@ -76,15 +59,6 @@
             </activation>
             <modules>
                 <module>jspui</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>dspace-rest</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <modules>
-                <module>rest</module>
             </modules>
         </profile>
         <profile>
@@ -115,7 +89,7 @@
             </modules>
         </profile>
         <profile>
-            <id>dspace-oai</id>
+            <id>dspace-xoai</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -123,7 +97,6 @@
                 <module>oai</module>
             </modules>
         </profile>
-        
         <profile>
             <id>sedici2003</id>
             <activation>
@@ -133,15 +106,5 @@
                 <module>sedici-2003</module>
             </modules>
         </profile>
-        <profile>
-            <id>dspace-xoai</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>xoai</module>
-            </modules>
-        </profile>
-        
     </profiles>
 </project>

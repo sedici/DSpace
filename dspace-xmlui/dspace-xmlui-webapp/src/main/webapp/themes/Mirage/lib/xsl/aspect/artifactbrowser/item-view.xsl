@@ -40,9 +40,10 @@
         <xsl:apply-templates select="./mets:dmdSec/mets:mdWrap[@OTHERMDTYPE='DIM']/mets:xmlData/dim:dim"
         mode="itemSummaryView-DIM"/>
 
+        <xsl:copy-of select="$SFXLink" />
         <!-- Generate the bitstream information from the file section -->
         <xsl:choose>
-            <xsl:when test="./mets:fileSec/mets:fileGrp[@USE='CONTENT' or @USE='ORIGINAL']">
+            <xsl:when test="./mets:fileSec/mets:fileGrp[@USE='CONTENT' or @USE='ORIGINAL']/mets:file">
                 <xsl:apply-templates select="./mets:fileSec/mets:fileGrp[@USE='CONTENT' or @USE='ORIGINAL']">
                     <xsl:with-param name="context" select="."/>
                     <xsl:with-param name="primaryBitstream" select="./mets:structMap[@TYPE='LOGICAL']/mets:div[@TYPE='DSpace Item']/mets:fptr/@FILEID"/>
@@ -316,6 +317,7 @@
             </xsl:attribute>
             &#xFEFF; <!-- non-breaking space to force separating the end tag -->
         </span>
+        <xsl:copy-of select="$SFXLink" />
     </xsl:template>
 
     <xsl:template match="dim:field" mode="itemDetailView-DIM">
@@ -346,12 +348,12 @@
             </tr>
     </xsl:template>
 
-    <!--dont render the item-view-toggle automatically in the summary view, only when it get's called-->
+    <!-- don't render the item-view-toggle automatically in the summary view, only when it gets called -->
     <xsl:template match="dri:p[contains(@rend , 'item-view-toggle') and
         (preceding-sibling::dri:referenceSet[@type = 'summaryView'] or following-sibling::dri:referenceSet[@type = 'summaryView'])]">
     </xsl:template>
 
-    <!-- dont render the head on the item view page -->
+    <!-- don't render the head on the item view page -->
     <xsl:template match="dri:div[@n='item-view']/dri:head" priority="5">
     </xsl:template>
 

@@ -5,7 +5,6 @@
    <packaging>jar</packaging>
    <name>DSpace LNI :: Core Implementation</name>
    <description>DSpace Lightweight Network Interface</description>
-   <url>http://projects.dspace.org/dspace-lni/dspace-lni-core</url>
 
    <parent>
       <groupId>org.dspace</groupId>
@@ -13,11 +12,6 @@
       <version>1.8.3</version>
       <relativePath>..</relativePath>
    </parent>
-
-   <properties>
-        <!-- This is the path to the root [dspace-src] directory. -->
-        <root.basedir>${basedir}/../..</root.basedir>
-   </properties>
 
    <dependencies>
       <dependency>

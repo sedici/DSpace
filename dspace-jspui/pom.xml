@@ -4,7 +4,6 @@
    <artifactId>dspace-jspui</artifactId>
    <name>DSpace JSP-UI</name>
    <packaging>pom</packaging>
-   <url>http://projects.dspace.org/dspace-jspui</url>
    <description>DSpace JSP Based Webapplication</description>
 
    <!-- 
@@ -17,11 +16,6 @@
       <version>1.8.3</version>
       <relativePath>..</relativePath>
    </parent>
-
-   <properties>
-        <!-- This is the path to the root [dspace-src] directory. -->
-        <root.basedir>${basedir}/..</root.basedir>
-   </properties>
 
    <modules>
       <module>dspace-jspui-api</module>

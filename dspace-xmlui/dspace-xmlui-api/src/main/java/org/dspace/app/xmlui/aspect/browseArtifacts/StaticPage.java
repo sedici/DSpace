@@ -5,7 +5,6 @@
  *
  * http://www.dspace.org/license/
  */
-
 package org.dspace.app.xmlui.aspect.browseArtifacts;
 
 import org.apache.cocoon.ProcessingException;

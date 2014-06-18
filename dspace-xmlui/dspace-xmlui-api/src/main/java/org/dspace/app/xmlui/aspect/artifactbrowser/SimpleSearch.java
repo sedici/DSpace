@@ -31,7 +31,7 @@ import org.dspace.content.DSpaceObject;
 import org.xml.sax.SAXException;
 
 /**
- * Preform a simple search of the repository. The user provides a simple one
+ * Perform a simple search of the repository. The user provides a simple one
  * field query (the url parameter is named query) and the results are processed.
  * 
  * @author Scott Phillips
@@ -71,7 +71,7 @@ public class SimpleSearch extends AbstractSearch implements CacheableProcessingC
 		DSpaceObject dso = HandleUtil.obtainHandle(objectModel);
         if ((dso instanceof Collection) || (dso instanceof Community))
         {
-	        HandleUtil.buildHandleTrail(dso,pageMeta,contextPath);
+	        HandleUtil.buildHandleTrail(dso,pageMeta,contextPath, true);
 		} 
 		
         pageMeta.addTrail().addContent(T_trail);

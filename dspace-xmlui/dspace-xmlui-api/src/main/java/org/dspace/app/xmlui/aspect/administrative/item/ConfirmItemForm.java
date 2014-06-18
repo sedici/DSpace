@@ -29,7 +29,7 @@ import org.dspace.content.Item;
 /**
  * This page is used as a general confirmation page for any
  * actions on items. It will display the item and ask if the
- * user is sure they want to preform the action.
+ * user is sure they want to perform the action.
  * 
  * The "confirm" parameter determines what action is confirmed.
  * There are three possible values, "delete", "withdraw", or
@@ -57,6 +57,9 @@ public class ConfirmItemForm extends AbstractDSpaceTransformer {
 	private static final Message T_submit_delete = message("xmlui.general.delete");
 	private static final Message T_submit_withdraw = message("xmlui.administrative.item.ConfirmItemForm.submit_withdraw");
 	private static final Message T_submit_reinstate = message("xmlui.administrative.item.ConfirmItemForm.submit_reinstate");
+
+    private static final Message T_submit_private = message("xmlui.administrative.item.ConfirmItemForm.submit_private");
+    private static final Message T_submit_public = message("xmlui.administrative.item.ConfirmItemForm.submit_public");
 
 
 	public void addPageMeta(PageMeta pageMeta) throws WingException
@@ -127,6 +130,14 @@ public class ConfirmItemForm extends AbstractDSpaceTransformer {
 		{
 			confirmButton.setValue(T_submit_reinstate);
 		}
+        else if ("private".equals(confirm))
+        {
+            confirmButton.setValue(T_submit_private);
+        }
+        else if ("public".equals(confirm))
+        {
+            confirmButton.setValue(T_submit_public);
+        }
 		else if ("withdraw".equals(confirm))
 		{
 			confirmButton.setValue(T_submit_withdraw);
@@ -138,7 +149,7 @@ public class ConfirmItemForm extends AbstractDSpaceTransformer {
 
 
 	/**
-	 * Compare two metadata element's name so that they may be sorted.
+	 * Compare names of two metadata elements so that they may be sorted.
 	 */
 	static class DCValueComparator implements Comparator, Serializable {
 		public int compare(Object arg0, Object arg1) {

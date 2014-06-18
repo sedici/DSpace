@@ -229,7 +229,17 @@ public class ConfigurableBrowse extends AbstractDSpaceTransformer implements
     public void addPageMeta(PageMeta pageMeta) throws SAXException, WingException, UIException,
             SQLException, IOException, AuthorizeException
     {
+        BrowseInfo info = getBrowseInfo();
 
+        pageMeta.addMetadata("title").addContent(getTitleMessage(info));
+
+        DSpaceObject dso = HandleUtil.obtainHandle(objectModel);
+
+        pageMeta.addTrailLink(contextPath + "/", T_dspace_home);
+        if (dso != null)
+        {
+            HandleUtil.buildHandleTrail(dso, pageMeta, contextPath, true);
+        }
     	try {
 	        BrowseInfo info = getBrowseInfo();
 	

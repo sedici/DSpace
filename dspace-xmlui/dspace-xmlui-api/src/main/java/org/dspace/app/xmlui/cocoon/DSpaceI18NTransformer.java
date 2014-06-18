@@ -34,7 +34,7 @@ import org.dspace.app.xmlui.configuration.XMLUIConfiguration;
  * 
  * EXAMPLE:
  * 
- * For instance let's say there the i18n transformer's configuration 
+ * For instance let's say that the i18n transformer's configuration 
  * were as follows:
  * <catalogues default="default">
  *   <catalogue id="default" name="messages" aspects="true">
@@ -95,7 +95,7 @@ public class DSpaceI18NTransformer extends I18nTransformer {
         		if (!baseCatalogueLocationPath.endsWith("/"))
                 {
                     baseCatalogueLocationPath += "/";
-                } // Add a trailing slash if one dosn't exist
+                } // Add a trailing slash if one doesn't exist
         			
         		String catalogueId = catalogueConf.getAttribute("id","unknown");
         		
@@ -129,7 +129,7 @@ public class DSpaceI18NTransformer extends I18nTransformer {
             		String aspectLocationPath = aspect.getPath();
             		if (!aspectLocationPath.endsWith("/"))
                     {
-                        aspectLocationPath += "/"; // Add a trailing slash if one dosn't exist
+                        aspectLocationPath += "/"; // Add a trailing slash if one doesn't exist
                     }
             		aspectLocationPath += "i18n/";
             		MutableConfiguration aspectLocation = new DefaultConfiguration("location");

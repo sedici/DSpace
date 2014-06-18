@@ -28,11 +28,10 @@
   adminPath: RequestHandler path to manage cores.  
     If 'null' (or absent), cores will not be manageable via REST
   -->
-
   <cores adminPath="/admin/cores">
     <core name="search" instanceDir="search" />
     <core name="statistics" instanceDir="statistics" />
-    <core name="xoai" instanceDir="xoai" />
+    <core name="oai" instanceDir="oai" />
   </cores>
   
 </solr>

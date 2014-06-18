@@ -126,10 +126,10 @@ public abstract class Field extends AbstractWingElement implements
     /** The type of field, see TYPES above */
     protected String type;
 
-    /** Weather this field is disabled */
+    /** Whether this field is disabled */
     protected boolean disabled;
 
-    /** Weather this field is required */
+    /** Whether this field is required */
     protected boolean required;
 
     /** Any special rendering instructions */
@@ -276,6 +276,16 @@ public abstract class Field extends AbstractWingElement implements
     public void setAuthorityRequired(boolean value)
     {
         this.params.setAuthorityRequired(value);
+    }
+
+    /**
+     * Set the field's autofocus attribute, an HTML5 feature.
+     * Valid input values to enable autofocus are: autofocus, and empty string.
+     * @param value To enable autofocus: "autofocus" or ""
+     */
+    public void setAutofocus(String value)
+    {
+        this.params.setAutofocus(value);
     }
 
     /**

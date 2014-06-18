@@ -4,7 +4,6 @@
    <artifactId>dspace-jspui-api</artifactId>
    <name>DSpace JSP-UI :: API and Implementation</name>
    <packaging>jar</packaging>
-   <url>http://projects.dspace.org/dspace-jspui/dspace-jspui-api</url>
    <description>Libraries for DSpace JSP Based Webapplication</description>
 
    <!-- 
@@ -17,11 +16,6 @@
       <version>1.8.3</version>
       <relativePath>..</relativePath>
    </parent>
-
-   <properties>
-        <!-- This is the path to the root [dspace-src] directory. -->
-        <root.basedir>${basedir}/../..</root.basedir>
-   </properties>
 
    <dependencies>
       <dependency>
@@ -66,6 +60,12 @@
          <groupId>taglibs</groupId>
          <artifactId>standard</artifactId>
          <version>1.1.2</version>
+      </dependency>
+      <dependency>
+         <groupId>javax.servlet</groupId>
+         <artifactId>jsp-api</artifactId>
+         <version>2.0</version>
+         <scope>provided</scope>
       </dependency>
       <dependency>
          <groupId>org.springframework</groupId>

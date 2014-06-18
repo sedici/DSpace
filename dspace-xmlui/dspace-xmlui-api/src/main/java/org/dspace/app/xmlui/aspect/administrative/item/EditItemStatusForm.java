@@ -27,7 +27,7 @@ import org.dspace.core.Constants;
 
 /**
  * Display basic meta-meta information about the item and allow the user to change 
- * it's state such as withdraw or reinstate, possibily even completely deleting the item!
+ * its state such as withdraw or reinstate, possibly even completely deleting the item!
  * 
  * @author Jay Paz
  * @author Scott Phillips
@@ -58,18 +58,23 @@ public class EditItemStatusForm extends AbstractDSpaceTransformer {
 	private static final Message T_label_auth = message("xmlui.administrative.item.EditItemStatusForm.label_auth");
 	private static final Message T_label_withdraw = message("xmlui.administrative.item.EditItemStatusForm.label_withdraw");
 	private static final Message T_label_reinstate = message("xmlui.administrative.item.EditItemStatusForm.label_reinstate");
-    private static final Message T_label_move = message("xmlui.administrative.item.EditItemStatusForm.label_move");
+	private static final Message T_label_move = message("xmlui.administrative.item.EditItemStatusForm.label_move");
 	private static final Message T_label_delete = message("xmlui.administrative.item.EditItemStatusForm.label_delete");
 	private static final Message T_submit_authorizations = message("xmlui.administrative.item.EditItemStatusForm.submit_authorizations");
 	private static final Message T_submit_withdraw = message("xmlui.administrative.item.EditItemStatusForm.submit_withdraw");
 	private static final Message T_submit_reinstate = message("xmlui.administrative.item.EditItemStatusForm.submit_reinstate");
-    private static final Message T_submit_move = message("xmlui.administrative.item.EditItemStatusForm.submit_move");
+	private static final Message T_submit_move = message("xmlui.administrative.item.EditItemStatusForm.submit_move");
 	private static final Message T_submit_delete = message("xmlui.administrative.item.EditItemStatusForm.submit_delete");
 	private static final Message T_na = message("xmlui.administrative.item.EditItemStatusForm.na");
 	
 	private static final Message T_not_allowed = message("xmlui.administrative.item.EditItemStatusForm.not_allowed");
 	private static final Message T_collectionadmins_only = message("xmlui.administrative.item.EditItemStatusForm.collection_admins_only");
-	
+
+
+    private static final Message T_label_private = message("xmlui.administrative.item.EditItemStatusForm.label_private");
+    private static final Message T_label_public = message("xmlui.administrative.item.EditItemStatusForm.label_public");
+    private static final Message T_submit_private = message("xmlui.administrative.item.EditItemStatusForm.submit_private");
+    private static final Message T_submit_public = message("xmlui.administrative.item.EditItemStatusForm.submit_public");
 	
 	public void addPageMeta(PageMeta pageMeta) throws WingException
 	{
@@ -106,7 +111,7 @@ public class EditItemStatusForm extends AbstractDSpaceTransformer {
 		
 		
 		
-		// PARA: Helpfull instructions
+		// PARA: Helpful instructions
 		main.addPara(T_para1);
 		
 		
@@ -137,7 +142,8 @@ public class EditItemStatusForm extends AbstractDSpaceTransformer {
 		if(item.getHandle()==null){
 			itemInfo.addItem(T_na);		
 		}
-		else{
+		else
+		{
 			itemInfo.addItem().addXref(ConfigurationManager.getProperty("dspace.url") + "/handle/" + item.getHandle(),ConfigurationManager.getProperty("dspace.url") + "/handle/" + item.getHandle());		
 		}
 		
@@ -150,46 +156,51 @@ public class EditItemStatusForm extends AbstractDSpaceTransformer {
 		catch (AuthorizeException authex) 
 		{
 		    addNotAllowedButton(itemInfo.addItem(), "submit_authorization", T_submit_authorizations);
-        }
+		}
 	
 		if(!item.isWithdrawn())
 		{
 			itemInfo.addLabel(T_label_withdraw);
 			try
-	        {
-	            AuthorizeUtil.authorizeWithdrawItem(context, item);
-	            itemInfo.addItem().addButton("submit_withdraw").setValue(T_submit_withdraw);
-	        }
-	        catch (AuthorizeException authex) 
-	        {
-	            addNotAllowedButton(itemInfo.addItem(), "submit_withdraw", T_submit_withdraw);
-	        }
+			{
+				AuthorizeUtil.authorizeWithdrawItem(context, item);
+				itemInfo.addItem().addButton("submit_withdraw").setValue(T_submit_withdraw);
+			}
+			catch (AuthorizeException authex) 
+			{
+				addNotAllowedButton(itemInfo.addItem(), "submit_withdraw", T_submit_withdraw);
+			}
 		}
 		else
 		{	
 			itemInfo.addLabel(T_label_reinstate);
 			try
-            {
-                AuthorizeUtil.authorizeReinstateItem(context, item);
-                itemInfo.addItem().addButton("submit_reinstate").setValue(T_submit_reinstate);
-            }
-            catch (AuthorizeException authex) 
-            {
-                addNotAllowedButton(itemInfo.addItem(), "submit_reinstate", T_submit_reinstate);
-            }
+			{
+				AuthorizeUtil.authorizeReinstateItem(context, item);
+				itemInfo.addItem().addButton("submit_reinstate").setValue(T_submit_reinstate);
+			}
+			catch (AuthorizeException authex) 
+			{
+				addNotAllowedButton(itemInfo.addItem(), "submit_reinstate", T_submit_reinstate);
+			}
 		}
 		
-        itemInfo.addLabel(T_label_move);
-        addCollectionAdminOnlyButton(itemInfo.addItem(), item.getOwningCollection(), "submit_move", T_submit_move);
-        
+		itemInfo.addLabel(T_label_move);
+		addCollectionAdminOnlyButton(itemInfo.addItem(), item.getOwningCollection(), "submit_move", T_submit_move);
+
+
+        privateOrPublicAccess(item, itemInfo);
+
+
+
 		itemInfo.addLabel(T_label_delete);
 		if (AuthorizeManager.authorizeActionBoolean(context, item, Constants.DELETE))
 		{
-		    itemInfo.addItem().addButton("submit_delete").setValue(T_submit_delete);
+			itemInfo.addItem().addButton("submit_delete").setValue(T_submit_delete);
 		}
 		else
 		{
-		    addNotAllowedButton(itemInfo.addItem(), "submit_delete", T_submit_delete);
+			addNotAllowedButton(itemInfo.addItem(), "submit_delete", T_submit_delete);
 		}
 		
 		
@@ -201,7 +212,38 @@ public class EditItemStatusForm extends AbstractDSpaceTransformer {
 		main.addHidden("administrative-continue").setValue(knot.getId());
 	}
 
-	/**
+    private void privateOrPublicAccess(Item item, List itemInfo) throws WingException, SQLException {
+        if(item.isDiscoverable())
+        {
+            itemInfo.addLabel(T_label_private);
+            try
+            {
+                // who can Withdraw can also Make It Private
+                AuthorizeUtil.authorizeWithdrawItem(context, item);
+                itemInfo.addItem().addButton("submit_private").setValue(T_submit_private);
+            }
+            catch (AuthorizeException authex)
+            {
+                addNotAllowedButton(itemInfo.addItem(), "submit_private", T_submit_private);
+            }
+        }
+        else
+        {
+            itemInfo.addLabel(T_label_public);
+            try
+            {
+                // who can Reinstate can also Make It Public
+                AuthorizeUtil.authorizeReinstateItem(context, item);
+                itemInfo.addItem().addButton("submit_public").setValue(T_submit_public);
+            }
+            catch (AuthorizeException authex)
+            {
+                addNotAllowedButton(itemInfo.addItem(), "submit_public", T_submit_public);
+            }
+        }
+    }
+
+    /**
 	 * Add a disabled button with a "not allowed" notice
 	 * @param item
 	 * @param buttonName
@@ -211,24 +253,24 @@ public class EditItemStatusForm extends AbstractDSpaceTransformer {
 	 */
 	private void addNotAllowedButton(org.dspace.app.xmlui.wing.element.Item item, String buttonName, Message buttonLabel) throws WingException, SQLException
 	{
-    	Button button = item.addButton(buttonName);
-    	button.setValue(buttonLabel);
+		Button button = item.addButton(buttonName);
+		button.setValue(buttonLabel);
 		button.setDisabled();
 		item.addHighlight("fade").addContent(T_not_allowed);
 	}
     
-    private void addCollectionAdminOnlyButton(org.dspace.app.xmlui.wing.element.Item item, Collection collection, String buttonName, Message buttonLabel) throws WingException, SQLException
+	private void addCollectionAdminOnlyButton(org.dspace.app.xmlui.wing.element.Item item, Collection collection, String buttonName, Message buttonLabel) throws WingException, SQLException
 	{
-    	Button button = item.addButton(buttonName);
-    	button.setValue(buttonLabel);
-        
-        
-    	if (!AuthorizeManager.isAdmin(context, collection))
-    	{
-    		// Only admins can create or delete
-    		button.setDisabled();
-    		item.addHighlight("fade").addContent(T_collectionadmins_only);
-    	}
+		Button button = item.addButton(buttonName);
+		button.setValue(buttonLabel);
+
+
+		if (!AuthorizeManager.isAdmin(context, collection))
+		{
+			// Only admins can create or delete
+			button.setDisabled();
+			item.addHighlight("fade").addContent(T_collectionadmins_only);
+		}
 	}
 	
 }

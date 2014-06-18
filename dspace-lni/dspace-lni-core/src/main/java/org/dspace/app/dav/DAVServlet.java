@@ -323,8 +323,6 @@ public class DAVServlet extends HttpServlet
 	                }
 	            }
 	        }
-
-            // Authenticate the user.
 	        if (AuthenticationManager.authenticate(context, username, password,
 	                null, request) == AuthenticationMethod.SUCCESS)
 	        {

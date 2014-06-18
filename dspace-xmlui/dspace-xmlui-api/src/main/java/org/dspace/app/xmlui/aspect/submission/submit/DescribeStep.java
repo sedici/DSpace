@@ -440,7 +440,7 @@ public class DescribeStep extends AbstractSubmissionStep
          * @param fieldName
          *                      The field's name.
          * @param dcInput
-         *                      The field's input deffinition
+         *                      The field's input definition
          * @param dcValues
          *                      The field's pre-existing values.
          */
@@ -557,7 +557,7 @@ public class DescribeStep extends AbstractSubmissionStep
          * @param fieldName
          *                      The field's name.
          * @param dcInput
-         *                      The field's input deffinition
+         *                      The field's input definition
          * @param dcValues
          *                      The field's pre-existing values.
          */
@@ -666,7 +666,7 @@ public class DescribeStep extends AbstractSubmissionStep
          * @param fieldName
          *                      The field's name.
          * @param dcInput
-         *                      The field's input deffinition
+         *                      The field's input definition
          * @param dcValues
          *                      The field's pre-existing values.
          */
@@ -749,7 +749,7 @@ public class DescribeStep extends AbstractSubmissionStep
          * @param fieldName
          *                      The field's name.
          * @param dcInput
-         *                      The field's input deffinition
+         *                      The field's input definition
          * @param dcValues
          *                      The field's pre-existing values.
          */
@@ -830,7 +830,7 @@ public class DescribeStep extends AbstractSubmissionStep
          * @param fieldName
          *                      The field's name.
          * @param dcInput
-         *                      The field's input deffinition
+         *                      The field's input definition
          * @param dcValues
          *                      The field's pre-existing values.
          */
@@ -945,7 +945,7 @@ public class DescribeStep extends AbstractSubmissionStep
          * @param fieldName
          *                      The field's name.
          * @param dcInput
-         *                      The field's input deffinition
+         *                      The field's input definition
          * @param dcValues
          *                      The field's pre-existing values.
          */
@@ -1021,7 +1021,7 @@ public class DescribeStep extends AbstractSubmissionStep
          * @param fieldName
          *                      The field's name.
          * @param dcInput
-         *                      The field's input deffinition
+         *                      The field's input definition
          * @param dcValues
          *                      The field's pre-existing values.
          */
@@ -1092,7 +1092,7 @@ public class DescribeStep extends AbstractSubmissionStep
          * @param fieldName
          *                      The field's name.
          * @param dcInput
-         *                      The field's input deffinition
+         *                      The field's input definition
          * @param dcValues
          *                      The field's pre-existing values.
          */
@@ -1174,7 +1174,7 @@ public class DescribeStep extends AbstractSubmissionStep
          * @param fieldName
          *                      The field's name.
          * @param dcInput
-         *                      The field's input deffinition
+         *                      The field's input definition
          * @param dcValues
          *                      The field's pre-existing values.
          */

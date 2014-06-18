@@ -143,8 +143,8 @@ public class DescribeStep extends AbstractProcessingStep
 
         // Fetch the document type (dc.type)
         // Primero pregunto si el dc.type viene en un parametro
-        String documentType = "";
-        String documentTypeParameter = request.getParameter(MetadataField.formKey("dc", "type", null));
+		String documentType = "";
+       	String documentTypeParameter = request.getParameter(MetadataField.formKey("dc", "type", null));
         if(documentTypeParameter != null)
         {
             documentType = documentTypeParameter;

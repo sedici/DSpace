@@ -7,7 +7,6 @@
    <description>
       DSpace Lightweight Network Interface Build Modules
    </description>
-   <url>http://projects.dspace.org/dspace-lni</url>
 
    <parent>
       <groupId>org.dspace</groupId>
@@ -15,11 +14,6 @@
       <version>1.8.3</version>
       <relativePath>..</relativePath>
    </parent>
-
-   <properties>
-        <!-- This is the path to the root [dspace-src] directory. -->
-        <root.basedir>${basedir}/..</root.basedir>
-   </properties>
 
    <modules>
       <module>dspace-lni-core</module>

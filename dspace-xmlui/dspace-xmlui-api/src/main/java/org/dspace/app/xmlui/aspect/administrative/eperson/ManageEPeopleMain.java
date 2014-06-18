@@ -26,7 +26,7 @@ import org.dspace.eperson.EPerson;
 /**
  * The manage epeople page is the starting point page for managing 
  * epeople. From here the user is able to browse or search for epeople, 
- * once identified the user can selected them for deletition by selecting 
+ * once identified the user can selected them for deletion by selecting 
  * the checkboxes and clicking delete or click their name to edit the 
  * eperson.
  * 
@@ -139,6 +139,7 @@ public class ManageEPeopleMain extends AbstractDSpaceTransformer
         actionsList.addLabel(T_actions_search);
         org.dspace.app.xmlui.wing.element.Item actionItem = actionsList.addItem();
         Text queryField = actionItem.addText("query");
+        queryField.setAutofocus("autofocus");
         if (query != null)
         {
             queryField.setValue(query);

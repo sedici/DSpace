@@ -145,7 +145,7 @@ public class SearchFacetFilter extends AbstractDSpaceTransformer implements Cach
                     validity.add(dso);
                 }
 
-                // add reciently submitted items, serialize solr query contents.
+                // add recently submitted items, serialize solr query contents.
                 DiscoverResult response = getQueryResponse(dso);
 
                 validity.add("numFound:" + response.getDspaceObjects().size());
@@ -159,7 +159,7 @@ public class SearchFacetFilter extends AbstractDSpaceTransformer implements Cach
 
                     java.util.List<DiscoverResult.FacetResult> facetValues = queryResults.getFacetResults().get(facetField);
                     for (DiscoverResult.FacetResult facetValue : facetValues) {
-                        validity.add(facetValue.getAsFilterQuery() + facetValue.getCount());
+                        validity.add(facetField + facetValue.getAsFilterQuery() + facetValue.getCount());
                     }
                 }
 
@@ -204,7 +204,7 @@ public class SearchFacetFilter extends AbstractDSpaceTransformer implements Cach
 
         queryArgs.setMaxResults(0);
 
-        queryArgs.addFilterQueries(getDiscoveryFilterQueries());
+        queryArgs.addFilterQueries(DiscoveryUIUtils.getFilterQueries(request, context));
 
 
         //Set the default limit to 11

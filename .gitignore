@@ -1,10 +1,3 @@
-target/
-.settings/
-.classpath
-
-#Ignoro lo adquirido desde el svn de dspace
-dspace/dspace-tag-files/
-
 ## Ignore the MVN compiled output directories from version tracking
 target/
 
@@ -12,7 +5,6 @@ target/
 .settings/
 #.project
 .classpath
-.tomcatplugin
 
 ## Ignore project files created by IntelliJ IDEA
 *.iml
@@ -33,3 +25,4 @@ META-INF/
 ##Omito los datos relativos a la configuración local de dspace
 install/
 #build.properties
+

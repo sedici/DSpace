@@ -9,21 +9,12 @@
       DSpace SOLR Service Provider Web Application
    </description>
 
-   <!-- 
-      A Parent POM that Maven inherits DSpace Default 
-      POM atrributes from. 
-   -->
    <parent>
       <groupId>org.dspace</groupId>
       <artifactId>modules</artifactId>
-      <version>1.8.3</version>
-        <relativePath>..</relativePath>
+      <version>3.0-SNAPSHOT</version>
+      <relativePath>..</relativePath>
    </parent>
-   
-   <properties>
-        <!-- This is the path to the root [dspace-src] directory. -->
-        <root.basedir>${basedir}/../../..</root.basedir>
-   </properties>
 
    <build>
       <plugins>

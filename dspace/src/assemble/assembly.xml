@@ -7,11 +7,6 @@
     http://www.dspace.org/license/
 
 -->
-<!--
-    DSpace Directory Assembly
-    This assembly creates the 'target/dspace-[version]-build/' which can
-    then be installed via Apache Ant.
--->
 <assembly xmlns="http://maven.apache.org/POM/4.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/assembly-1.1.0-SNAPSHOT.xsd">
@@ -22,7 +17,6 @@
    <includeBaseDirectory>false</includeBaseDirectory>
 
    <fileSets>
-      <!-- Copy src/main/config/build.xml to resulting directory -->
       <fileSet>
          <directory>src/main/config</directory>
          <outputDirectory>.</outputDirectory>
@@ -30,19 +24,6 @@
             <include>build.xml</include>
          </includes>
       </fileSet>
-      <!-- Copy README and LICENSE files to resulting directory -->
-      <fileSet>
-         <directory>..</directory>
-         <outputDirectory>.</outputDirectory>
-         <includes>
-            <include>LICENSE*</include>
-            <include>README</include>
-         </includes>
-         <excludes>
-            <exclude>LICENSE_HEADER</exclude>
-         </excludes>
-      </fileSet>
-      <!-- Copy necessary subdirectories to resulting directory -->
       <fileSet>
          <outputDirectory>.</outputDirectory>
          <includes>
@@ -51,16 +32,18 @@
             <include>docs/**</include>
             <include>etc/**</include>
             <include>solr/**</include>
+            <include>build.xml</include>
+            <include>LICENSE*</include>
+            <include>CHANGES</include>
+            <include>KNOWN_BUGS</include>
+            <include>README</include>
          </includes>
-         <!-- Exclude source code & configs (we'll copy configs below) -->
          <excludes>
             <exclude>src</exclude>
             <exclude>config/dspace.cfg</exclude>
-            <exclude>config/log4j.properties</exclude>
             <exclude>config/modules/**</exclude>
          </excludes>
       </fileSet>
-      <!-- Copy over all module configs & filter them -->
       <fileSet>
          <outputDirectory>.</outputDirectory>
          <includes>
@@ -70,23 +53,17 @@
       </fileSet>
    </fileSets>
 
-   <!-- Copy over the dspace.cfg and log4j.properties files & filter them -->
    <files>
       <file>
          <source>config/dspace.cfg</source>
          <outputDirectory>config</outputDirectory>
          <filtered>true</filtered>
       </file>
-      <file>
-         <source>config/log4j.properties</source>
-         <outputDirectory>config</outputDirectory>
-         <filtered>true</filtered>
-      </file>
    </files>
 
    <!--
-   Still allow anyone to put a JAR dependency into
-   [src]/dspace/pom.xml and have it go into 'lib' directory
+   Still allow anyone to put a dependency into
+   dspace/pom.xml and have it go into lib
    -->
    <dependencySets>
       <dependencySet>
@@ -100,10 +77,13 @@
 
    <moduleSets>
       <!--
-      Take all jar modules in [src]/dspace/modules/ dir
-      and add them into 'lib' directory
+      take all jar modules in modules dir
+      and add them into lib
       -->
       <moduleSet>
+         <excludes>
+            <exclude>*:war:*</exclude>
+         </excludes>
          <includes>
             <include>*:jar:*</include>
          </includes>
@@ -123,8 +103,8 @@
       </moduleSet>
 
       <!--
-      Take all war modules (in [src]/dspace/modules/) and explode them into
-      'webapps' directory
+      take all war modules and explode them into
+      webapps
       -->
       <moduleSet>
          <includes>

@@ -146,7 +146,7 @@
                     <xsl:text>ds-form-item </xsl:text>
 
                 <!-- Row counting voodoo, meant to impart consistent row alternation colors to the form lists.
-                    Should probably be chnaged to a system that is more straitforward. -->
+                    Should probably be chnaged to a system that is more straigtforward. -->
                 <xsl:choose>
                     <xsl:when test="(count(../../..//dri:item) - count(../../..//dri:list[@type='form'])) mod 2 = 0">
                         <!--<xsl:if test="count(../dri:item) > 3">-->
@@ -224,20 +224,22 @@
             <xsl:when test="dri:field">
                 <xsl:choose>
                         <xsl:when test="preceding-sibling::*[1][local-name()='label']">
-                                <label class="ds-form-label">
+                                <xsl:if test="string-length(string(preceding-sibling::*[1][local-name()='label'])) > 0">
+                                    <label class="ds-form-label">
                                         <xsl:choose>
-                                                <xsl:when test="./dri:field/@id">
-                                                        <xsl:attribute name="for">
-                                                                <xsl:value-of select="translate(./dri:field/@id,'.','_')"/>
-                                                        </xsl:attribute>
-                                                </xsl:when>
-                                                <xsl:otherwise></xsl:otherwise>
+                                            <xsl:when test="./dri:field/@id">
+                                                    <xsl:attribute name="for">
+                                                            <xsl:value-of select="translate(./dri:field/@id,'.','_')"/>
+                                                    </xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:otherwise></xsl:otherwise>
                                         </xsl:choose>
-                                    <xsl:apply-templates select="preceding-sibling::*[1][local-name()='label']"/>&#160;
-                                </label>
+                                        <xsl:apply-templates select="preceding-sibling::*[1][local-name()='label']"/>
+                                    </label>
+                                </xsl:if>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:apply-templates select="preceding-sibling::*[1][local-name()='label']"/>&#160;
+                                <xsl:apply-templates select="preceding-sibling::*[1][local-name()='label']"/>
                             </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
@@ -318,7 +320,7 @@
         </div>
     </xsl:template>
 
-    <!-- The hadling of the special case of instanced composite fields under "form" lists -->
+    <!-- The handling of the special case of instanced composite fields under "form" lists -->
     <xsl:template match="dri:field[@type='composite'][dri:field/dri:instance | dri:params/@operations]" mode="formComposite" priority="2">
         <xsl:variable name="confidenceIndicatorID" select="concat(translate(@id,'.','_'),'_confidence_indicator')"/>
         <div class="ds-form-content">
@@ -763,7 +765,7 @@
             select: A menu input control which allows the user to select from a list of available options.
             text: A single-line text input control.
             textarea: A multi-line text input control.
-            composite: A composite input control combines several input controls into a single field. The only fields that may be combined together are: checkbox, password, select, text, and textarea. When fields are combined together they can posses multiple combined values.
+            composite: A composite input control combines several input controls into a single field. The only fields that may be combined together are: checkbox, password, select, text, and textarea. When fields are combined together they can possess multiple combined values.
     </xsl:template>
         -->
 
@@ -825,7 +827,7 @@
     <xsl:template match="dri:field" mode="normalField">
         <xsl:variable name="confidenceIndicatorID" select="concat(translate(@id,'.','_'),'_confidence_indicator')"/>
         <xsl:choose>
-            <!-- TODO: this has changed drammatically (see form3.xml) -->
+            <!-- TODO: this has changed dramatically (see form3.xml) -->
                         <xsl:when test="@type= 'select'">
                                 <select>
                                     <xsl:call-template name="fieldAttributes"/>
@@ -838,7 +840,7 @@
 
                                     <!--
                                         if the cols and rows attributes are not defined we need to call
-                                        the tempaltes for them since they are required attributes in strict xhtml
+                                        the templates for them since they are required attributes in strict xhtml
                                      -->
                                     <xsl:choose>
                                         <xsl:when test="not(./dri:params[@cols])">
@@ -907,7 +909,7 @@
               </xsl:choose>
             </xsl:when>
 
-            <!-- This is changing drammatically -->
+            <!-- This is changing dramatically -->
             <xsl:when test="@type= 'checkbox' or @type= 'radio'">
                 <fieldset>
                     <xsl:call-template name="standardAttributes">

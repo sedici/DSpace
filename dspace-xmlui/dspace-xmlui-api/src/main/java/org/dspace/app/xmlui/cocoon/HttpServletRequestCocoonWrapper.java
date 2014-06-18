@@ -44,7 +44,7 @@ import org.apache.cocoon.environment.Request;
 public class HttpServletRequestCocoonWrapper implements HttpServletRequest{
 
 	private Request cocoonRequest;
-	//private HttpServletRequest realRequest;
+	// private HttpServletRequest realRequest;
 	
 	public HttpServletRequestCocoonWrapper(Map objectModel) {
 		
@@ -52,8 +52,8 @@ public class HttpServletRequestCocoonWrapper implements HttpServletRequest{
 		this.cocoonRequest = ObjectModelHelper.getRequest(objectModel);
 		
 		// If the real request is needed in the future to fall back to when the
-		// cocoon request object dosn't support those methods use the following line.
-		//this.realRequest = (HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
+		// cocoon request object doesn't support those methods use the following line.
+		// this.realRequest = (HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
 	}
 	
 	public String getAuthType() {
@@ -269,6 +269,22 @@ public class HttpServletRequestCocoonWrapper implements HttpServletRequest{
 	public void setCharacterEncoding(String arg0)
 			throws UnsupportedEncodingException {
 		this.cocoonRequest.setCharacterEncoding(arg0);
+	}
+
+	public int getRemotePort() {
+		return this.cocoonRequest.getRemotePort();
+	}
+
+	public String getLocalName() {
+		return this.cocoonRequest.getLocalName();
+	}
+
+	public String getLocalAddr() {
+		return this.cocoonRequest.getLocalAddr();
+	}
+
+	public int getLocalPort() {
+		return this.cocoonRequest.getLocalPort();
 	}
 	
 	

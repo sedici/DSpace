@@ -31,7 +31,7 @@ import org.dspace.authorize.AuthorizeException;
  * can describe the new eperson before being created. If the user's 
  * input is incorrect in someway then they may be returning here with 
  * some fields in error. In particular there is a special case for the 
- * condition when the email-adress entered is allready in use by 
+ * condition when the email-address entered is already in use by 
  * another user.
  * 
  * @author Alexey Maslov
@@ -148,6 +148,7 @@ public class AddEPersonForm extends AbstractDSpaceTransformer
         
         Text email = identity.addItem().addText("email_address");
         email.setRequired();
+        email.setAutofocus("autofocus");
         email.setLabel(T_email_address);
         email.setValue(emailValue);
         if (errors.contains("eperson_email_key")) {

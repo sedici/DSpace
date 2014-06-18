@@ -5,7 +5,6 @@
    <packaging>war</packaging>
    <name>DSpace SWORD :: Web Application Resources</name>
    <description>DSpace SWORD Deposit Service Provider Web Application Resources</description>
-   <url>http://projects.dspace.org/dspace-sword-webapp</url>
 
    <!--
       A Parent POM that Maven inherits DSpace Default
@@ -18,12 +17,10 @@
       <relativePath>..</relativePath>
    </parent>
 
-   <properties>
-        <!-- This is the path to the root [dspace-src] directory. -->
-        <root.basedir>${basedir}/../..</root.basedir>
-   </properties>
-
    <build>
+	  <filters>
+            <filter>${basedir}/../../${filters.file}</filter>
+      </filters>
       <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -34,13 +31,13 @@
                <packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes>
                <warSourceExcludes>WEB-INF/lib/*.jar</warSourceExcludes>
                <webResources>
-                  <resource>
-                     <filtering>true</filtering>
-                     <directory>${basedir}/src/main/webapp</directory>
-                     <includes>
-                        <include>WEB-INF/web.xml</include>
-                     </includes>
-                  </resource>
+                    <resource>
+                        <filtering>false</filtering>
+                        <directory>${basedir}/src/main/webapp</directory>
+                        <includes>
+                            <include>WEB-INF/web.xml</include>
+                        </includes>
+                    </resource>
                </webResources>
             </configuration>
             <executions>
@@ -53,26 +50,6 @@
    </build>
 
    <profiles>
-      <!--
-         when activated a dspace.config configuration
-         file location passed on the commandline
-         (-Ddspace.config=...) can be passed through
-         to be used as a filter source by projects for
-         tasks such as updating the ${dspace.dir} in
-         web.xml etc.
-      -->
-      <profile>
-         <activation>
-            <property>
-               <name>dspace.config</name>
-            </property>
-         </activation>
-         <build>
-            <filters>
-               <filter>${dspace.config}</filter>
-            </filters>
-         </build>
-      </profile>
       <profile>
          <id>oracle-support</id>
          <activation>

@@ -169,6 +169,11 @@
                             <i18n:text>xmlui.dri2xhtml.structural.pagination-next</i18n:text>
                         </a>
                     </xsl:if>
+                    <xsl:if test="parent::node()/dri:div[@n = 'masked-page-control']">
+                        <xsl:apply-templates select="parent::node()/dri:div[@n='masked-page-control']/dri:div">
+                            <xsl:with-param name="position" select="$position"/>
+                        </xsl:apply-templates>
+                    </xsl:if>
                 </div>
             </xsl:when>
         </xsl:choose>
@@ -237,7 +242,27 @@
         <xsl:attribute name="cols"><xsl:value-of select="."/></xsl:attribute>
     </xsl:template>
 
+    <!-- Add the HTML5 autofocus attribute to the input field -->
+    <xsl:template match="@autofocus">
+        <xsl:attribute name="autofocus"><xsl:value-of select="."/></xsl:attribute>
+    </xsl:template>
+
     <!-- The general "catch-all" template for attributes matched, but not handled above -->
     <xsl:template match="@*"></xsl:template>
+
+        <xsl:template match="dri:div[@n = 'masked-page-control']">
+        <!--Do not render this division, this is handled by the xsl-->
+    </xsl:template>
+
+    <xsl:template match="dri:div[@n ='search-controls-gear']">
+        <xsl:param name="position"/>
+        <div>
+            <xsl:call-template name="standardAttributes">
+                <xsl:with-param name="class"><xsl:value-of select="$position"/></xsl:with-param>
+            </xsl:call-template>
+
+            <xsl:apply-templates/>
+        </div>
+    </xsl:template>
 
 </xsl:stylesheet>

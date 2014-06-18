@@ -7,7 +7,6 @@
    <description>
       DSpace SWORD Deposit Service Provider Web Application
    </description>
-   <url>http://swordapp.org/</url>
 
    <!--
       A Parent POM that Maven inherits DSpace Default
@@ -20,12 +19,10 @@
       <relativePath>..</relativePath>
    </parent>
 
-   <properties>
-        <!-- This is the path to the root [dspace-src] directory. -->
-        <root.basedir>${basedir}/../../..</root.basedir>
-   </properties>
-
    <build>
+       <filters>
+           <filter>${basedir}/../../../${filters.file}</filter>
+       </filters>
       <plugins>
 
          <plugin>
@@ -35,7 +32,7 @@
                <archiveClasses>false</archiveClasses>
                <webResources>
                   <resource>
-                     <filtering>true</filtering>
+                     <filtering>false</filtering>
                      <directory>${basedir}/src/main/webapp</directory>
                      <includes>
                         <include>WEB-INF/web.xml</include>
@@ -54,27 +51,6 @@
    </build>
 
    <profiles>
-      <!--
-         when activated a dspace.config configuration
-         file location passed on the commandline
-         (-Ddspace.config=...) can be passed through
-         to be used as a filter source by projects for
-         tasks such as updating the ${dspace.dir} in
-         web.xml etc.
-      -->
-      <profile>
-         <id>dspace-config</id>
-         <activation>
-            <property>
-               <name>dspace.config</name>
-            </property>
-         </activation>
-         <build>
-            <filters>
-               <filter>${dspace.config}</filter>
-            </filters>
-         </build>
-      </profile>
       <profile>
          <id>oracle-support</id>
          <activation>
@@ -108,6 +84,10 @@
 
    <dependencies>
       <dependency>
+         <groupId>org.dspace.modules</groupId>
+         <artifactId>additions</artifactId>
+      </dependency>
+      <dependency>
          <groupId>org.dspace</groupId>
          <artifactId>dspace-sword-webapp</artifactId>
          <type>war</type>
@@ -123,7 +103,6 @@
       <dependency>
          <groupId>javax.servlet</groupId>
          <artifactId>servlet-api</artifactId>
-         <version>2.3</version>
          <scope>provided</scope>
       </dependency>
    </dependencies>

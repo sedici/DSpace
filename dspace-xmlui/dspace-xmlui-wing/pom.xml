@@ -4,7 +4,6 @@
     <artifactId>dspace-xmlui-wing</artifactId>
     <packaging>jar</packaging>
     <name>DSpace XML-UI (Manakin) :: Wing-Framework</name>
-    <url>http://projects.dspace.org/dspace-xmlui/dspace-xmlui-wing</url>
     <description>The Cocoon-based Wing framework</description>
 
     <parent>
@@ -13,11 +12,6 @@
         <version>1.8.3</version>
       <relativePath>..</relativePath>
     </parent>
-
-    <properties>
-        <!-- This is the path to the root [dspace-src] directory. -->
-        <root.basedir>${basedir}/../..</root.basedir>
-    </properties>
 
     <dependencies>
 
