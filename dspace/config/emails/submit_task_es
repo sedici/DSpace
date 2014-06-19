@@ -6,19 +6,21 @@
 # {3}  Description of task
 # {4}  link to 'my DSpace' page 
 #
-Subject: SeDiCI - Nueva tarea
+Subject: [Dspace@SeDiCI] Nuevo recurso en {1}
 
-Un nuevo item ha sido enviado:
+Un nuevo recurso ha sido depositado en el repositorio:
 
-T韙ulo:        {0}
-Colecci髇:   {1}
+T铆tulo:      {0}
 Enviado por: {2}
+Colecci贸n:   {1}
 
-{3}
-
-Para ocuparse de esta tarea, por favor visite su p醙ina en "My DSpace":  {4}
+Para tomar esta tarea, visite http://sedici.unlp.edu.ar/submissions
 
 Muchas gracias.
 Cordialmente,
 
-SeDiCI - UNLP
+Servicio de Difusi贸n de la Creaci贸n Intelectual (http://sedici.unlp.edu.ar)
+Universidad Nacional de La Plata
+Ubicaci贸n: 49 y 115 s/n, 1er piso, Departamento de Ciencias B谩sicas, Facultad de Ingenier铆a.
+Mapa: http://sedici.unlp.edu.ar/pages/comoLlegar
+Tel 0221- 4236677/6696 Interno 141

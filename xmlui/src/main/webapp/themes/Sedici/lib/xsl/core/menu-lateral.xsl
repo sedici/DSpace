@@ -24,6 +24,8 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
 	xmlns:dim="http://www.dspace.org/xmlns/dspace/dim"
 	xmlns:xhtml="http://www.w3.org/1999/xhtml"
+	xmlns:xalan="http://xml.apache.org/xalan"
+    xmlns:java="http://xml.apache.org/xalan/java"
 	xmlns:mods="http://www.loc.gov/mods/v3"
 	xmlns:dc="http://purl.org/dc/elements/1.1/"
 	xmlns="http://www.w3.org/1999/xhtml"
@@ -77,27 +79,33 @@
     			  -->	
     			  
     			<!-- Genero la seccion del contexto-->	
-                <xsl:apply-templates select="dri:list[@id='aspect.viewArtifacts.Navigation.list.context']"/>
+    			<xsl:if test="/dri:document/dri:meta/dri:userMeta[@authenticated='yes']">
+                	<xsl:apply-templates select="dri:list[@id='aspect.viewArtifacts.Navigation.list.context']"/>
+				</xsl:if>
 
 				<!-- Genero la seccion administrativa -->
                 <xsl:apply-templates select="dri:list[@id='aspect.viewArtifacts.Navigation.list.administrative']"/>
                 
                 <!-- Genero la seccion de otros -->
-               <xsl:if test="count(dri:list[@id='aspect.viewArtifacts.Navigation.list.account']/dri:item)>2">
-	                <!-- <h1 id="ds-options-otros" class="ds-option-set-head">
-	                    <i18n:text>sedici.menuLateral.otros.head</i18n:text>
-	                </h1>
-	                <div id="ds-otros-set" class="ds-option-set">
-	                    <ul>
-	                       <li></li> 
-	                    </ul>
-	                </div>--> 
+				<xsl:if test="count(dri:list[@id='aspect.viewArtifacts.Navigation.list.account']/dri:item)>3">
+					<h1 id="ds-options-others" class="ds-option-set-head">
+						<i18n:text>sedici.menuLateral.otros.head</i18n:text>
+					</h1>
+					<div id="ds-others-set" class="ds-option-set">
+						<ul class="ds-simple-list">
+							<xsl:apply-templates select="dri:list[@id='aspect.viewArtifacts.Navigation.list.account']/dri:item[not(contains(dri:xref/@target,'/logout')) and not(contains(dri:xref/@target,'/submissions')) and not(contains(dri:xref/@target,'/profile'))]"/>
+						</ul>
+					</div>
                 </xsl:if>
 
                 <!-- Genero la seccion del discovery -->
                 <xsl:apply-templates select="dri:list[@id='aspect.discovery.Navigation.list.discovery']"/>
 
-                
+                <!-- Genero la seccion de las estadísticas -->            
+                <xsl:if test="not(java:ar.edu.unlp.sedici.xmlui.xsl.XslExtensions.matches(/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='request'][@qualifier='URI'], 'handle/\d+/\d+/submit(.*)'))">
+					<xsl:apply-templates select='dri:list[@id="aspect.statistics.Navigation.list.statistics"]'/> 
+                </xsl:if> 
+            
                 <!-- DS-984 Add RSS Links to Options Box -->
                 <!-- <xsl:if test="count(/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='feed']) != 0">
                     <h1 id="ds-feed-option-head" class="ds-option-set-head">

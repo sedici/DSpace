@@ -10,18 +10,22 @@
 #             {7} sender message 
 # See org.dspace.core.Email for information on the format of this file.
 #
-Subject: Items de interÈs en SeDiCI
+Subject: Items de inter√©s en SeDiCI
 
 Hola {0}:
 
-{1} solicitÛ que le envi·ramos este e-mail sobre un item disponible en {2}.
+{1} solicit√© que le envi√°ramos este e-mail sobre un item disponible en {2}.
 
-TÌtulo: {3}
-UbicaciÛn: {5}
-En la colecciÛn: {6}
+T√≠tulo: {3}
+Ubicaci√≥n: {5}
+En la colecci√≥n: {6}
 Mensaje personal: {7}
 
-Los repositorios digitales DSpace capturan, almacenan, catalogan, preservan y distribuyen materiales digitales.
-Para m·s informaciÛn, visite www.dspace.org.
+El SeDiCI es el repositorio institucional de la UNLP. Se encarga de capturar, almacenar, catalogar, preservar y distribuir la producci≈Ñ intelectual de la UNLP en formato  digital.
+Para m√°s informaci√≥n, visite sedici.unlp.edu.ar
 
-SeDiCI - UNLP
+Servicio de Difusi√≥n de la Creaci√≥n Intelectual (http://sedici.unlp.edu.ar)
+Universidad Nacional de La Plata
+Ubicaci√≥n: 49 y 115 s/n, 1er piso, Departamento de Ciencias B√°sicas, Facultad de Ingenier√≠a.
+Mapa: http://sedici.unlp.edu.ar/pages/comoLlegar
+Tel 0221- 4236677/6696 Interno 141

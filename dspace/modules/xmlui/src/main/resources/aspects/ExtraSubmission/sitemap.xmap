@@ -14,6 +14,10 @@
 	<map:transformers>
 		<map:transformer name="Navigation" src="ar.edu.unlp.sedici.aspect.extraSubmission.Navigation"/>
 		<map:transformer name="AutoArchive" src="ar.edu.unlp.sedici.aspect.extraSubmission.GenerateAutoArchivePageMeta"/>
+		<map:transformer name="HomeLinks" src="ar.edu.unlp.sedici.aspect.extraSubmission.GenerateHomeLinksPageMeta"/>
+		<map:transformer name="CommunityLinks" src="ar.edu.unlp.sedici.aspect.extraSubmission.GenerateCommunityLinksPageMeta"/>
+		<map:transformer name="InternationalizableSubmission" src="ar.edu.unlp.sedici.aspect.extraSubmission.InternationalizableSubmission"/>
+		<map:transformer name="FlashMessagesConsumer" src="ar.edu.unlp.sedici.util.FlashMessagesTransformer"/>
 	</map:transformers>
 
     <map:matchers default="wildcard">
@@ -31,6 +35,10 @@
   <map:pipelines>
     <map:pipeline>
     
+      <map:match pattern="submit/finalize">
+        <map:serialize type="xml"/>
+      </map:match>
+      
       <map:generate/>
 
       <!-- Genero los meta para la funcionalidad de autoarchivo -->
@@ -38,10 +46,25 @@
 
       <map:transform type="Navigation"/>
       
+      <map:transform type="FlashMessagesConsumer"/>
+      
+      <!-- Agregar los links a las comunidades en el home -->
+      <map:match pattern="">
+          <map:transform type="HomeLinks"/>
+      </map:match>
+      
+      <map:match pattern="community-list">
+          <map:transform type="CommunityLinks"/>
+      </map:match>
 
       <!-- Make sure the user is atleast logged in -->
       <map:select type="AuthenticatedSelector">
         <map:when test="administrator">
+
+		  <map:match type="regexp" pattern="submit|workflow_edit_metadata|edit_item_metadata">
+		  	<map:transform type="InternationalizableSubmission"/>
+		  </map:match>
+        
           <map:match pattern="handle/*/*/submit/*.continue">
             <map:transform type="IncludePageMeta">
                 <map:parameter name="administrator" value="true"/>
@@ -60,7 +83,7 @@
             </map:transform>
           </map:match>
           
-          <map:match pattern="handle/*/*/workflow_edit_metadata?*">
+          <map:match pattern="handle/*/*/workflow_edit_metadata">
             <map:transform type="IncludePageMeta">
                 <map:parameter name="administrator" value="true"/>
             	<map:parameter name="javascript#1" value="lib/js/jquery-ui-1.8.15.custom.min.js"/>
@@ -108,7 +131,7 @@
             </map:transform>
           </map:match>
           
-          <map:match pattern="handle/*/*/workflow_edit_metadata?*">
+          <map:match pattern="handle/*/*/workflow_edit_metadata">
             <map:transform type="IncludePageMeta">
                 <map:parameter name="administrator" value="false"/>
                 <map:parameter name="javascript#1" value="lib/js/jquery-ui-1.8.15.custom.min.js"/>

@@ -4,20 +4,28 @@
 # {1}  Name of collection
 # {2}  handle 
 #
-Subject: SeDiCI - Env�o aprobado y archivado
+Subject: Repositorio SeDiCI, UNLP - Su envío fue aprobado y publicado
 
-Usted envi�: {0}
+Estimado usuario:
 
-A la colecci�n: {1}
+Por la presente le comunicamos que la obra que ha enviado al Repositorio Institucional Central de la UNLP (SeDiCI) denominada "{0}" ha sido incorporada a la colección "{1}". 
 
-Su env�o ha sido aceptado y archivado en SeDiCI,
-y se le ha asignado el siguiente identificador:
+A partir de este momento, la obra se encontrará siempre disponible en el portal de SeDiCI en el siguiente enlace: 
+   {2}
 
-{2}
+Por favor, sírvase utilizarlo toda vez que necesite citar su obra para obtener mayor visibilidad para la misma.
 
-Por favor util�celo cuando cite su env�o.
+Asimismo, lo invitamos a recorrer nuestro repositorio, donde encontrará información de su interés, como artículos, tesis de grado y posgrado, ponencias y otros documentos referidos a su área de investigación y a muchas otras dentro del ámbito de la UNLP: 
+    http://sedici.unlp.edu.ar
 
-Muchas gracias.
+Cualquier inquietud que desee comunicarnos, sírvase escribirnos a info@sedici.unlp.edu.ar
+
+
+Muchas gracias por su aporte.
 Cordialmente,
 
-SeDiCI - UNLP
+Servicio de Difusión de la Creación Intelectual (http://sedici.unlp.edu.ar)
+Universidad Nacional de La Plata
+Ubicación: 49 y 115 s/n, 1er piso, Departamento de Ciencias Básicas, Facultad de Ingeniería.
+Mapa: http://sedici.unlp.edu.ar/pages/comoLlegar
+Tel 0221- 4236677/6696 Interno 141

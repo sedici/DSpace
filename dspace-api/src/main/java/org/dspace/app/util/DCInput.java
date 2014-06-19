@@ -7,11 +7,19 @@
  */
 package org.dspace.app.util;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
+import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.MetadataSchema;
+import org.dspace.core.Context;
+import org.dspace.eperson.Group;
 
 /**
  * Class representing a line in an input form.
@@ -68,13 +76,27 @@ public class DCInput
 
     /** allowed document types */
     private List<String> typeBind = null;
+    
+    /** indicates the opposite of types */
+	private boolean negateTypeBind = false;
 
+    /** if the field is internationalizable */
+    private boolean i18nable = false;
+        
     /**  
      * Group-based mandatory attribute
      * if hasToBeMember is true, the this field is madantory if the user is member of <code>requiredOnGroup</code>
      */
     private String requiredOnGroup = null;
     private boolean hasToBeMember = true;
+    
+    /**
+     * Group-based visibility restriction
+     * Saves a Map containing the list of groups on wich this field's visibility is restricted on.
+     * Map's keys are group names and map's values determine whether there is a NOT modifier for that group 
+     */
+    private Map<String, Boolean> visibilityOnGroup = null;
+
     
     /** 
      * The scope of the input sets, this restricts hidden metadata fields from 
@@ -134,11 +156,23 @@ public class DCInput
         typeBind = new ArrayList<String>();
         String typeBindDef = fieldMap.get("type-bind");
         if(typeBindDef != null && typeBindDef.trim().length() > 0) {
+        	
+        	if(typeBindDef.startsWith("!")){
+        		//Se esta negando todo el type-bind
+        		negateTypeBind = true;
+        		typeBindDef = typeBindDef.substring(1);
+        	}
+        	
         	String[] types = typeBindDef.split(",");
         	for(String type : types) {
         		typeBind.add( type.trim() );
         	}
         }
+        
+        // is i18nable ?
+        String i18nableStr = fieldMap.get("i18n");
+        i18nable = "true".equalsIgnoreCase(i18nableStr)
+                || "yes".equalsIgnoreCase(i18nableStr);
         
         // Is it a group-based field?
         String requiredOnGroupDef = fieldMap.get("required-on-group");
@@ -150,6 +184,24 @@ public class DCInput
         	}
         	requiredOnGroup = requiredOnGroupDef;
         }
+        
+        // Has it a group-based visibility restriction?
+        visibilityOnGroup = new HashMap<String, Boolean>();
+        String visibilityOnGroupContent = fieldMap.get("visibility-on-group");
+        if(visibilityOnGroupContent != null && visibilityOnGroupContent.trim().length() > 0) {
+        	// Splits the field's content and parses them individually 
+        	for(String restriction : visibilityOnGroupContent.split(",")) {
+        		restriction = restriction.trim();
+        		Boolean isPositiveRestriction = true;
+	        	if(restriction.startsWith("!")) {
+	        		isPositiveRestriction = false;
+	        		restriction = restriction.substring(1);
+	        	}
+	        	// Register the restriction
+	        	visibilityOnGroup.put(restriction, isPositiveRestriction);
+        	}
+        }
+        
     }
 
     /**
@@ -409,16 +461,19 @@ public class DCInput
 	}
 
 	/**
-	 * Decides if this field is valid for the document type
+	 * Decides if this field is valid for the document type. It verifies if this field is used for one or more types.
 	 * @param typeName Document type name
 	 * @return true when there is no type restriction or typeName is allowed
 	 */
 	public boolean isAllowedFor(String typeName) {
-		if(typeBind.size() == 0)
-			return true;
-		
-		return typeBind.contains(typeName);
+		if(typeBind.isEmpty()) 
+            return true;
+		else if (negateTypeBind)
+			return !typeBind.contains(typeName);
+		else
+			return typeBind.contains(typeName);
 	}
+	
 	
 	/**
 	 * Returns true if this field has a group-based mandatory restriction
@@ -442,4 +497,52 @@ public class DCInput
 	public boolean hasToBeMemeber() {
 		return hasToBeMember;
 	}
+	
+	public boolean isI18nable() {
+		return i18nable;
+	}
+	
+	public boolean hasVisibilityOnGroup() {
+		return !(visibilityOnGroup.size() == 0);
+	}
+	
+	public String[] getVisibilityRestrictions() {
+		return visibilityOnGroup.keySet().toArray( new String[visibilityOnGroup.size()] );
+	}
+	
+	public boolean isVisibilityPositiveRestriction(String groupName) {
+		return visibilityOnGroup.get(groupName);
+	}
+	
+    /**
+     * Mini-cache of loaded groups for group-based validation
+     * 
+     * @return Group instance
+     */
+    private Map<String, Group> loadedGroups = new HashMap<String, Group>();
+    private Group findGroup(Context context, String groupName) throws SQLException {
+    	Group group = loadedGroups.get(groupName);
+    	if(group == null) {
+    		group = Group.findByName(context, groupName);
+    		loadedGroups.put(groupName, group);
+    	}
+    	return group;
+    }
+    
+    public boolean isVisibleOnGroup(Context context) throws SQLException, AuthorizeException {
+    	
+    	if(!hasVisibilityOnGroup())
+    		return true;
+    	
+    	boolean isVisible = false;
+    	for(String groupName : getVisibilityRestrictions()) {
+    		Group group = findGroup(context, groupName);
+        	if( group == null) {
+        		throw new AuthorizeException("Group "+groupName+ " does not exist, check your input_forms.xml");
+        	}
+        	isVisible = isVisible || !(Group.isMember(context, group.getID()) ^ isVisibilityPositiveRestriction(groupName)); 
+    	}
+		return isVisible;
+    }
+	
 }

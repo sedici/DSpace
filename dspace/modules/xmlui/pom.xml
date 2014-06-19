@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>dspace-sedici</artifactId>
 		<groupId>ar.edu.unlp.sedici</groupId>
-		<version>1.8.0</version>
+		<version>1.8.2</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>xmlui</artifactId>
@@ -51,6 +51,15 @@
 			<artifactId>plugins</artifactId>
 			<version>${project.version}</version>
 			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>dspace-discovery-xmlui-api</artifactId>
+			<version>1.8.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>dspace-discovery-solr</artifactId>
 		</dependency>
 	</dependencies>
 

@@ -4,19 +4,22 @@
 # {1}  Name of collection
 # {2}  Name of the rejector
 # {3}  Reason for the rejection
-# {4}  Link to 'My DSpace' page
 #
-Subject: SeDiCI - EnvÌo rechazado
+Subject: Repositorio SeDiCI, UNLP - Su env√≠o no fue aceptado 
 
-Usted enviÛ: {0}
+Estimado usuario, 
 
-A la colecciÛn: {1}
-
-Su envÌo ha sido rechazado por {2}
-con la siguiente explicaciÛn:
+Se ha rechazado la incorporacion su env√≠o "{0}" a la colecci√≥n "{1}" con la siguiente explicaci√≥n:
 
 {3}
 
-Su envÌo no ha sido borrado. Puede acceder a Èl a travÈs de su p·gina en "My DSpace": {4}
+Tenga en cuenta que su env√≠o no ha sido borrado, puede acceder a √©l a trav√©s de la p√°gina de "Carga de documentos": http://sedici.unlp.edu.ar/submissions 
 
-SeDiCI - UNLP
+Muchas gracias. 
+Cordialmente, 
+
+Servicio de Difusi√≥n de la Creaci√≥n Intelectual (http://sedici.unlp.edu.ar)
+Universidad Nacional de La Plata
+Ubicaci√≥n: 49 y 115 s/n, 1er piso, Departamento de Ciencias B√°sicas, Facultad de Ingenier√≠a.
+Mapa: http://sedici.unlp.edu.ar/pages/comoLlegar
+Tel 0221- 4236677/6696 Interno 141

@@ -121,7 +121,7 @@
     <xsl:template match="dri:div[@n='community-view']">
          <xsl:apply-templates select="dri:referenceSet/dri:reference" mode='mi-community-view'/>
          <xsl:apply-templates select="/dri:document/dri:body/dri:div[@id='aspect.artifactbrowser.CommunityViewer.div.community-home']/dri:div[@n='community-search-browse']"/>
-         <xsl:apply-templates select="dri:referenceSet/dri:reference/dri:referenceSet"/>        
+         <xsl:apply-templates select="dri:referenceSet/dri:reference/dri:referenceSet" mode="multiple_column_browse_community"/>
     </xsl:template>
     
     <xsl:template match='dri:reference' mode='mi-community-view'>
@@ -137,16 +137,40 @@
           
      <xsl:template match="dri:div[@n='community-recent-submission']">
        <xsl:apply-templates select="dri:head"/>
-       <a class="link-community-view-all">
-       <xsl:attribute name="href">
-          <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath']"/>/<xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='request'][@qualifier='URI']"/>/discover
-       </xsl:attribute>
-       (Ver todos)
-       </a>
        <div id="aspect_artifactbrowser_CommunityRecentSubmissions_div_community-recent-submission" class="ds-static-div secondary recent-submission">
        <xsl:apply-templates select="dri:referenceSet[@n='community-last-submitted']"/>
        </div>
     </xsl:template>
 
+    <!-- Generate the info about the community from the metadata section -->
+    <xsl:template match="dim:dim" mode="communityDetailView-DIM">
+        <xsl:if test="string-length(dim:field[@element='description'][not(@qualifier)])&gt;0">
+            <div class="intro-text">
+                <xsl:copy-of select="dim:field[@element='description'][not(@qualifier)]/node()"/>
+            </div>
+        </xsl:if>
+
+        <xsl:if test="string-length(dim:field[@element='description'][@qualifier='tableofcontents'])&gt;0">
+        	<div class="detail-view-news">
+        		<h3><i18n:text>xmlui.dri2xhtml.METS-1.0.news</i18n:text></h3>
+        		<div class="news-text">
+        			<xsl:copy-of select="dim:field[@element='description'][@qualifier='tableofcontents']/node()"/>
+        		</div>
+        	</div>
+        </xsl:if>
+
+        <xsl:if test="string-length(dim:field[@element='rights'][not(@qualifier)])&gt;0">
+        	<div class="detail-view-rights-and-license">
+	            <div class="copyright-text">
+	                <xsl:copy-of select="dim:field[@element='rights'][not(@qualifier)]/node()"/>
+	            </div>
+            </div>
+        </xsl:if>
+    </xsl:template>
+   
+    <!-- Template que muestra las estadisticas de una comunidad -->
+    <xsl:template match="dri:div[@id='aspect.statistics.StatisticsTransformer.div.community-home']">
+    	<xsl:apply-templates/>    
+    </xsl:template>
 
 </xsl:stylesheet>

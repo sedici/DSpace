@@ -169,7 +169,7 @@ public class DescribeStep extends AbstractSubmissionStep
                 DCInput[] inputs;
                 try
                 {
-                        inputSet = getInputsReader().getInputs(submission.getCollection().getHandle());
+                        inputSet = getInputsReader().getInputs(submission.getCollection());
                         inputs = inputSet.getPageRows(getPage()-1, submission.hasMultipleTitles(), submission.isPublishedBefore());
                 }
                 catch (DCInputsReaderException se)
@@ -204,11 +204,17 @@ public class DescribeStep extends AbstractSubmissionStep
                     }
                     
                     // If the input is invisible in this scope, then skip it.
-                        if (!dcInput.isVisible(scope) && !readonly)
-                        {
-                            continue;
-                        }
+                    if (!dcInput.isVisible(scope) && !readonly)
+                    {
+                        continue;
+                    }
                         
+                    // Omit fields not visible based on user's group
+                    if(!dcInput.isVisibleOnGroup(context))
+                    {
+                    	continue;
+                    }
+                    
                         String schema = dcInput.getSchema();
                         String element = dcInput.getElement();
                         String qualifier = dcInput.getQualifier();
@@ -322,7 +328,7 @@ public class DescribeStep extends AbstractSubmissionStep
         DCInputSet inputSet = null;
         try
         {
-            inputSet = getInputsReader().getInputs(submission.getCollection().getHandle());
+            inputSet = getInputsReader().getInputs(submission.getCollection());
         }
         catch (DCInputsReaderException se)
         {
@@ -331,7 +337,15 @@ public class DescribeStep extends AbstractSubmissionStep
         
         MetadataAuthorityManager mam = MetadataAuthorityManager.getManager();
         DCInput[] inputs = inputSet.getPageRows(getPage()-1, submission.hasMultipleTitles(), submission.isPublishedBefore());
-
+        
+        // Fetch the document type (dc.type)
+        String documentType = "";
+        Item item=submission.getItem();
+        if( (item.getMetadata("dc.type") != null) && (item.getMetadata("dc.type").length >0) )
+        {
+            documentType = item.getMetadata("dc.type")[0].value;
+        }
+        
         for (DCInput input : inputs)
         {
             // If the input is invisible in this scope, then skip it.
@@ -339,6 +353,18 @@ public class DescribeStep extends AbstractSubmissionStep
             if (!input.isVisible(scope) && !input.isReadOnly(scope))
             {
                 continue;
+            }
+            
+           // Omit fields not allowed for this document type
+            if(!input.isAllowedFor(documentType))
+            {
+            	continue;
+            }
+
+            // Omit fields not visible based on user's group
+            if(!input.isVisibleOnGroup(context))
+            {
+            	continue;
             }
 
             String inputType = input.getInputType();
@@ -547,10 +573,9 @@ public class DescribeStep extends AbstractSubmissionStep
                 // for the year, followed by a select box of the months, follewed
                 // by a text box for the day.
                 Composite fullDate = form.addItem().addComposite(fieldName, "submit-date");
-                Text year = fullDate.addText(fieldName+"_year");
+                Text day = fullDate.addText(fieldName+"_day");               
                 Select month = fullDate.addSelect(fieldName+"_month");
-                Text day = fullDate.addText(fieldName+"_day");
-
+                Text year = fullDate.addText(fieldName+"_year");
                 // Set up the full field
                 fullDate.setLabel(dcInput.getLabel());
                 fullDate.setHelp(cleanHints(dcInput.getHints()));
@@ -864,6 +889,10 @@ public class DescribeStep extends AbstractSubmissionStep
                 {
                     textArea.setDisabled();
                 }
+                if(dcInput.isI18nable())
+                {
+                	textArea.setI18nable();
+                }
                 
                 // Setup the field's values
                 if (dcInput.isRepeatable() || dcValues.length > 1)
@@ -872,6 +901,11 @@ public class DescribeStep extends AbstractSubmissionStep
                         {
                                 Instance ti = textArea.addInstance();
                                 ti.setValue(dcValue.value);
+                                if(dcInput.isI18nable())
+                                {
+                                    ti.setLanguageValue(dcValue.language);
+                                }
+                                
                                 if (isAuth)
                                 {
                                     if (dcValue.authority == null || dcValue.authority.equals(""))
@@ -888,6 +922,11 @@ public class DescribeStep extends AbstractSubmissionStep
                 else if (dcValues.length == 1)
                 {
                         textArea.setValue(dcValues[0].value);
+                        if(dcInput.isI18nable())
+                        {
+    	                    textArea.setLanguageValue(dcValues[0].language);
+                        }
+                        
                         if (isAuth)
                         {
                             if (dcValues[0].authority == null || dcValues[0].authority.equals(""))
@@ -1198,7 +1237,11 @@ public class DescribeStep extends AbstractSubmissionStep
                 {
                     text.enableDeleteOperation();
                 }
-
+                if(dcInput.isI18nable())
+                {
+                	text.setI18nable();
+                }
+                
                 if (readonly)
                 {
                     text.setDisabled();
@@ -1220,6 +1263,10 @@ public class DescribeStep extends AbstractSubmissionStep
                                 Instance ti = text.addInstance();
                      
                                 ti.setValue(dcValue.value);       
+                                if(dcInput.isI18nable())
+                                {
+                                    ti.setLanguageValue(dcValue.language);
+                                }
                                 
                                 if (isAuth){
                                 	
@@ -1249,6 +1296,10 @@ public class DescribeStep extends AbstractSubmissionStep
 	                    };
                         
 	                    text.setValue(dcValues[0].value);
+                        if(dcInput.isI18nable())
+                        {
+    	                    text.setLanguageValue(dcValues[0].language);
+                        }
 	                    
                         if (isAuth)
                         {
@@ -1315,4 +1366,3 @@ public class DescribeStep extends AbstractSubmissionStep
                 return clean;
         }
 }
-
