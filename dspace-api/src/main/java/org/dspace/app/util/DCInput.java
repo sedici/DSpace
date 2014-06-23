@@ -7,6 +7,7 @@
  */
 package org.dspace.app.util;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -65,6 +66,16 @@ public class DCInput
     /** is the entry closed to vocabulary terms? */
     private boolean closedVocabulary = false;
 
+    /** allowed document types */
+    private List<String> typeBind = null;
+
+    /**  
+     * Group-based mandatory attribute
+     * if hasToBeMember is true, the this field is madantory if the user is member of <code>requiredOnGroup</code>
+     */
+    private String requiredOnGroup = null;
+    private boolean hasToBeMember = true;
+    
     /** 
      * The scope of the input sets, this restricts hidden metadata fields from 
      * view during workflow processing. 
@@ -118,6 +129,27 @@ public class DCInput
         String closedVocabularyStr = fieldMap.get("closedVocabulary");
         closedVocabulary = "true".equalsIgnoreCase(closedVocabularyStr)
                             || "yes".equalsIgnoreCase(closedVocabularyStr);
+        
+        // parsing of the <type-bind> element (using the colon as split separator)
+        typeBind = new ArrayList<String>();
+        String typeBindDef = fieldMap.get("type-bind");
+        if(typeBindDef != null && typeBindDef.trim().length() > 0) {
+        	String[] types = typeBindDef.split(",");
+        	for(String type : types) {
+        		typeBind.add( type.trim() );
+        	}
+        }
+        
+        // Is it a group-based field?
+        String requiredOnGroupDef = fieldMap.get("required-on-group");
+        if(requiredOnGroupDef != null && requiredOnGroupDef.trim().length() > 0) {
+        	//Determina si el usuario debe o no pertenecer al grupo (usa el signo de admiración como negación: !)
+        	if(requiredOnGroupDef.startsWith("!")) {
+        		this.hasToBeMember = false;
+        		requiredOnGroupDef = requiredOnGroupDef.substring(1);
+        	}
+        	requiredOnGroup = requiredOnGroupDef;
+        }
     }
 
     /**
@@ -376,4 +408,38 @@ public class DCInput
 		return closedVocabulary;
 	}
 
+	/**
+	 * Decides if this field is valid for the document type
+	 * @param typeName Document type name
+	 * @return true when there is no type restriction or typeName is allowed
+	 */
+	public boolean isAllowedFor(String typeName) {
+		if(typeBind.size() == 0)
+			return true;
+		
+		return typeBind.contains(typeName);
+	}
+	
+	/**
+	 * Returns true if this field has a group-based mandatory restriction
+	 * @return
+	 */
+	public boolean isGroupBased() {
+		return (requiredOnGroup != null);
+	}
+	
+	/**
+	 * Returns the group name for which this field is mandatory.
+	 * Null when there is no group-based restriction
+	 */
+	public String getGroup() {
+		return requiredOnGroup;
+	}
+	
+	/**
+	 * Returns the hasToBeMember flag
+	 */
+	public boolean hasToBeMemeber() {
+		return hasToBeMember;
+	}
 }

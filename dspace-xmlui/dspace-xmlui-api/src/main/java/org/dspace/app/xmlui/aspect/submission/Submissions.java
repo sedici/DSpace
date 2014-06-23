@@ -34,6 +34,7 @@ import org.dspace.content.Item;
 import org.dspace.content.ItemIterator;
 import org.dspace.content.SupervisedItem;
 import org.dspace.content.WorkspaceItem;
+import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 import org.dspace.eperson.EPerson;
 import org.xml.sax.SAXException;
@@ -370,7 +371,7 @@ public class Submissions extends AbstractDSpaceTransformer
         //Limit to showing just 50 archived submissions, unless overridden
         //(This is a saftey measure for Admins who may have submitted 
         // thousands of items under their account via bulk ingest tools, etc.)
-        int limit = 50;
+        int limit = ConfigurationManager.getIntProperty("xmlui.Submission.Submissions.completed.limit", 50);
         int count = 0;
 
         // Populate table
@@ -422,7 +423,7 @@ public class Submissions extends AbstractDSpaceTransformer
         if(!displayAll && count>limit)
         {
             Para limitedList = completedSubmissions.addPara();
-            limitedList.addContent(T_c_limit);
+            limitedList.addContent(T_c_limit.parameterize(limit));
             limitedList.addXref(contextPath + "/submissions?all", T_c_displayall);
         }    
     }

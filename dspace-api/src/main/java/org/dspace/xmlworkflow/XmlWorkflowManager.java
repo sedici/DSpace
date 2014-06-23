@@ -85,6 +85,113 @@ public class XmlWorkflowManager {
         return wfi;
     }
 
+    // BEGIN SeDiCI: inserción de un item (archivado) en el workflow
+    public static XmlWorkflowItem startEditItemMetadata(Context context, String handle) throws SQLException, IOException, WorkflowConfigurationException, AuthorizeException, WorkflowException {
+    	
+    	// Obtenemos el item a editar
+    	DSpaceObject object = HandleManager.resolveToObject(context, handle);
+    	if(object.getType() != Constants.ITEM)
+        	return null;
+
+    	// Creación del wrapper XmlWorkflowItem (seguimos los pasos del start() original, adaptando lo necesario)
+    	Item item = (Item) object;
+    	
+    	// Primero verificamos que exista un XmlWorkflowItem para este item
+    	if( workflowItemExists(context, item) )
+    		throw new WorkflowException("El item "+handle+" ya se ecuentra dentro del workflow");
+    	
+        Collection collection = item.getOwningCollection();
+        Workflow wf = WorkflowFactory.getWorkflow(collection);
+
+        XmlWorkflowItem wfi = XmlWorkflowItem.create(context);
+        wfi.setItem(item);
+        wfi.setCollection(collection);
+        // Estos 3 booleans no se usan
+        wfi.setMultipleFiles(false);
+        wfi.setMultipleTitles(false);
+        wfi.setPublishedBefore(false);
+
+        // TODO Ver si hay que setear el flag withdraw para evitar que el item siga publico
+        //item.withdraw();
+        
+        wfi.update();
+        removeUserItemPolicies(context, item, item.getSubmitter());
+        grantSubmitterReadPolicies(context, item);
+
+        context.turnOffAuthorisationSystem();
+        Step firstStep = wf.getFirstStep();
+        if(firstStep.isValidStep(context, wfi)){
+             activateFirstStep(context, wf, firstStep, wfi);
+        } else {
+            //Get our next step, if none is found, archive our item
+            firstStep = wf.getNextStep(context, wfi, firstStep, ActionResult.OUTCOME_COMPLETE);
+            if(firstStep == null){
+                archive(context, wfi);
+            }else{
+                activateFirstStep(context, wf, firstStep, wfi);
+            }
+        }
+        
+        context.restoreAuthSystemState();
+        return wfi;
+    }
+    
+    /**
+     * Ya que a la gente de DSpace se les olvido crear un metodo para retornar un XmlWorkflowItem según el Item,
+     * agregamos uno aqui
+     * 
+     * @param item
+     * @return
+     * @throws SQLException 
+     */
+    private static boolean workflowItemExists(Context context, Item item) throws SQLException {
+    	 // Look for the unique workspaceitem entry where 'item_id' references this item
+        TableRow row =  DatabaseManager.findByUnique(context, "cwf_workflowitem", "item_id", item.getID());
+        return (row != null);
+    }
+    
+    /**
+     * Ya que a la gente de DSpace se les olvido crear un metodo para retornar un XmlWorkflowItem según el Item,
+     * agregamos uno aqui
+     * 
+     * @param item
+     * @return
+     * @throws SQLException 
+     */
+    public static XmlWorkflowItem GetWorkflowItem(Context context, Item item) throws SQLException {
+    	 // Look for the unique workspaceitem entry where 'item_id' references this item
+        TableRow row =  DatabaseManager.findByUnique(context, "cwf_workflowitem", "item_id", item.getID());
+        XmlWorkflowItem retorno=null;
+        if (row!=null){
+        	try {
+				retorno= XmlWorkflowItem.find(context, row.getIntColumn("workflowitem_id"));
+			} catch (AuthorizeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        };
+        return retorno;
+    }
+    
+    public static PoolTask GetPoolTask(Context context, XmlWorkflowItem workflowItem, EPerson person) throws SQLException {
+    	PoolTask poolTask=null;    	
+		try {
+			poolTask = PoolTask.findByWorkflowIdAndEPerson(context, workflowItem.getID(), person.getID());
+		} catch (AuthorizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return poolTask;
+   }
+    
+    //END SeDiCI
+    
     //TODO: this is currently not used in our notifications. Look at the code used by the original WorkflowManager
     /**
      * startWithoutNotify() starts the workflow normally, but disables
@@ -294,10 +401,20 @@ public class XmlWorkflowManager {
                 + wfi.getID() + "item_id=" + item.getID() + "collection_id="
                 + collection.getID()));
 
-        InstallItem.installItem(c, wfi);
+        //BEGIN SeDiCI: aca preguntamos si es un Item nuevo en el repositorio o uno existente
+        if(item.isArchived()) {
+        	
+        	// En lugar de hacer un Install, no hacemos mas que eliminar el XmlWorkflowItem
+        	wfi.deleteWrapper();
+        	
+        } else { 
+        	// Codigo original antes de agregar este IF
+        	
+	        InstallItem.installItem(c, wfi);
 
-        //Notify
-        notifyOfArchive(c, item, collection);
+	        //Notify
+	        notifyOfArchive(c, item, collection);
+        }
 
         //Clear any remaining workflow metadata
         item.clearMetadata(WorkflowRequirementsManager.WORKFLOW_SCHEMA, Item.ANY, Item.ANY, Item.ANY);

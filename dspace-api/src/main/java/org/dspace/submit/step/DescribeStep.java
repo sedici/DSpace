@@ -9,8 +9,10 @@ package org.dspace.submit.step;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
+import org.dspace.app.util.DCInput;
 import org.dspace.app.util.DCInputsReader;
 import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.app.util.DCInput;
@@ -35,8 +37,10 @@ import org.dspace.content.MetadataField;
 import org.dspace.content.authority.MetadataAuthorityManager;
 import org.dspace.content.authority.ChoiceAuthorityManager;
 import org.dspace.content.authority.Choices;
+import org.dspace.content.authority.MetadataAuthorityManager;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
+import org.dspace.eperson.Group;
 import org.dspace.submit.AbstractProcessingStep;
 
 /**
@@ -139,10 +143,20 @@ public class DescribeStep extends AbstractProcessingStep
             throw new ServletException(e);
         }
 
+        // Fetch the document type (dc.type)
+        String documentType = "";
+        if( (item.getMetadata("dc.type") != null) && (item.getMetadata("dc.type").length >0) )
+        {
+            documentType = item.getMetadata("dc.type")[0].value;
+        }
+        
         // Step 1:
         // clear out all item metadata defined on this page
         for (int i = 0; i < inputs.length; i++)
         {
+
+        	// Allow the clearing out of the metadata defined for other document types, provided it can change anytime
+        	
             if (!inputs[i]
                     .isVisible(subInfo.isInWorkflow() ? DCInput.WORKFLOW_SCOPE
                             : DCInput.SUBMISSION_SCOPE))
@@ -169,6 +183,12 @@ public class DescribeStep extends AbstractProcessingStep
         boolean moreInput = false;
         for (int j = 0; j < inputs.length; j++)
         {
+        	// Omit fields not allowed for this document type
+            if(!inputs[j].isAllowedFor(documentType))
+            {
+            	continue;
+            }
+
             if (!inputs[j]
                         .isVisible(subInfo.isInWorkflow() ? DCInput.WORKFLOW_SCOPE
                                 : DCInput.SUBMISSION_SCOPE))
@@ -284,9 +304,28 @@ public class DescribeStep extends AbstractProcessingStep
         {
             for (int i = 0; i < inputs.length; i++)
             {
+            	// Do not check the required attribute if it is not visible or not allowed for the document type
+            	String scope = subInfo.isInWorkflow() ? DCInput.WORKFLOW_SCOPE : DCInput.SUBMISSION_SCOPE;
+                if ( !( inputs[i].isVisible(scope) && inputs[i].isAllowedFor(documentType) ) )
+                {
+                	continue;
+                }
+            	
                 DCValue[] values = item.getMetadata(inputs[i].getSchema(),
                         inputs[i].getElement(), inputs[i].getQualifier(), Item.ANY);
 
+                // Group-based restriction validation
+                if(inputs[i].isGroupBased()) 
+                {
+                	Group group = findGroup(context, inputs[i].getGroup());
+                	if( !(group.isMember(context, group.getID()) ^ inputs[i].hasToBeMemeber()) && values.length == 0 ) 
+                	{
+                		// agrega el campo faltante a la lista de errores 
+                        addErrorField(request, getFieldName(inputs[i]));
+                	}
+                    continue;
+                }
+                
                 if (inputs[i].isRequired() && values.length == 0)
                 {
                     // since this field is missing add to list of error fields
@@ -317,6 +356,20 @@ public class DescribeStep extends AbstractProcessingStep
         return STATUS_COMPLETE;
     }
 
+    /**
+     * Mini-cache of loaded groups for group-based validation
+     * 
+     * @return Group instance
+     */
+    private Map<String, Group> loadedGroups = new HashMap<String, Group>();
+    private Group findGroup(Context context, String groupName) throws SQLException {
+    	Group group = loadedGroups.get(groupName);
+    	if(group == null) {
+    		group = Group.findByName(context, groupName);
+    		loadedGroups.put(groupName, group);
+    	}
+    	return group;
+    }
     
 
     /**

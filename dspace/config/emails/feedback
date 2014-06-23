@@ -10,7 +10,7 @@
 #
 # See org.dspace.core.Email for information on the format of this file.
 #
-Subject: Feedback Form Information
+Subject: SeDiCI - Feedback Form Information
 
 Comments:
 
@@ -24,3 +24,4 @@ Referring Page: {3}
 User Agent: {4}
 Session: {5}
 
+SeDiCI - UNLP

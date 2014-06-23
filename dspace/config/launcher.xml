@@ -348,4 +348,18 @@
 	</command>
 
 
+    <command>
+        <name>create-user</name>
+        <description>Create a DSpace user account</description>
+        <step>
+            <class>ar.edu.unlp.sedici.dspace.administer.CreateUser</class>
+        </step>
+    </command>
+    <command>
+        <name>import-users</name>
+        <description>Import users from a file</description>
+        <step>
+            <class>ar.edu.unlp.sedici.dspace.administer.ImportUsers</class>
+        </step>
+    </command>
 </commands>

@@ -34,6 +34,10 @@ importClass(Packages.org.dspace.app.util.SubmissionInfo);
 
 importClass(Packages.org.dspace.submit.AbstractProcessingStep);
 
+importClass(Packages.org.dspace.eperson.EPerson);
+importClass(Packages.org.dspace.xmlworkflow.XmlWorkflowManager);
+importClass(Packages.org.dspace.xmlworkflow.storedcomponents.PoolTask);
+
 /* Global variable which stores a comma-separated list of all fields 
  * which errored out during processing of the last step.
  */
@@ -316,7 +320,7 @@ function submissionControl(collectionHandle, workspaceID, initStepAndPage)
            		  	//Submission is completed!
            			cocoon.log.debug("Submission Completed!");
 
-           			showCompleteConfirmation(collectionHandle);
+           			showCompleteConfirmation(collectionHandle, submissionInfo.getSubmissionItem().getItem());
            		}
            		else
            		{   //since in Workflow just break out of loop to return to Workflow process
@@ -701,11 +705,25 @@ function submitStepSaveOrRemove(collectionHandle,workspaceID,step,page)
 /**
  * This method simply displays
  * the "submission completed" confirmation page
+ * Si el item se instala directamente, se redirige a la muestra del item. De caso contrario, si el item pasa por un workflow y el usuario tiene permiso sobre ese workflow, se le muestra
+ * la opción de tomar la tarea, y en caso contrario a esto ultimo se le muestra una pagina de informe de envio.
  */
-function showCompleteConfirmation(handle)
-{
-	//forward to completion page & exit cocoon
-	sendPage("handle/"+handle+"/submit/completedStep",{"handle":handle});
+function showCompleteConfirmation(handle, item){
+	var workflowItem=XmlWorkflowManager.GetWorkflowItem(getDSContext(), item)
+	if (workflowItem!=null){
+		var poolTask=XmlWorkflowManager.GetPoolTask(getDSContext(), workflowItem, getDSContext().getCurrentUser());
+		if (poolTask!=null){
+		    var stepID = poolTask.getStepID();	    
+		    var actionID = poolTask.getActionID();
+		    cocoon.redirectTo(cocoon.request.getContextPath()+"/handle/"+handle+"/xmlworkflow?workflowID="+workflowItem.getID()+"&stepID="+stepID+"&actionID="+actionID, true);
+		} else {
+			//forward to completion page & exit cocoon
+		    sendPage("handle/"+handle+"/submit/completedStep",{"handle":handle});
+        }	
+	} else {
+		cocoon.redirectTo(cocoon.request.getContextPath()+"/handle/"+item.getHandle(), true);
+	}
+	
     cocoon.exit(); // We're done, Stop execution.
 }
 
