@@ -449,11 +449,19 @@ public class Bundle extends DSpaceObject
         // FIXME: multiple inclusion is affected by this...
         AuthorizeManager.inheritPolicies(ourContext, this, b);
 
+        //Determine the current highest bitstream order in our bundle2bitstream table 
+        //This will always append a newly added bitstream as the last one 
+        int bitstreamOrder = 0;  //bitstream order starts at '0' index
+        TableRow tableRow = DatabaseManager.querySingle(ourContext, "SELECT MAX(bitstream_order) as max_value FROM bundle2bitstream WHERE bundle_id=?", getID());
+        if(tableRow != null){
+            bitstreamOrder = tableRow.getIntColumn("max_value") + 1;
+        }
+
         // Add the mapping row to the database
         TableRow mappingRow = DatabaseManager.row("bundle2bitstream");
         mappingRow.setColumn("bundle_id", getID());
         mappingRow.setColumn("bitstream_id", b.getID());
-        mappingRow.setColumn("bitstream_order", b.getSequenceID());
+        mappingRow.setColumn("bitstream_order", bitstreamOrder);
         DatabaseManager.insert(ourContext, mappingRow);
     }
 
@@ -491,6 +499,14 @@ public class Bundle extends DSpaceObject
 
             // Place the bitstream in the list of bitstreams in this bundle
             bitstreams.add(bitstreamMap.get(bitstreamId));
+        }
+
+        //The order of the bitstreams has changed, ensure that we update the last modified of our item
+        Item owningItem = (Item) getParentObject();
+        if(owningItem != null)
+        {
+            owningItem.updateLastModified();
+            owningItem.update();
 
         }
     }
@@ -531,7 +547,16 @@ public class Bundle extends DSpaceObject
         }
 
         ourContext.addEvent(new Event(Event.REMOVE, Constants.BUNDLE, getID(), Constants.BITSTREAM, b.getID(), String.valueOf(b.getSequenceID())));
-        
+
+        //Ensure that the last modified from the item is triggered !
+        Item owningItem = (Item) getParentObject();
+        if(owningItem != null)
+        {
+            owningItem.updateLastModified();
+            owningItem.update();
+
+        }
+
         // In the event that the bitstream to remove is actually
         // the primary bitstream, be sure to unset the primary
         // bitstream.
