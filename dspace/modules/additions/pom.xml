@@ -10,7 +10,7 @@
         <artifactId>dspace-sedici</artifactId>
         <groupId>ar.edu.unlp.sedici</groupId>
         <relativePath>../</relativePath>
-        <version>1.8.0</version>
+        <version>1.8.2</version>
     </parent>
 
     
@@ -26,6 +26,20 @@
 			<artifactId>dspace-api</artifactId>
 		</dependency>
 		
+		
+        <dependency>
+        	<!-- Esta dependencia es por xmlworkflow ... -->
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+        	<!-- Esta dependencia es por las extensiones para xoai ... -->
+            <groupId>org.dspace</groupId>
+            <artifactId>dspace-xoai-api</artifactId>
+            <version>1.8.2</version>
+        </dependency>
     </dependencies>
 
     <build>

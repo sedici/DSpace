@@ -19,6 +19,11 @@ import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.Select;
 import org.dspace.content.Collection;
+<<<<<<< HEAD
+=======
+import org.dspace.content.CollectionSearchSedici;
+import org.dspace.content.CollectionsWithCommunities;
+>>>>>>> sedici-svn-1.8.2-refactored
 import org.dspace.content.Item;
 import org.dspace.core.Constants;
 
@@ -66,7 +71,8 @@ public class MoveItemForm extends AbstractDSpaceTransformer {
         Division main = body.addInteractiveDivision("move-item", contextPath+"/admin/item", Division.METHOD_POST, "primary administrative item");
         main.setHead(T_head1.parameterize(item.getHandle()));
 
-        Collection[] collections = Collection.findAuthorized(context, null, Constants.ADD);
+        //Collection[] collections = Collection.findAuthorized(context, null, Constants.ADD);
+        CollectionsWithCommunities collections = CollectionSearchSedici.findAuthorizedWithCommunitiesName(context, null, Constants.ADD);
 
         List list = main.addList("select-collection", List.TYPE_FORM);
         Select select = list.addItem().addSelect("collectionID");
@@ -77,22 +83,29 @@ public class MoveItemForm extends AbstractDSpaceTransformer {
         if (owningCollection == null) {
             select.addOption("",T_collection_default);
         }
-        
-        for (Collection collection : collections)
-        {
-            String name = collection.getMetadata("name");
-            if (name.length() > 50)
-            {
-                name = name.substring(0, 47) + "...";
-            }
 
-            // Only add the item if it isn't already the owner
+        String communityName, collectionName;
+        Collection collection;
+        for (int i = 0; i < collections.getCollections().size(); i++) {
+        	collection=collections.getCollections().get(i);
+        	
+        	communityName=collections.getCommunitiesName().get(i);
+        	collectionName=collection.getName();
+
+   		   	if (communityName.length() > 40){
+   		   		communityName = communityName.substring(0, 39);
+            } 
+   		   	if (collectionName.length() > 40){
+   		   		collectionName = collectionName.substring(0, 39);
+            }
+   		   	
+   		    // Only add the item if it isn't already the owner
             if (!item.isOwningCollection(collection))
             {
-                select.addOption(collection.equals(owningCollection), collection.getID(), name);
+            	select.addOption(collection.equals(owningCollection), collection.getID(), communityName+" > "+collectionName);  
             }
+        	
         }
-        
         org.dspace.app.xmlui.wing.element.Item actions = list.addItem();
         CheckBox inheritPolicies = actions.addCheckBox("inheritPolicies");
         inheritPolicies.setLabel(T_submit_inherit);

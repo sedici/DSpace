@@ -11,9 +11,9 @@ var errorConfianzaSingular='Verifique el valor';
 var errorConfianzaPlural='Hay errores en el formulario';
 
 //-------------------Variable para el limite en el lookup
-var limit_lookup=20;
+var limit_lookup=150;
 //-------------------Variable para el limite en el suggest
-var limit_suggest=30;
+var limit_suggest=50;
 //-------------------Variable para el paginado del lookup
 var previous_start=0;
 
@@ -107,6 +107,13 @@ $(document).ready(function (){
 
 });
 
+//-------------------- Funcion que elimina un previous value
+
+function eliminarMetadato(metadatoCheckboxId){
+     var checkbox = $('#'+metadatoCheckboxId);
+     checkbox.attr('checked', true);
+}
+
 //-------------------- support for Lookup Popup
 
 //Create popup window with authority choices for value of an input field.
@@ -114,7 +121,9 @@ $(document).ready(function (){
 function DSpaceChoiceLookup(url, field, formID, valueInput, authInput,
                          confIndicatorID, collectionID, isName, isRepeating) {
  // fill in URL
- url += '?field=' + field + '&formID=' + formID + '&valueInput=' + valueInput +
+
+	
+	url += '?field=' + field + '&formID=' + formID + '&valueInput=' + valueInput +
          '&authorityInput=' + authInput + '&collection=' + collectionID +
          '&isName=' + isName + '&isRepeating=' + isRepeating + '&confIndicatorID=' + confIndicatorID + '&limit='+limit_lookup;
  // primary input field - for positioning popup.
@@ -132,12 +141,13 @@ function DSpaceChoiceLookup(url, field, formID, valueInput, authInput,
  var height = 470;
  var left;
  var top;
+ 
  if (window.screenX == null) {
-     left = window.screenLeft + cOffset.left - (width / 2);
+ 	 left = window.screenLeft + cOffset.left - (width / 2);
      top = window.screenTop + cOffset.top - (height / 2);
  } else {
-     left = window.screenX + cOffset.left - (width / 2);
-     top = window.screenY + cOffset.top - (height / 2);
+	 left = $(window).width()/2 - width/2;
+	  top = $(window).height()/2 - height/2;
  }
  if (left < 0) left = 0;
  if (top < 0) top = 0;
@@ -194,14 +204,14 @@ function DSpaceChoicesLoad(form) {
      // if this is a repeating input, clear the source value so that e.g.
      // clicking "Next" on a submit-describe page will not *add* the proposed
      // lookup text as a metadata value:
-     if (isRepeating) {
+    /* if (isRepeating) {
          if (isName) {
              of.find('*[name = ' + dspace_makeFieldInput(valueInput, '_last') + ']').val('');
              of.find('*[name = ' + dspace_makeFieldInput(valueInput, '_first') + ']').val('');
          }
          else
              of.find('*[name = ' + valueInput + ']').val(null);
-     }
+     }*/
  }
 
  // start spinner
@@ -233,6 +243,7 @@ function DSpaceChoicesLoad(form) {
          //var oldStart = 1 * Choices.attr('start');
          //actualizo el start viejo
          var oldStart = 1 * Choices.attr('start');
+         
          previous_start=oldStart-(1*limit_lookup);
          if (previous_start<0) previous_start=0;
          
@@ -240,7 +251,7 @@ function DSpaceChoicesLoad(form) {
          var nextStart = oldStart + lastTotal;
          var resultMore = Choices.attr('more');
          if(!(resultMore != null && resultMore == 'true')){
-        	 $('*[name = more]').attr('disabled', 'disabled');
+        	// $('*[name = more]').attr('disabled', 'disabled');
          } else {
         	 $('*[name = more]').attr('class','ds-button-field choices-lookup');
              $('*[name = more]').attr('disabled',null); 

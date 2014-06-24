@@ -102,6 +102,10 @@
           
           <map:generate/>
 
+		  <map:match pattern="submit/finalize">
+           	<map:serialize/>
+          </map:match>
+
           
           <map:transform type="Navigation"/>
           

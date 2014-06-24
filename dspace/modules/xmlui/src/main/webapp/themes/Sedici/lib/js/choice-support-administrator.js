@@ -120,8 +120,10 @@ function DSpaceSetupAutocomplete(formID, args) {
     			return verificarConfidenceIndividual(args.inputID, args.confidenceName, confianza_100);
     		})
     	}
-    	//si es authority controlled y el value del label es distinto al del value,  debo cambar la confianza ya que vendra como 200 y en realidad es 600
-    	verificarConfianzaInicial(inputID, authorityLabelID, args.confidenceIndicatorID, args.confidenceName);
+    	if (args.verificarConfianzaInicial == 'yes'){
+	    	//si es authority controlled y el value del label es distinto al del value,  debo cambar la confianza ya que vendra como 200 y en realidad es 600
+	    	verificarConfianzaInicial(inputID, authorityLabelID, args.confidenceIndicatorID, args.confidenceName);
+        }	
     	
     } else {
     	isAuthorityControlled=false;     
@@ -194,7 +196,7 @@ function DSpaceSetupAutocomplete(formID, args) {
 			                        if (label != null) {
 			                            options.push({
 			                                label: label,
-			                                vasearchlue: value
+			                                value: value
 			                            });
 			                            authorities['label: ' + label + ', value: ' + value] = $(this).attr('authority') ? $(this).attr('authority') : value;
 			                        }
@@ -301,7 +303,7 @@ function DSpaceSetupAutocomplete(formID, args) {
                 var authValue = authorities['label: ' + ui.item.label + ', value: ' + ui.item.value];
 
                 if (isAuthorityControlled) {
-                	cambiarAuthority(inputID, authorityID, authValue, args.confidenceIndicatorID, icono_accepted, args.confidenceName, confianza_600, authorityLabelID, ui.item.label);
+                	cambiarAuthority(inputID, authorityID, authValue, args.confidenceIndicatorID, icono_accepted, args.confidenceName, confianza_600, authorityLabelID, ui.item.value);
                 }
                 
             }

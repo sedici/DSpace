@@ -27,13 +27,28 @@ public class SeDiCI2003Authors extends SeDiCI2003AuthorityProvider{
 	@Override
 	protected List<Choice> findSeDiCI2003Entities(String field, String text, int start, int limit, ChoiceFactory choiceFactory) {
 		
-		String[] parts = text.split(", ",1);
-		String apellido = parts[0];
-		String nombre = (parts.length == 2)?parts[1]:"";
+		String[] parts = text.split(",",2);
+		String apellido = parts[0].trim();
+		String nombre = (parts.length == 2)?parts[1].trim():"";
 		List<Personas> personas = Personas.findPersonasesByApellidoYNombre(apellido, nombre, start, limit);
 		List<Choice> choices= new ArrayList<Choice>(personas.size());
 		for (Personas p : personas) {
-			choices.add(choiceFactory.createChoice(String.valueOf(p.getId()), p.getApellidoYNombre(), p.getApellidoYNombre()));
+			String contextInfo = "";
+			
+			if(p.getInstitucion() != null) {
+				contextInfo += p.getInstitucion().getNombre();
+			}
+			
+			if(p.getDependencia() != null) {
+				if(contextInfo != "")
+					contextInfo += "; ";
+				contextInfo += p.getDependencia().getNombre();
+			}
+
+			if(contextInfo != "")
+				contextInfo = " ("+contextInfo+")";
+			
+			choices.add(choiceFactory.createChoice(String.valueOf(p.getId()), p.getApellidoYNombre(), p.getApellidoYNombre()+contextInfo));
 		}
 		return choices;
 	}
@@ -41,16 +56,27 @@ public class SeDiCI2003Authors extends SeDiCI2003AuthorityProvider{
 	@Override
 	protected int findSeDiCI2003EntitiesCount(String field, String text) {
 		
-		String[] parts = text.split(", ",1);
-		String apellido = parts[0];
-		String nombre = (parts.length == 2)?parts[1]:"";
+		String[] parts = text.split(",",2);
+		String apellido = parts[0].trim();
+		String nombre = (parts.length == 2)?parts[1].trim():"";
 		int total = Personas.findPersonasesByApellidoYNombreCount(apellido, nombre);
 
 		return total;
 	}
 
 	protected String getSeDiCI2003EntityLabel(String field, String key) {
-		Personas p = Personas.findPersonas(Integer.valueOf(key));
-		return p.getApellidoYNombre();
+		try {
+			Personas p = Personas.findPersonas(Integer.valueOf(key));
+			if (p == null){
+				this.reportMissingAuthorityKey(field, key);
+				return key;
+			}else{
+				return p.getApellidoYNombre();
+			}
+		} catch (NumberFormatException e) {
+			//this.reportMissingAuthorityKey(field, key);
+			return key;
+		} 
+		
 	}
 }

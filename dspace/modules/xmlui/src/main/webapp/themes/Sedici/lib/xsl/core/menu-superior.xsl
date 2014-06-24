@@ -21,6 +21,25 @@
 				<a href="{$context-path}/"><i18n:text>sedici.menuSuperior.home</i18n:text></a>
 			</li>
 			<li class="main">
+				<xsl:choose>
+					<xsl:when test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='autoArchive' and @qualifier='submit']='true'">
+					<a>
+						<xsl:attribute name="href">
+							<xsl:value-of select="$context-path"/>
+							<xsl:text>/handle/</xsl:text>
+							<xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='autoArchive'][@qualifier='handle']"/>
+							<xsl:text>/submit</xsl:text>
+						</xsl:attribute>
+						<i18n:text>sedici.menuSuperior.subirMaterial</i18n:text>
+					</a>	
+				</xsl:when>
+				<xsl:otherwise>
+  					<a href="{$context-path}/submit"><i18n:text>sedici.menuSuperior.subirMaterial</i18n:text></a>
+  				</xsl:otherwise>
+			  </xsl:choose> 
+				
+			</li>
+			<li class="main">
 				<a href="{$context-path}/discover"><i18n:text>sedici.menuSuperior.buscar</i18n:text></a>
 			</li>
 	        <li class="main">
@@ -28,7 +47,7 @@
 				<ul>
 					<li><a href="{$context-path}/community-list"><i18n:text>sedici.menuSuperior.exploracion.colecciones</i18n:text></a></li>
 					<li><a href="{$context-path}/browse?type=dateissued"><i18n:text>sedici.menuSuperior.exploracion.fechaPublicacion</i18n:text></a></li>
-					<li><a href="{$context-path}/browse?type=author"><i18n:text>sedici.menuSuperior.exploracion.autor</i18n:text></a></li>
+					<li><a href="{$context-path}/browse?type=author&amp;rpp=60"><i18n:text>sedici.menuSuperior.exploracion.autor</i18n:text></a></li>
 	        		<li><a href="{$context-path}/browse?type=title"><i18n:text>sedici.menuSuperior.exploracion.titulo</i18n:text></a></li>
 	        		<li><a href="{$context-path}/browse?type=subject"><i18n:text>sedici.menuSuperior.exploracion.tema</i18n:text></a></li>
 			    </ul>
@@ -37,7 +56,7 @@
 	        	<a href="#"><i18n:text>sedici.menuSuperior.institucional</i18n:text></a>
 				<ul>
 					<li><a href="{$context-path}/pages/queEsSedici"><i18n:text>sedici.menuSuperior.institucional.queEsSedici</i18n:text></a></li>
-					<li><a href="{$context-path}/pages/politica"><i18n:text>sedici.menuSuperior.institucional.politica</i18n:text></a></li>
+					<li><a href="{$context-path}/pages/politicas"><i18n:text>sedici.menuSuperior.institucional.politica</i18n:text></a></li>
 					<li><a href="{$context-path}/pages/links"><i18n:text>sedici.menuSuperior.institucional.links</i18n:text></a></li>
 	        		<li><a href="{$context-path}/pages/staff"><i18n:text>sedici.menuSuperior.institucional.staff</i18n:text></a></li>
 	        		<li><a href="{$context-path}/pages/comoLlegar"><i18n:text>sedici.menuSuperior.institucional.comoLlegar</i18n:text></a></li>
@@ -49,12 +68,14 @@
 				  <li><a href="{$context-path}/pages/comoAgregarTrabajos"><i18n:text>sedici.menuSuperior.informacion.agregacion</i18n:text></a></li>
 				  <li><a href="{$context-path}/pages/informacionTesistas"><i18n:text>sedici.menuSuperior.informacion.infoTesistas</i18n:text></a></li>
 				  <li><a href="{$context-path}/pages/FAQ"> <i18n:text>sedici.menuSuperior.informacion.faq</i18n:text></a></li>
+				  <li><a href="{$context-path}/pages/revistasAccesoAbierto"> <i18n:text>sedici.menuSuperior.informacion.revistasAccesoAbierto</i18n:text></a></li>
 				</ul>
 			
 			</li>
 			<li class="main">
-				<a href="{$context-path}/pages/contacto"><i18n:text>sedici.menuSuperior.contacto</i18n:text></a>
+				<a href="{$context-path}/feedback"><i18n:text>sedici.menuSuperior.contacto</i18n:text></a>
 			</li>
+			
 	     </ul>
      </div>
 

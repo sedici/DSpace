@@ -221,8 +221,9 @@ function doSubmission()
                else if (cocoon.request.get("submit_cancel"))
                {
                    var contextPath = cocoon.request.getContextPath();
+                   cocoon.sendPage("submit/finalize");
                    cocoon.redirectTo(contextPath+"/submissions",true);
-                   getDSContext().complete();
+                   //getDSContext().complete();
                    cocoon.exit();
                }
 
@@ -263,6 +264,14 @@ function submissionControl(collectionHandle, workspaceID, initStepAndPage)
     //it's used to step back and forth between pages!
     var stepsInSubmission = getSubmissionSteps(submissionInfo);
 
+    //si es un administrador y no está en el workflow, saltamos el proceso de submission
+    //(en realidad, ejecutamos el ultimo paso directamente)
+    var collectionObject = HandleManager.resolveToObject(getDSContext(), collectionHandle);
+    var isAdmin = AuthorizeManager.isAdmin(getDSContext(), collectionObject);
+    if(isAdmin && !submissionInfo.isInWorkflow()) {
+        initStepAndPage = stepsInSubmission[ stepsInSubmission.length - 1 ];
+        state.progressIterator = stepsInSubmission.length - 1;
+    }
 
     //if we didn't have a page passed in, go to first page in process
     if(initStepAndPage==null)
@@ -294,7 +303,7 @@ function submissionControl(collectionHandle, workspaceID, initStepAndPage)
 
     	//Pass it all the info it needs, including any response/error flags
     	//in case an error occurred
-    	response_flag = doNextPage(collectionHandle, workspaceID, stepConfig, state.stepAndPage, response_flag); 
+    	response_flag = doNextPage(collectionHandle, workspaceID, stepConfig, state.stepAndPage, response_flag);
 
     	var maxStep = FlowUtils.getMaximumStepReached(getDSContext(),workspaceID);
         var maxPage = FlowUtils.getMaximumPageReached(getDSContext(),workspaceID);
@@ -365,8 +374,9 @@ function submissionControl(collectionHandle, workspaceID, initStepAndPage)
         	if (inWorkflow && response_flag==AbstractProcessingStep.STATUS_COMPLETE)
         	{
         		var contextPath = cocoon.request.getContextPath();
+        		cocoon.sendPage("submit/finalize");
         		cocoon.redirectTo(contextPath+"/submissions",true);
-        		coocon.exit();
+        		cocoon.exit();
         	}
         	else if (!inWorkflow)
         	{
@@ -690,6 +700,7 @@ function submitStepSaveOrRemove(collectionHandle,workspaceID,step,page)
     {
        // Already saved...
        var contextPath = cocoon.request.getContextPath();
+       cocoon.sendPage("submit/finalize");
        cocoon.redirectTo(contextPath+"/submissions",true);
        cocoon.exit();
     }
@@ -715,12 +726,14 @@ function showCompleteConfirmation(handle, item){
 		if (poolTask!=null){
 		    var stepID = poolTask.getStepID();	    
 		    var actionID = poolTask.getActionID();
+		    cocoon.sendPage("submit/finalize");
 		    cocoon.redirectTo(cocoon.request.getContextPath()+"/handle/"+handle+"/xmlworkflow?workflowID="+workflowItem.getID()+"&stepID="+stepID+"&actionID="+actionID, true);
 		} else {
 			//forward to completion page & exit cocoon
 		    sendPage("handle/"+handle+"/submit/completedStep",{"handle":handle});
         }	
 	} else {
+		cocoon.sendPage("submit/finalize");
 		cocoon.redirectTo(cocoon.request.getContextPath()+"/handle/"+item.getHandle(), true);
 	}
 	
@@ -741,14 +754,16 @@ function doWorkflowEditMetadata() {
         var step = workflow.getStep(cocoon.request.get("stepID"));
         var action = step.getActionConfig(cocoon.request.get("actionID"));
         submissionControl(handle, "X"+workflowItemId, null);
+        cocoon.sendPage("submit/finalize");
         cocoon.redirectTo(contextPath+"/handle/"+handle+"/xmlworkflow?"+"workflowID="+workflowItemId+"&stepID="+step.getId()+"&actionID="+action.getId(), true);
-        getDSContext().complete();
+        //getDSContext().complete();
         cocoon.exit();
     } else {
         workflowItemId = workflowItemId.replace("W", "");
         submissionControl(handle, "W"+workflowItemId, null);
+        cocoon.sendPage("submit/finalize");
         cocoon.redirectTo(contextPath+"/handle/"+handle+"/workflow?workflowID="+workflowItemId, true);
-        getDSContext().complete();
+        //getDSContext().complete();
         cocoon.exit();
     }
 }

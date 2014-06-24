@@ -42,11 +42,11 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="sidebarFacetAuthor" />
-                <ref bean="sidebarFacetSubject" />
-                <ref bean="sidebarFacetKeywords" />
-                <ref bean="sidebarFacetDateIssued" />
                 <ref bean="sidebarFacetType" />
+                <ref bean="sidebarFacetDateIssued" />
+                <ref bean="sidebarFacetSubject" />
+                <ref bean="sidebarFacetAuthor" />
+                <ref bean="sidebarFacetKeywords" />
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
@@ -56,6 +56,10 @@
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
                 <ref bean="searchFilterIssued" />
+                <ref bean="searchFilterPersona" />
+                <ref bean="searchFilterInstitucion" />
+                <ref bean="searchFilterSubtype" />
+                <ref bean="searchFilterDescriptor" />
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -68,6 +72,7 @@
                     <list>
                         <ref bean="sortTitle" />
                         <ref bean="sortDateIssued" />
+                        <ref bean="sortDateAccessioned" />
                     </list>
                 </property>
             </bean>
@@ -106,7 +111,8 @@
         <property name="indexFieldName" value="author"/>
         <property name="metadataFields">
             <list>
-                <value>sedici.creator.*</value>
+                <value>sedici.creator.person</value>
+                <value>sedici.creator.corporate</value>
             </list>
         </property>
         <property name="fullAutoComplete" value="true"/>
@@ -132,9 +138,61 @@
         <property name="type" value="date"/>
         <property name="fullAutoComplete" value="false"/>
     </bean>
-
-
-
+    
+    <bean id="searchFilterPersona" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="persona"/>
+        <property name="metadataFields">
+            <list>
+                <value>sedici.creator.person</value>
+                <value>sedici.contributor.colaborator</value>
+                <value>sedici.contributor.editor</value>
+                <value>sedici.contributor.translator</value>
+                <value>sedici.contributor.compiler</value>
+                <value>sedici.contributor.director</value>
+                <value>sedici.contributor.codirector</value>
+                <value>sedici.contributor.juror</value>
+                <value>sedici.contributor.inscriber</value>
+            </list>
+        </property>
+        <property name="fullAutoComplete" value="true"/>
+    </bean>
+    
+    <bean id="searchFilterInstitucion" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="institucion"/>
+        <property name="metadataFields">
+            <list>
+                <value>sedici.institucionDesarrollo</value>   
+                <value>mods.originInfo.place</value>                 
+            </list>
+        </property>
+        <property name="fullAutoComplete" value="true"/>
+    </bean>
+    
+    <bean id="searchFilterSubtype" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="subtipo"/>
+        <property name="metadataFields">
+            <list>
+                <value>sedici.subtype</value>   
+                <value>dc.type</value>                 
+            </list>
+        </property>
+        <property name="fullAutoComplete" value="true"/>
+    </bean>
+    
+    <bean id="searchFilterDescriptor" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="descriptor"/>
+        <property name="metadataFields">
+            <list>
+            	<value>sedici.subject.decs</value>
+            	<value>sedici.subject.eurovoc</value>
+            	<value>sedici.subject.acmcss98</value>
+                <value>sedici.subject.descriptores</value>   
+                <value>sedici.subject.keyword</value>                 
+            </list>
+        </property>
+        <property name="fullAutoComplete" value="true"/>
+    </bean>
+    
     <!--Sidebar facet configuration beans-->
     <bean id="sidebarFacetAuthor" class="org.dspace.discovery.configuration.SidebarFacetConfiguration">
         <property name="indexFieldName" value="author"/>
@@ -142,6 +200,10 @@
             <list>
                 <value>sedici.creator.person</value>
                 <value>sedici.creator.corporate</value>
+                <value>sedici.contributor.translator</value>
+                <value>sedici.contributor.compiler</value>
+                <value>sedici.contributor.editor</value>
+                <value>sedici.creator.interprete</value>
             </list>
         </property>
         <property name="facetLimit" value="10"/>
@@ -166,6 +228,7 @@
             <list>
                 <value>sedici.subject.decs</value>
                 <value>sedici.subject.eurovoc</value>
+                <value>sedici.subject.acmcss98</value>
                 <value>sedici.subject.descriptores</value>
                 <value>sedici.subject.other</value>
             </list>
@@ -193,8 +256,8 @@
                 <value>sedici.subtype</value>
             </list>
         </property>
-        <property name="facetLimit" value="10"/>
-        <property name="sortOrder" value="COUNT"/>
+        <property name="facetLimit" value="20"/>
+        <property name="sortOrder" value="VALUE"/>
     </bean>
     
     <bean id="sidebarFacetLanguage" class="org.dspace.discovery.configuration.SidebarFacetConfiguration">
@@ -215,6 +278,11 @@
 
     <bean id="sortDateIssued" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
         <property name="metadataField" value="dc.date.issued"/>
+        <property name="type" value="date"/>
+    </bean>
+    
+    <bean id="sortDateAccessioned" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="dc.date.accessioned"/>
         <property name="type" value="date"/>
     </bean>
 </beans>

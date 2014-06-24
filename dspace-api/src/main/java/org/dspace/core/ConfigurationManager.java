@@ -921,6 +921,9 @@ public class ConfigurationManager
                 is = url.openStream();
                 properties.load(is);
 
+                // creates a InputStreamReader to use the system default charset
+                properties.load( new InputStreamReader(is) );
+
                 // walk values, interpolating any embedded references.
                 for (Enumeration<?> pe = properties.propertyNames(); pe.hasMoreElements(); )
                 {

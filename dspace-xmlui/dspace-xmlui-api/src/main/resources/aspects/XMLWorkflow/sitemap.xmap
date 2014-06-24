@@ -76,6 +76,10 @@
 
 
                     <map:generate/>
+				    
+				    <map:match pattern="xmlworkflow/finalize">
+		           	   <map:serialize/>
+		            </map:match>
 
                     <map:transform type="Navigation"/>
 

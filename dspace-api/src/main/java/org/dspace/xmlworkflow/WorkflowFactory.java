@@ -9,7 +9,9 @@ package org.dspace.xmlworkflow;
 
 import org.apache.log4j.Logger;
 import org.apache.xpath.XPathAPI;
+import org.dspace.app.util.Util;
 import org.dspace.content.Collection;
+import org.dspace.content.Community;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.utils.DSpace;
 import org.dspace.xmlworkflow.state.Step;
@@ -24,6 +26,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 
 /**

@@ -15,15 +15,20 @@
  */
 package ar.edu.unlp.sedici.dspace.authority;
 
+import java.sql.SQLException;
 import java.util.List;
+
+import javax.mail.MessagingException;
 
 import org.dspace.content.authority.Choice;
 import org.dspace.content.authority.ChoiceAuthority;
 import org.dspace.content.authority.Choices;
 import org.dspace.core.ConfigurationManager;
+import org.dspace.core.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.edu.unlp.sedici.dspace.utils.MailReporter;
 import ar.edu.unlp.sedici.sedici2003.service.SeDiCI2003Manager;
 
 
@@ -131,7 +136,11 @@ public abstract class SeDiCI2003AuthorityProvider implements ChoiceAuthority {
 		public Choice createChoice(String id, String value, String label){
 			return new Choice(id, value, label);
 		}
-		
     }
+    
+    protected void reportMissingAuthorityKey(String field, String key){
+    	//TODO check for some kind of flag mail.reporter.reportMissingAuthorityKey = true
+		MailReporter.reportMissingAuthorityKey(field, key);
+	}
 	
 }

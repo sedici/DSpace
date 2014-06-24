@@ -79,6 +79,7 @@
 		<aspect name="CollectionViewer" path="resource://aspects/CollectionViewer/"/>
 	    <aspect name="Discovery" path="resource://aspects/Discovery/" />
 	    <aspect name="XMLWorkflow" path="resource://aspects/XMLWorkflow/" />
+	    <aspect name="Feeds" path="resource://aspects/Feeds/" />
         <!--
             To enable Discovery, uncomment this Aspect that will enable it
             within your existing XMLUI
@@ -127,7 +128,8 @@
         <!-- <theme name="Test Theme 2" regex="community-list" path="theme2/"/> -->
 
         <!-- Default theme -->
-        <theme name="Default Reference Theme" regex=".*" path="Sedici/" />
+        <!-- <theme name="Default Reference Theme" regex=".*" path="Sedici/" /> -->
+        <theme name="Sedici2" regex=".*" path="Sedici2/" />
 
         <!-- Mirage theme, @mire contribution of new theme to support easier development and branding -->
         <!-- <theme name="Atmire Mirage Theme" regex=".*" path="Mirage/" /> -->

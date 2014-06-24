@@ -24,10 +24,10 @@
 		-->
 
 	<!-- General keys -->
-	<message key="xmlui.general.dspace_home">DSpace Home</message>
+	<message key="xmlui.general.dspace_home">SEDICI - Repository of National University of La Plata</message>
 	<message key="xmlui.general.search">Search</message>
 	<message key="xmlui.general.go">Go</message>
-	<message key="xmlui.general.go_home">Go to DSpace home</message>
+	<message key="xmlui.general.go_home">Go to SEDICI home</message>
 	<message key="xmlui.general.save">Save</message>
 	<message key="xmlui.general.cancel">Cancel</message>
 	<message key="xmlui.general.return">Return</message>
@@ -60,7 +60,7 @@
 	<!--
 		This section is for feed syndications (RSS, atom, etc)
 	-->
-	<message key="xmlui.feed.general_description">The DSpace digital repository system captures, stores, indexes, preserves, and distributes digital research material.</message>
+	<message key="xmlui.feed.general_description">The SEDICI digital repository system captures, stores, indexes, preserves, and distributes digital research material.</message>
     <message key="xmlui.feed.header">RSS Feeds</message>
 	<message key="xmlui.feed.logo_title">The Channel Image</message>
 	<message key="xmlui.feed.untitled">Untitled</message>
@@ -92,7 +92,7 @@
 	<message key="xmlui.ArtifactBrowser.AbstractSearch.head2">Communities or Collections matching your query</message>
 	<message key="xmlui.ArtifactBrowser.AbstractSearch.head3">Items matching your query</message>
 	<message key="xmlui.ArtifactBrowser.AbstractSearch.no_results">Search produced no results.</message>
-	<message key="xmlui.ArtifactBrowser.AbstractSearch.all_of_dspace">All of DSpace</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.all_of_dspace">All of SEDICI</message>
 
    <message key="xmlui.ArtifactBrowser.AbstractSearch.sort_by.title">title</message>
    <message key="xmlui.ArtifactBrowser.AbstractSearch.sort_by.dateissued">issue date</message>
@@ -103,6 +103,39 @@
 	<message key="xmlui.ArtifactBrowser.AbstractSearch.order.asc">ascending</message>
 	<message key="xmlui.ArtifactBrowser.AbstractSearch.order.desc">descending</message>
 	<message key="xmlui.ArtifactBrowser.AbstractSearch.rpp">Results/page</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.tips_info_general">You can try with some of the following options:</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.tips_info1">If you are using quotation marks, try omitting them for generate a new search with individual words</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.tips_info2">Use broader terms for a new refined search using filters</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.tips_info3">Use some of the explorations availables</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.other_services_no_results">Besides, you can do a search in some of the services linstings below:  </message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.sort_by.ispartof">Is part of</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.group_by">Results grouped by</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.group_by.none">None</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.group_by.publication_grp">Publication</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_dc.contributor.author_browse">Exploring by: Author</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_dc.title_browse">Exploring by: Title</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_dc.subject_browse">Exploring by: Subject</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_dc.description.abstract_browse">Exploring by: Summary</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_series_browse">Exploring by: Series</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_sponsor_browse">Exploring by: Sponsor</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_identifier_browse">Exploring by: Identificator</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_language_browse">Exploring by: Lenguage (ISO)</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_keyword_browse">Exploring by: Keyword</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_taxon_browse">Exploring by: Scientific name</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_contributor_browse">Exploring by: Jury</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_creator_browse">Exploring by: Author</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_subject_browse">Exploring by: Subject</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_description_browse">Exploring by: Description</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_relation_browse">Exploring by: Relation</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_mime_browse">Exploring by: File format</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_other_browse">Exploring by: Co-supervisor of thesis</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_advisor_browse">Exploring by: Supervisor of thesis</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_department_browse">Exploring by: Department</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.type_dateissued_dt_browse">Exploring by: Publication date</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.sort_by.dc.title_sort">Title</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.sort_by.dc.date.issued_dt">Publication date</message>
+	<message key="xmlui.ArtifactBrowser.AbstractSearch.sort_by.dc.date.accessioned_dt">Issued date</message>
+		
 
     <!-- org.dspace.app.xmlui.artifactbrowser.AdvancedSearch.java -->
 	<message key="xmlui.ArtifactBrowser.AdvancedSearch.title">Advanced Search</message>
@@ -116,12 +149,28 @@
 	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_author">Author</message>
 	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_title">Title</message>
 	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_subject">Subject</message>
+	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_keywords">Keyword</message>
+	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_dateIssued">Date Issued</message>	
+	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_type">Document type</message>	
 	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_abstract">Abstract</message>
 	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_series">Series</message>
 	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_sponsor">Sponsor</message>
 	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_identifier">Identifier</message>
 	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_language">Language (ISO)</message>
 	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_keyword">Keyword</message>
+	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_sedici.autor.apellido">Author's surname</message>
+	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_sedici.autor.direccion">Author's address</message>
+	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_dc.contributor.author_filter">Author</message>
+	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_dc.subject_filter">Subject</message>
+	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_dc.type_filter">Content's type</message>
+	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_dc.date.issued">Publication date</message>
+	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_type_filter">Type</message>
+	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_publisher_filter">Editorial</message>
+	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_location.comm">Community</message>
+	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_location.coll">Collection</message>
+	<message key="xmlui.ArtifactBrowser.AdvancedSearch.type_dc.relation.ispartofseries_filter">Series</message>
+	
+	
 
    <!--  some common other possibilities for Advanced Search Fields -->
    <message key="xmlui.ArtifactBrowser.AdvancedSearch.type_contributor">Contributor</message>
@@ -184,7 +233,7 @@
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.CollectionViewer.java -->
 	<message key="xmlui.ArtifactBrowser.CollectionViewer.search_scope">Search Scope</message>
-	<message key="xmlui.ArtifactBrowser.CollectionViewer.all_of_dspace">All of DSpace</message>
+	<message key="xmlui.ArtifactBrowser.CollectionViewer.all_of_dspace">All of SEDICI</message>
 	<message key="xmlui.ArtifactBrowser.CollectionViewer.full_text_search">Search within this collection:</message>
 	<message key="xmlui.ArtifactBrowser.CollectionViewer.head_browse">Browse by</message>
 	<message key="xmlui.ArtifactBrowser.CollectionViewer.browse_titles">Titles</message>
@@ -194,14 +243,14 @@
 	<message key="xmlui.ArtifactBrowser.CollectionViewer.head_recent_submissions">Recent Submissions</message>
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.CommunityBrowser.java -->
-	<message key="xmlui.ArtifactBrowser.CommunityBrowser.title">Community List</message>
-	<message key="xmlui.ArtifactBrowser.CommunityBrowser.trail">Community List</message>
-	<message key="xmlui.ArtifactBrowser.CommunityBrowser.head">Communities in DSpace</message>
-	<message key="xmlui.ArtifactBrowser.CommunityBrowser.select">Select a community to browse its collections.</message>
+	<message key="xmlui.ArtifactBrowser.CommunityBrowser.title">SEDICI - Available collections</message>
+	<message key="xmlui.ArtifactBrowser.CommunityBrowser.trail">Collections</message>
+	<message key="xmlui.ArtifactBrowser.CommunityBrowser.head">SEDICI's collections</message>
+	<message key="xmlui.ArtifactBrowser.CommunityBrowser.select">Here you can browse the repository's collections</message>
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.CommunityViewer.java -->
 	<message key="xmlui.ArtifactBrowser.CommunityViewer.search_scope">Search Scope</message>
-	<message key="xmlui.ArtifactBrowser.CommunityViewer.all_of_dspace">All of DSpace</message>
+	<message key="xmlui.ArtifactBrowser.CommunityViewer.all_of_dspace">All of SEDICI</message>
 	<message key="xmlui.ArtifactBrowser.CommunityViewer.full_text_search">Search within this community and its collections:</message>
 	<message key="xmlui.ArtifactBrowser.CommunityViewer.head_browse">Browse by</message>
 	<message key="xmlui.ArtifactBrowser.CommunityViewer.browse_titles">Titles</message>
@@ -217,7 +266,7 @@
 	<message key="xmlui.ArtifactBrowser.Contact.title">Contact us</message>
 	<message key="xmlui.ArtifactBrowser.Contact.trail">Contact us</message>
 	<message key="xmlui.ArtifactBrowser.Contact.head">Contact us</message>
-	<message key="xmlui.ArtifactBrowser.Contact.para1">{0} administrators may be contacted at:</message>
+	<message key="xmlui.ArtifactBrowser.Contact.para1">Dear user, you can send us your doubts and suggestions through:</message>
 	<message key="xmlui.ArtifactBrowser.Contact.feedback_label">On-line form</message>
 	<message key="xmlui.ArtifactBrowser.Contact.feedback_link">Feedback</message>
 	<message key="xmlui.ArtifactBrowser.Contact.email">Email</message>
@@ -225,8 +274,8 @@
 	<!-- org.dspace.app.xmlui.artifactbrowser.FeedbackForm.java -->
 	<message key="xmlui.ArtifactBrowser.FeedbackForm.title">Give feedback</message>
 	<message key="xmlui.ArtifactBrowser.FeedbackForm.trail">Give feedback</message>
-	<message key="xmlui.ArtifactBrowser.FeedbackForm.head">Give feedback</message>
-	<message key="xmlui.ArtifactBrowser.FeedbackForm.para1">Thanks for sharing your feedback about the DSpace system. Your comments are appreciated!</message>
+	<message key="xmlui.ArtifactBrowser.FeedbackForm.head">Doubts, suggestions about SEDICI?</message>
+	<message key="xmlui.ArtifactBrowser.FeedbackForm.para1">Thanks for sharing your feedback about the SEDICI system. Your comments are appreciated!</message>
 	<message key="xmlui.ArtifactBrowser.FeedbackForm.email">Your Email</message>
 	<message key="xmlui.ArtifactBrowser.FeedbackForm.email_help">This address will be used to follow up on your feedback.</message>
 	<message key="xmlui.ArtifactBrowser.FeedbackForm.comments">Comments</message>
@@ -239,8 +288,8 @@
 	<message key="xmlui.ArtifactBrowser.FeedbackSent.para1">Your comments have been received.</message>
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.FrontPageSearch.java -->
-	<message key="xmlui.ArtifactBrowser.FrontPageSearch.head">Search DSpace</message>
-	<message key="xmlui.ArtifactBrowser.FrontPageSearch.para1">Enter some text in the box below to search DSpace.</message>
+	<message key="xmlui.ArtifactBrowser.FrontPageSearch.head">Search SeDICI</message>
+	<message key="xmlui.ArtifactBrowser.FrontPageSearch.para1">Enter some text in the box below to search SEDICI.</message>
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.ItemViewer.java -->
 	<message key="xmlui.ArtifactBrowser.ItemViewer.trail">View Item</message>
@@ -252,7 +301,7 @@
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.Navigation.java -->
 	<message key="xmlui.ArtifactBrowser.Navigation.head_browse">Browse</message>
-	<message key="xmlui.ArtifactBrowser.Navigation.head_all_of_dspace">All of DSpace</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.head_all_of_dspace">All of SEDICI</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.communities_and_collections">Communities &amp; Collections</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_title">Titles</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_author">Authors</message>
@@ -261,13 +310,22 @@
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_dateaccessioned">By Submit Date</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.head_this_collection">This Collection</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.head_this_community">This Community</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.links_browse">Statics pages</message>
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.SimpleSearch.java -->
-	<message key="xmlui.ArtifactBrowser.SimpleSearch.title">Search</message>
+	<message key="xmlui.ArtifactBrowser.SimpleSearch.title">SEDICI -Search</message>
 	<message key="xmlui.ArtifactBrowser.SimpleSearch.trail">Search</message>
 	<message key="xmlui.ArtifactBrowser.SimpleSearch.head">Search</message>
 	<message key="xmlui.ArtifactBrowser.SimpleSearch.search_scope">Search Scope</message>
 	<message key="xmlui.ArtifactBrowser.SimpleSearch.full_text_search">Full Text Search</message>
+	<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.sedici.autor.direccion_filter">Author's address</message>
+	<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.sedici.autor.apellido_filter">Author's surname</message>
+	<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.author">Author</message>
+	<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.title">Title</message>
+	<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.subject">Subject</message>
+	<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.dateIssued">Publication date</message>
+	<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.selected">Applied filters</message>
+	
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.RestrictedItem.java -->
 	<message key="xmlui.ArtifactBrowser.RestrictedItem.title">This resource is restricted</message>
@@ -292,6 +350,7 @@
 
         <message key="xmlui.ArtifactBrowser.RestrictedItem.head_item_withdrawn">This item is withdrawn</message>
         <message key="xmlui.ArtifactBrowser.RestrictedItem.para_item_withdrawn">The selected item is withdrawn and is no longer available.</message>
+        <message key="xmlui.ArtifactBrowser.RestrictedItem.para_item_withdrawn_contact">If you consider that this is a mistake, please write an e-mail to </message>
         <message key="xmlui.ArtifactBrowser.RestrictedItem.para_item_restricted_auth">The selected item is access restricted and requires credentials to view. Please login to access the item.</message>
         <message key="xmlui.ArtifactBrowser.RestrictedItem.para_item_restricted">Your user account does not have the credentials to view this item. Please contact the system administrator if you have any questions.</message>
         
@@ -304,6 +363,10 @@
 
     <message key="xmlui.ArtifactBrowser.StatisticsViewer.no_report.title">No reports currently available</message>
     <message key="xmlui.ArtifactBrowser.StatisticsViewer.no_report.text">There are currently no reports available for this service.  Please check back later.</message>
+
+	<!-- Others -->
+	
+	<message key="xmlui.ArtifactBrowser.SiteViewer.head_recent_submissions">Outstanding documents</message>
 
     <!-- Authentication messages used for bitstream authentication -->
 	<message key="xmlui.BitstreamReader.auth_header">The file is restricted</message>
@@ -332,7 +395,7 @@
 	<!-- org.dspace.app.xmlui.eperson.CannotRegister.java -->
 	<message key="xmlui.EPerson.CannotRegister.title">Registration unavailable</message>
 	<message key="xmlui.EPerson.CannotRegister.head">Registration unavailable</message>
-	<message key="xmlui.EPerson.CannotRegister.para1">The configuration of this DSpace repository does not allow registration in this context. Please contact the <a href="../contact">site administrator</a> with questions or comments.</message>
+	<message key="xmlui.EPerson.CannotRegister.para1">The configuration of this SEDICI repository does not allow registration in this context. Please contact the <a href="../contact">site administrator</a> with questions or comments.</message>
 
 	<!-- org.dspace.app.xmlui.eperson.EditProfile.java -->
 	<message key="xmlui.EPerson.EditProfile.title_update">Update Profile</message>
@@ -392,7 +455,7 @@
 	<!-- org.dspace.app.xmlui.eperson.PasswordLogin.java -->
 	<message key="xmlui.EPerson.PasswordLogin.title">Sign in</message>
 	<message key="xmlui.EPerson.PasswordLogin.trail">Sign in</message>
-	<message key="xmlui.EPerson.PasswordLogin.head1">Sign in to DSpace</message>
+	<message key="xmlui.EPerson.PasswordLogin.head1">Sign in to SEDICI</message>
 	<message key="xmlui.EPerson.PasswordLogin.title">Sign in</message>
 	<message key="xmlui.EPerson.PasswordLogin.email_address">E-Mail Address</message>
 	<message key="xmlui.EPerson.PasswordLogin.error_bad_login">The email address and/or password supplied were not valid.</message>
@@ -400,13 +463,13 @@
 	<message key="xmlui.EPerson.PasswordLogin.forgot_link"> Forgot your password?</message>
 	<message key="xmlui.EPerson.PasswordLogin.submit">Sign in</message>
 	<message key="xmlui.EPerson.PasswordLogin.head2">Register new user</message>
-	<message key="xmlui.EPerson.PasswordLogin.para1">Register an account to subscribe to collections for email updates, and submit new items to DSpace.</message>
+	<message key="xmlui.EPerson.PasswordLogin.para1">Register an account to subscribe to collections for email updates, and submit new items to SEDICI.</message>
 	<message key="xmlui.EPerson.PasswordLogin.register_link">Click here to register.</message>
 
 	<!-- org.dspace.app.xmlui.eperson.LDAPLogin.java -->
 	<message key="xmlui.EPerson.LDAPLogin.title">Sign in</message>
 	<message key="xmlui.EPerson.LDAPLogin.trail">Sign in</message>
-	<message key="xmlui.EPerson.LDAPLogin.head1">Sign in to DSpace</message>
+	<message key="xmlui.EPerson.LDAPLogin.head1">Sign in to SEDICI</message>
 	<message key="xmlui.EPerson.LDAPLogin.title">Sign in</message>
 	<message key="xmlui.EPerson.LDAPLogin.username">User Name</message>
 	<message key="xmlui.EPerson.LDAPLogin.error_bad_login">The user name and/or password supplied were not valid.</message>
@@ -446,7 +509,7 @@
 	<!-- org.dspace.app.xmlui.eperson.RegistrationFinished.java -->
 	<message key="xmlui.EPerson.RegistrationFinished.title">Registration finished</message>
 	<message key="xmlui.EPerson.RegistrationFinished.head">Registration Finished</message>
-	<message key="xmlui.EPerson.RegistrationFinished.para1">You're now registered to use the DSpace system.  You can subscribe to collections to receive email updates about new items.</message>
+	<message key="xmlui.EPerson.RegistrationFinished.para1">You're now registered to use the SEDICI system.  You can subscribe to collections to receive email updates about new items.</message>
 
 	<!-- org.dspace.app.xmlui.eperson.ResetPassword.java -->
 	<message key="xmlui.EPerson.ResetPassword.title">Reset password</message>
@@ -462,7 +525,7 @@
 	<!-- org.dspace.app.xmlui.eperson.StartForgotPassword.java -->
 	<message key="xmlui.EPerson.StartForgotPassword.title">Forgot Password</message>
 	<message key="xmlui.EPerson.StartForgotPassword.head">Forgot Password</message>
-	<message key="xmlui.EPerson.StartForgotPassword.para1">Enter the email address you provided when you registered with DSpace. An email will be sent to that address with further instructions.</message>
+	<message key="xmlui.EPerson.StartForgotPassword.para1">Enter the email address you provided when you registered with SEDICI. An email will be sent to that address with further instructions.</message>
 	<message key="xmlui.EPerson.StartForgotPassword.email_address">Email Address</message>
 	<message key="xmlui.EPerson.StartForgotPassword.email_address_help">Enter the same address used when registering.</message>
 	<message key="xmlui.EPerson.StartForgotPassword.error_not_found">Email address not found.</message>
@@ -475,7 +538,7 @@
 	<message key="xmlui.EPerson.StartRegistration.reset_password_for">Reset password for</message>
 	<message key="xmlui.EPerson.StartRegistration.submit_reset">Reset password</message>
 	<message key="xmlui.EPerson.StartRegistration.head2">New user registration</message>
-	<message key="xmlui.EPerson.StartRegistration.para2">Register an account to subscribe to collections for email updates, and submit new items to DSpace.</message>
+	<message key="xmlui.EPerson.StartRegistration.para2">Register an account to subscribe to collections for email updates, and submit new items to SEDICI.</message>
 	<message key="xmlui.EPerson.StartRegistration.email_address">Email Address</message>
 	<message key="xmlui.EPerson.StartRegistration.email_address_help">This address will be verified and used as your login name.</message>
 	<message key="xmlui.EPerson.StartRegistration.error_bad_email">Unable to send email to this address.</message>
@@ -504,8 +567,8 @@
 
 
 	<!-- general submission aspect messages -->
-	<message key="xmlui.Submission.general.mydspace_home">MyDSpace Home</message>
-	<message key="xmlui.Submission.general.go_mydspace">Go to MyDSpace Home</message>
+	<message key="xmlui.Submission.general.mydspace_home">SEDICI Home</message>
+	<message key="xmlui.Submission.general.go_mydspace">Go to SEDICI Home</message>
 	<message key="xmlui.Submission.general.submission.title">Item submission</message>
 	<message key="xmlui.Submission.general.submission.trail">Item submission</message>
 	<message key="xmlui.Submission.general.submission.head">Item submission</message>
@@ -533,7 +596,7 @@
 	<message key="xmlui.Submission.Submissions.trail">Submissions</message>
 	<message key="xmlui.Submission.Submissions.head">Submissions &amp; workflow tasks</message>
 	<message key="xmlui.Submission.Submissions.untitled"><i>Untitled</i></message>
-	<message key="xmlui.Submission.Submissions.email">email: </message>
+	<message key="xmlui.Submission.Submissions.email"></message>
 	<!-- Same transformer, workflow section -->
 	<message key="xmlui.Submission.Submissions.workflow_head1">Workflow tasks</message>
 	<message key="xmlui.Submission.Submissions.workflow_info1">These tasks are items that are awaiting approval before they are added to the repository. There are two task queues, one for tasks which you have chosen to accept and another for tasks which have not been taken by anyone yet.</message>
@@ -583,7 +646,7 @@
 	<message key="xmlui.Submission.Submissions.status_unknown">Unknown state</message>
         <!-- Same transformer, completed submissions section -->
         <message key="xmlui.Submission.Submissions.completed.head">Archived Submissions</message>
-        <message key="xmlui.Submission.Submissions.completed.info">These are your completed submissions which have been accepted into DSpace.</message>
+        <message key="xmlui.Submission.Submissions.completed.info">These are your completed submissions which have been accepted into SEDICI.</message>
         <message key="xmlui.Submission.Submissions.completed.column1">Date accepted</message>
         <message key="xmlui.Submission.Submissions.completed.column2">Title</message>
         <message key="xmlui.Submission.Submissions.completed.column3">Collection</message>
@@ -648,15 +711,15 @@
 
 	<!-- org.dspace.app.xmlui.Submission.submit.UploadStep -->
 	<message key="xmlui.Submission.submit.UploadStep.head">Upload File(s)</message>
-	<message key="xmlui.Submission.submit.UploadStep.file">File</message>
-	<message key="xmlui.Submission.submit.UploadStep.file_help">Please enter the full path of the file on your computer corresponding to your item. If you click "Browse...", a new window will allow you to select the file from your computer.</message>
+	<message key="xmlui.Submission.submit.UploadStep.file">Attatch a new file</message>
+	<message key="xmlui.Submission.submit.UploadStep.file_help">Press the "Browse..." button in order to select a file from your computer. Remember you can upload files in an editable format (MS Word, OpenOffice, etc), and we will export them to non-editable formats suitable for publication (pdf)</message>
 	<message key="xmlui.Submission.submit.UploadStep.file_error">The item must contain at least one file.</message>
 	<message key="xmlui.Submission.submit.UploadStep.upload_error">There was a problem uploading your file.  Either the filename you entered was incorrect, there was a network problem which prevented the file from reaching us correctly, or you have attempted to upload a file format marked for internal system use only.  Please try again.</message>
 	<message key="xmlui.Submission.submit.UploadStep.virus_error">The file has not been uploaded as it appears to contain a virus. Please contact the system administrator.</message>
     <message key="xmlui.Submission.submit.UploadStep.virus_checker_error">A technical problem was encountered whilst attempting to scan the file for viruses. Please contact the system administrator.</message>
     <message key="xmlui.Submission.submit.UploadStep.description">File Description</message>
-	<message key="xmlui.Submission.submit.UploadStep.description_help">Optionally, provide a brief description of the file, for example "<i>Main article</i>", or "<i>Experiment data readings</i>".</message>
-	<message key="xmlui.Submission.submit.UploadStep.submit_upload">Upload file &amp; add another</message>
+	<message key="xmlui.Submission.submit.UploadStep.description_help">You can provide a briefly description for your file, e.g. "MS Word Original Version", "Cover", etc. </message>
+	<message key="xmlui.Submission.submit.UploadStep.submit_upload">Upload file</message>
 	<message key="xmlui.Submission.submit.UploadStep.head2">Files Uploaded</message>
 	<message key="xmlui.Submission.submit.UploadStep.column0">Primary</message>
 	<message key="xmlui.Submission.submit.UploadStep.column1">  </message>
@@ -673,7 +736,11 @@
 	<message key="xmlui.Submission.submit.UploadStep.submit_edit">Edit</message>
 	<message key="xmlui.Submission.submit.UploadStep.checksum">File checksum:</message>
 	<message key="xmlui.Submission.submit.UploadStep.submit_remove">Remove selected files</message>
-
+    <message key="xmlui.Submission.submit.UploadStep.infoEmbargo">
+   <b>Note:</b> If you need that your work keeps temporarily hidden, you may request its embargo by 3, 6, 12, 18 or 24 months starting from the date of presentation of the work.   
+   The UNLP and repository of SEDICI fervently support the open access to the scientific-academic production and therefore <b>RECCOMEND NOT</b> apply this restriction unless it results strictly needed for pending patents, confidenciality conveins and similar situations. Have in mind that the deposit of your thesis into the repository not allow you to do derived publications with quality of inedit; a derived work is NOT the original work.
+   <br/>To apply this restriction, you will must attach over this step a note of embargo request that properly justify the request (see model <a href="http://sedici.unlp.edu.ar/blog/wp-content/uploads/2013/04/Modelo-nota-de-embargo.doc">Here</a>).
+   </message>
 
 	<!-- org.dspace.app.xmlui.Submission.submit.EditFileStep -->
 	<message key="xmlui.Submission.submit.EditFileStep.head">Edit File</message>
@@ -717,7 +784,7 @@
 
 	<!-- org.dspace.app.xmlui.Submission.submit.LicenseStep -->
 	<message key="xmlui.Submission.submit.LicenseStep.head">Distribution License</message>
-	<message key="xmlui.Submission.submit.LicenseStep.info1"><strong>There is one last step:</strong> In order for DSpace to reproduce, translate and distribute your submission worldwide, you must agree to the following terms.</message>
+	<message key="xmlui.Submission.submit.LicenseStep.info1"><strong>There is one last step:</strong> In order for SEDICI to reproduce, translate and distribute your submission worldwide, you must agree to the following terms.</message>
 	<message key="xmlui.Submission.submit.LicenseStep.info2">Grant the standard distribution license by selecting 'I Grant the License'; and then click 'Complete Submission'.</message>
 	<message key="xmlui.Submission.submit.LicenseStep.info3">If you have questions regarding this license please contact the system administrators.</message>
 	<message key="xmlui.Submission.submit.LicenseStep.decision_label">Distribution license</message>
@@ -1105,7 +1172,7 @@
 	<!-- org.dspace.app.xmlui.administrative.registries.MetadatRegistryMain.java -->
 	<message key="xmlui.administrative.registries.MetadataRegistryMain.title">Metadata Registry</message>
 	<message key="xmlui.administrative.registries.MetadataRegistryMain.head1">Metadata registry</message>
-	<message key="xmlui.administrative.registries.MetadataRegistryMain.para1">The metadata registry maintains a list of all metadata fields available in the repository. These fields may be divided amongst multiple schemas.  However, DSpace requires the qualified Dublin Core schema. You may extend the Dublin Core schema with additional fields or add new schemas to the registry.</message>
+	<message key="xmlui.administrative.registries.MetadataRegistryMain.para1">The metadata registry maintains a list of all metadata fields available in the repository. These fields may be divided amongst multiple schemas.  However, SEDICI requires the qualified Dublin Core schema. You may extend the Dublin Core schema with additional fields or add new schemas to the registry.</message>
 	<message key="xmlui.administrative.registries.MetadataRegistryMain.column1"></message>
 	<message key="xmlui.administrative.registries.MetadataRegistryMain.column2">ID</message>
 	<message key="xmlui.administrative.registries.MetadataRegistryMain.column3">Namespace</message>
@@ -1240,6 +1307,7 @@
 	<message key="xmlui.administrative.item.general.option_view">View Item</message>
         <message key="xmlui.administrative.item.general.option_curate">Curate</message>
         <message key="xmlui.administrative.item.general.option_queue">Queue</message>
+    <message key="xmlui.administrative.item.AddBitstreamForm.bundle.CC_LICENSE">Creative Commons licences</message>
 
 	<!-- org.dspace.app.xmlui.administrative.item.AddBitstreamForm -->
 	<message key="xmlui.administrative.item.AddBitstreamForm.title">Upload Bitstream</message>
@@ -1559,7 +1627,7 @@
 	<message key="xmlui.administrative.collection.GeneralCollectionHarvestingForm.trail">Harvesting</message>
 	<message key="xmlui.administrative.collection.GeneralCollectionHarvestingForm.options_harvest">Content Source</message>
 	<message key="xmlui.administrative.collection.GeneralCollectionHarvestingForm.label_source">Content source</message>
-	<message key="xmlui.administrative.collection.GeneralCollectionHarvestingForm.source_normal">This is a standard DSpace collection</message>
+	<message key="xmlui.administrative.collection.GeneralCollectionHarvestingForm.source_normal">This is a standard SEDICI collection</message>
 	<message key="xmlui.administrative.collection.GeneralCollectionHarvestingForm.source_harvested">This collection harvests its content from an external source</message>
 	<message key="xmlui.administrative.collection.GeneralCollectionHarvestingForm.submit_save">Save</message>
 
@@ -1693,7 +1761,7 @@
 	<message key="xmlui.administrative.ControlPanel.trail">Control panel</message>
 	<message key="xmlui.administrative.ControlPanel.head">Control Panel</message>
 	<message key="xmlui.administrative.ControlPanel.option_java">Java Information</message>
-	<message key="xmlui.administrative.ControlPanel.option_dspace">DSpace Configuration</message>
+	<message key="xmlui.administrative.ControlPanel.option_dspace">SEDICI Configuration</message>
 	<message key="xmlui.administrative.ControlPanel.option_alerts">System-wide Alerts</message>
 	<message key="xmlui.administrative.ControlPanel.hours">{0} h</message>
 	<message key="xmlui.administrative.ControlPanel.minutes">{0} m</message>
@@ -1718,11 +1786,11 @@
         <message key="xmlui.administrative.ControlPanel.cocoon_cache_clear">(Clear Cache Immediately)</message>
         <message key="xmlui.administrative.ControlPanel.cocoon_persistent_cache_size">Persistent Cache Size ({0})</message>
         <message key="xmlui.administrative.ControlPanel.cocoon_transient_cache_size">Transient Cache Size ({0})</message>
-	<message key="xmlui.administrative.ControlPanel.dspace_head">DSpace Settings</message>
-        <message key="xmlui.administrative.ControlPanel.dspace_version">DSpace Version</message>
-	<message key="xmlui.administrative.ControlPanel.dspace_dir">DSpace Installation Directory</message>
-	<message key="xmlui.administrative.ControlPanel.dspace_url">DSpace Base URL</message>
-	<message key="xmlui.administrative.ControlPanel.dspace_hostname">DSpace Host Name</message>
+	<message key="xmlui.administrative.ControlPanel.dspace_head">SEDICI Settings</message>
+        <message key="xmlui.administrative.ControlPanel.dspace_version">SEDICI Version</message>
+	<message key="xmlui.administrative.ControlPanel.dspace_dir">SEDICI Installation Directory</message>
+	<message key="xmlui.administrative.ControlPanel.dspace_url">SEDICI Base URL</message>
+	<message key="xmlui.administrative.ControlPanel.dspace_hostname">SEDICI Host Name</message>
 	<message key="xmlui.administrative.ControlPanel.dspace_name">Name of the Site</message>
 	<message key="xmlui.administrative.ControlPanel.db_name">Database Name</message>
 	<message key="xmlui.administrative.ControlPanel.db_url">Database URL</message>
@@ -1782,7 +1850,7 @@
         <!-- System-wide Curation Tasks form (org.dspace.app.xmlui.aspect.administrative.CurateForm) -->
         <message key="xmlui.administrative.CurateForm.title">System Curation Tasks</message>
         <message key="xmlui.administrative.CurateForm.trail">Curation Tasks</message>
-        <message key="xmlui.administrative.CurateForm.object_label_name">Handle of DSpace Object</message>
+        <message key="xmlui.administrative.CurateForm.object_label_name">Handle of SEDICI Object</message>
         <message key="xmlui.administrative.CurateForm.object_hint">Hint: Enter [your-handle-prefix]/0 to run a task across entire site (not all tasks may support this capability)</message>
         <message key="xmlui.administrative.CurateForm.task_label_name">Task</message>
     <!-- Used by Curate<DSO>Form classes also -->
@@ -1838,13 +1906,13 @@
 	<message key="xmlui.dri2xhtml.structural.contact-link">Contact Us</message>
 	<message key="xmlui.dri2xhtml.structural.feedback-link">Send Feedback</message>
 
-	<message key="xmlui.dri2xhtml.structural.head-subtitle">DSpace/Manakin Repository</message>
+	<message key="xmlui.dri2xhtml.structural.head-subtitle">SEDICI</message>
 
 	<message key="xmlui.dri2xhtml.structural.profile">Profile: </message>
 	<message key="xmlui.dri2xhtml.structural.logout">Logout</message>
 	<message key="xmlui.dri2xhtml.structural.login">Login</message>
 
-	<message key="xmlui.dri2xhtml.structural.search">Search DSpace</message>
+	<message key="xmlui.dri2xhtml.structural.search">Search in SEDICI</message>
 	<message key="xmlui.dri2xhtml.structural.search-advanced">Advanced Search</message>
 	<message key="xmlui.dri2xhtml.structural.search-in-community">This Community</message>
 	<message key="xmlui.dri2xhtml.structural.search-in-collection">This Collection</message>
@@ -1855,8 +1923,16 @@
 
 	<message key="xmlui.dri2xhtml.structural.link_cc">Creative Commons</message>
 	<message key="xmlui.dri2xhtml.structural.link_original_license">Original License</message>
-
-
+	
+	<message key="xmlui.dri2xhtml.structural.footer.university.name">National University of La Plata</message>
+	<message key="xmlui.dri2xhtml.structural.footer.site.copyrights">Rights reserved contemplated by 11.723 law</message>
+	<message key="xmlui.dri2xhtml.structural.footer.site.support">Supported by <strong>Dspace</strong></message>
+	<message key="xmlui.dri2xhtml.structural.footer.developers.address">49 and 115 St - Ex Liceo Apt. Floor 1</message>
+	<message key="xmlui.dri2xhtml.structural.footer.developers.district">La Plata, Buenos Aires (C.P. 1900)</message>
+	<message key="xmlui.dri2xhtml.structural.footer.developers.contact-phone">Phone: 0221 423 6696/6677 (int. 141) </message>
+	<message key="xmlui.dri2xhtml.structural.pagination-info.nototal">Show items {0}-{1}</message>
+	
+	
 	<!-- DS-METS-1.0-MODS.xsl -->
 	<!-- DS-METS-1.0-DIM.xsl -->
 	<!-- DS-METS-1.0-QDC.xsl -->
@@ -1864,7 +1940,7 @@
 	<message key="xmlui.dri2xhtml.METS-1.0.no-title">Untitled</message>
 	<message key="xmlui.dri2xhtml.METS-1.0.no-author">Unknown author</message>
 	<message key="xmlui.dri2xhtml.METS-1.0.non-conformant">
-		This is not a DSpace object conformant to the METS 1.0 profile and as such cannot be
+		This is not a SEDICI object conformant to the METS 1.0 profile and as such cannot be
         rendered effectively. You can override either the template that handles the general
         case in dri2xhtml to perform the needed function, or create your template to match
         whatever profile you use.
@@ -1911,12 +1987,25 @@
 	<message key="xmlui.dri2xhtml.METS-1.0.community-logo-alt">The community's logo</message>
 	<message key="xmlui.dri2xhtml.METS-1.0.no-logo-alt">No logo</message>
 	<message key="xmlui.dri2xhtml.METS-1.0.news">News</message>
+	<message key="xmlui.dri2xhtml.METS-1.0.item-relation-ciclo">Cycle</message>
+	<message key="xmlui.dri2xhtml.METS-1.0.item-creator-interprete">Performer</message>
+	<message key="xmlui.dri2xhtml.METS-1.0.item-creators-interprete">Performers</message>
+	<message key="xmlui.dri2xhtml.METS-1.0.item-creator-creator">Creator</message>
+	<message key="xmlui.dri2xhtml.METS-1.0.item-creators-creator">Creators</message>
+	<message key="xmlui.dri2xhtml.METS-1.0.item-creators-person">Authors</message>
+	<message key="xmlui.dri2xhtml.METS-1.0.item-creator-person">Author</message>
+	<message key="xmlui.dri2xhtml.METS-1.0.item-availability-local">Direct download</message>
+	<message key="xmlui.dri2xhtml.METS-1.0.item-availability-local-help">You can download this document from SEDICI</message>
+	<message key="xmlui.dri2xhtml.METS-1.0.item-availability-linked">External link</message>
+	<message key="xmlui.dri2xhtml.METS-1.0.item-availability-linked-help">A link to an external website is available</message>
+		
 
 	<!-- Internationalization elements specific to the Qualified Dublin Core metadata handler.
 		DS-METS-1.0-QDC.xsl -->
 	<message key="xmlui.dri2xhtml.METS-1.0.qdc-not-applicable">
-		Qualified Dublin Core (QDC) is not applicable to DSpace communities and collections at
-		this time. When using QDC, you should use the QDC crosswalk for DSpace items and either
+		Qualified Dublin Core (QDC) is not applicable to SE
+		DICI communities and collections at
+		this time. When using QDC, you should use the QDC crosswalk for SEDICI items and either
 		DIM or MODS for processing of communities and collections.
 	</message>
 
@@ -1932,6 +2021,9 @@
 
 	<!-- tag used to handle the empty textarea tag added 09/28/2006 -->
 	<message key="xmlui.dri2xhtml.default.textarea.value"> </message>
+	<message key="xmlui.dri2xhtml.METS-1.0.item-record-source">The data of this record has been obtained from</message>
+	<message key="xmlui.dri2xhtml.METS-1.0.item-note">Notes</message>
+	
 
   <!--###### File Format MIME Type Mappings ######-->
 
@@ -1952,6 +2044,15 @@
   <message key="xmlui.dri2xhtml.mimetype.application/vnd.oasis.opendocument.presentation">OpenOffice Impress</message>
   <message key="xmlui.dri2xhtml.mimetype.application/vnd.oasis.opendocument.spreadsheet">OpenOffice Calc</message>
   <message key="xmlui.dri2xhtml.mimetype.application/vnd.oasis.opendocument.text">OpenOffice Writer</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/vnd.oasis.opendocument.chart">OpenOffice Chart</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/vnd.oasis.opendocument.graphics-template">OpenOffice Draw Template</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/vnd.oasis.opendocument.image">OpenOffice Image</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/vnd.oasis.opendocument.presentation-template">OpenOffice Impress Template</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/vnd.oasis.opendocument.spreadsheet-template">OpenOffice Calc Template</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/vnd.oasis.opendocument.text-master">OpenOffice Master Document</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/vnd.oasis.opendocument.text-template">OpenOffice Writer Template</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/vnd.oasis.opendocument.text-web">OpenOffice Web Page Template</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/vnd.openofficeorg.extension">OpenOffice.org extension</message>
   <message key="xmlui.dri2xhtml.mimetype.application/vnd.openxmlformats-officedocument.presentationml.presentation">Microsoft PowerPoint 2007</message>
   <message key="xmlui.dri2xhtml.mimetype.application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">Microsoft Excel 2007</message>
   <message key="xmlui.dri2xhtml.mimetype.application/vnd.openxmlformats-officedocument.wordprocessingml.document">Microsoft Word 2007</message>
@@ -1959,6 +2060,13 @@
   <message key="xmlui.dri2xhtml.mimetype.application/vnd.sun.xml.draw">OpenOffice Draw (1.x)</message>
   <message key="xmlui.dri2xhtml.mimetype.application/vnd.sun.xml.impress">OpenOffice Impress (1.x)</message>
   <message key="xmlui.dri2xhtml.mimetype.application/vnd.sun.xml.writer.global">OpenOffice Writer (1.x)</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/vnd.sun.xml.calc.template">OpenOffice Calc template (1.x)</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/vnd.sun.xml.draw.template">OpenOffice Draw template (1.x)</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/vnd.sun.xml.impress.template">OpenOffice Impress template (1.x)</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/vnd.sun.xml.math">OpenOffice Math (1.x)</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/vnd.sun.xml.writer">OpenOffice Writer (1.x)</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/vnd.sun.xml.writer.template">OpenOffice Writer template (1.x)</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/x-shockwave-flash">Shockwave Flash</message>
   <message key="xmlui.dri2xhtml.mimetype.application/vnd.visio">Microsoft Visio</message>
   <message key="xmlui.dri2xhtml.mimetype.application/wordperfect5.1">WordPerfect</message>
   <message key="xmlui.dri2xhtml.mimetype.application/x-dvi">TeX DVI</message>
@@ -1967,7 +2075,10 @@
   <message key="xmlui.dri2xhtml.mimetype.application/x-latex">LaTeX</message>
   <message key="xmlui.dri2xhtml.mimetype.application/x-photoshop">Photoshop</message>
   <message key="xmlui.dri2xhtml.mimetype.application/x-tex">TeX</message>
-
+  <message key="xmlui.dri2xhtml.mimetype.application/epub">ePub</message>
+  <message key="xmlui.dri2xhtml.mimetype.application/mobi">MOBI</message>
+	
+	  
   <!-- Audio-based formats -->
   <message key="xmlui.dri2xhtml.mimetype.audio/basic">Basic Audio</message>
   <message key="xmlui.dri2xhtml.mimetype.audio/flac">FLAC Audio</message>
@@ -2026,7 +2137,7 @@
      - JavaScript (AJAX) that completes the lookup popup window.
      - So, positional parameters are @1@, @2@, etc.
     -->
-  <message key="xmlui.ChoiceLookupTransformer.title">DSpace Value Lookup</message>
+  <message key="xmlui.ChoiceLookupTransformer.title">SEDICI Value Lookup</message>
   <message key="xmlui.ChoiceLookupTransformer.accept">Accept</message>
   <message key="xmlui.ChoiceLookupTransformer.add">Add</message>
   <message key="xmlui.ChoiceLookupTransformer.cancel">Cancel</message>
@@ -2038,6 +2149,15 @@
   <!-- Choice Lookup - sample config for dc.publisher field -->
   <message key="xmlui.ChoiceLookupTransformer.field.dc_publisher.help">Name of Publisher</message>
   <message key="xmlui.ChoiceLookupTransformer.field.dc_publisher.title">Look up Publisher</message>
+  
+	<message key="xmlui.ChoiceLookupTransformer.field.sedici_subject_decs.help">Name of the term in DECS thesaurus</message>
+	<message key="xmlui.ChoiceLookupTransformer.field.sedici_subject_decs.title">Search a term in DECS thesaurus</message>
+  <message key="xmlui.ChoiceLookupTransformer.field.sedici_subject_decs.nonauthority">Use "@1@" (no controlled)</message>
+
+	<message key="xmlui.ChoiceLookupTransformer.field.sedici_subject_eurovoc.help">Name of the term in Eurovoc thesaurus</message>
+	<message key="xmlui.ChoiceLookupTransformer.field.sedici_subject_eurovoc.title">Search a term in Eurovoc thesaurus</message>
+	<message key="xmlui.ChoiceLookupTransformer.field.sedici_subject_eurovoc.nonauthority">Use @1@" (value without controlling)"</message>
+
   <!-- Params are: search-value -->
   <message key="xmlui.ChoiceLookupTransformer.field.dc_publisher.nonauthority">Non-authority value: @1@</message>
 
@@ -2047,6 +2167,10 @@
   <message key="xmlui.ChoiceLookupTransformer.field.dc_contributor_author.help.first">First name(s) e.g. "Fred"</message>
   <message key="xmlui.ChoiceLookupTransformer.field.dc_contributor_author.title">LC Name Authority author lookup</message>
   <message key="xmlui.ChoiceLookupTransformer.field.dc_contributor_author.nonauthority">Local value "@1@" (not in Naming Authority)</message>
+
+  <message key="xmlui.ChoiceLookupTransformer.field.dc_coverage_spatial.help">Geographic location name</message>
+  <message key="xmlui.ChoiceLookupTransformer.field.dc_coverage_spatial.title">Geographic locations</message>
+  <message key="xmlui.ChoiceLookupTransformer.field.dc_coverage_spatial.nonauthority">Use "@1@" (no controlled)</message>
 
   <!-- Traducciones agregadas por SEDICI -->
   
@@ -2061,29 +2185,41 @@
 <message key="xmlui.dri2xhtml.METS-1.0.item-lang-es">In Spanish</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-lang-en">In English</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-lang-pt">In Portuguese</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-lang-de">In German</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-lang-it">In Italian</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-lang-fr">In French</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-lang-other">Another language</message>
+
 <message key="xmlui.dri2xhtml.METS-1.0.embargoed-document">Embargoed document</message>
 <message key="xmlui.dri2xhtml.METS-1.0.embargoed-document-description">This document can not be accesioned because it has embargo until:</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-is-peer-review">Peer reviewed document</message>
-<message key="xmlui.dri2xhtml.METS-1.0.item-is-fulltext">Fulltext document</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-is-non-peer-review">Non peer reviewed document</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-true-fulltext">Fulltext document</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-false-fulltext">Non fulltext document</message>
 <message key="xmlui.dri2xhtml.METS-1.0.other-attributes">Other attributes of the document</message>
 <message key="xmlui.dri2xhtml.METS-1.0.tesis-info">Thesis information</message>
 <message key="xmlui.dri2xhtml.METS-1.0.general-info">General information</message>
 
 <message key="xmlui.dri2xhtml.METS-1.0.item-date-available">Available since</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-date-accessioned">Created</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-date-created">Object creation date</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-title-subtitle">Subtitle</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-embargo-liftDate">End of embargo date</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-institucion-desarrollo">Developed at </message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-title-alternative">Alternative title</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-date-issued">Issue date</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-contributor-director">Advisor</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-contributor-codirector">Co-advisor</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-contributor-editor">Editor</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-contributor-editors">Editors</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-contributor-translator">Translator</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-contributor-translators">Translator</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-contributor-compiler">Compiler</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-contributor-compilers">Compilers</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-contributor-juror">Jury</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-contributor-colaborator">Colaborator</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-language">Document language</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-produccion">Production</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-publisher">Place of publication</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-affiliated-institution">Place of development</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-degree-name">Degree</message>
@@ -2091,25 +2227,35 @@
 <message key="xmlui.dri2xhtml.METS-1.0.item-date-exposure">Exposure date</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-relation-dossier">Dossier</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-originInfo">Origin</message>
-<message key="xmlui.dri2xhtml.METS-1.0.item-identifier-uri">URI</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-identifier-uri">External link</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-identifier-doi">DOI</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-identifier-handle">Handle</message>
-<message key="xmlui.dri2xhtml.METS-1.0.item-identifier-other">Other</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-identifier-other">Others identifiers</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-identifier-issn">ISSN</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-identifier-isbn">ISBN</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-location">Location</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-coverage-spatial">Geographical references</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-coverage-temporal">Temporal references</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-format-extent">Extent</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-format-medium">Materials</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-subject-materias">Subjects</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-subject-decs">DECS Thesaurus</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-subject-eurovoc">Eurovoc Thesaurus</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-subject-acmcss98">ACM98 Classification System</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-subject-descriptores">Descriptors</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-subject-other">Other descriptors</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-subject-keyword">Keywords</message>
-<message key="xmlui.dri2xhtml.METS-1.0.item-relation-isPartOf">Journal</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-relation-journal">Journal</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-relation-event">Event</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-subtype">Document type</message>
 <message key="xmlui.dri2xhtml.METS-1.0.item-authors">Authors</message>  
+<message key="xmlui.dri2xhtml.METS-1.0.item-contributor-inscriber">Inscribers</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-identifier-expediente">File Number</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-relation-book-title">Belongs to book</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-relation-review-of">Is review of</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-relation-reviewed-by">Is reviewed by</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-relation-related-with">Related documents</message>
+<message key="xmlui.dri2xhtml.METS-1.0.item-relation-isPartOfSeries">Series</message>
   
 <!-- Choice authority -->
 <message key="sedici.choiceAuthorityControl.messageErrorConfidenceSingular">Check the value</message>
@@ -2125,18 +2271,24 @@
 <message key="sedici.menuSuperior.exploracion.tema">Subjects</message>
 <message key="sedici.menuSuperior.exploracion.filtrar">Filter</message>
 <message key="sedici.menuSuperior.institucional">Institutional</message>
-<message key="sedici.menuSuperior.institucional.queEsSedici">What is SeDiCI?</message>
+<message key="sedici.menuSuperior.institucional.queEsSedici">What is SEDICI?</message>
 <message key="sedici.menuSuperior.institucional.politica">Repository policies</message>
 <message key="sedici.menuSuperior.institucional.links">Links</message>
 <message key="sedici.menuSuperior.institucional.staff">Staff</message>
 <message key="sedici.menuSuperior.institucional.comoLlegar">How to get here</message>
 <message key="sedici.menuSuperior.informacion">Information</message>
+<message key="sedici.menuSuperior.preguntas">Frequentes questions</message>
 <message key="sedici.menuSuperior.informacion.agregacion">How to add documents</message>
 <message key="sedici.menuSuperior.informacion.infoTesistas">Information for posgraduated contributors</message>
 <message key="sedici.menuSuperior.informacion.faq">FAQ</message>
+<message key="sedici.menuSuperior.informacion.revistasAccesoAbierto">Open Access Journals</message>
 <message key="sedici.menuSuperior.home">Home</message>
 <message key="sedici.menuSuperior.buscar">Search</message>
 <message key="sedici.menuSuperior.contacto">Contact</message>
+<message key="sedici.menuSuperior.subirMaterial">Upload Material</message>
+<message key="sedici.menuSuperior.administracion">Administration</message>
+<message key="sedici.menuSuperior.otrasOpciones">Other options</message>
+
 
 <!-- Menu lateral -->
 
@@ -2147,6 +2299,37 @@
 <message key="sedici.menuLateral.cuenta.export">My exportations</message>
 <message key="sedici.menuLateral.otros.head">Other</message>
 
+<message key="sedici.errorTitle.resourceNotFound">Resource not found</message>
+<message key="sedici.errorDescription.resourceNotFound">The resource doesn't exist or it's not available right now</message>
+<message key="sedici.errorTitle.invalidContinuation">Your session has expired</message>
+<message key="sedici.errorDescription.invalidContinuation">Often this happens when the system doesn't receive any activity from your computer. Please, login again.</message>
+<message key="sedici.errorTitle.internalError">An error has occurred</message> 
+<message key="sedici.errorDescription.internalError">We are sorry, but an error has ocurred. This incident will be reported to be fixed as soon as possible</message>
+<message key="sedici.errorTitle.notAuthorize">Unathorized site.</message>
+<message key="sedici.errorDescription.notAuthorize">You do not have the requested permissions to access this site. In case you have them, please log in with the correct user.</message>
+<message key="sedici.errorDescription.generalNote">If you consider that there is a problem or you want to make a suggestion, please contact us to the following e-mail: info@sedici.unlp.edu.ar</message>
+<message key="sedici.errorTitle.badRequest">Bad Request</message>
+<message key="sedici.errorDescription.badRequest">The request seems to be incorrect. Probably this is due to a parameter error.</message>
+
+<!-- Creative Commons mensajes -->
+<message key="xmlui.Submission.submit.SediciCCLicenseStep.CommercialQuestion">Do you want to allow commercial uses of your opus?</message>
+<message key="xmlui.Submission.submit.SediciCCLicenseStep.CommercialAnswerNo">No</message>
+<message key="xmlui.Submission.submit.SediciCCLicenseStep.CommercialAnswerYes">Yes</message>
+<message key="xmlui.Submission.submit.SediciCCLicenseStep.DerivativesQuestion">¿Quiere permitir modificaciones de su obra?</message>
+<message key="xmlui.Submission.submit.SediciCCLicenseStep.DerivativesAnswerNo">No</message>
+<message key="xmlui.Submission.submit.SediciCCLicenseStep.DerivativesAnswerYes">Yes</message>
+<message key="xmlui.Submission.submit.SediciCCLicenseStep.DerivativesAnswerShareALike">Share alike</message>
+<message key="xmlui.Submission.submit.SediciCCLicenseStep.campos_obligatorios">An error has been ocurred: all the fields are mandatory </message>
+
+
+<message key="xmlui.Submission.submit.SediciCCLicenseStep.administrador.pregunta">Choose a license:</message>
+<message key="xmlui.Submission.submit.SediciCCLicenseStep.administrador.sinLicencia">Without license</message>
+<message key="xmlui.Submission.submit.SediciCCLicenseStep.administrador.by">Creative Commons Attribution 2.5 Argentina (CC BY 2.5)</message>
+<message key="xmlui.Submission.submit.SediciCCLicenseStep.administrador.by-nc">Creative Commons Attribution-NonCommercial 2.5 Argentina (CC BY-NC 2.5)</message>
+<message key="xmlui.Submission.submit.SediciCCLicenseStep.administrador.by-nc-nd">Creative Commons Attribution-NonCommercial-NoDerivs 2.5 Argentina (CC BY-NC-ND 2.5)</message>
+<message key="xmlui.Submission.submit.SediciCCLicenseStep.administrador.by-nc-sa">Creative Commons Attribution-NonCommercial-ShareAlike 2.5 Argentina (CC BY-NC-SA 2.5)</message>
+<message key="xmlui.Submission.submit.SediciCCLicenseStep.administrador.by-nd">Creative Commons Attribution-NoDerivs 2.5 Argentina (CC BY-ND 2.5)</message>
+<message key="xmlui.Submission.submit.SediciCCLicenseStep.administrador.by-sa">Creative Commons Attribution-ShareAlike 2.5 Argentina (CC BY-SA 2.5)</message>
 <!-- Otras traducciones -->
 
 <message key="sedici.aspect.collectionViewer.addItem">Add document</message>
@@ -2156,6 +2339,27 @@
 <message key="xmlui.administrative.item.ViewItem.title">View item</message>
 <message key="xmlui.administrative.item.ViewItem.trail">View item</message>
 
+
+<message key="xmlui.forms.add">Add</message>
+<message key="xmlui.forms.remove_selected">Remove selected</message>
+
+<message key="xmlui.profile.subscriptions.add">Add</message>
+<message key="xmlui.profile.subscriptions.remove">Remove selected</message>
+
+
+<message key="xmlui.ArtifactBrowser.FeedbackForm.para2">Remember that you can contact us via e-mail to the following adress</message>
+
+<message key="xmlui.administrative.Navigation.context_in_edit_item_workflow">In edition by {0}</message>
+
+<message key="xmlui.bitstream.downloadName">document</message>
+
+<message key="xmlui.forms.remove">Remove</message>
+
+<message key="xmlui.forms.claimedAction.non_installed">Non installed</message>
+
+<message key="xmlui.flashMessage.deleteItem.success">Item has been removed.</message>
+<message key="xmlui.flashMessage.deleteItem.failure">Item couldn't been removed.</message>
+
 <!-- De aca en mas estan en las dependencias de dspace -->
 
 <!-- extension al messages.xml de XmlWorkflow -->
@@ -2163,14 +2367,185 @@
 <message key="xmlui.XMLWorkflow.default.CollectionLevelReview">Local review</message>
 <message key="xmlui.XMLWorkflow.default.CollectionLevelReview.claimaction">Local review</message>
 <message key="xmlui.XMLWorkflow.default.CollectionLevelReview.editaction">Local review</message>
-<message key="xmlui.XMLWorkflow.default.SeDiCILevelReview">SeDiCI review</message>
-<message key="xmlui.XMLWorkflow.default.SeDiCILevelReview.claimaction">SeDiCI review</message>
-<message key="xmlui.XMLWorkflow.default.SeDiCILevelReview.editaction">SeDiCi review</message>
+<message key="xmlui.XMLWorkflow.default.SeDiCILevelReview">SEDICI review</message>
+<message key="xmlui.XMLWorkflow.default.SeDiCILevelReview.claimaction">SEDICI review</message>
+<message key="xmlui.XMLWorkflow.default.SeDiCILevelReview.editaction">SEDICI review</message>
+<message key="xmlui.XMLWorkflow.default.reviewstep">Accept/Reject</message>
+<message key="xmlui.XMLWorkflow.default.reviewstep.claimaction">Accept/Reject</message>
+<message key="xmlui.XMLWorkflow.default.reviewstep.reviewaction">Accept/Reject</message>
+<message key="xmlui.XMLWorkflow.default.editstep">Accept/Edit/Reject step</message>
+<message key="xmlui.XMLWorkflow.default.editstep.claimaction">Accept/Edit/Reject</message>
+<message key="xmlui.XMLWorkflow.default.editstep.editaction">Accept/Edit/Reject</message>
+<message key="xmlui.XMLWorkflow.default.finaleditstep">Accept/Reject final</message>
+<message key="xmlui.XMLWorkflow.default.finaleditstep.claimaction">Accept/Reject final</message>
+<message key="xmlui.XMLWorkflow.default.finaleditstep.finaleditaction">Accept/Reject final</message>
+<message key="xmlui.XMLWorkflow.default.SeDiCILevelReview.selectcollectionaction">Collection's assignment</message>
+
+<message key="xmlui.XMLWorkflow.selectSingleReviewer.selectReviewerStep.claimaction">Step of the revisor assignment</message>
+<message key="xmlui.XMLWorkflow.selectSingleReviewer.selectReviewerStep.selectrevieweraction">Assign revisor</message>
+<message key="xmlui.XMLWorkflow.selectSingleReviewer.singleUserReviewStep">Single user review step</message>
+<message key="xmlui.XMLWorkflow.selectSingleReviewer.singleUserReviewStep.singleuserreviewaction">Revise deposit</message>
+
+<message key="xmlui.XMLWorkflow.scoreReview.scoreReviewStep.claimaction">Result of the revision</message>
+<message key="xmlui.XMLWorkflow.scoreReview.scoreReviewStep.scorereviewaction">Result of the revision</message>
+<message key="xmlui.XMLWorkflow.scoreReview.scoreReviewStep">Result of the revision</message>
+
 
 <!-- extensión al messages.xml de discovery -->
 
 <message key="xmlui.ArtifactBrowser.SimpleSearch.filter.type_filter">Document type</message>
-  
+<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.keywords_filter">Keyword</message>  
+<message key="xmlui.Discovery.AbstractSearch.type_type">Filtered by: Document types</message>
+<message key="xmlui.Discovery.AbstractSearch.type_keywords">Filtered by: Keywords</message>
+<message key="xmlui.Discovery.AbstractSearch.type_author">Filtered by: Author</message>
+<message key="xmlui.Discovery.AbstractSearch.type_subject">Filter by: Subject</message>
+<message key="xmlui.Discovery.AbstractSearch.startswith">Starts with</message>
+<message key="xmlui.Discovery.AbstractSearch.startswith.help">Or enter the beginning letters </message>
+<message key="xmlui.Discovery.SimpleSearch.filter_head">Filters</message>
+<message key="xmlui.Discovery.SimpleSearch.filter_add">Add</message>
+<message key="xmlui.Discovery.SimpleSearch.filter_help">Use the filters for short your search</message>
+<message key="xmlui.Discovery.SimpleSearch.filter_apply">Update filters</message>
+<message key="xmlui.Discovery.SimpleSearch.sort_head">Sort options</message>
+<message key="xmlui.Discovery.SimpleSearch.sort_apply">Apply</message>
+
+<message key="xmlui.discovery.SearchFacetFilter.no-results">No values found according to the filters.</message>
+<message key="xmlui.discovery.AbstractFiltersTransformer.filters.head">Refine your search</message>
+<message key="xmlui.discovery.AbstractFiltersTransformer.filters.head_collection">Collection's content</message>
+<message key="xmlui.discovery.AbstractFiltersTransformer.filters.view-more">See more</message>
+<message key="xmlui.discovery.SimpleSearch.search_label">Search</message>
 
 
+
+<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.persona">People</message>
+<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.institucion">Institution</message>
+<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.subtipo">Subtype</message>
+<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.descriptor">Descriptor</message>
+<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.author">Author</message>
+<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.author_filter">Author</message>
+<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.subject">Subject</message>
+<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.subject_filter">Subject</message>
+<message key="xmlui.ArtifactBrowser.SimpleSearch.filter.dateIssued.year">Publication date</message>
+
+
+<message key="sedici.comunidades.header">Navigate our collections</message>
+<message key="sedici.comunidades.tesis.nombre">Thesis</message>
+<message key="sedici.comunidades.tesis.info">Bachelor and doctoral thesis among other documents</message>
+<message key="sedici.comunidades.revistas.nombre">Journals</message>
+<message key="sedici.comunidades.revistas.info">Cientific journal publications</message>
+<message key="sedici.comunidades.libros.nombre">Books</message>
+<message key="sedici.comunidades.libros.info">Digitized books and e-books</message>
+<message key="sedici.comunidades.eventos.nombre">Events</message>
+<message key="sedici.comunidades.eventos.info">Congress y conference publications</message>
+<message key="sedici.comunidades.tesis.embargo">Embargoed document</message>
+<message key="sedici.comunidades.redunci.nombre">Red UNCI</message>
+<message key="sedici.comunidades.redunci.info">Journals and events from Red UNCI</message>
+<message key="sedici.comunidades.radio.nombre">University Radio</message>
+<message key="sedici.comunidades.radio.info">Interveiws and artistic productions, among other audios</message>
+<message key="sedici.comunidades.bdigital.nombre">Digital Library</message>
+<message key="sedici.comunidades.bdigital.info">Historical documents and other external digital resources</message>
+<message key="sedici.comunidades.rea.nombre">Open Eduational Resources</message>
+<message key="sedici.comunidades.rea.info">Learning objects and others</message>
+<message key="sedici.comunidades.ehidrica.nombre">Hydric emergency</message>
+<message key="sedici.comunidades.ehidrica.info">Jobs within the Plan of Integrated Management of Disaster's Risk</message>
+
+<message key="sedici.noticias.head">News</message>
+<message key="sedici.noticias.titulo">News list</message>
+<message key="sedici.common.camposObligato.nerios">(*) Mandatory</message>
+<message key="sedici.noticias.verTodas">Show all news</message>
+<message key="sedici.comunidades.link.hintRSS">RSS with latest added documents</message>
+<message key="sedici.common.link.verTodos">show all</message>
+
+<message key="sedici.XMLWorkflow.workflow.selectCollectionAction.head">Perform task: select collection</message>
+<message key="sedici.XMLWorkflow.workflow.selectCollectionAction.complete">Install document</message>
+<message key="xmlui.XMLWorkflow.default.SeDiCILevelReview.selectcollectionction">Select collection</message>
+
+<message key="xmlui.XMLWorkflow.autoarchive.SeDiCILevelReview">Review </message>
+<message key="xmlui.XMLWorkflow.autoarchive.SeDiCILevelReview.claimaction">SEDICI Review</message>
+<message key="xmlui.XMLWorkflow.autoarchive.SeDiCILevelReview.editaction">SEDICI Review</message>
+<message key="xmlui.XMLWorkflow.autoarchive.SeDiCILevelReview.selectcollectionaction">Select collection</message>
+<message key="xmlui.XMLWorkflow.default.CollectionLevelReview.skipadminclaimaction">Local review</message>
+<message key="xmlui.XMLWorkflow.step.unknown">Unknown state</message>
+<message key="xmlui.XMLWorkflow.Navigation.xmlworkflow_overview">General view for the workflow</message>
+
+<message key="xmlui.XMLWorkflow.MuseoAzzariniAdmin.SeDiCILevelReview.claimaction">SEDICI Review</message>
+<message key="xmlui.XMLWorkflow.MuseoFisicaAdmin.SeDiCILevelReview.claimaction">SEDICI Review</message>
+
+<message key="xmlui.XMLWorkflow.WorkflowOverviewTransformer.trail">General view for the workflow</message>
+<message key="xmlui.XMLWorkflow.WorkflowOverviewTransformer.title">General view for the workflow</message>
+<message key="xmlui.XMLWorkflow.WorkflowOverviewTransformer.search_column1"></message>
+<message key="xmlui.XMLWorkflow.WorkflowOverviewTransformer.search_column2">Step</message>
+<message key="xmlui.XMLWorkflow.WorkflowOverviewTransformer.search_column3">Item</message>
+<message key="xmlui.XMLWorkflow.WorkflowOverviewTransformer.search_column4">Collection</message>
+<message key="xmlui.XMLWorkflow.WorkflowOverviewTransformer.search_column5">Depositor</message>
+<message key="xmlui.XMLWorkflow.WorkflowOverviewTransformer.button.submit_submitter">Send items back to the depositor</message>
+<message key="xmlui.XMLWorkflow.WorkflowOverviewTransformer.button.submit_delete">Delete items</message>
+<message key="xmlui.XMLWorkflow.WorkflowOverviewTransformer.button.no_results">No results</message>
+
+<message key="xmlui.XMLWorkflow.WorkflowItemTransformer.title">Display workflow item: {0}</message>
+<message key="xmlui.XMLWorkflow.WorkflowItemTransformer.trail">Display workflow item: {0}</message>
+
+
+
+<message key="sedici.Submission.submit.SelectCollection.collection_help">Select the collection for install this item</message>
+
+<message key="xmlui.XMLWorkflow.workflow.EditMetadataAction.delete_help">If you reviewed the item and found that its inclusion <strong>ISN'T</strong> correct and want to delete it permanently of the repository, select "Remove". This will remove the item of the repository totally without give to the depositor the option of modification and upload again. </message>
+<message key="xmlui.XMLWorkflow.workflow.EditMetadataAction.delete_submit">Delete item</message>
+<message key="xmlui.XMLWorkflow.workflow.EditMetadataAction.head">Execute task: Accept/Reject item</message>
+<message key="xmlui.XMLWorkflow.workflow.EditMetadataAction.info1">Actions that you can realize in this task:</message>
+<message key="xmlui.XMLWorkflow.workflow.EditMetadataAction.reject_help">If you reviewed the item and found that its inclusion in the collection <strong>ISN'T</strong> correct and want to delete it permanently of the repository, select "Remove". It will ask you that enter a message telling why the item isn't appropiate, and if the depositor will must change something and upload again the item.</message>
+<message key="xmlui.XMLWorkflow.workflow.EditMetadataAction.reject_submit">Reject item</message>
+<message key="xmlui.XMLWorkflow.workflow.EditMetadataAction.approve_help">If you reviewed the item and found that its inclusion in the collection is correct, select "Approve item".</message>
+<message key="xmlui.XMLWorkflow.workflow.EditMetadataAction.approve_submit">Approve Item</message>
+<message key="xmlui.XMLWorkflow.workflow.EditMetadataAction.edit_help">Choose this option to change the metadata of the item.</message>
+<message key="xmlui.XMLWorkflow.workflow.EditMetadataAction.edit_submit">Edit metadata</message>
+<message key="xmlui.Submission.workflow.DeleteTaskStep.info1">Are you sure?</message>
+<message key="xmlui.Submission.workflow.DeleteTaskStep.submit_delete">Delete</message>
+<message key="xmlui.XMLWorkflow.workflow.ClaimAction.info1">Actions that you can realize in this task:</message>
+<message key="xmlui.XMLWorkflow.workflow.ClaimAction.take_help">Assign this task to self.</message>
+<message key="xmlui.XMLWorkflow.workflow.ClaimAction.take_submit">Take task</message>
+<message key="xmlui.XMLWorkflow.workflow.ClaimAction.leave_help">Leave this task queued for another to take.</message>
+<message key="xmlui.XMLWorkflow.workflow.ClaimAction.leave_submit">Leave task</message>
+<message key="xmlui.XMLWorkflow.workflow.ClaimAction.back">Go back to the general view</message>
+<message key="xmlui.XMLWorkflow.workflow.ClaimAction.title">Accept/Reject this task</message>
+<message key="xmlui.XMLWorkflow.workflow.AcceptAction.head">Execute task: Accept/Reject item</message>
+<message key="xmlui.XMLWorkflow.workflow.AcceptAction.info1">Actions that you can realize in this task:</message>
+<message key="xmlui.XMLWorkflow.workflow.AcceptAction.reject_help">If you reviewed the item and found that its inclusion in the collection <strong>ISN'T</strong> correct and want to delete it permanently of the repository, select "Remove". It will ask you that enter a message telling why the item isn't appropiate, and if the depositor will must change something and upload again the item.</message>
+<message key="xmlui.XMLWorkflow.workflow.AcceptAction.reject_submit">Reject item</message>
+<message key="xmlui.XMLWorkflow.workflow.AcceptAction.approve_help">If you reviewed the item and found that its inclusion in the collection is correct, select "Approve item".</message>
+<message key="xmlui.XMLWorkflow.workflow.AcceptAction.approve_submit">Approve Item</message>
+<message key="xmlui.XMLWorkflow.workflow.SelectReviewerAction.head">Execute task: Assign revisor</message>
+<message key="xmlui.XMLWorkflow.workflow.SelectReviewerAction.help">Use the search located below for choose the user in charge of the task's revision</message>
+<message key="xmlui.XMLWorkflow.workflow.SelectReviewerAction.search.label">Search revisor</message>
+<message key="xmlui.XMLWorkflow.workflow.SelectReviewerAction.search.button">Search user</message>
+<message key="xmlui.XMLWorkflow.workflow.SelectReviewerAction.select-reviewer.button">Choose as revisor</message>
+<message key="xmlui.XMLWorkflow.workflow.SingleUserReviewAction.decline.help">If you aren't the correct person to revise this item, you can always reject this task by clicking the button "Reject Task".</message>
+<message key="xmlui.XMLWorkflow.workflow.SingleUserReviewAction.decline.button">Reject Task</message>
+<message key="xmlui.XMLWorkflow.workflow.ScoreReviewAction.head">Revise deposit</message>
+<message key="xmlui.XMLWorkflow.workflow.ScoreReviewAction.score.button">Revise deposit</message>
+<message key="xmlui.XMLWorkflow.workflow.ScoreReviewAction.help">Enter the result for this deposit</message>
+
+
+<message key="sedici.XMLWorkflow.workflowitem.notfound">Requested workflow item does not exist</message>
+
+<message key="sedici.common.dspace-info">Supported by</message>
+
+<message key="sedici.EPerson.string-too-long">Field {0} exceded maximun length ({1} characteres) and was cut</message>
+
+<message key="sedici.home.buscar_material.title">Search resources</message>
+<message key="sedici.home.buscar_material.info_pre">Search among more than </message>
+<message key="sedici.home.buscar_material.info_post"> resources available in the repository</message>
+<message key="sedici.home.subir_material.title">Upload resources</message>
+<message key="sedici.home.subir_material.info">Upload your works to SEDICI to increase its visibility and improve its impact</message>
+<message key="sedici.home.subir_material.linktext">Upload a new document</message>
+<message key="sedici.home.slide_resources.title">Resources for your research</message>
+<message key="sedici.home.slide_resources.info">Access to more than 25.000 scientific and academic resources  developed in the UNLP.</message>
+<message key="sedici.home.slide_digital_preservation.title">Digital preservation</message>
+<message key="sedici.home.slide_digital_preservation.info">Ensure the long-term access of your work despite the technologic changes</message>
+<message key="sedici.home.slide_work_visibility.title">Visibility of your work</message>
+<message key="sedici.home.slide_work_visibility.info">By posting your works in SEDICI you will improve its visibility and impact</message>
+<message key="sedici.home.slide_pairs_contact.title">Contact with pairs</message>
+<message key="sedici.home.slide_pairs_contact.info">Contact with researchers that actually works in areas related to yours</message>
+
+<message key="sedici.items.handle.utilizacion_URI">Please, use this identificator(URI) for cite o linking this item: </message>
+<message key="sedici.common.camposObligatorios">(*) Mandatory fields</message>
 </catalogue>

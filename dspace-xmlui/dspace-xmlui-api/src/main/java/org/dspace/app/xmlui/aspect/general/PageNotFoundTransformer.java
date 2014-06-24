@@ -20,6 +20,7 @@ import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
 import org.dspace.app.xmlui.utils.UIException;
+<<<<<<< HEAD
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingConstants;
 import org.dspace.app.xmlui.wing.WingException;
@@ -28,6 +29,12 @@ import org.dspace.app.xmlui.wing.element.Division;
 import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.authorize.AuthorizeException;
 
+=======
+import org.dspace.app.xmlui.wing.WingConstants;
+import org.dspace.app.xmlui.wing.WingException;
+import org.dspace.app.xmlui.wing.element.Body;
+import org.dspace.authorize.AuthorizeException;
+>>>>>>> sedici-svn-1.8.2-refactored
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -40,23 +47,7 @@ import org.xml.sax.SAXException;
  */
 public class PageNotFoundTransformer extends AbstractDSpaceTransformer implements CacheableProcessingComponent
 {
-    /** Language Strings */
-    private static final Message T_title =
-        message("xmlui.PageNotFound.title");
-    
-    private static final Message T_head =
-        message("xmlui.PageNotFound.head");
-    
-    private static final Message T_para1 =
-        message("xmlui.PageNotFound.para1");
-    
-    private static final Message T_go_home =
-        message("xmlui.general.go_home");
-    
-    private static final Message T_dspace_home =
-        message("xmlui.general.dspace_home");
-    
-    
+
     /** Where the body element is stored while we wait to see if it is empty */
     private SAXEvent bodyEvent;
     
@@ -155,70 +146,20 @@ public class PageNotFoundTransformer extends AbstractDSpaceTransformer implement
     public void addBody(Body body) throws SAXException, WingException,
             UIException, SQLException, IOException, AuthorizeException, ResourceNotFoundException
     {
-        if (this.bodyEmpty)
+
+    	// Consider the response is empty if the body is empty and this request was not redirected 
+        if (this.bodyEmpty && !ObjectModelHelper.getResponse(objectModel).containsHeader("Location"))
         {
-            Division notFound = body.addDivision("page-not-found","primary");
-            
-            notFound.setHead(T_head);
-            
-            notFound.addPara(T_para1); 
+            Request request = ObjectModelHelper.getRequest(objectModel);
 
-            notFound.addPara().addXref(contextPath + "/",T_go_home);
+            String URL = request.getRequestURI();
+            if(request.getQueryString() != null)
+                URL += "?" + request.getQueryString();
 
-            throw new ResourceNotFoundException("Page cannot be found");
-
-
+            throw new ResourceNotFoundException("Page cannot be found: " + URL);
         }
     }
 
-    /** What page metadata to add to the document */
-    @Override
-    public void addPageMeta(PageMeta pageMeta) throws SAXException,
-            WingException, UIException, SQLException, IOException,
-            AuthorizeException
-    {
-        if (this.bodyEmpty)
-        {
-            // Set the page title
-            pageMeta.addMetadata("title").addContent(T_title);
-            
-            // Give theme a base trail
-            pageMeta.addTrailLink(contextPath + "/",T_dspace_home);
-        }
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     /**
      * Send the given recorded sax event.
      */

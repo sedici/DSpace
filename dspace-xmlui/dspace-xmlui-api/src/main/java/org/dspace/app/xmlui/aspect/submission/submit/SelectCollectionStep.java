@@ -9,6 +9,10 @@ package org.dspace.app.xmlui.aspect.submission.submit;
 
 import java.io.IOException;
 import java.sql.SQLException;
+<<<<<<< HEAD
+=======
+import java.util.HashMap;
+>>>>>>> sedici-svn-1.8.2-refactored
 
 import org.dspace.app.xmlui.utils.UIException;
 import org.dspace.app.xmlui.aspect.submission.AbstractSubmissionStep;
@@ -22,6 +26,11 @@ import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.Select;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
+<<<<<<< HEAD
+=======
+import org.dspace.content.CollectionSearchSedici;
+import org.dspace.content.CollectionsWithCommunities;
+>>>>>>> sedici-svn-1.8.2-refactored
 import org.dspace.content.Community;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Constants;
@@ -69,18 +78,20 @@ public class SelectCollectionStep extends AbstractSubmissionStep
   
     public void addBody(Body body) throws SAXException, WingException,
             UIException, SQLException, IOException, AuthorizeException
-    {     
-		Collection[] collections; // List of possible collections.
+    {  
+		//Collection[] collections; // List of possible collections.
+		CollectionsWithCommunities collections; // List of possible collections.
 		String actionURL = contextPath + "/submit/" + knot.getId() + ".continue";
 		DSpaceObject dso = HandleManager.resolveToObject(context, handle);
 
 		if (dso instanceof Community)
 		{
-			collections = Collection.findAuthorized(context, ((Community) dso), Constants.ADD);   
+			//collections = Collection.findAuthorized(context, ((Community) dso), Constants.ADD);   
+			collections = CollectionSearchSedici.findAuthorizedWithCommunitiesName(context, ((Community) dso), Constants.ADD);   
 		} 
 		else
 		{
-			collections = Collection.findAuthorized(context, null, Constants.ADD);
+			collections = CollectionSearchSedici.findAuthorizedWithCommunitiesName(context, null, Constants.ADD);
 		}
         
 		// Basic form with a drop down list of all the collections
@@ -95,14 +106,21 @@ public class SelectCollectionStep extends AbstractSubmissionStep
         select.setHelp(T_collection_help);
         
         select.addOption("",T_collection_default);
-        for (Collection collection : collections) 
-        {
-        	String name = collection.getMetadata("name");
-   		   	if (name.length() > 50)
-                  {
-                      name = name.substring(0, 47) + "...";
-                  }
-        	select.addOption(collection.getHandle(),name);
+        String communityName, collectionName;
+        Collection collection;
+        for (int i = 0; i < collections.getCollections().size(); i++) {
+        	collection=collections.getCollections().get(i);
+        	
+        	communityName=collections.getCommunitiesName().get(i);
+        	collectionName=collection.getName();
+
+   		   	if (communityName.length() > 40){
+   		   		communityName = communityName.substring(0, 39);
+            } 
+   		   	if (collectionName.length() > 40){
+   		   		collectionName = collectionName.substring(0, 39);
+            }
+        	select.addOption(collection.getHandle(),communityName+" > "+collectionName);
         }
         
         Button submit = list.addItem().addButton("submit");

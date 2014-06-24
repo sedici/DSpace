@@ -52,11 +52,16 @@
     <!--handles the rendering of a single item in a list in file mode-->
     <xsl:template match="dri:div[@id='ar.edu.unlp.sedici.aspect.news.ShowNews.div.feed']">
 
-         	<h1><xsl:value-of select='dri:head'/></h1>
+         	<h1><xsl:copy-of select='dri:head'/></h1>
          	 <xsl:for-each select="dri:list[@id='ar.edu.unlp.sedici.aspect.news.ShowNews.list.news']">
                 <xsl:call-template name="noticias"/>
             </xsl:for-each>
-
+ 			<a href="http://sedici.unlp.edu.ar/blog/">
+    	     <xsl:attribute name="target">
+                 _blank
+             </xsl:attribute>
+             <i18n:text>sedici.noticias.verTodas</i18n:text>
+          </a> 
     </xsl:template>
     
     <xsl:template name="noticias">
@@ -72,6 +77,7 @@
     </xsl:template>
     
     <xsl:template name='noticia_individual'>
+          <span class="news_date"><xsl:value-of select="dri:item[@n='fecha']"/></span>
     	  <a>
              <xsl:attribute name="href">
                  <xsl:value-of select="dri:item[@n='link']/dri:xref/@target"/>
