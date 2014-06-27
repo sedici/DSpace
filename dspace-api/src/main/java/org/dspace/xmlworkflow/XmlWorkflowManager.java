@@ -25,15 +25,14 @@ import org.dspace.xmlworkflow.state.Step;
 import org.dspace.xmlworkflow.state.Workflow;
 import org.dspace.xmlworkflow.state.actions.*;
 import org.dspace.xmlworkflow.storedcomponents.*;
-import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 
-import ar.edu.unlp.sedici.util.AuthorizeUtil;
 
 /**
  * When an item is submitted and is somewhere in a workflow, it has a row in the
@@ -199,23 +198,25 @@ public class XmlWorkflowManager {
         return (row != null);
     }
     
-    /**
-     * Decide si debe enviarse o no un mail de notificación de nueva tarea disponible, según si el usuario logueado es administrador o no.
-     * 
-     * @param context DSpace context
-     * @param wfi XmlWorkflowItem related to this invocation
-     * @param useNoEMail signals if the item's ID should be set in the noEMail static var
-     * @return whether the mail should be sent or not
-     * @throws SQLException
-     */
-    public static boolean shouldSendAlert(Context context, XmlWorkflowItem wfi, EPerson eperson) throws SQLException {
-    	// Checks the ADMIN privilege on target collection for the scpeficied eperson or the current users if eperson is null
-    	if(eperson == null) {
-    		return !AuthorizeManager.isAdmin(context, wfi.getCollection());
-    	} else {
-    		return !AuthorizeUtil.isAdmin(context, eperson, wfi.getCollection());
-    	}
-    }
+	/**
+	 * Decide si debe enviarse o no un mail de notificación de nueva tarea
+	 * disponible, según si el usuario logueado es administrador o no.
+	 * 
+	 * @param context
+	 *            DSpace context
+	 * @param wfi
+	 *            XmlWorkflowItem related to this invocation
+	 * @param useNoEMail
+	 *            signals if the item's ID should be set in the noEMail static
+	 *            var
+	 * @return whether the mail should be sent or not
+	 * @throws SQLException
+	 */
+	public static boolean shouldSendAlert(Context context, XmlWorkflowItem wfi,
+			EPerson eperson) throws SQLException {
+		// Checks the ADMIN privilege on target collection for the current user
+		return !AuthorizeManager.isAdmin(context, wfi.getCollection(), true);
+	}
     
     /**
      * Ya que a la gente de DSpace se les olvido crear un metodo para retornar un XmlWorkflowItem según el Item,
@@ -1002,4 +1003,32 @@ public class XmlWorkflowManager {
     		return "true".equals( values[0].value );
     	return false;
     }
+
+	/**
+	 * Permanently delete the specified workflow item, this method assumes that
+	 * the action has been confirmed.
+	 * 
+	 * @param context The DSpace context
+	 * @param wfi The XMLWorkflow item the to be deleted
+	 * @throws AuthorizeException 
+	 * @throws SQLException 
+	 * @throws IOException 
+	 */
+	public static void deleteWorkflowItem (Context context, XmlWorkflowItem wfi) throws SQLException, AuthorizeException, IOException
+	{
+		XmlWorkflowManager.deleteAllTasks(context, wfi);
+		Item item = wfi.getItem();
+		Collection[] collections = item.getCollections();
+
+		// Remove item from all the collections it's in
+	    for (Collection collection : collections)
+	    {
+	            collection.removeItem(item);
+	    }	
+
+	    // Note: when removing an item from the last collection it will
+	    // be removed from the system. So there is no need to also call
+	    // an item.delete() method.        
+        context.commit();
+	}
 }

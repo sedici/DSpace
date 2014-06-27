@@ -2,29 +2,24 @@ package ar.edu.unlp.sedici.aspect.extraSubmission;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
 
-import org.dspace.app.xmlui.utils.UIException;
-import org.dspace.app.xmlui.aspect.submission.AbstractSubmissionStep;
 import org.dspace.app.xmlui.aspect.xmlworkflow.AbstractXMLUIAction;
+import org.dspace.app.xmlui.utils.UIException;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.Body;
 import org.dspace.app.xmlui.wing.element.Button;
 import org.dspace.app.xmlui.wing.element.Division;
 import org.dspace.app.xmlui.wing.element.List;
-import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.Select;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
-import org.dspace.content.CollectionSearchSedici;
-import org.dspace.content.CollectionsWithCommunities;
-import org.dspace.content.Community;
-import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.core.Constants;
-import org.dspace.handle.HandleManager;
 import org.xml.sax.SAXException;
+
+import ar.edu.unlp.sedici.dspace.content.CollectionSearchSedici;
+import ar.edu.unlp.sedici.dspace.content.CollectionsWithCommunities;
 
 public class SeDiCISelectCollectionStep extends AbstractXMLUIAction {
 

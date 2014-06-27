@@ -9,13 +9,9 @@ package org.dspace.app.xmlui.aspect.submission.submit;
 
 import java.io.IOException;
 import java.sql.SQLException;
-<<<<<<< HEAD
-=======
-import java.util.HashMap;
->>>>>>> sedici-svn-1.8.2-refactored
 
-import org.dspace.app.xmlui.utils.UIException;
 import org.dspace.app.xmlui.aspect.submission.AbstractSubmissionStep;
+import org.dspace.app.xmlui.utils.UIException;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.Body;
@@ -26,16 +22,14 @@ import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.Select;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
-<<<<<<< HEAD
-=======
-import org.dspace.content.CollectionSearchSedici;
-import org.dspace.content.CollectionsWithCommunities;
->>>>>>> sedici-svn-1.8.2-refactored
 import org.dspace.content.Community;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Constants;
 import org.dspace.handle.HandleManager;
 import org.xml.sax.SAXException;
+
+import ar.edu.unlp.sedici.dspace.content.CollectionSearchSedici;
+import ar.edu.unlp.sedici.dspace.content.CollectionsWithCommunities;
 
 /**
  * Allow the user to select a collection they wish to submit an item to, 

@@ -8,25 +8,25 @@
 package org.dspace.app.util;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.net.URLEncoder;
-import java.io.UnsupportedEncodingException;
 
-import org.w3c.dom.Document;
-
+import org.apache.log4j.Logger;
+import org.dspace.content.DSpaceObject;
+import org.dspace.core.ConfigurationManager;
+import org.dspace.core.Constants;
+import org.dspace.core.Context;
+import org.dspace.handle.HandleManager;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.output.DOMOutputter;
 import org.jdom.output.XMLOutputter;
-
-import org.apache.log4j.Logger;
-
-import org.dspace.content.DSpaceObject;
-import org.dspace.core.ConfigurationManager;
-import org.dspace.search.QueryResults;
+import org.w3c.dom.Document;
 
 import com.sun.syndication.feed.module.opensearch.OpenSearchModule;
 import com.sun.syndication.feed.module.opensearch.entity.OSQuery;
@@ -190,8 +190,6 @@ public class OpenSearch
             log.error(e.toString(), e);
             throw new IOException("Unable to generate feed", e);
         	}
-    
-        }
     }
 
     private static SyndicationFeed getResults(String format, String query, int totalResults, int start, int pageSize,

@@ -1,6 +1,8 @@
-package org.dspace.content;
+package ar.edu.unlp.sedici.dspace.content;
 
 import java.util.List;
+
+import org.dspace.content.Collection;
 
 public class CollectionsWithCommunities {
     List<Collection> collections;

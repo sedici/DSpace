@@ -348,30 +348,47 @@ public class AuthorizeManager
      *         given DSpace object
      */
     public static boolean isAdmin(Context c, DSpaceObject o) throws SQLException {
-
-	// return true if user is an Administrator
-	if (isAdmin(c))
-	{
-	    return true;
-	}
-
-	if (o == null)
-	{
-	    return false;
-	}
-
-        // is eperson set? if not, userid = 0 (anonymous)
-	int userid = 0;
-	EPerson e = c.getCurrentUser();
-	if(e != null)
-	{
-            userid = e.getID();
-	}
-
-        //
-        // First, check all Resource Policies directly on this object
-        //
-	List<ResourcePolicy> policies = getPoliciesActionFilter(c, o, Constants.ADMIN);
+    	return isAdmin(c,o, false);
+    }
+    /**
+     * Check to see if the current user is an Administrator of a given object
+     * within DSpace. Always return <code>true</code> if the user is a System
+     * Admin
+     * 
+     * @param c
+     *            current context
+     * @param o
+     *            current DSpace Object, if <code>null</code> the call will be
+     *            equivalent to a call to the <code>isAdmin(Context c)</code>
+     *            method
+     * 
+     * @return <code>true</code> if user has administrative privileges on the
+     *         given DSpace object
+     */
+    public static boolean isAdmin(Context c, DSpaceObject o, boolean strictCheck) throws SQLException {
+    	// return true if user is an Administrator
+    	if (isAdmin(c, strictCheck))
+    	{
+    	    return true;
+    	}
+	
+		if (o == null)
+		{
+		    return false;
+		}
+	
+	        // is eperson set? if not, userid = 0 (anonymous)
+		int userid = 0;
+		EPerson e = c.getCurrentUser();
+		if(e != null)
+		{
+	            userid = e.getID();
+		}
+	
+	        //
+	        // First, check all Resource Policies directly on this object
+	        //
+		List<ResourcePolicy> policies = getPoliciesActionFilter(c, o, Constants.ADMIN);
         
         for (ResourcePolicy rp : policies)
         {
@@ -400,13 +417,12 @@ public class AuthorizeManager
         DSpaceObject parent = o.getParentObject();
         if (parent != null)
         {
-            return isAdmin(c, parent);
+        	return isAdmin(c, parent,strictCheck);
         }
 	
 		return false;
     }
 
-   
     /**
      * Check to see if the current user is a System Admin. Always return
      * <code>true</code> if c.ignoreAuthorization is set. Anonymous users
@@ -420,8 +436,24 @@ public class AuthorizeManager
      */
     public static boolean isAdmin(Context c) throws SQLException
     {
+    	return isAdmin(c, false);
+    }
+    /**
+     * Check to see if the current user is a System Admin. Always return
+     * <code>true</code> if c.ignoreAuthorization is set. Anonymous users
+     * can't be Admins (EPerson set to NULL)
+     * 
+     * @param c
+     *            current context
+     * @param strictCheck 
+     * 
+     * @return <code>true</code> if user is an admin or ignore authorization
+     *         flag set
+     */
+    public static boolean isAdmin(Context c, boolean strictCheck) throws SQLException
+    {
         // if we're ignoring authorization, user is member of admin
-        if (c.ignoreAuthorization())
+    	if (!strictCheck && c.ignoreAuthorization())
         {
             return true;
         }

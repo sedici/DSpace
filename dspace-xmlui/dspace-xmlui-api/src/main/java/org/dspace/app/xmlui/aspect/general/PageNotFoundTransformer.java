@@ -20,21 +20,10 @@ import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
 import org.dspace.app.xmlui.utils.UIException;
-<<<<<<< HEAD
-import org.dspace.app.xmlui.wing.Message;
-import org.dspace.app.xmlui.wing.WingConstants;
-import org.dspace.app.xmlui.wing.WingException;
-import org.dspace.app.xmlui.wing.element.Body;
-import org.dspace.app.xmlui.wing.element.Division;
-import org.dspace.app.xmlui.wing.element.PageMeta;
-import org.dspace.authorize.AuthorizeException;
-
-=======
 import org.dspace.app.xmlui.wing.WingConstants;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.Body;
 import org.dspace.authorize.AuthorizeException;
->>>>>>> sedici-svn-1.8.2-refactored
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 

@@ -1,25 +1,4 @@
-<<<<<<< HEAD
 target/
-.settings/
-.classpath
-
-#Ignoro lo adquirido desde el svn de dspace
-dspace/dspace-tag-files/
-
-## Ignore the MVN compiled output directories from version tracking
-target/
-=======
-
-#Ignoro lo adquirido desde el svn de dspace
-distribution/dspace-tag-files/
-
-## Ignore the MVN compiled output directories from version tracking
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.next
-release.properties
->>>>>>> sedici-svn-1.8.2-refactored
 
 ## Ignore project files created by Eclipse
 .settings/
@@ -27,19 +6,11 @@ release.properties
 .classpath
 .tomcatplugin
 
-<<<<<<< HEAD
-=======
-
->>>>>>> sedici-svn-1.8.2-refactored
 ## Ignore project files created by IntelliJ IDEA
 *.iml
 *.ipr
 *.iws
 .idea/
-<<<<<<< HEAD
-=======
-overlays/
->>>>>>> sedici-svn-1.8.2-refactored
 
 ## Ignore project files created by NetBeans
 nbproject/private/
@@ -51,16 +22,6 @@ nbactions.xml
 nb-configuration.xml
 META-INF/
 
-<<<<<<< HEAD
-=======
-## Ignore all *.properties file in root folder, EXCEPT build.properties (the default)
-/*.properties
-!/build.properties
-
-##Mac noise
-.DS_Store
-
->>>>>>> sedici-svn-1.8.2-refactored
 ##Omito los datos relativos a la configuración local de dspace
 install/
 #build.properties

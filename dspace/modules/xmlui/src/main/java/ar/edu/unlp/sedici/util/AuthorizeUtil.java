@@ -21,7 +21,7 @@ public class AuthorizeUtil {
 	 * @return
 	 * @throws SQLException 
 	 */
-	public static boolean isAdmin(Context c, EPerson eperson) throws SQLException {
+	private static boolean isAdmin(Context c, EPerson eperson) throws SQLException {
 		if(eperson == null)
 			return false;
 		return epersonInGroup(c, 1, eperson);
@@ -47,7 +47,7 @@ public class AuthorizeUtil {
      * @return <code>true</code> if user has administrative privileges on the
      *         given DSpace object
      */
-    public static boolean isAdmin(Context c, EPerson eperson, DSpaceObject dspaceObject) throws SQLException {
+	private static boolean isAdmin(Context c, EPerson eperson, DSpaceObject dspaceObject) throws SQLException {
 
     	if(eperson == null)
     		return false;
@@ -94,7 +94,7 @@ public class AuthorizeUtil {
     /**
      * copied from the private version in Group.epersonInGroup method
      */
-    public static boolean epersonInGroup(Context c, int groupID, EPerson e) throws SQLException {
+	private static boolean epersonInGroup(Context c, int groupID, EPerson e) throws SQLException {
         Set<Integer> groupIDs = Group.allMemberGroupIDs(c, e);
         return groupIDs.contains(Integer.valueOf(groupID));
     }

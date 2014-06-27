@@ -308,7 +308,7 @@ public class SidebarFacetsTransformer extends AbstractDSpaceTransformer implemen
                         }
                     }
                 }
-            }
+          
         }
     }
 

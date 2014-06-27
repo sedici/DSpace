@@ -31,10 +31,7 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.browse.BrowseException;
 import org.dspace.browse.BrowseIndex;
 import org.dspace.content.Collection;
-<<<<<<< HEAD
-=======
 import org.dspace.content.Community;
->>>>>>> sedici-svn-1.8.2-refactored
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.ConfigurationManager;
 import org.xml.sax.SAXException;

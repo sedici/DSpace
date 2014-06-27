@@ -12,10 +12,7 @@ import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-<<<<<<< HEAD
-=======
 import org.apache.cocoon.ResourceNotFoundException;
->>>>>>> sedici-svn-1.8.2-refactored
 import org.apache.cocoon.environment.*;
 import org.apache.cocoon.reading.ResourceReader;
 import org.apache.excalibur.source.Source;

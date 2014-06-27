@@ -14,15 +14,12 @@ import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.*;
 import org.dspace.authorize.AuthorizeException;
-<<<<<<< HEAD
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
-=======
 import org.dspace.authorize.AuthorizeManager;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
 import org.dspace.xmlworkflow.XmlWorkflowManager;
->>>>>>> sedici-svn-1.8.2-refactored
 import org.dspace.xmlworkflow.state.actions.Action;
 import org.dspace.xmlworkflow.state.actions.processingaction.ReviewAction;
 import org.xml.sax.SAXException;

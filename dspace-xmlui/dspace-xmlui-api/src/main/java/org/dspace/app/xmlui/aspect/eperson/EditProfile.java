@@ -33,19 +33,15 @@ import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.Select;
 import org.dspace.app.xmlui.wing.element.Text;
 import org.dspace.content.Collection;
-<<<<<<< HEAD
 import org.dspace.core.ConfigurationManager;
-=======
-import org.dspace.content.CollectionSearchSedici;
-import org.dspace.content.CollectionsWithCommunities;
-import org.dspace.core.ConfigurationManager;
-import org.dspace.core.Constants;
->>>>>>> sedici-svn-1.8.2-refactored
 import org.dspace.core.I18nUtil;
 import org.dspace.core.LogManager;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.Subscribe;
 import org.xml.sax.SAXException;
+
+import ar.edu.unlp.sedici.dspace.content.CollectionSearchSedici;
+import ar.edu.unlp.sedici.dspace.content.CollectionsWithCommunities;
 
 /**
  * Display a form that allows the user to edit their profile.

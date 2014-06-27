@@ -2,7 +2,6 @@ package ar.edu.unlp.sedici.xmlui.xsl;
 
 import java.net.URL;
 
-import javax.validation.Path.Node;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;

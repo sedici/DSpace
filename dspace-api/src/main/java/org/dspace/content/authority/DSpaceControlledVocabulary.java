@@ -26,7 +26,7 @@ import org.dspace.core.ConfigurationManager;
 import org.dspace.core.SelfNamedPlugin;
 import org.xml.sax.InputSource;
 
-import ar.edu.unlp.sedici.dspace.utils.MailReporter;
+import ar.edu.unlp.sedici.dspace.util.MailReporter;
 
 /**
  * ChoiceAuthority source that reads the JSPUI-style hierarchical vocabularies

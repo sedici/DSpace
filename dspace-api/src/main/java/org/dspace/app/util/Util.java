@@ -9,6 +9,7 @@ package org.dspace.app.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -148,15 +149,22 @@ public class Util {
         
             return out.toString();
         }
-
+        
         /** Version of encodeBitstreamName with one parameter, uses default encoding
          * <P>
          * @param stringIn
          *                input string to encode
          * @return the encoded string
          */
-        public static String encodeBitstreamName(String stringIn) throws java.io.UnsupportedEncodingException {
-                return encodeBitstreamName(stringIn, Constants.DEFAULT_ENCODING);
+        public static String encodeBitstreamName(String stringIn)  {
+                try {
+					return encodeBitstreamName(stringIn, Constants.DEFAULT_ENCODING);
+				} catch (UnsupportedEncodingException e) {
+					// this should never happen because UTF8 is always supported
+					e.printStackTrace();
+					log.error("Incredibly error occurred the default encoding is not available",e);
+					throw new RuntimeException(e);
+				}
          }
 
         /**

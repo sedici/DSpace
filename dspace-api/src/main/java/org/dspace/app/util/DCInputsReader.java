@@ -8,15 +8,22 @@
 package org.dspace.app.util;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.*;
 
 import org.xml.sax.SAXException;
 import org.w3c.dom.*;
+
 import javax.xml.parsers.*;
 
 import org.dspace.content.Collection;
 import org.dspace.content.MetadataSchema;
 import org.dspace.core.ConfigurationManager;
+import org.dspace.handle.HandleManager;
+
+
+
+import org.dspace.core.Context;
 
 /**
  * Submission form generator for DSpace. Reads and parses the installation
@@ -154,9 +161,16 @@ public class DCInputsReader
      * @throws DCInputsReaderException
      *             if no default set defined
      */
-    public DCInputSet getInputs(Collection collection)
+    public DCInputSet getInputs(String handle)
                 throws DCInputsReaderException
     {
+    	Collection collection;
+		try {
+	    	Context context = new Context();
+			collection = (Collection) HandleManager.resolveToObject(context, handle);
+		} catch (SQLException e1) {
+			throw new DCInputsReaderException(e1);
+		}
     	String formName;
     	try
     	{
@@ -199,7 +213,7 @@ public class DCInputsReader
     public int getNumberInputPages(Collection collection)
         throws DCInputsReaderException
     {
-        return getInputs(collection).getNumberPages();
+        return getInputs(collection.getHandle()).getNumberPages();
     }
     
     /**

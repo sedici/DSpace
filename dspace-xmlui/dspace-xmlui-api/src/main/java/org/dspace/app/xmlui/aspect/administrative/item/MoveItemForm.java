@@ -19,13 +19,11 @@ import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.Select;
 import org.dspace.content.Collection;
-<<<<<<< HEAD
-=======
-import org.dspace.content.CollectionSearchSedici;
-import org.dspace.content.CollectionsWithCommunities;
->>>>>>> sedici-svn-1.8.2-refactored
 import org.dspace.content.Item;
 import org.dspace.core.Constants;
+
+import ar.edu.unlp.sedici.dspace.content.CollectionSearchSedici;
+import ar.edu.unlp.sedici.dspace.content.CollectionsWithCommunities;
 
 
 /**

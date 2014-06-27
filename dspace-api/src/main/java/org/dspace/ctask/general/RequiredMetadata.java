@@ -18,10 +18,7 @@ import org.dspace.app.util.DCInput;
 import org.dspace.app.util.DCInputSet;
 import org.dspace.app.util.DCInputsReader;
 import org.dspace.app.util.DCInputsReaderException;
-<<<<<<< HEAD
-=======
 import org.dspace.content.Collection;
->>>>>>> sedici-svn-1.8.2-refactored
 import org.dspace.content.DCValue;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
@@ -122,7 +119,7 @@ public class RequiredMetadata extends AbstractCurationTask
         if (reqList == null)
         {
             reqList = new ArrayList<String>();
-            DCInputSet inputs = reader.getInputs(collection);
+            DCInputSet inputs = reader.getInputs(collection.getHandle());
             for (int i = 0; i < inputs.getNumberPages(); i++)
             {
                 for (DCInput input : inputs.getPageRows(i, true, true))

@@ -1,4 +1,4 @@
-package ar.edu.unlp.sedici.xmlui.exception;
+package ar.edu.unlp.sedici.dspace.xmlui.exception;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.util.location.Location;
