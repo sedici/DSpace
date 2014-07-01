@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ar.edu.unlp.sedici.aspect.artifactbrowser;
+package org.dspace.app.xmlui.aspect.artifactbrowser;
 
 import java.io.IOException;
 import java.io.Serializable;
