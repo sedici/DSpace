@@ -234,11 +234,7 @@ public class OpenSearch
      * @return module
      */
     private static OpenSearchModule openSearchMarkup(String query, int totalResults, int start, int pageSize)
-<<<<<<< HEAD
-    { 
-=======
     {
->>>>>>> efbf7d2... DS-1244 - XMLUI's OpenSearch implementation refactored.
     	OpenSearchModule osMod = new OpenSearchModuleImpl();
     	osMod.setTotalResults(totalResults);
     	osMod.setStartIndex(start);
@@ -252,11 +248,7 @@ public class OpenSearch
         catch(UnsupportedEncodingException e)
         {
             log.error(e);
-<<<<<<< HEAD
-        	}
-=======
         }
->>>>>>> efbf7d2... DS-1244 - XMLUI's OpenSearch implementation refactored.
         osq.setStartPage(1 + (start / pageSize));
         osMod.addQuery(osq);
         return osMod;

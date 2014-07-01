@@ -3,7 +3,7 @@ target/
 ## Ignore project files created by Eclipse
 .settings/
 #.project
-.classpath
+#.classpath
 .tomcatplugin
 
 ## Ignore project files created by IntelliJ IDEA

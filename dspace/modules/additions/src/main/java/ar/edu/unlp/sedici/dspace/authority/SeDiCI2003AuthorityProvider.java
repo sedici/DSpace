@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *          http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,7 +28,7 @@ import org.dspace.core.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.edu.unlp.sedici.dspace.utils.MailReporter;
+import ar.edu.unlp.sedici.dspace.util.MailReporter;
 import ar.edu.unlp.sedici.sedici2003.service.SeDiCI2003Manager;
 
 

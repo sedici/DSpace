@@ -109,7 +109,11 @@
 	</build>
 
 	<dependencies>
-
+		<dependency>
+			<groupId>org.dspace.modules</groupId>
+			<artifactId>additions</artifactId>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.dspace</groupId>
 			<artifactId>dspace-jspui-webapp</artifactId>

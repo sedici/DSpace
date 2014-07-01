@@ -1,44 +1,39 @@
 /**
- * The contents of this file are subject to the license and copyright
- * detailed in the LICENSE and NOTICE files at the root of the source
- * tree and available online at
+ * Copyright (C) 2011 SeDiCI <info@sedici.unlp.edu.ar>
  *
- * http://www.dspace.org/license/
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-package org.dspace.submit.step;
+package ar.edu.unlp.sedici.dspace.submit.step;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Map;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
-
-import javax.servlet.http.HttpSession;
-
-import org.apache.cocoon.util.StringUtils;
-import org.apache.log4j.Logger;
-
-import org.dspace.app.util.SubmissionInfo;
-import org.dspace.app.util.Util;
-import org.dspace.app.xmlui.wing.Message;
-import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
-import org.dspace.content.Collection;
-import org.dspace.content.DCValue;
-import org.dspace.content.Item;
-import org.dspace.core.ConfigurationManager;
-import org.dspace.core.Context;
-import org.dspace.license.CreativeCommons;
-import org.dspace.license.CCLookup;
-import org.dspace.submit.AbstractProcessingStep;
-
-import com.ibm.icu.util.StringTokenizer;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.SQLException;
-import org.dspace.app.xmlui.wing.Message;
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
+import org.dspace.app.util.SubmissionInfo;
+import org.dspace.app.util.Util;
+import org.dspace.authorize.AuthorizeException;
+import org.dspace.content.Collection;
+import org.dspace.content.Item;
+import org.dspace.core.ConfigurationManager;
+import org.dspace.core.Context;
+import org.dspace.submit.AbstractProcessingStep;
+import org.dspace.submit.step.CCLicenseStep;
 
 /**
  * CCLicense step for DSpace Submission Process. 
@@ -76,6 +71,9 @@ public class SediciAdministratorCCLicenseStep extends AbstractProcessingStep
     private static Logger log = Logger.getLogger(CCLicenseStep.class);
     
 
+    public SediciAdministratorCCLicenseStep() {
+		// TODO Auto-generated constructor stub
+	}
     
     /**
      * Do any processing of the information input by the user, and/or perform
@@ -175,7 +173,7 @@ public class SediciAdministratorCCLicenseStep extends AbstractProcessingStep
 	   item.clearMetadata(uriNameSchema, uriNameElement, uriNameQualifier, Item.ANY);
        item.clearMetadata(uriFieldSchema, uriFieldElement, uriFieldQualifier, Item.ANY);
        if (licenseUri!=""){
-            String licenseDescription=org.dspace.app.xmlui.aspect.submission.SediciAdministratorCCLicenseStep.GetLicenses().get(licenseUri);
+            String licenseDescription= GetLicenses().get(licenseUri);
 	    	//agrego los metadatos
 	    	item.addMetadata(uriFieldSchema, uriFieldElement, uriFieldQualifier, null, licenseUri);
 	    	item.addMetadata(uriNameSchema, uriNameElement, uriNameQualifier, null, licenseDescription);
@@ -221,5 +219,24 @@ public class SediciAdministratorCCLicenseStep extends AbstractProcessingStep
     {
 		return 1;
     }
+    
+
+    private static final String PropertiesFilename = "sedici-dspace";
+	private static HashMap<String, String> Licencias=null;
+	public static HashMap<String, String> GetLicenses(){
+		if (Licencias==null || Licencias.size()<=1){
+				//cargo el map con las licencias
+				Licencias=new HashMap<String, String>();
+			    String values=ConfigurationManager.getProperty(PropertiesFilename, "map.licenses");
+		        String[] valores=values.split(",");
+		        String[] valor;
+		        for (String entrada : valores) {
+					valor=entrada.split(" = ");
+					Licencias.put(valor[0], valor[1]);
+			}
+
+		};
+		return Licencias;
+	}
    
 }

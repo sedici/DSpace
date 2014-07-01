@@ -14,10 +14,11 @@
       in dependencies found in dspace-parent pom. Solr is
       a standalone webapplication.
    -->
-   <parent>
+	<parent>
       <groupId>org.dspace</groupId>
-      <artifactId>dspace-pom</artifactId>
-      <version>12</version>
+      <artifactId>modules</artifactId>
+      <version>1.8.2</version>
+      <relativePath>..</relativePath>
    </parent>
    
    <!--
@@ -45,6 +46,11 @@
       </plugins>
    </build>
    <dependencies>
+		<dependency>
+			<groupId>org.dspace.modules</groupId>
+			<artifactId>additions</artifactId>
+		</dependency>
+		
        <dependency>
            <groupId>org.dspace</groupId>
            <artifactId>dspace-solr</artifactId>

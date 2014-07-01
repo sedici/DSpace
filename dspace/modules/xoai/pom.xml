@@ -93,6 +93,11 @@
 	
 	<dependencies>
 		<dependency>
+			<groupId>org.dspace.modules</groupId>
+			<artifactId>additions</artifactId>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.dspace</groupId>
 			<artifactId>dspace-xoai-webapp</artifactId>
 			<version>1.8.2</version>

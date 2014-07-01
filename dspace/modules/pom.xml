@@ -31,6 +31,9 @@
          modules in /dspace/pom.xml, so the above command will also disable the
          compiling of the corresponding source module.
     -->
+    <modules>
+        <module>additions</module>
+    </modules>
     <profiles>
         <profile>
             <id>dspace-xmlui</id>
@@ -95,5 +98,30 @@
                 <module>solr</module>
             </modules>
         </profile>
+        <profile>
+            <id>sedici2003</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>sedici-2003</module>
+            </modules>
+        </profile>
     </profiles>
+    
+    <build>
+    	<plugins>
+			<plugin>
+				<groupId>com.mycila.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<version>1.9.0</version>
+				<configuration>
+					<!-- License header file (can be a URL, but that's less stable if external 
+						site is down on occasion) -->
+					<header>LICENSE_SEDICI</header>
+					<skip>false</skip>
+				</configuration>
+			</plugin>
+    	</plugins>
+    </build>
 </project>

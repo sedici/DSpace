@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2011 SeDiCI <info@sedici.unlp.edu.ar>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ar.edu.unlp.sedici.aspect.submission;
 
 import java.io.IOException;
@@ -69,8 +84,7 @@ public class SediciAdministratorCCLicenseStep extends AbstractSubmissionStep
         protected static final Message Derivatives_question_answer_no  = message("xmlui.Submission.submit.SediciCCLicenseStep.DerivativesAnswerNo");
         protected static final Message Derivatives_question_answer_yes  = message("xmlui.Submission.submit.SediciCCLicenseStep.DerivativesAnswerYes");
         protected static final Message Derivatives_question_answer_sa  = message("xmlui.Submission.submit.SediciCCLicenseStep.DerivativesAnswerShareALike");
-		private static final String PropertiesFilename = "sedici-dspace";
-		private static HashMap<String, String> Licencias=null;
+		
 	/**
 	 * Establish our required parameters, abstractStep will enforce these.
 	 */
@@ -78,22 +92,6 @@ public class SediciAdministratorCCLicenseStep extends AbstractSubmissionStep
 	{
 	    this.requireSubmission = true;
 	    this.requireStep = true;
-	}
-	
-	public static HashMap<String, String> GetLicenses(){
-		if (Licencias==null || Licencias.size()<=1){
-				//cargo el map con las licencias
-				Licencias=new HashMap<String, String>();
-			    String values=ConfigurationManager.getProperty(PropertiesFilename, "map.licenses");
-		        String[] valores=values.split(",");
-		        String[] valor;
-		        for (String entrada : valores) {
-					valor=entrada.split(" = ");
-					Licencias.put(valor[0], valor[1]);
-			}
-
-		};
-		return Licencias;
 	}
 	
 	
@@ -124,8 +122,9 @@ public class SediciAdministratorCCLicenseStep extends AbstractSubmissionStep
 	    Select select  = subList.addItem().addSelect("cc_license_chooser");
 	    select.addOption("", message("xmlui.Submission.submit.SediciCCLicenseStep.administrador.sinLicencia"));
 	    //Cargo la lista de licencias permitidas
-        for (String key : GetLicenses().keySet()) {
-        	select.addOption(key, message(GetLicenses().get(key)));
+	    HashMap<String, String> licenses = ar.edu.unlp.sedici.dspace.submit.step.SediciAdministratorCCLicenseStep.GetLicenses();
+        for (String key : licenses.keySet()) {
+        	select.addOption(key, message(licenses.get(key)));
 		}
         //En caso de que tenga una licencia la selecciono
 	    String ccUri=ConfigurationManager.getProperty("cc.license.uri");

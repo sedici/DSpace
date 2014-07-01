@@ -72,9 +72,19 @@
                      http://jira.codehaus.org/browse/MNG-2742
                      Once the bug is fixed, we should put open-ended range in dspace-pom -->
                 <version>2.1.1</version>
-         </plugin>
-      </plugins>
-   </build>
+	    </plugin>
+	 <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.9.0</version>
+                <configuration>
+                    <!-- License header file (can be a URL, but that's less stable if external site is down on occasion) -->
+                    <header>LICENSE_HEADER</header>
+		    <skip>false</skip>
+		</configuration>
+	</plugin>
+	</plugins>
+    </build>
 
    <profiles>
 
@@ -253,6 +263,19 @@
             <module>dspace-sword-client</module>
          </modules>
       </profile>
+
+        <!--
+           Builds OAI Gateway WAR for DSpace
+        -->
+        <profile>
+            <id>dspace-xoai</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>dspace-xoai</module>
+            </modules>
+        </profile>
 
       <!--
          Use 'mvn package -Pdistributions' to create distributions
@@ -461,6 +484,11 @@
           <dependency>
               <groupId>org.dspace</groupId>
               <artifactId>dspace-discovery-solr</artifactId>
+              <version>${project.version}</version>
+          </dependency>
+          <dependency>
+              <groupId>org.dspace.modules</groupId>
+              <artifactId>additions</artifactId>
               <version>${project.version}</version>
           </dependency>
          <!-- DSpace third Party Dependencies -->
@@ -794,6 +822,12 @@
             <artifactId>contiperf</artifactId>
             <version>1.06</version>
             <scope>test</scope>
+        </dependency>
+        
+         <dependency>
+            <groupId>org.dspace.modules</groupId>
+            <artifactId>additions</artifactId>
+            <version>${project.version}</version>
         </dependency>
       </dependencies>
    </dependencyManagement>
