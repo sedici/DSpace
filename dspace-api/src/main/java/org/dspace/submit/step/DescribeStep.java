@@ -144,7 +144,7 @@ public class DescribeStep extends AbstractProcessingStep
         }
 
         // Fetch the document type (dc.type)
-        // Primero pregunto si el dc.type viene en un parametro
+        // SEDICI Primero pregunto si el dc.type viene en un parametro
         String documentType = "";
         String documentTypeParameter = request.getParameter(MetadataField.formKey("dc", "type", null));
         if(documentTypeParameter != null)
@@ -336,9 +336,15 @@ public class DescribeStep extends AbstractProcessingStep
                 {
                 	continue;
                 }
-            	
+
+                String qualifier = inputs[i].getQualifier();
+                if (qualifier == null
+                        && inputs[i].getInputType().equals("qualdrop_value"))
+                {
+                    qualifier = Item.ANY;
+                }
                 DCValue[] values = item.getMetadata(inputs[i].getSchema(),
-                        inputs[i].getElement(), inputs[i].getQualifier(), Item.ANY);
+                        inputs[i].getElement(), qualifier, Item.ANY);
 
                 // Group-based restriction validation
                 if(inputs[i].isGroupBased()) 
@@ -357,7 +363,8 @@ public class DescribeStep extends AbstractProcessingStep
                 		continue;
                 }
                 
-                if (inputs[i].isRequired() && values.length == 0)
+                if ((inputs[i].isRequired() && values.length == 0) &&
+                     inputs[i].isVisible(subInfo.isInWorkflow() ? DCInput.WORKFLOW_SCOPE : DCInput.SUBMISSION_SCOPE))
                 {
                     // since this field is missing add to list of error fields
                     addErrorField(request, getFieldName(inputs[i]));
@@ -428,7 +435,7 @@ public class DescribeStep extends AbstractProcessingStep
     public int getNumberOfPages(HttpServletRequest request,
             SubmissionInfo subInfo) throws ServletException
     {
-        // by default, prepare to use the "default" form definition
+         // by default, use the "default" collection 
         Collection collection = null;
 
         if (subInfo.getSubmissionItem() != null)
@@ -1065,7 +1072,6 @@ public class DescribeStep extends AbstractProcessingStep
      * Return the HTML / DRI field name for the given input.
      *
      * @param input
-     * @return
      */
     public static String getFieldName(DCInput input)
     {

@@ -681,6 +681,9 @@ public class GoogleMetadata
         //JOURNAL_TITLE 
         addSingleField(JOURNAL_TITLE);
 
+        // JOURNAL_TITLE
+        addSingleField(JOURNAL_TITLE);
+
         // VOLUME
         addSingleField(VOLUME);
 

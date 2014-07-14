@@ -76,6 +76,7 @@ public class DCInput
 
     /** allowed document types */
     private List<String> typeBind = null;
+
     
     /** indicates the opposite of types */
 	private boolean negateTypeBind = false;
@@ -461,7 +462,7 @@ public class DCInput
 	}
 
 	/**
-	 * Decides if this field is valid for the document type. It verifies if this field is used for one or more types.
+	 * Decides if this field is valid for the document type
 	 * @param typeName Document type name
 	 * @return true when there is no type restriction or typeName is allowed
 	 */

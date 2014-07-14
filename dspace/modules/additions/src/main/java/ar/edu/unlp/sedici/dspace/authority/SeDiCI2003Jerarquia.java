@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.unlp.sedici.sedici2003.model.JerarquiasTermino;
-import ar.edu.unlp.sedici.sedici2003.model.TesaurosTermino;
 
 public class SeDiCI2003Jerarquia extends SeDiCI2003Hierarchy {
 

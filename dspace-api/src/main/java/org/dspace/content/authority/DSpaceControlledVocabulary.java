@@ -89,22 +89,24 @@ public class DSpaceControlledVocabulary extends SelfNamedPlugin implements Choic
     {
         if (pluginNames == null)
         {
-        	class xmlFilter implements java.io.FilenameFilter
+            class xmlFilter implements java.io.FilenameFilter
             {
-        		public boolean accept(File dir, String name)
+                @Override
+                public boolean accept(File dir, String name)
                 {
-        			return name.endsWith(".xml");
-        		}
-        	}
-            String vocabulariesPath = ConfigurationManager.getProperty("dspace.dir") + "/config/controlled-vocabularies/";
-        	String[] xmlFiles = (new File(vocabulariesPath)).list(new xmlFilter());
-        	List<String> names = new ArrayList<String>();
-        	for (String filename : xmlFiles)
+                    return name.endsWith(".xml");
+                }
+            }
+            String vocabulariesPath = ConfigurationManager.getProperty("dspace.dir")
+                    + "/config/controlled-vocabularies/";
+            String[] xmlFiles = (new File(vocabulariesPath)).list(new xmlFilter());
+            List<String> names = new ArrayList<String>();
+            for (String filename : xmlFiles)
             {
-        		names.add((new File(filename)).getName().replace(".xml",""));
-        	}
-        	pluginNames = names.toArray(new String[names.size()]);
-            log.info("Got plugin names = "+Arrays.deepToString(pluginNames));
+                names.add((new File(filename)).getName().replace(".xml", ""));
+            }
+            pluginNames = names.toArray(new String[names.size()]);
+            log.info("Got plugin names = " + Arrays.deepToString(pluginNames));
         }
     }
 
@@ -133,7 +135,7 @@ public class DSpaceControlledVocabulary extends SelfNamedPlugin implements Choic
     {
     	if (node.getNodeType() == Node.DOCUMENT_NODE)
         {
-    		return "";
+    		return("");
     	}
     	else if (!"node".equals(node.getLocalName())) 
     	{
@@ -143,89 +145,103 @@ public class DSpaceControlledVocabulary extends SelfNamedPlugin implements Choic
         else
         {
     		String parentValue = buildString(node.getParentNode());
-    		String currentValue;
-    		if (node.getAttributes().getNamedItem("label") == null)
-            	currentValue = "(missing label)";
+    		Node currentLabel = node.getAttributes().getNamedItem("label");
+    		String currentValue; 
+    		if (currentLabel != null)
+    			currentValue = currentLabel.getNodeValue();
             else 
-    			currentValue = node.getAttributes().getNamedItem("label").getNodeValue();
-    		
-    		if ("".equals(parentValue))
-            	return currentValue;
-    		else
-            	return parentValue + this.hierarchyDelimiter + currentValue ;
+            	currentValue = "(missing label)";
+    		if (parentValue.equals(""))
+            {
+    			return currentValue;
+    		}
+            else
+            {
+    			return(parentValue + this.hierarchyDelimiter + currentValue);
+    		}
     	}
     }
 
-    public Choices getMatches(String field, String text, int collection, int start, int limit, String locale)
-    {
-    	init();
-    	
-    	if (start <=0)
-    		start=0;
-    	
-    	if (limit <=0 || limit > MAX_PAGE_SIZE)
-    		limit=DEFAULT_PAGE_SIZE;
-    	
-    	if (log.isDebugEnabled())	
-    		log.debug(limit+" matches requested for field '" + field + "' with value '"+ text+"' starting from "+start);
-    	
-    	XPath xpath = XPathFactory.newInstance().newXPath();
-    	String xpathExpression = String.format(xpathTemplate, text.replaceAll("'", "&apos;").toLowerCase());
-    	NodeList results;
-    	
-    	try {
-    		results = (NodeList)xpath.evaluate(xpathExpression, vocabulary, XPathConstants.NODESET);
-    	} catch(XPathExpressionException e) {
-    		String url = "url://get-authority-url/?field="+field+"&text="+text+"&start="+start+"&limit="+limit;
-    		String message = "XPathExpressionException on expression "+xpathExpression;
-    		log.warn(message,e);
-    		
-    		MailReporter.reportUnknownException(message, e, url);
-    		
-    		return new Choices(true);
-    	}
-    	
-    	
-    	int totalResults = results.getLength();
-    	int end = Math.min(start + limit, totalResults);
-    	Choice[] choices = new Choice[end-start];
-    	String label, value, authority, hierarchyLabel;
-    	
-    	for (int i=0; i<choices.length; i++)
-        {
-    		Node node = results.item(i);
-        	hierarchyLabel = this.buildString(node);
-        	if (node.getAttributes().getNamedItem("label") == null)
-        	{
-        		log.warn("Missing label for authority on field "+field + ". Check ControlledVocabulary "+this.vocabularyName + " and look for text '"+text);
-        		label = hierarchyLabel;
-        		value = hierarchyLabel;
-        	}
-        	else 
-        	{
-        		label = node.getAttributes().getNamedItem("label").getNodeValue();
-        		if (this.suggestHierarchy)
-	        		label += " - " + hierarchyLabel;
-	        	
-	        	if (this.storeHierarchy)
-	            	value = hierarchyLabel;
-	        	else
-	        		value = node.getAttributes().getNamedItem("label").getNodeValue();
-        	}
-        	
-        	if (node.getAttributes().getNamedItem("id") == null){
-        		log.warn("Missing id for authority on field "+field + ". Check ControlledVocabulary "+this.vocabularyName + " and look for label '"+label);
-        		authority = "";
-        	}else{
-        		authority = node.getAttributes().getNamedItem("id").getNodeValue();
-        	}
-        	
-        	choices[i] = new Choice(authority,value,label);
-        }
-        
-    	return new Choices(choices, 0, choices.length, Choices.CF_AMBIGUOUS, (end < totalResults));
-    }
+	@Override
+	public Choices getMatches(String field, String text, int collection,
+			int start, int limit, String locale) {
+		init();
 
+		if (limit <= 0 || limit > MAX_PAGE_SIZE)
+			limit = DEFAULT_PAGE_SIZE;
+
+		if (log.isDebugEnabled())
+			log.debug(limit + " matches requested for field '" + field
+					+ "' with value '" + text + "' starting from " + start);
+
+		String xpathExpression = String.format(xpathTemplate,
+				text.replaceAll("'", "&apos;").toLowerCase());
+		XPath xpath = XPathFactory.newInstance().newXPath();
+		NodeList results;
+		try {
+			results = (NodeList) xpath.evaluate(xpathExpression, vocabulary,
+					XPathConstants.NODESET);
+		} catch (XPathExpressionException e) {
+			String url = "url://get-authority-url/?field=" + field + "&text="
+					+ text + "&start=" + start + "&limit=" + limit;
+			String message = "XPathExpressionException on expression "
+					+ xpathExpression;
+			log.warn(message, e);
+
+			MailReporter.reportUnknownException(message, e, url);
+
+			return new Choices(true);
+		}
+		int resultCount = results.getLength();
+		start = Math.max(start, 0);
+		int end;
+		if (limit == 0)
+			end = Math.min(start + limit, resultCount);
+		else
+			end = resultCount;
+		Choice[] choices = new Choice[end - start];
+		String label, value, authority, hierarchyLabel;
+
+		for (int i = 0; i < choices.length; i++) {
+			Node node = results.item(i);
+			hierarchyLabel = this.buildString(node);
+			if (node.getAttributes().getNamedItem("label") == null) {
+				log.warn("Missing label for authority on field " + field
+						+ ". Check ControlledVocabulary " + this.vocabularyName
+						+ " and look for text '" + text);
+				label = hierarchyLabel;
+				value = hierarchyLabel;
+			} else {
+				label = node.getAttributes().getNamedItem("label")
+						.getNodeValue();
+				if (this.suggestHierarchy)
+					label += " - " + hierarchyLabel;
+
+				if (this.storeHierarchy)
+					value = hierarchyLabel;
+				else
+					value = node.getAttributes().getNamedItem("label")
+							.getNodeValue();
+			}
+
+			if (node.getAttributes().getNamedItem("id") == null) {
+				log.warn("Missing id for authority on field " + field
+						+ ". Check ControlledVocabulary " + this.vocabularyName
+						+ " and look for label '" + label);
+				authority = "";
+			} else {
+				authority = node.getAttributes().getNamedItem("id")
+						.getNodeValue();
+			}
+
+			choices[i] = new Choice(authority, value, label);
+		}
+
+		return new Choices(choices, 0, choices.length, Choices.CF_AMBIGUOUS,
+				(end < resultCount));
+	}
+
+    @Override
     public Choices getBestMatch(String field, String text, int collection, String locale)
     {
     	init();
@@ -233,6 +249,7 @@ public class DSpaceControlledVocabulary extends SelfNamedPlugin implements Choic
         return getMatches(field, text, collection, 0, 2, locale);
     }
 
+    @Override
     public String getLabel(String field, String key, String locale)
     {
     	init();
@@ -241,16 +258,15 @@ public class DSpaceControlledVocabulary extends SelfNamedPlugin implements Choic
     	try {
     		Node node = (Node)xpath.evaluate(xpathExpression, vocabulary, XPathConstants.NODE);
     		return node.getAttributes().getNamedItem("label").getNodeValue();
-    	} catch(Exception e) {
+    	} catch(XPathExpressionException e) {
     		String url = "org.dspace.content.authority.getMatches()";
     		String parameters = "field="+field+"&key="+key+"&locale="+locale;
     		String message = "Exception on expression "+xpathExpression;
     		log.warn(message,e);
     		
     		MailReporter.reportUnknownException(message, e, url,parameters);
-    		//continue
+    		return key;
     	}
-    	return key;
     	
     }
 }
