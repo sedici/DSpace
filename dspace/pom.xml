@@ -84,6 +84,7 @@
                 </executions>
             </plugin>
         </plugins>
+		<finalName>dspace-distribution</finalName>
     </build>
 
     <profiles>

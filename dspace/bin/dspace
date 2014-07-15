@@ -55,9 +55,9 @@ JARS=`echo $DSPACEDIR/lib/*.jar | sed 's/ /\:/g'`
 #   The JARs (WEB-INF/lib/*.jar)
 #   The WEB-INF/classes directory
 if [ "$CLASSPATH" = "" ]; then
-    FULLPATH=$JARS:$DSPACEDIR/config:$DSPACEDIR/webapps/xmlui/WEB-INF/classes
+    FULLPATH=$JARS:$DSPACEDIR/config
 else
-    FULLPATH=$CLASSPATH:$JARS:$DSPACEDIR/config:$DSPACEDIR/webapps/xmlui/WEB-INF/classes
+    FULLPATH=$CLASSPATH:$JARS:$DSPACEDIR/config
 fi
 
 

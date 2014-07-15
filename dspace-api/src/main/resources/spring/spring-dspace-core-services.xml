@@ -23,12 +23,12 @@
           scope="singleton"/>
 
    <!-- provider for exposing default Handle services implementaion. -->
-    <!--bean id="org.dspace.identifier.HandleIdentifierProvider" class="org.dspace.identifier.HandleIdentifierProvider"
+    <bean id="org.dspace.identifier.HandleIdentifierProvider" class="org.dspace.identifier.HandleIdentifierProvider"
           scope="singleton">
         <property name="configurationService" ref="org.dspace.services.ConfigurationService"/>
-    </bean-->
+    </bean>
 
-    <bean id="org.dspace.identifier.VersionedHandleIdentifierProvider" class="org.dspace.identifier.VersionedHandleIdentifierProvider"
+<!--     bean id="org.dspace.identifier.VersionedHandleIdentifierProvider" class="org.dspace.identifier.VersionedHandleIdentifierProvider" 
           scope="singleton">
         <property name="configurationService" ref="org.dspace.services.ConfigurationService"/>
         <property name="versionDAO">
@@ -37,5 +37,5 @@
         <property name="versionHistoryDAO">
             <bean class="org.dspace.versioning.VersionHistoryDAO"/>
         </property>
-    </bean>
+    </bean-->
 </beans>

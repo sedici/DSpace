@@ -158,15 +158,15 @@ do_install()
 	mkdir $INSTALL_DIR
 
 	print_sec "EMPAQUETADO DEL PROYECTO"
-	MVN_ARGS="$MVN_ARGS -Ddefault.db.username=$dspace_dbuser -Ddefault.db.password=$dspace_dbpassword -Ddefault.db.url=jdbc:postgresql://$pg_connection_host:5432/$dspace_dbname"
-	mvn clean license:format install $MVN_ARGS 
-
+	MVN_ARGS="$MVN_ARGS -Ddspace.install.dir=$INSTALL_DIR -Ddb.username=$dspace_dbuser -Ddb.password=$dspace_dbpassword -Ddb.url=jdbc:postgresql://$pg_connection_host:5432/$dspace_dbname"
+	mvn clean install $MVN_ARGS 
+	#license:format
 	print_sec "CREACION DE LA BBDD"
 	do_createdb
 
 	print_sec "INSTALANDO DSPACE@SEDICI"
 	cd $DSPACE_SRC/dspace/target/dspace-distribution-build
-	ant -Ddspace.dir=$INSTALL_DIR fresh_install -Dgeolite=$DSPACE_SRC/config/GeoLiteCity.dat.gz $ANT_ARGS
+    ant -Ddspace.configuration=$INSTALL_DIR/config/dspace.cfg fresh_install -Dgeolite=$DSPACE_SRC/config/GeoLiteCity.dat.gz $ANT_ARGS
 
 	echo -e "Personalizando los metadatos"
 	$INSTALL_DIR/bin/dspace dsrun org.dspace.administer.MetadataImporter -f $INSTALL_DIR/config/registries/sedici-metadata.xml
