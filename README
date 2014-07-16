@@ -1,30 +1,15 @@
-Installation instructions are included in this release package under
 
- - dspace/docs/DSpace-Manual.pdf
+pasos para la instalación:
+# Actualizar config/default.properties
+# Actualizar config/dspace.cgf
+# Actualizar config/sedici-2003.properties (para la conexión de authorities)
+
+
+---------------------------------------------------------------
 
 DSpace version information can be viewed online at
  - https://wiki.duraspace.org/display/DSDOC/
-
-Documentation for the most recent stable release(s) may be downloaded
-or viewed online at
- - http://www.dspace.org/latest-release/
- - https://wiki.duraspace.org/display/DSDOC/
-
-In addition, a listing of all known contributors to DSpace software can be
-found online at:
-https://wiki.duraspace.org/display/DSPACE/DSpaceContributors
-
-Installation instructions for other versions may be different, so you
-are encouraged to obtain the appropriate version of the Documentation
-(from the links above or from the source repository).
-
-To obtain files from the repository and build, please see:
-
- - https://github.com/DSpace/DSpace/
-
-or just:
-
- - git clone git://github.com/DSpace/DSpace.git
+ - dspace/docs/DSpace-Manual.pdf
 
 Please refer any further problems to the dspace-tech@lists.sourceforge.net
 mailing list.
@@ -47,8 +32,3 @@ places to seek help, news articles and lists of other users, please see:
 
  - http://www.dspace.org/
 
-
-DSpace source code licensing information available online at:
- - http://www.dspace.org/license/
-
-Copyright (c) 2002-2012, DuraSpace.  All rights reserved.
