@@ -241,6 +241,7 @@
 			<XSLT>metadataFormats/uketd_dc.xsl</XSLT>
 			<Namespace>http://naca.central.cranfield.ac.uk/ethos-oai/2.0/</Namespace>
 			<SchemaLocation>http://naca.central.cranfield.ac.uk/ethos-oai/2.0/uketd_dc.xsd</SchemaLocation>
+			<Filter refid="thesisFilter" />
 		</Format>
 	</Formats>
 	
@@ -259,7 +260,7 @@
 
 	<Filters>
 		<Filter id="authorexistsFilter">
-			<Class>ar.edu.unlp.sedici.dspace.xoai.filters.DSpaceAnyMetadataExistsFilter</Class>
+			<Class>org.dspace.xoai.filter.DSpaceMetadataExistsFilter</Class>
 			<Parameter key="fields">
 				<Value>sedici.creator.person</Value>
 				<Value>sedici.creator.corporate</Value>
@@ -273,7 +274,7 @@
 		
 		<Filter id="titleexistsFilter">
 			<Class>org.dspace.xoai.filter.DSpaceMetadataExistsFilter</Class>
-			<Parameter key="field">
+			<Parameter key="fields">
 				<Value>dc.title</Value>
 			</Parameter>
 		</Filter>
@@ -340,7 +341,7 @@
 		
 		<!-- Sólo se considera fecha de publicación o de exposición (en el caso de las tesis) -->
 		<Filter id="driverDateExistsFilter">
-			<Class>ar.edu.unlp.sedici.dspace.xoai.filters.DSpaceAnyMetadataExistsFilter</Class>
+			<Class>org.dspace.xoai.filter.DSpaceMetadataExistsFilter</Class>
 			<Parameter key="fields">
 				<Value>sedici.date.exposure</Value>
 				<Value>dc.date.issued</Value>
@@ -412,7 +413,19 @@
 				<Value>starts_with</Value>
 			</Parameter>
 			<Parameter key="value">
-				<Value>info:eurepo/grantAgreement/EC/FP</Value>
+				<Value>info:eu-repo/grantAgreement/EC/FP</Value>
+			</Parameter>
+		</Filter>
+		<Filter id="thesisFilter">
+			<Class>org.dspace.xoai.filter.DSpaceAtLeastOneMetadataFilter</Class>
+			<Parameter key="field">
+				<Value>dc.type</Value>
+			</Parameter>
+			<Parameter key="operator">
+				<Value>contains</Value>
+			</Parameter>
+			<Parameter key="value">
+				<Value>Thesis</Value>
 			</Parameter>
 		</Filter>
 		

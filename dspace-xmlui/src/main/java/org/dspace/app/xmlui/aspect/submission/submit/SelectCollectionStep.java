@@ -10,8 +10,8 @@ package org.dspace.app.xmlui.aspect.submission.submit;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.dspace.app.xmlui.aspect.submission.AbstractSubmissionStep;
 import org.dspace.app.xmlui.utils.UIException;
+import org.dspace.app.xmlui.aspect.submission.AbstractSubmissionStep;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.Body;
@@ -28,8 +28,7 @@ import org.dspace.core.Constants;
 import org.dspace.handle.HandleManager;
 import org.xml.sax.SAXException;
 
-import ar.edu.unlp.sedici.dspace.content.CollectionSearchSedici;
-import ar.edu.unlp.sedici.dspace.content.CollectionsWithCommunities;
+import org.dspace.app.util.CollectionDropDown;
 
 /**
  * Allow the user to select a collection they wish to submit an item to, 
@@ -72,26 +71,24 @@ public class SelectCollectionStep extends AbstractSubmissionStep
   
     public void addBody(Body body) throws SAXException, WingException,
             UIException, SQLException, IOException, AuthorizeException
-    {  
-		//Collection[] collections; // List of possible collections.
-		CollectionsWithCommunities collections; // List of possible collections.
-		String actionURL = contextPath + "/submit/" + knot.getId() + ".continue";
-		DSpaceObject dso = HandleManager.resolveToObject(context, handle);
-
-		if (dso instanceof Community)
-		{
-			//collections = Collection.findAuthorized(context, ((Community) dso), Constants.ADD);   
-			collections = CollectionSearchSedici.findAuthorizedWithCommunitiesName(context, ((Community) dso), Constants.ADD);   
-		} 
-		else
-		{
-			collections = CollectionSearchSedici.findAuthorizedWithCommunitiesName(context, null, Constants.ADD);
-		}
+    {     
+        Collection[] collections; // List of possible collections.
+        String actionURL = contextPath + "/submit/" + knot.getId() + ".continue";
+        DSpaceObject dso = HandleManager.resolveToObject(context, handle);
         
-		// Basic form with a drop down list of all the collections
-		// you can submit too.
+        if (dso instanceof Community)
+        {
+            collections = Collection.findAuthorized(context, ((Community) dso), Constants.ADD);   
+        } 
+        else
+        {
+            collections = Collection.findAuthorized(context, null, Constants.ADD);
+        }
+        
+        // Basic form with a drop down list of all the collections
+        // you can submit too.
         Division div = body.addInteractiveDivision("select-collection",actionURL,Division.METHOD_POST,"primary submission");
-		div.setHead(T_submission_head);
+        div.setHead(T_submission_head);
         
         List list = div.addList("select-collection", List.TYPE_FORM);
         list.setHead(T_head);       
@@ -101,21 +98,9 @@ public class SelectCollectionStep extends AbstractSubmissionStep
         select.setHelp(T_collection_help);
         
         select.addOption("",T_collection_default);
-        String communityName, collectionName;
-        Collection collection;
-        for (int i = 0; i < collections.getCollections().size(); i++) {
-        	collection=collections.getCollections().get(i);
-        	
-        	communityName=collections.getCommunitiesName().get(i);
-        	collectionName=collection.getName();
-
-   		   	if (communityName.length() > 40){
-   		   		communityName = communityName.substring(0, 39);
-            } 
-   		   	if (collectionName.length() > 40){
-   		   		collectionName = collectionName.substring(0, 39);
-            }
-        	select.addOption(collection.getHandle(),communityName+" > "+collectionName);
+        for (Collection collection : collections) 
+        {
+            select.addOption(collection.getHandle(), CollectionDropDown.collectionPath(collection));
         }
         
         Button submit = list.addItem().addButton("submit");

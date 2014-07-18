@@ -7,35 +7,34 @@
  */
 package org.dspace.app.util;
 
-import java.io.File;
+import java.sql.SQLException;
+
+import org.dspace.authorize.AuthorizeManager;
+import org.dspace.content.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Date;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import org.apache.log4j.Logger;
+import org.dspace.core.ConfigurationManager;
+
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.Set;
-
-import org.apache.log4j.Logger;
-import org.bouncycastle.crypto.RuntimeCryptoException;
-import org.dspace.content.Bitstream;
-import org.dspace.content.Bundle;
-import org.dspace.content.DCDate;
-import org.dspace.content.DCValue;
-import org.dspace.content.Item;
-import org.dspace.core.ConfigurationManager;
+import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.handle.HandleManager;
-import org.jdom.Element;
 
+import org.jdom.Element;
 
 /**
  * 
@@ -609,7 +608,7 @@ public class GoogleMetadata
             for (DCValue v : allMD)
             {
 
-                // De-dup multiple occurances of field names in item
+                // De-dup multiple occurrences of field names in item
                 if (!expandedDC.contains(buildFieldName(v)))
                 {
                     expandedDC.add(buildFieldName(v));
@@ -677,9 +676,6 @@ public class GoogleMetadata
 
         // ISBN
         addSingleField(ISBN);
-        
-        //JOURNAL_TITLE 
-        addSingleField(JOURNAL_TITLE);
 
         // JOURNAL_TITLE
         addSingleField(JOURNAL_TITLE);
@@ -783,7 +779,6 @@ public class GoogleMetadata
 
     /**
      * Produce meta elements that can easily be put into the head.
-     * @return
      */
     public List<Element> disseminateList()
     {
@@ -1002,68 +997,91 @@ public class GoogleMetadata
         return metadataMappings.get(TECH_REPORT_INSTITUTION);
     }
 
-	/**
-	 * Gets the URL to a PDF using a very basic strategy by assuming that the
-	 * PDF is in the default content bundle, and that the item only has one
-	 * public bitstream and it is a PDF.
-	 * 
-	 * @param item
-	 * @return URL that the PDF can be directly downloaded from
-	 */
+    /**
+     * Gets the URL to a PDF using a very basic strategy by assuming that the PDF
+     * is in the default content bundle, and that the item only has one public bitstream
+     * and it is a PDF.
+     *
+     * @param item
+     * @return URL that the PDF can be directly downloaded from
+     */
 	private String getPDFSimpleUrl(Item item) {
-		Bundle[] contentBundles;
+		String the_handle = item.getHandle();
 		try {
-			contentBundles = item.getBundles("ORIGINAL");
-		} catch (SQLException e) {
-			log.error("item.getBundles(ORIGINAL) threw an SQLException", e);
-			throw new RuntimeException("item.getBundles(ORIGINAL) threw an SQLException", e);
-		}
+			Bitstream bitstream = findLinkableFulltext(item);
+			if (bitstream != null) {
+				StringBuilder path = new StringBuilder();
+				path.append(ConfigurationManager.getProperty("dspace.url"));
 
-		Bitstream the_bitstream = null;
-		if (contentBundles.length > 0) {
-			Bitstream[] bitstreams = contentBundles[0].getBitstreams();
-			if (bitstreams.length > 1) {
-				for (Bitstream bitstream : bitstreams) {
-					if ("application/pdf".equalsIgnoreCase(bitstream.getFormat().getMIMEType())
-							&& bitstream.getID() == contentBundles[0].getPrimaryBitstreamID()) {
-						the_bitstream = bitstream;
-						break;
-					}
+				if (item.getHandle() != null) {
+					path.append("/bitstream/handle/");
+					path.append(the_handle);
+				} else {
+					the_handle = "no-handle";
+					log.warn("Missing handle for item " + item.getID());
+					path.append("/retrieve/");
+					path.append(bitstream.getID());
 				}
-			} else {
-				if ((bitstreams.length == 1) &&("application/pdf".equalsIgnoreCase(bitstreams[0].getFormat().getMIMEType()))) {
-					the_bitstream = bitstreams[0];
+
+				path.append("/");
+				String bs_filename;
+				if (bitstream.getDescription() != null)
+					bs_filename = bitstream.getDescription();
+				else if (bitstream.getName() != null)
+					bs_filename = bitstream.getName();
+				else
+					bs_filename = the_handle + "-bitstream-"
+							+ bitstream.getSequenceID();
+				path.append(Util.encodeBitstreamName(bs_filename));
+				path.append(".pdf?sequence=");
+				path.append(bitstream.getSequenceID());
+
+				return path.toString();
+			}
+		} catch (SQLException e) {
+			log.error("SQLException", e);
+			throw new RuntimeException("SQLException in findLinkableFulltext",
+					e);
+		}
+		return "";
+	}
+
+	/**
+	 * A bitstream is considered linkable fulltext when it is either
+	 * <ul>
+	 *     <li>the item's only bitstream (in the ORIGINAL bundle); or</li>
+	 *     <li>the primary bitstream</li>
+	 * </ul>
+	 * Additionally, this bitstream must be publicly viewable.
+	 * @param item
+	 * @return
+	 * @throws SQLException
+	 */
+	private Bitstream findLinkableFulltext(Item item) throws SQLException {
+		Bitstream bestSoFar = null;
+		Bundle[] contentBundles = item.getBundles("ORIGINAL");
+
+		for (Bundle bundle : contentBundles) {
+			int primaryBitstreamId = bundle.getPrimaryBitstreamID();
+			Bitstream[] bitstreams = bundle.getBitstreams();
+			for (Bitstream candidate : bitstreams) {
+				if (isPublic(candidate)) {
+					//if ("application/pdf".equalsIgnoreCase(bitstream.getFormat().getMIMEType())
+					
+					if (candidate.getID() == primaryBitstreamId) { // is primary -> use this one
+						return candidate;
+					} else if (bestSoFar == null) {
+						bestSoFar = candidate;
+					}
 				}
 			}
 		}
-		if (the_bitstream == null) {
-			return "";
-		}
-		StringBuilder path = new StringBuilder();
-		path.append(ConfigurationManager.getProperty("dspace.url"));
-		String the_handle = item.getHandle();
-		if (the_handle == null) {
-			the_handle = "no-handle";
-			log.warn("Missing handle for item " + item.getID());
-			path.append("/retrieve/");
-			path.append(the_bitstream.getID());
-		} else {
-			path.append("/bitstream/handle/");
-			path.append(the_handle);
-		}
-		path.append("/");
-		String bs_filename;
-		if (the_bitstream.getDescription() != null)
-			bs_filename = the_bitstream.getDescription();
-		else if (the_bitstream.getName() != null)
-			bs_filename = the_bitstream.getName();
-		else
-			bs_filename = the_handle + "-bitstream-" + the_bitstream.getSequenceID();
+		return bestSoFar;
+	}
 
-		path.append(Util.encodeBitstreamName(bs_filename));
-		path.append(".pdf?sequence=");
-		path.append(the_bitstream.getSequenceID());
-
+	private boolean isPublic(Bitstream bitstream) {
+	
+		/*Deshabilito el chequeo de embargo de SEDICI en favor de los resources policies
 		DCDate online_date = new DCDate(resolveMetadataField(configuredFields.get(ONLINE_DATE)).value);
 		Date now= new Date();
 		if ( now.before(online_date.toDate()))  {
@@ -1073,9 +1091,27 @@ public class GoogleMetadata
 			return path.toString();
 		
 		}
+		*/
+	
+		if (bitstream == null) {
+			return false;
+		}
+		boolean result = false;
+		Context context = null;
+		try {
+			context = new Context();
+			result = AuthorizeManager.authorizeActionBoolean(context, bitstream, Constants.READ, true);
+		} catch (SQLException e) {
+			log.error("Cannot determine whether bitstream is public, assuming it isn't. bitstream_id=" + bitstream.getID(), e);
+		} finally {
+			if (context != null) {
+				context.abort();
+			}
+		}
+		return result;
 	}
 
-    /**
+	/**
      * 
      * 
      * @param Field
@@ -1199,7 +1235,7 @@ public class GoogleMetadata
                 }
                 else
                 {
-                    // Otherwise, add it as the first occurance of this field
+                    // Otherwise, add it as the first occurrence of this field
                     ArrayList<String> newField = new ArrayList<String>();
                     newField.add(parsedPair[1].trim());
                     mdPairs.put(parsedPair[0].trim(), newField);

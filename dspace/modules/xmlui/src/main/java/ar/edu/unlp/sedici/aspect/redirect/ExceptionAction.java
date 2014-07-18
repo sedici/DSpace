@@ -82,7 +82,7 @@ public class ExceptionAction extends AbstractAction
                      .getProperty("sedici-dspace", PROPERTY_MAIL_RECIPIENT);
  
              if (recipient != null) {
-                 Email email = ConfigurationManager
+                 Email email = Email
                          .getEmail(I18nUtil.getEmailFilename(
                                  context.getCurrentLocale(), "exception_error"));
                  email.addRecipient(recipient);

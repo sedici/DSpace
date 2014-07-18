@@ -47,7 +47,7 @@ public class MailReporter {
 	private static Email getEmailTemplate(Context context,String templateName) throws MessagingException{
 		String filename = I18nUtil.getEmailFilename(context.getCurrentLocale(), templateName);
 		try {
-			return ConfigurationManager.getEmail(filename);
+			return Email.getEmail(filename);
 		} catch (IOException e) {
 			//Si es un mail de reporte diferente al de UnknownException, mando reporte de UnknownException
 			if (!EXCEPTION_MAIL_TEMPLATE.equals(templateName)){
@@ -97,6 +97,9 @@ public class MailReporter {
 			//email no es descriptivo pero no hay forma de desarmarlo desde afuera. 
 			log.error("Error al tratar de enviar el email: ", e);
 			throw e;
+		} catch (IOException e) { 
+			log.error("Error al tratar de enviar el email: ", e);
+			throw new MessagingException("IOException al adjuntar archivos",e);
 		}
 	}
 

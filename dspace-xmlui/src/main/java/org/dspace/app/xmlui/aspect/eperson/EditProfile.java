@@ -21,6 +21,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.log4j.Logger;
+import org.dspace.app.util.CollectionDropDown;
 import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
@@ -33,6 +34,7 @@ import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.Select;
 import org.dspace.app.xmlui.wing.element.Text;
 import org.dspace.content.Collection;
+import org.dspace.content.Community;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.I18nUtil;
 import org.dspace.core.LogManager;
@@ -40,8 +42,6 @@ import org.dspace.eperson.Group;
 import org.dspace.eperson.Subscribe;
 import org.xml.sax.SAXException;
 
-import ar.edu.unlp.sedici.dspace.content.CollectionSearchSedici;
-import ar.edu.unlp.sedici.dspace.content.CollectionsWithCommunities;
 
 /**
  * Display a form that allows the user to edit their profile.
@@ -366,9 +366,7 @@ public class EditProfile extends AbstractDSpaceTransformer
            subscribe.addItem(T_subscriptions_help);
            
            Collection[] currentList = Subscribe.getSubscriptions(context, context.getCurrentUser());
-           //Collection[] possibleList = Collection.findAll(context);
-           CollectionsWithCommunities possibleList = CollectionSearchSedici.findAllWithCommunitiesName(context);
-           //Collection[] possibleList = Collection.findAll(context);
+           Collection[] possibleList = Collection.findAll(context);
            
            Select subscriptions = subscribe.addItem().addSelect("subscriptions");
            subscriptions.setLabel(T_email_subscriptions);
@@ -377,28 +375,14 @@ public class EditProfile extends AbstractDSpaceTransformer
            subscriptions.enableDeleteOperation();
            
            subscriptions.addOption(-1,T_select_collection);
-           
-           String communityName, collectionName;
-           Collection collection;
-           for (int i = 0; i < possibleList.getCollections().size(); i++) {
-           	collection=possibleList.getCollections().get(i);
-           	
-           	communityName=possibleList.getCommunitiesName().get(i);
-           	collectionName=collection.getName();
-
-      		   	if (communityName.length() > 40){
-      		   		communityName = communityName.substring(0, 39);
-               } 
-      		   	if (collectionName.length() > 40){
-      		   		collectionName = collectionName.substring(0, 39);
-               }
-      		   	
-      		  subscriptions.addOption(collection.getID(),communityName+" > "+collectionName);
+           for (Collection possible : possibleList)
+           {
+               subscriptions.addOption(possible.getID(), CollectionDropDown.collectionPath(possible));
            }
                    
-           for (Collection collectionAux: currentList)
+           for (Collection collection: currentList)
            {
-               subscriptions.addInstance().setOptionSelected(collectionAux.getID());
+               subscriptions.addInstance().setOptionSelected(collection.getID());
            }
        }
        
@@ -488,14 +472,14 @@ public class EditProfile extends AbstractDSpaceTransformer
 
     /**
      * get the available Locales for the User Interface as defined in dspace.cfg
-     * property xmlui.supported.locales
+     * property webui.supported.locales
      * returns an array of Locales or null
      *
      * @return an array of supported Locales or null
      */
     private static Locale[] getSupportedLocales()
     {
-        String ll = ConfigurationManager.getProperty("xmlui.supported.locales");
+        String ll = ConfigurationManager.getProperty("webui.supported.locales");
         if (ll != null)
         {
             return I18nUtil.parseLocales(ll);
