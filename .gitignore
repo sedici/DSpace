@@ -29,3 +29,7 @@ META-INF/
 
 ##Mac noise
 .DS_Store
+
+
+##Ignorar la instalación de dspace
+dspaceTesis/
