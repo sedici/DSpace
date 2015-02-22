@@ -3,6 +3,7 @@ package org.dspace.repelExpresionModule.repel;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
 
+import javax.el.ELException;
 import javax.el.ELManager;
 import javax.el.ELProcessor;
 
@@ -44,7 +45,12 @@ public class RepelExpressionModule {
 			SiteWrapper siteWrapper = new SiteWrapper(site);
 			this.procesor.defineBean("Site", siteWrapper);	
 		} catch (SQLException e) {
-			throw new RepelExpresionException("Error al instanciar un contexto Dspace",e);
+			log.error("Error al instanciar un contexto o un site Dspace: " + e.getMessage() + "\n\n");
+			throw new RepelExpresionException("Error al instanciar un contexto o un site Dspace",e);
+		} catch (RepelExpresionException re){
+			log.error("Error en al intentar instanciar el site del metamodelo" + re.getMessage());
+			//dejo el error en el errormodule loger y levanto la excepción
+			throw re;
 		}
 	}
 	
@@ -59,26 +65,32 @@ public class RepelExpressionModule {
 	 * 		collection
 	 * 		community
 	 * 		site 
-	 *TODO  añadir handle y site
-	 *TODO mostrar a lira el defineObject, proponer alguna otra solución esto es horrible
-	 *TODO como evitar el if si tengo un builder por clase
 	 *
 	 *
 	 */
 	public <T extends DSpaceObject> void defineObject(String name, T bean){
-		AbstractFactory factory = new ReadOnlyFactory();
-		this.procesor.defineBean(name, factory.getWrapper(bean));
+		try{
+			AbstractFactory factory = new ReadOnlyFactory();
+			this.procesor.defineBean(name, factory.getWrapper(bean));
+		}catch (ELException e ){
+			log.error("Excepción al intentar definir un objeto, el error fue: \n\n" + e.getMessage());
+			throw new RepelExpresionException("Algo ha ocurrido verifique el log",e);
+		}
 	}
 	
 	
 	/**
 	 * matchea dos strings para que se puedan definir otras cosas
-	 * TODO este método no debería ser publico o los wrapper no tendrian sentido
 	 * @param name
 	 * @param object
 	 */
 	public void defineObject(String name, String object){
+		try{
 		this.procesor.defineBean(name, object);
+		}catch (ELException ele){
+			log.error("Excepción al intetnar definir una constante");
+			throw new RepelExpresionException("Algo ha ocurrido verifique el log",ele);
+		}
 	}
 	
 	/**
@@ -87,7 +99,12 @@ public class RepelExpressionModule {
 	 */
 		
 	public void setVariable( String variable, String obj ) {
-		this.procesor.setVariable(variable,obj);
+		try{
+			this.procesor.setVariable(variable,obj);	
+		}catch (ELException ele){
+			log.error("Excepción al intentar definir una variable");
+			throw new RepelExpresionException("Algo ha ocurrido verifique el log",ele);
+		}
 	}
 	
 	/**
@@ -96,11 +113,15 @@ public class RepelExpressionModule {
 	 * @param prefix
 	 * @param localName
 	 * @param meth
-	 * TODO consultar con lira si se puede dejar como trabajo futuro
 	 * @throws NoSuchMethodException si no hay un método que se llame asi
 	 */
 	protected void setFunction (String prefix, String localName, Method meth) throws NoSuchMethodException{
+		try{
 		this.procesor.defineFunction(prefix, localName, meth);
+		}catch (ELException ele){
+			log.error("Excepción al intentar definir una funcion");
+			throw new RepelExpresionException("Algo ha ocurrido verifique el log",ele);
+		}
 	}
 	
 	/**
@@ -108,13 +129,15 @@ public class RepelExpressionModule {
 	 * @param expr la expresion es un string porque se convierte aquí
 	 * @return objeto con resultado de la evaluación de la expresión
 	 * 
-	 *TODO ver con lira lo de ocultar la necesidad de utilizar un factory
-	 *preguntar si no puedo usar un factory en el Módulo como estado interno
 	 */
 	public Object eval(String expr){
-		return this.procesor.eval(expr);
+		try{
+			return this.procesor.eval(expr);
+		}catch (ELException ele){
+			log.error("Error al interpretar la expresion " + ele.getMessage());
+			throw new RepelExpresionException("Error en la libreria de lenguaje", ele);
+		}
 	}
-	
 	
 	private ELManager getELManager(){
 		return this.procesor.getELManager();

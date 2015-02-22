@@ -15,11 +15,7 @@ import org.junit.Test;
  * 
  * 
  *
- *TODO el contexto es necesario solo en la clase itemCollectionWrapper, pero deberían conocerlo todos los DspaceObjects
- *debería ser enviado como parámetro por quien instancia los objetos con el factory (ver cuadernillo)
- *TODO hacer un commit en el branch de git
  *TODO mostrarle a lira lo q paso con getIdentifiers
- *TODO Anotar en getItems con parametros distintos de comunidad que queda para ELResolver
  *
  *@author terru
  *

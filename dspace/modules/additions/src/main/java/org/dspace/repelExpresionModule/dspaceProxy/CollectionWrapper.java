@@ -56,7 +56,7 @@ public class CollectionWrapper extends DspaceObjectWrapper<Collection> {
 		try {
 			return new ItemWrapper(this.getDso().getTemplateItem());
 		} catch (SQLException e) {
-			throw new RepelExpresionException("Error inesperado",e);
+			throw new RepelExpresionException("Error inesperado de SQL",e);
 		}
 	}
 
@@ -69,7 +69,7 @@ public class CollectionWrapper extends DspaceObjectWrapper<Collection> {
 			}
 			return returner;
 		} catch (SQLException e) {
-			throw new RepelExpresionException("Error inesperado",e);
+			throw new RepelExpresionException("Error inesperado de SQL",e);
 		}
 		
 	}
@@ -82,25 +82,25 @@ public class CollectionWrapper extends DspaceObjectWrapper<Collection> {
 		try {
 			return this.getDso().countItems();
 		} catch (SQLException e) {
-			throw new RepelExpresionException("Error inesperado",e);
+			throw new RepelExpresionException("Error inesperado de SQL",e);
 		}
 	}
 	
-	public ItemCollectionWrapper getItems(Context context){
+	public ItemCollectionWrapper getItems(){
 		ItemIterator it;
 		try {
 			it = this.getDso().getItems();
-			return new ItemCollectionWrapper(it,context);
+			return new ItemCollectionWrapper(it,this.getContext());
 		} catch (SQLException e) {
 			throw new RepelExpresionException("Error al intentar recuperar items de una coleccion",e);
 		}
 	}
 	
-	public ItemCollectionWrapper getAllItems(Context context){
+	public ItemCollectionWrapper getAllItems(){
 		ItemIterator it;
 		try {
 			it = this.getDso().getAllItems();
-			return new ItemCollectionWrapper(it,context);
+			return new ItemCollectionWrapper(it,this.getContext());
 		} catch (SQLException e) {
 			throw new RepelExpresionException("Error al intentar recuperar items de una coleccion",e);
 		}

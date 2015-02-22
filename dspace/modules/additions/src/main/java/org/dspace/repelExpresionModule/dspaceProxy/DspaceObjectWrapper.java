@@ -1,17 +1,23 @@
 package org.dspace.repelExpresionModule.dspaceProxy;
 import java.sql.SQLException;
 
-
 import org.dspace.repelExpresionModule.repel.RepelExpresionException;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Metadatum;
+import org.dspace.core.Context;
 
 public class DspaceObjectWrapper<T extends DSpaceObject> {
 	
     private T dso;
+    private Context context;
 
 	public DspaceObjectWrapper(T dso){
     	this.dso = dso;
+    	try {
+			this.context = new Context();
+		} catch (SQLException e) {
+			throw new RepelExpresionException("Error al instanciar un contexto",e);
+		}
     }
     
 	public int getType(){
@@ -68,4 +74,9 @@ public class DspaceObjectWrapper<T extends DSpaceObject> {
 		}
 		return returner;
 	}
+
+	protected Context getContext() {
+		return context;
+	}
+
 }
