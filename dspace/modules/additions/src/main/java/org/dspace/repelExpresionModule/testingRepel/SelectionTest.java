@@ -3,11 +3,8 @@ package org.dspace.repelExpresionModule.testingRepel;
 
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
 
 import org.junit.Test;
-
-import org.dspace.content.*;
 import org.dspace.repelExpresionModule.repel.*;
 
 /**	

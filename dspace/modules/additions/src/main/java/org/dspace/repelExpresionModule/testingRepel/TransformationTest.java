@@ -2,10 +2,8 @@ package org.dspace.repelExpresionModule.testingRepel;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import org.dspace.repelExpresionModule.repel.RepelExpressionModule;
-import org.dspace.content.Item;
+import org.junit.Test;
 
 public class TransformationTest {
 	@Test

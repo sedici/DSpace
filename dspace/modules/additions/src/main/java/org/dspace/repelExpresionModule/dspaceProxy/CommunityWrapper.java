@@ -1,7 +1,6 @@
 package org.dspace.repelExpresionModule.dspaceProxy;
 
 import java.sql.SQLException;
-import java.util.Map;
 
 import org.dspace.repelExpresionModule.repel.RepelExpresionException;
 import org.dspace.content.Collection;
@@ -115,7 +114,7 @@ public class CommunityWrapper extends DspaceObjectWrapper<Community> {
  */
 		
 //	/**
-//	 * Esta clase retorna todos los items de una comunidad para mejorar expresividad del lenguaje
+//	 * Esta clase retorna todos los items de una comunidad para mejorar expresividad del lenguaje 
 //	 * @return itemWrapper
 //	 */
 //	public ItemWrapper[] getItems(){
