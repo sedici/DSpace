@@ -3,6 +3,7 @@ package org.dspace.newCurationTasks;
 import java.io.IOException;
 
 import org.dspace.content.DSpaceObject;
+import org.dspace.core.Context;
 import org.dspace.curate.AbstractCurationTask;
 import org.dspace.curate.Curator;
 import org.dspace.repelExpresionModule.repel.RepelExpresionException;
@@ -18,6 +19,7 @@ import org.dspace.repelExpresionModule.repel.RepelExpressionModule;
  */
 public class RepelValidationTask extends AbstractCurationTask {
 	private RepelExpressionModule expModule;
+	private Context ctx;
 
 	/*
 	 * (non-Javadoc)
@@ -28,8 +30,7 @@ public class RepelValidationTask extends AbstractCurationTask {
 	public final int perform(DSpaceObject dso) throws IOException {
 		this.configExpressionModule();
 		if (!this.accept(dso)) {
-			report("Omitido por no ser el objeto adecuado para la tarea");
-			setResult("Omitido por no ser el objeto adecuado para la tarea");
+			//Se evita la sobrecarga de reportes de errores en items salteados
 			return Curator.CURATE_SKIP;
 		}
 		try {
@@ -45,7 +46,7 @@ public class RepelValidationTask extends AbstractCurationTask {
 			setResult("Validación fallida en el dso: " + dso.getID());
 			return Curator.CURATE_FAIL;
 		} catch (RepelExpresionException re) {
-			String print = "Excepcion del módulo de expresiones, vea el log para mas informacion \n\n";
+			String print = "Excepcion del módulo de expresiones";
 			print = print + "Ha ocurrido un error procesando el objeto " + dso.getID();
 			print = print + ":\n [" + re.getClass().getName() + "]" + re.getMessage() + "\n";
 			re.printStackTrace();
@@ -56,7 +57,7 @@ public class RepelValidationTask extends AbstractCurationTask {
 	}
 
 	protected void configExpressionModule() {
-		this.expModule = new RepelExpressionModule();
+		this.expModule = new RepelExpressionModule(this.ctx);
 	}
 
 	// las clases hijas deben reescribir estos dos métodos
@@ -68,6 +69,12 @@ public class RepelValidationTask extends AbstractCurationTask {
 	protected Boolean accept(DSpaceObject dso) {
 		throw new UnsupportedOperationException(
 				"Se debe implementar en subclase");
+	}
+	
+	@Override
+	public int perform(Context ctx, String id) throws IOException {
+		this.ctx = ctx;
+		return super.perform(ctx, id);
 	}
 
 }

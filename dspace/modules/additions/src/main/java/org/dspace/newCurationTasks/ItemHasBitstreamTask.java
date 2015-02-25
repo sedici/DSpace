@@ -25,7 +25,7 @@ public class ItemHasBitstreamTask extends RepelValidationTask {
 	
 	@Override
 	protected Boolean accept(DSpaceObject dso){
-		return (dso.getType() != Constants.ITEM);
+		return (dso.getType() == Constants.ITEM);
 	}
 	
 }

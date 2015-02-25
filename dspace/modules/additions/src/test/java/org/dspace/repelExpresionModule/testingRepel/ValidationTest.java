@@ -14,8 +14,10 @@ import org.junit.Test;
  * 			   validar la existencia de un metadato en un item
  * 
  * 
- *
+ *TODO mostrarle a lira que cuando se quere instanciar un context no se puede 
+ *instanciar una conexion nueva
  *TODO mostrarle a lira lo q paso con getIdentifiers
+ *
  *
  *@author terru
  *

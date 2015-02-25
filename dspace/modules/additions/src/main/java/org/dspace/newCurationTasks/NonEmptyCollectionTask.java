@@ -24,7 +24,7 @@ public class NonEmptyCollectionTask extends RepelValidationTask {
 	
 	@Override
 	protected Boolean accept(DSpaceObject dso){
-		return (dso.getType() != Constants.COLLECTION);
+		return (dso.getType() == Constants.COLLECTION);
 	}
 	
 

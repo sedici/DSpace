@@ -31,14 +31,14 @@ public class RepelExpressionModule {
 	 * En el constructor se instancia el ELManager que representa la facade hacia el EL
 	 * tambien se instancia el objeto contexto para que se pueda setear
 	 */
-	public RepelExpressionModule (){
+	public RepelExpressionModule (Context context){
 		this.procesor = new ELProcessor(); 
 		DspaceResolver elr = new DspaceResolver();
 		//añade un Dspace Resolver al contexto usando addElREsolver que propone un CompositeResolver
 		this.getELManager().addELResolver(elr);
 		try {
 			//FIXME quizas debería recibirse un context en uso antes de instanciarse uno nuevo
-			this.context = new Context();
+			this.context = context;//new Context();
 			//añade el site que representa el contexto de los objetos que no poseen uno
 			Site site = (Site) Site.find(this.context, Site.SITE_ID); 
 			SiteWrapper siteWrapper = new SiteWrapper(site);

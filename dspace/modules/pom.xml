@@ -62,9 +62,7 @@
         <profile>
             <id>dspace-jspui</id>
             <activation>
-                <file>
-                    <exists>jspui/pom.xml</exists>
-                </file>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <modules>
                 <module>jspui</module>
@@ -73,9 +71,7 @@
         <profile>
             <id>dspace-rdf</id>
             <activation>
-                <file>
-                    <exists>rdf/pom.xml</exists>
-                </file>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <modules>
                 <module>rdf</module>
@@ -84,9 +80,7 @@
         <profile>
             <id>dspace-rest</id>
             <activation>
-                <file>
-                    <exists>rest/pom.xml</exists>
-                </file>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <modules>
                 <module>rest</module>
@@ -95,9 +89,7 @@
         <profile>
             <id>dspace-sword</id>
             <activation>
-                <file>
-                    <exists>sword/pom.xml</exists>
-                </file>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <modules>
                 <module>sword</module>
@@ -106,9 +98,7 @@
         <profile>
             <id>dspace-swordv2</id>
             <activation>
-                <file>
-                    <exists>swordv2/pom.xml</exists>
-                </file>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <modules>
                 <module>swordv2</module>
@@ -128,9 +118,7 @@
         <profile>
             <id>dspace-oai</id>
             <activation>
-                <file>
-                    <exists>oai/pom.xml</exists>
-                </file>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <modules>
                 <module>oai</module>
@@ -143,9 +131,7 @@
             -->
             <id>mirage2</id>
             <activation>
-                <property>
-                    <name>mirage2.on</name>
-                </property>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <modules>
                 <module>xmlui-mirage2</module>
