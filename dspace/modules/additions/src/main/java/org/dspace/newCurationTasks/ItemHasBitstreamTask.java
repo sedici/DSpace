@@ -15,7 +15,7 @@ import org.dspace.core.Constants;
  *
  */
 public class ItemHasBitstreamTask extends RepelValidationTask {
-	private String expression = "dso.bundles.stream().anyMatch(b->!empty(b.bitstreams)))";
+	private String expression = "dso.bundles.stream().anyMatch(b->!empty(b.bitstreams))";
 	
 	
 	@Override

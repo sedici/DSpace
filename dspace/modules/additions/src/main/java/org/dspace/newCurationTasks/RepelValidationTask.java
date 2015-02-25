@@ -31,6 +31,7 @@ public class RepelValidationTask extends AbstractCurationTask {
 		this.configExpressionModule();
 		if (!this.accept(dso)) {
 			//Se evita la sobrecarga de reportes de errores en items salteados
+			setResult(null);
 			return Curator.CURATE_SKIP;
 		}
 		try {
@@ -52,7 +53,7 @@ public class RepelValidationTask extends AbstractCurationTask {
 			re.printStackTrace();
 			setResult(print);
 			report(print);
-			return Curator.CURATE_FAIL;
+			return Curator.CURATE_ERROR;
 		}
 	}
 
