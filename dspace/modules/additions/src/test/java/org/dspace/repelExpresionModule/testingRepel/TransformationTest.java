@@ -9,7 +9,7 @@ public class TransformationTest {
 	@Test
 	public void testCase1() {
 		String elText = "item.handle";
-		RepelExpressionModule expModule = new RepelExpressionModule();
+		RepelExpressionModule expModule = new RepelExpressionModule(null);
 		Object convertedText = expModule.eval(elText);
 		System.out.print(convertedText);
 		assertEquals( "123456", convertedText );

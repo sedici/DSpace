@@ -9,7 +9,7 @@ public abstract class RepelTesT {
 	protected void initConfig(String casename) {
 		System.out.print("Realizando test para el caso de uso:\n\n");
 		System.out.print(casename);
-		this.expModule = new RepelExpressionModule();
+		this.expModule = new RepelExpressionModule(null);
 		this.setMetamodel();
 	}
 
