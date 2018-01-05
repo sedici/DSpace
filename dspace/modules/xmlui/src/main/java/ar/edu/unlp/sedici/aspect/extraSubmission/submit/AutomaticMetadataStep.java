@@ -10,16 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-
 import org.dspace.app.util.SubmissionInfo;
-import org.dspace.app.util.Util;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
-import org.dspace.content.LicenseUtils;
 import org.dspace.core.Context;
-import org.dspace.core.LogManager;
-import org.dspace.eperson.EPerson;
-import org.dspace.license.CreativeCommons;
 import org.dspace.submit.AbstractProcessingStep;
 
 @Deprecated
@@ -62,7 +56,7 @@ public class AutomaticMetadataStep extends AbstractProcessingStep {
         Item item = subInfo.getSubmissionItem().getItem();
 
         //Si no tiene cargado el metadato lo cargo
-        if (item.getMetadata("dc", "date", "created", null).length == 0){
+        if (itemService.getMetadata(item,"dc", "date", "created", null).size() == 0){
         	
         	//recupero la fecha de creacion
         	Date ahora = new Date();
@@ -70,13 +64,10 @@ public class AutomaticMetadataStep extends AbstractProcessingStep {
         	String cadenaFecha = formato.format(ahora);
         	
             //agrego la fecha de creacion al item
-        	item.addMetadata("dc", "date", "created", null, cadenaFecha);
+        	itemService.addMetadata(context, item, "dc", "date", "created", null, cadenaFecha);
         	
-            // Save changes to database
-            subInfo.getSubmissionItem().update();
+        	itemService.update(context, item);
 
-            // gaurdo los cambios
-            context.commit();
         };
         // completed without errors
         return STATUS_COMPLETE;

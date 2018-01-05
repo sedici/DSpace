@@ -9,19 +9,32 @@ importClass(Packages.java.lang.Class);
 importClass(Packages.java.lang.ClassLoader);
 
 importClass(Packages.org.dspace.app.xmlui.utils.FlowscriptUtils);
+importClass(Packages.org.dspace.app.xmlui.aspect.submission.FlowUtils);
+importClass(Packages.org.dspace.app.xmlui.cocoon.HttpServletRequestCocoonWrapper);
 importClass(Packages.org.apache.cocoon.environment.http.HttpEnvironment);
-importClass(Packages.org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem);
-importClass(Packages.org.dspace.xmlworkflow.XmlWorkflowManager);
-importClass(Packages.org.dspace.xmlworkflow.WorkflowFactory);
+importClass(Packages.org.dspace.app.xmlui.aspect.submission.StepAndPage);
+importClass(Packages.org.apache.cocoon.servlet.multipart.Part);
 
-importClass(Packages.org.dspace.handle.HandleManager);
-importClass(Packages.org.dspace.authorize.AuthorizeManager);
+importClass(Packages.org.dspace.handle.service.HandleService);
+importClass(Packages.org.dspace.handle.factory.HandleServiceFactory);
+importClass(Packages.org.dspace.workflow.WorkflowService);
+importClass(Packages.org.dspace.core.Constants);
+importClass(Packages.org.dspace.workflow.WorkflowItem);
+importClass(Packages.org.dspace.content.WorkspaceItem);
+importClass(Packages.org.dspace.content.service.WorkspaceItemService);
+importClass(Packages.org.dspace.content.factory.ContentServiceFactory);
+importClass(Packages.org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem);
+importClass(Packages.org.dspace.authorize.service.AuthorizeService);
+importClass(Packages.org.dspace.authorize.factory.AuthorizeServiceFactory);
+importClass(Packages.org.dspace.license.service.CreativeCommonsService);
+importClass(Packages.org.dspace.workflow.factory.WorkflowServiceFactory);
+importClass(Packages.org.dspace.xmlworkflow.factory.XmlWorkflowServiceFactory);
+importClass(Packages.org.dspace.xmlworkflow.factory.XmlWorkflowFactory);
+importClass(Packages.org.dspace.xmlworkflow.storedcomponents.service.PoolTaskService);
+importClass(Packages.org.dspace.xmlworkflow.storedcomponents.ClaimedTask);
 
 importClass(Packages.org.dspace.app.xmlui.utils.ContextUtil);
 importClass(Packages.org.dspace.app.xmlui.cocoon.HttpServletRequestCocoonWrapper);
-
-importClass(Packages.org.dspace.xmlworkflow.storedcomponents.PoolTask);
-importClass(Packages.org.dspace.xmlworkflow.storedcomponents.ClaimedTask);
 
 importClass(Packages.org.dspace.eperson.EPerson);
 
@@ -77,6 +90,48 @@ function getHttpResponse()
 	return getObjectModel().get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
 }
 
+
+
+function getHandleService(handle) {
+    var dso = HandleServiceFactory.getInstance().getHandleService().resolveToObject(getDSContext(), handle);
+    return dso;
+}
+
+function getWorkspaceItemService() {
+    return ContentServiceFactory.getInstance().getWorkspaceItemService();
+}
+
+function getItemService() {
+    return ContentServiceFactory.getInstance().getItemService();
+}
+
+function getWorkflowItemService()
+{
+    return XmlWorkflowServiceFactory.getInstance().getWorkflowItemService();
+}
+
+function getXmlWorkflowFactory()
+{
+    return XmlWorkflowServiceFactory.getInstance().getWorkflowFactory();
+}
+
+function getPoolTaskService()
+{
+    return XmlWorkflowServiceFactory.getInstance().getPoolTaskService();
+}
+
+function getXmlWorkflowService()
+{
+    return XmlWorkflowServiceFactory.getInstance().getXmlWorkflowService();
+}
+
+function getClaimedTaskService()
+{
+    return XmlWorkflowServiceFactory.getInstance().getClaimedTaskService();
+}
+
+
+
 /**
  * Send the current page and wait for the flow to be continued. Use this method to add
  * a flow=true parameter. This allows the sitemap to filter out all flow related requests
@@ -111,11 +166,21 @@ function sendPage(uri,bizData)
 function doEditItemMetadata() 
 {
 	var handle = cocoon.parameters["handle"];
-	var xmlWorkflowItem = XmlWorkflowManager.startEditItemMetadata(getDSContext(), handle);
-	if(xmlWorkflowItem == null)
-		throw "Error generando XmlWorkflowItem para el item "+handle;
+	var item = getHandleService(handle);
+	var xmlWorkflowItem = getWorkflowItemService().findByItem(getDSContext(), item);
+	if(xmlWorkflowItem == null){
+	    var collection = item.getOwningCollection();
+	    var wf = getXmlWorkflowFactory().getWorkflow(collection);
+	    xmlWorkflowItem = getWorkflowItemService().create(getDSContext(), item, collection);
+	    getWorkflowItemService().update(getDSContext(), xmlWorkflowItem);
+	}
+	
+	var wsi = getWorkspaceItemService().create(getDSContext(), xmlWorkflowItem);
 
-	var poolTaskList = PoolTask.find(getDSContext(), xmlWorkflowItem);
+	xmlWorkflowItem=getXmlWorkflowService().start(getDSContext(), wsi);
+	
+
+	var poolTaskList = getPoolTaskService().find(getDSContext(), xmlWorkflowItem);
 	var usuario=getDSContext().getCurrentUser();
 	var redireccionamiento;
 	var contextPath = cocoon.request.getContextPath();
@@ -124,7 +189,7 @@ function doEditItemMetadata()
 	
 	//esto es para el caso de la edicion de una solapa abierta previamente a la aceptacion de la tarea desde otra solapa
 	if(poolTaskList.isEmpty()){
-		var claimedTask=ClaimedTask.findByWorkflowIdAndEPerson(getDSContext(), xmlWorkflowItem.getID(), getDSContext().getCurrentUser().getID());
+		var claimedTask=getClaimedTaskService().findByWorkflowIdAndEPerson(getDSContext(), xmlWorkflowItem, getDSContext().getCurrentUser());
 		if (claimedTask==null){
 			redireccionamiento=contextPath+"/handle/"+handle;
 		} else {
@@ -134,8 +199,7 @@ function doEditItemMetadata()
 		var poolTask = poolTaskList.get(0);
 		redireccionamiento=contextPath+"/handle/"+handle+"/xmlworkflow?"+"workflowID="+xmlWorkflowItem.getID()+"&stepID="+poolTask.getStepID()+"&actionID="+poolTask.getActionID();
 		
-	}	
-	
+	}
 	
 	// Enviamos al usuario a la pantalla de aceptación del trabajo
 	cocoon.sendPage("submit/finalize");

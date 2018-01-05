@@ -22,12 +22,17 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.factory.AuthorizeServiceFactory;
+import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Community;
+import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.eperson.Group;
-import org.dspace.handle.HandleManager;
+import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.eperson.service.EPersonService;
+import org.dspace.eperson.service.GroupService;
+import org.dspace.handle.factory.HandleServiceFactory;
 
 public final class CreateGroup {
 
@@ -155,7 +160,11 @@ public final class CreateGroup {
 	public void createGroup(String name, String parentGroupName, List<String> communitiesIds) throws Exception {
 		// Of course we aren't an user yet so we need to
 		// circumvent authorisation
-
+        EPersonService epersonService = EPersonServiceFactory.getInstance().getEPersonService();
+        GroupService groupService= EPersonServiceFactory.getInstance().getGroupService();
+        AuthorizeService authorizeService = AuthorizeServiceFactory.getInstance().getAuthorizeService();
+        
+        
 		context.turnOffAuthorisationSystem();
 		
 
@@ -179,10 +188,10 @@ public final class CreateGroup {
 			} else {
 				if ("1".equals(parentGroupName) || "administrator".equals(parentGroupName)) {
 					parentGroupName = "1 {administrator}";
-					parentGroup = Group.find(context, 1);
+					parentGroup = groupService.findByLegacyId(context, 1);
 
 				} else {
-					parentGroup = Group.findByName(context, parentGroupName);
+					parentGroup = groupService.findByName(context, parentGroupName);
 				}
 				if (parentGroup == null) {
 					throw new IllegalStateException("Error, no parentGroup (" + parentGroupName + ") found");
@@ -193,22 +202,22 @@ public final class CreateGroup {
 				throw new IllegalStateException("Debe especificar el nombre del grupo");
 			}
 
-			Group group = Group.findByName(context, name);
+			Group group = groupService.findByName(context, name);
 
 			if (group != null) {
 				throw new IllegalStateException("Error, El grupo " + name + " ya se encuentra registrado");
 			}
-			group = Group.create(context);
-			group.setName(name);
+			group = groupService.create(context);
+			groupService.setName(group, name);
+			groupService.update(context, group);
 
-			group.update();
 			if (parentGroup != null) {
-				parentGroup.addMember(group);
-				parentGroup.update();
+				groupService.addMember(context, parentGroup, group);
+				groupService.update(context, parentGroup);
 			}
 			
 			for (Community community : communities) {
-			    AuthorizeManager.addPolicy(context,community,Constants.ADMIN,group);
+			    authorizeService.addPolicy(context,community,Constants.ADMIN,group);
 			}
 			
 			context.complete();
@@ -227,7 +236,7 @@ public final class CreateGroup {
 
 		if (communityID.indexOf('/') != -1) {
 			// has a / must be a handle
-			community = (Community) HandleManager.resolveToObject(c, communityID);
+			community = (Community) HandleServiceFactory.getInstance().getHandleService().resolveToObject(c, communityID);
 
 			// ensure it's a community
 			if ((community == null) || (community.getType() != Constants.COMMUNITY)) {
@@ -235,7 +244,7 @@ public final class CreateGroup {
 			}
 		} else {
 			try{
-				community = Community.find(c, Integer.parseInt(communityID));
+				community = ContentServiceFactory.getInstance().getCommunityService().findByLegacyId(c, Integer.parseInt(communityID));
 			}catch (NumberFormatException e) {
 				community = null;
 			}

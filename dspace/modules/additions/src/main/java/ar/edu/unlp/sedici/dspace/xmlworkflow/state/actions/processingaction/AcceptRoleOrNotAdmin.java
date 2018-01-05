@@ -2,20 +2,25 @@ package ar.edu.unlp.sedici.dspace.xmlworkflow.state.actions.processingaction;
 
 import java.sql.SQLException;
 
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.factory.AuthorizeServiceFactory;
+import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.core.Context;
 import org.dspace.xmlworkflow.WorkflowConfigurationException;
 import org.dspace.xmlworkflow.state.actions.userassignment.ClaimAction;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 
 public class AcceptRoleOrNotAdmin extends ClaimAction {
-
+	protected AuthorizeService authorizeService;
+	
+	public AcceptRoleOrNotAdmin() {
+		authorizeService = AuthorizeServiceFactory.getInstance().getAuthorizeService();
+	}
 	/*
 	 * If current user is member of the role of the current step, or is not ADMIN of the collection or 
 	 * an upper community,then evaluate if exists users that can handle the actions of the current step.
 	 */
 	public boolean isValidUserSelection(Context ctx, XmlWorkflowItem wfi, boolean hasUI) throws WorkflowConfigurationException, SQLException {
-		if (isUserMemberInStepRole(ctx,wfi) || !AuthorizeManager.isAdmin(ctx, wfi.getCollection()))
+		if (isUserMemberInStepRole(ctx,wfi) || !authorizeService.isAdmin(ctx, wfi.getCollection()))
 			return super.isValidUserSelection(ctx, wfi, hasUI);
 		else
 			return false;

@@ -1,16 +1,20 @@
 package ar.edu.unlp.sedici.dspace.embargo;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.authorize.factory.AuthorizeServiceFactory;
+import org.dspace.authorize.service.ResourcePolicyService;
 import org.dspace.content.DCDate;
 import org.dspace.content.Item;
+import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.embargo.DefaultEmbargoSetter;
-import org.dspace.embargo.EmbargoManager;
+import org.dspace.embargo.service.EmbargoService;
+import org.dspace.services.factory.DSpaceServicesFactory;
 
 /**
  * Plugin implementation of the embargo setting function. The parseTerms()
@@ -23,12 +27,8 @@ public class DaysEmbargoSetter extends DefaultEmbargoSetter {
 
 	private static Logger log = Logger.getLogger(DaysEmbargoSetter.class);
 
-	public DaysEmbargoSetter() {
-		super();
-
-	    log.info("Se inicialza correctamente el EmbargoSetter del módulo de embargo. ");
-	}
-
+	private ItemService itemService;
+	
 	/**
 	 * Parse the terms into a definite date. Only terms expressions processed
 	 * are those defined in 'embargo.terms.days' configuration property.
@@ -42,14 +42,14 @@ public class DaysEmbargoSetter extends DefaultEmbargoSetter {
 	 * @return parsed date in DCDate format
 	 */
 	public DCDate parseTerms(Context context, Item item, String terms)
-			throws SQLException, AuthorizeException, IOException {
+			throws SQLException, AuthorizeException {
 		if (terms == null || "".equals(terms.trim())) {
 			log.trace("No se aplica embargo sobre el doc "+item.getHandle()+" dado que no hay un terms definido como metadato");
 			return null;
 		}
-
+        String termsOpen = DSpaceServicesFactory.getInstance().getConfigurationService().getProperty("embargo.terms.open");
 		if (termsOpen.equals(terms)) {
-			return EmbargoManager.FOREVER;
+			return EmbargoService.FOREVER;
 		}
 		
 		//termProps.getProperty(terms)
@@ -86,4 +86,12 @@ public class DaysEmbargoSetter extends DefaultEmbargoSetter {
 	protected Date getEmbargoStartDate(Item item) {
 		return new Date();
 	}
+	
+	protected ItemService getItemService() {
+        if(itemService == null)
+        {
+            itemService = ContentServiceFactory.getInstance().getItemService();
+        }
+        return itemService;
+    }
 }

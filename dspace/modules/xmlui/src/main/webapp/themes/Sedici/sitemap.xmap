@@ -213,7 +213,7 @@
 
 		<map:handle-errors>
 			<map:act type="DspacePropertyAction" >
-				<map:parameter name="module" value="sedici-dspace" />
+				<map:parameter name="module" value="sedici" />
 				<map:parameter name="property" value="xmlui.debug" />
 				<map:parameter name="alias" value="xmlui_debug" />
 					

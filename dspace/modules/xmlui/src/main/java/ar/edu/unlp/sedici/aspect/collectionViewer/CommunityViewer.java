@@ -3,7 +3,7 @@ package ar.edu.unlp.sedici.aspect.collectionViewer;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
-
+import java.util.List;
 
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.util.HashUtil;
@@ -17,7 +17,6 @@ import org.dspace.app.xmlui.wing.element.Body;
 import org.dspace.app.xmlui.wing.element.Division;
 import org.dspace.app.xmlui.wing.element.ReferenceSet;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.DSpaceObject;
 import org.xml.sax.SAXException;
@@ -93,7 +92,7 @@ public class CommunityViewer extends AbstractDSpaceTransformer implements Cachea
 	            DSpaceValidity validity = new DSpaceValidity();
 	            
 	            // Add the actual collection;
-	            validity.add(community);
+	            validity.add(context, community);
 	
 	            this.validity = validity.complete();
 	        }
@@ -119,16 +118,16 @@ public class CommunityViewer extends AbstractDSpaceTransformer implements Cachea
            return;
        }
 
-       Community[] superCommunities = ((Community) dso).getAllParents();
+       List<Community> superCommunities = ((Community) dso).getParentCommunities();
        int i = 0;
-       while(i < superCommunities.length) 
+       while(i < superCommunities.size()) 
        {
-    	   if(superCommunities[i].getLogo() != null) 
+    	   if(superCommunities.get(i).getLogo() != null) 
     	   {
     	       // Agrego la referencia a la comunidad root
     	   	   Division viewer =  body.addDivision("community-view-root","secondary");
     	       ReferenceSet mainInclude = viewer.addReferenceSet("community-view-root", ReferenceSet.TYPE_DETAIL_LIST);
-    	       mainInclude.addReference(superCommunities[i]);
+    	       mainInclude.addReference(superCommunities.get(i));
     	       break;
     	   }
     	   i++;

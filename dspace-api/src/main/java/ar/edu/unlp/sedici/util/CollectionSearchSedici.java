@@ -1,22 +1,11 @@
 
 package ar.edu.unlp.sedici.util;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import org.dspace.authorize.AuthorizeManager;
-import org.dspace.content.Collection;
-import org.dspace.content.Community;
-import org.dspace.core.Context;
-import org.dspace.storage.rdbms.DatabaseManager;
-import org.dspace.storage.rdbms.TableRow;
-import org.dspace.storage.rdbms.TableRowIterator;
 
 public class CollectionSearchSedici {
 
+	/*
+	 * Comento todo para permitir la actualización a dspace 6.0
     public static CollectionsWithCommunities findAuthorizedWithCommunitiesName(Context context, Community comm,
             int actionID) throws java.sql.SQLException
     {
@@ -39,8 +28,7 @@ public class CollectionSearchSedici {
 		        // Build a list of Community objects
 		        Collection fromCache;
 		        String communityName;
-		        try
-		        {
+		       
 		            while (tri.hasNext())
 		            {
 		                TableRow row = tri.next();
@@ -60,15 +48,6 @@ public class CollectionSearchSedici {
 		            	}                
 		                
 		            }
-		        }
-		        finally
-		        {
-		            // close the TableRowIterator to free up resources
-		            if (tri != null)
-		            {
-		                tri.close();
-		            }
-		        }
 		        return new CollectionsWithCommunities(collections, communitiesName);
 			}
 		} catch (SQLException e) {
@@ -158,5 +137,5 @@ public class CollectionSearchSedici {
 
         return new CollectionsWithCommunities(collections, communitiesName);
 	}
-	
+*/	
 }

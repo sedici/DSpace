@@ -19,7 +19,9 @@ import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.app.xmlui.wing.element.Options;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
+import org.dspace.authorize.factory.AuthorizeServiceFactory;
+import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.xml.sax.SAXException;
@@ -33,12 +35,9 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
 
     private static final Message T_context_swordclient_head = message("xmlui.swordclient.Navigation.context_head");
     private static final Message T_swordclient_copy = message("xmlui.swordclient.Navigation.context_copy");
-        
-    /** Cached validity object */
-    private SourceValidity validity;
-    
-    
-    
+
+    protected AuthorizeService authorizeService = AuthorizeServiceFactory.getInstance().getAuthorizeService();
+
     /**
      * Generate the unique caching key.
      * This key must be unique inside the space of this component.
@@ -72,7 +71,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
         {
             Item item = (Item) dso;
 
-            if (AuthorizeManager.isAdmin(this.context, dso))
+            if (authorizeService.isAdmin(this.context, dso))
             {
                 context.setHead(T_context_swordclient_head);
                 context.addItemXref(contextPath + "/swordclient?itemID="+item.getID(), T_swordclient_copy);

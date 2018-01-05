@@ -102,7 +102,7 @@ public class ShowNews  extends AbstractDSpaceTransformer implements CacheablePro
 		} catch (ParameterException e) {
 			id="feed";
 		};
-    	String url = ConfigurationManager.getProperty("sedici-dspace", id);
+    	String url = ConfigurationManager.getProperty("sedici", id);
     	//String url="http://feeds.feedburner.com/luauf";
         SyndFeed feed;
         try {

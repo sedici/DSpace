@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,8 @@ import org.apache.cocoon.environment.http.HttpResponse;
 import org.dspace.app.xmlui.utils.ContextUtil;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
-import org.dspace.content.ItemIterator;
+import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.ItemService;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 
@@ -264,11 +266,12 @@ public class RedirectAction extends AbstractAction
 	 * Transforma el valor del parametro al valor correspondiente el nueva base de datos.
 	 */
     private String transformParamValue(Request request, String type, String param_value) {
+    	ItemService itemService = ContentServiceFactory.getInstance().getItemService();
 	   	if (type.equals("item")){
     		//Obtengo el contexto para hacer la consulta a la BD
     		try {
 				Context contexto=ContextUtil.obtainContext(request);
-				ItemIterator items=Item.findByMetadataField(contexto, "sedici2003", "identifier", null, param_value);
+				Iterator<Item> items=itemService.findByMetadataField(contexto, "sedici2003", "identifier", null, param_value);
 				if (items.hasNext()){
 					param_value=items.next().getHandle();					
 				}

@@ -12,14 +12,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.MetadataSchema;
 import org.dspace.core.Context;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.eperson.service.GroupService;
 
 /**
  * Class representing a line in an input form.
@@ -28,6 +27,8 @@ import org.dspace.eperson.Group;
  */
 public class DCInput
 {
+    protected GroupService groupService;
+    
     /** the DC element name */
     private String dcElement = null;
 
@@ -36,6 +37,15 @@ public class DCInput
 
     /** the DC namespace schema */
     private String dcSchema = null;
+    
+    /** the input language */
+    private boolean language = false;
+    
+    /** the language code use for the input */
+    private static final String LanguageName = "common_iso_languages";
+
+    /** the language list and their value */
+    private List<String> valueLanguageList = null;
 
     /** a label describing input */
     private String label = null;
@@ -120,6 +130,8 @@ public class DCInput
      */
     public DCInput(Map<String, String> fieldMap, Map<String, List<String>> listMap)
     {
+    	groupService = EPersonServiceFactory.getInstance().getGroupService();
+    	
         dcElement = fieldMap.get("dc-element");
         dcQualifier = fieldMap.get("dc-qualifier");
 
@@ -130,6 +142,14 @@ public class DCInput
             dcSchema = MetadataSchema.DC_SCHEMA;
         }
 
+        //check if the input have a language tag
+        language = Boolean.valueOf(fieldMap.get("language"));
+        valueLanguageList = new ArrayList();
+        if (language)
+        {
+            valueLanguageList = listMap.get(LanguageName);
+        }
+        
         String repStr = fieldMap.get("repeatable");
         repeatable = "true".equalsIgnoreCase(repStr)
                 || "yes".equalsIgnoreCase(repStr);
@@ -327,6 +347,16 @@ public class DCInput
     {
         return dcQualifier;
     }
+    
+    /**
+     * Get the language for this form row.
+     * 
+     * @return the language state
+     */
+    public boolean getLanguage()
+    {
+        return language;
+    }
 
     /**
      * Get the hint for this form row, formatted for an HTML table
@@ -368,6 +398,17 @@ public class DCInput
         return valueList;
     }
 
+    /**
+     * Get the list of language tags 
+     * 
+     * @return the list of language
+     */
+
+    public List<String> getValueLanguageList() 
+    {
+        return valueLanguageList;
+    }
+    
     /**
      * Get the name of the controlled vocabulary that is associated with this
      * field
@@ -449,12 +490,12 @@ public class DCInput
 	 * The closed attribute of the vocabulary tag for this field as set in 
 	 * input-forms.xml
 	 * 
-	 * <code> 
+	 * {@code 
 	 * <field>
 	 *     .....
 	 *     <vocabulary closed="true">nsrc</vocabulary>
 	 * </field>
-	 * </code>
+	 * }
 	 * @return the closedVocabulary flags: true if the entry should be restricted 
 	 *         only to vocabulary terms, false otherwise
 	 */
@@ -515,22 +556,7 @@ public class DCInput
 	public boolean isVisibilityPositiveRestriction(String groupName) {
 		return visibilityOnGroup.get(groupName);
 	}
-	
-    /**
-     * Mini-cache of loaded groups for group-based validation
-     * 
-     * @return Group instance
-     */
-    private Map<String, Group> loadedGroups = new HashMap<String, Group>();
-    private Group findGroup(Context context, String groupName) throws SQLException {
-    	Group group = loadedGroups.get(groupName);
-    	if(group == null) {
-    		group = Group.findByName(context, groupName);
-    		loadedGroups.put(groupName, group);
-    	}
-    	return group;
-    }
-    
+	    
     public boolean isVisibleOnGroup(Context context) throws SQLException, AuthorizeException {
     	
     	if(!hasVisibilityOnGroup())
@@ -538,11 +564,11 @@ public class DCInput
     	
     	boolean isVisible = false;
     	for(String groupName : getVisibilityRestrictions()) {
-    		Group group = findGroup(context, groupName);
+    		Group group = groupService.findByName(context, groupName);
         	if( group == null) {
         		throw new AuthorizeException("Group "+groupName+ " does not exist, check your input_forms.xml");
         	}
-        	isVisible = isVisible || !(Group.isMember(context, group.getID()) ^ isVisibilityPositiveRestriction(groupName)); 
+        	isVisible = isVisible || !(groupService.isMember(context, group) ^ isVisibilityPositiveRestriction(groupName)); 
     	}
 		return isVisible;
     }

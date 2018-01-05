@@ -1,10 +1,11 @@
 package ar.edu.unlp.sedici.dspace.curation.preservationHierarchy.preservationRules;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.dspace.content.Item;
-import org.dspace.content.Metadatum;
+import org.dspace.content.MetadataValue;
 
 import ar.edu.unlp.sedici.dspace.curation.preservationHierarchy.Reporter;
 
@@ -24,15 +25,15 @@ public class HandleValidationRule extends Rule {
 	 */
 	@Override
 	public int evaluate(Item item, Reporter reporter) {
-		Metadatum[] dcHandle = item.getMetadataByMetadataString("dc.identifier.uri");
+		List<MetadataValue> dcHandle = itemService .getMetadataByMetadataString(item, "dc.identifier.uri");
 		String handle = item.getHandle();
-		if(dcHandle.length == 0){
+		if(dcHandle.size() == 0){
 		String Msg = "El ítem: "+item.getID()+" fue evaluado con 0 porque no posee Handle";
 		reporter.addToItemReport(Msg);
 		return 0;
 		}
 		Pattern pattern = Pattern.compile("\\d+/\\d+");
-		Matcher matcher = pattern.matcher(dcHandle[0].value);
+		Matcher matcher = pattern.matcher(dcHandle.get(0).getValue());
 		matcher.find();
 		String handleValue = matcher.group();
 		if(handleValue.equals("123456789")){

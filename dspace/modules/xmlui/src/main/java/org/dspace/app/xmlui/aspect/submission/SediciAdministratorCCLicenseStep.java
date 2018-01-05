@@ -18,7 +18,9 @@ import org.dspace.app.xmlui.wing.element.Select;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
-import org.dspace.content.Metadatum;
+import org.dspace.content.MetadataValue;
+import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.ItemService;
 import org.dspace.core.ConfigurationManager;
 import org.xml.sax.SAXException;
 
@@ -53,7 +55,7 @@ public class SediciAdministratorCCLicenseStep extends AbstractSubmissionStep
         protected static final Message Derivatives_question_answer_no  = message("xmlui.Submission.submit.SediciCCLicenseStep.DerivativesAnswerNo");
         protected static final Message Derivatives_question_answer_yes  = message("xmlui.Submission.submit.SediciCCLicenseStep.DerivativesAnswerYes");
         protected static final Message Derivatives_question_answer_sa  = message("xmlui.Submission.submit.SediciCCLicenseStep.DerivativesAnswerShareALike");
-		private static final String PropertiesFilename = "sedici-dspace";
+		private static final String PropertiesFilename = "sedici";
 		private static HashMap<String, String> Licencias=null;
 	/**
 	 * Establish our required parameters, abstractStep will enforce these.
@@ -84,6 +86,8 @@ public class SediciAdministratorCCLicenseStep extends AbstractSubmissionStep
 	public void addBody(Body body) throws SAXException, WingException,
 	UIException, SQLException, IOException, AuthorizeException
 	{
+		ItemService itemService = ContentServiceFactory.getInstance().getItemService();
+		
 	    // Build the url to and from creative commons
 	    Item item = submission.getItem();
 	    Collection collection=submission.getCollection();
@@ -113,9 +117,9 @@ public class SediciAdministratorCCLicenseStep extends AbstractSubmissionStep
 		}
         //En caso de que tenga una licencia la selecciono
 	    String ccUri=ConfigurationManager.getProperty("cc.license.uri");
-	    Metadatum[] carga=item.getMetadataByMetadataString(ccUri);
-        if (carga.length>0){
-	    	select.setOptionSelected(carga[0].value);
+	    java.util.List<MetadataValue> carga=itemService.getMetadataByMetadataString(item, ccUri);
+        if (carga.size()>0){
+	    	select.setOptionSelected(carga.get(0).getValue());
         } else {
         	select.setOptionSelected("");
         }

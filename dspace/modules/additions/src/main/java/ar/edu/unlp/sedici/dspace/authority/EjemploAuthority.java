@@ -41,7 +41,7 @@ public class EjemploAuthority implements ChoiceAuthority {
         "Acta de Prueba numero Trece"        
     };
 
-    public Choices getMatches(String field, String query, int collection, int start, int limit, String locale)
+    public Choices getMatches(String field, String query, org.dspace.content.Collection collection, int start, int limit, String locale)
     {
         int longitud=0;
         Collection<Choice> resultado = new ArrayList<Choice>();
@@ -62,7 +62,7 @@ public class EjemploAuthority implements ChoiceAuthority {
         return new Choices(v, 0, longitud, Choices.CF_ACCEPTED, false);
     }
 
-    public Choices getBestMatch(String field, String text, int collection, String locale)
+    public Choices getBestMatch(String field, String text, org.dspace.content.Collection collection, String locale)
     {
         /*for (int i = 0; i < values.length; ++i)
         {

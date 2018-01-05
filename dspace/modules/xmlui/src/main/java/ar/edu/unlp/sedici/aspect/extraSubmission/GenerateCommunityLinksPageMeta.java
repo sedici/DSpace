@@ -57,8 +57,8 @@ public class GenerateCommunityLinksPageMeta  extends AbstractDSpaceTransformer i
     public void addPageMeta(PageMeta pageMeta) throws SAXException, WingException, UIException, SQLException, IOException, AuthorizeException
     {
     	// Guardo las communities que serán links
-    	Map<String,String> communityLinks = ConfigurationUtil.readMultipleProperties("sedici-dspace", "xmlui.community-list.home-link");
-    	String orderedCommunityLinks = ConfigurationManager.getProperty("sedici-dspace","xmlui.community-list.ordered-community-links");
+    	Map<String,String> communityLinks = ConfigurationUtil.readMultipleProperties("sedici", "xmlui.community-list.home-link");
+    	String orderedCommunityLinks = ConfigurationManager.getProperty("sedici","xmlui.community-list.ordered-community-links");
     	
     	for(String key : orderedCommunityLinks.split(",")) {
     		pageMeta.addMetadata("community-link", key.trim()).addContent(communityLinks.get(key.trim()));

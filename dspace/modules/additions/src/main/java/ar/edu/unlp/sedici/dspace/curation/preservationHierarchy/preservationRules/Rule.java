@@ -10,8 +10,11 @@
  */
 package ar.edu.unlp.sedici.dspace.curation.preservationHierarchy.preservationRules;
 
-
+import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.ItemService;
 
 public abstract class Rule {
+	protected ItemService itemService = ContentServiceFactory.getInstance().getItemService();
+	
 	public abstract int evaluate(org.dspace.content.Item item, ar.edu.unlp.sedici.dspace.curation.preservationHierarchy.Reporter reporter);
 }

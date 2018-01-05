@@ -17,6 +17,7 @@ package ar.edu.unlp.sedici.dspace.authority;
 
 import java.util.List;
 
+import org.dspace.content.Collection;
 import org.dspace.content.authority.Choice;
 import org.dspace.content.authority.ChoiceAuthority;
 import org.dspace.content.authority.Choices;
@@ -59,7 +60,7 @@ public abstract class SeDiCI2003AuthorityProvider implements ChoiceAuthority {
      * @param locale explicit localization key if available, or null
      * @return a Choices object (never null).
      */
-    public Choices getMatches(String field, String text, int collection, int start, int limit, String locale) {
+    public Choices getMatches(String field, String text, Collection collection, int start, int limit, String locale) {
     	
     	if (text == null) text = "";
     	
@@ -101,7 +102,7 @@ public abstract class SeDiCI2003AuthorityProvider implements ChoiceAuthority {
      * @param locale explicit localization key if available, or null
      * @return a Choices object (never null) with 1 or 0 values.
      */
-    public Choices getBestMatch(String field, String text, int collection, String locale) {
+    public Choices getBestMatch(String field, String text, Collection collection, String locale) {
     	return this.getMatches(field, text, collection, 0, 1, locale);
 	}
 

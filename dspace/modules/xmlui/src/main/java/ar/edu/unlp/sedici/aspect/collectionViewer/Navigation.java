@@ -4,18 +4,10 @@ package ar.edu.unlp.sedici.aspect.collectionViewer;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Map;
 
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.HashUtil;
 import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.source.impl.validity.NOPValidity;
-import org.dspace.app.itemexport.ItemExport;
 import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
 import org.dspace.app.xmlui.utils.DSpaceValidity;
 import org.dspace.app.xmlui.utils.HandleUtil;
@@ -25,13 +17,10 @@ import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.app.xmlui.wing.element.Options;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.factory.AuthorizeServiceFactory;
 import org.dspace.content.Collection;
-import org.dspace.content.Community;
 import org.dspace.content.DSpaceObject;
-import org.dspace.content.Item;
 import org.dspace.core.Constants;
-import org.dspace.eperson.Group;
 import org.xml.sax.SAXException;
 
 /**
@@ -99,7 +88,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
  	            DSpaceValidity validity = new DSpaceValidity();
  	            
  	            // Add the actual collection;
- 	            validity.add(collection);
+ 	            validity.add(context, collection);
  	
  	            this.validity = validity.complete();
  	        }
@@ -115,6 +104,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
    public void addOptions(Options options) throws SAXException, WingException,
             UIException, SQLException, IOException, AuthorizeException
     {
+	   
     	/* Create skeleton menu structure to ensure consistent order between aspects,
     	 * even if they are never used 
     	 */
@@ -131,7 +121,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
 
     		//collections = Collection.findAuthorized(context, null, Constants.ADD);
     		
-            if (AuthorizeManager.authorizeActionBoolean(this.context, dso, Constants.ADD)){
+            if (AuthorizeServiceFactory.getInstance().getAuthorizeService().authorizeActionBoolean(this.context, dso, Constants.ADD)){
             	    context.setHead(T_context_head);
                     context.addItem().addXref(contextPath+"/handle/"+collection.getHandle()+"/submit", T_context_add_item );
             }

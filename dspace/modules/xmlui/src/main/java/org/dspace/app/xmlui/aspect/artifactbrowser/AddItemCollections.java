@@ -30,7 +30,8 @@ import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
-import org.dspace.content.Metadatum;
+import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.ItemService;
 import org.xml.sax.SAXException;
 
 
@@ -38,6 +39,7 @@ public class AddItemCollections extends AbstractDSpaceTransformer implements Cac
 {
 	/** Cached validity object */
 	private SourceValidity validity = null;
+	
 	
     /**
      * Generate the unique caching key.
@@ -77,7 +79,7 @@ public class AddItemCollections extends AbstractDSpaceTransformer implements Cac
 	            dso = HandleUtil.obtainHandle(objectModel);
 
 	            DSpaceValidity validity = new DSpaceValidity();
-	            validity.add(dso);
+	            validity.add(context, dso);
 	            this.validity =  validity.complete();
 	        }
 	        catch (Exception e)
@@ -95,7 +97,7 @@ public class AddItemCollections extends AbstractDSpaceTransformer implements Cac
     public void addBody(Body body) throws SAXException, WingException,
             UIException, SQLException, IOException, AuthorizeException
     {
-        DSpaceObject dso = HandleUtil.obtainHandle(objectModel);
+    	DSpaceObject dso = HandleUtil.obtainHandle(objectModel);
         if (!(dso instanceof Item))
         {
             return;
@@ -112,9 +114,9 @@ public class AddItemCollections extends AbstractDSpaceTransformer implements Cac
         for (Collection collection : item.getCollections()) 
         {
         	List coleccion=colecciones.addList("item-view-sedici-coleccion");
-        	Community[] comunidades=collection.getCommunities();
-        	if (comunidades.length>0){
-        		Community comunidad=comunidades[0];
+        	java.util.List<Community> comunidades=collection.getCommunities();
+        	if (comunidades.size()>0){
+        		Community comunidad=comunidades.get(0);
         		coleccion.addItemXref(comunidad.getHandle(), comunidad.getName());        		
         	}
         	coleccion.addItemXref(collection.getHandle(), collection.getName()); 
@@ -146,18 +148,8 @@ public class AddItemCollections extends AbstractDSpaceTransformer implements Cac
      */
     public static String getItemTitle(Item item)
     {
-        Metadatum[] titles = item.getDC("title", Item.ANY, Item.ANY);
-
-        String title;
-        if (titles != null && titles.length > 0)
-        {
-            title = titles[0].value;
-        }
-        else
-        {
-            title = null;
-        }
-        return title;
+    	ItemService itemService = ContentServiceFactory.getInstance().getItemService();
+        return itemService.getMetadataFirstValue(item, "dc", "title", Item.ANY, Item.ANY);
     }
 
 }

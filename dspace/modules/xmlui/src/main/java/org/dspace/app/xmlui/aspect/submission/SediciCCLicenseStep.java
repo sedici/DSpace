@@ -17,10 +17,12 @@ import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.app.xmlui.wing.element.Radio;
 import org.dspace.app.xmlui.wing.element.Select;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.factory.AuthorizeServiceFactory;
+import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
-import org.dspace.content.Metadatum;
+import org.dspace.content.MetadataValue;
+import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.core.ConfigurationManager;
 import org.xml.sax.SAXException;
 
@@ -72,12 +74,12 @@ public class SediciCCLicenseStep extends AbstractSubmissionStep
 	    Item item = submission.getItem();
 	    Collection collection=submission.getCollection();
 	    String ccUri=ConfigurationManager.getProperty("cc.license.uri");
-	    Metadatum[] carga=item.getMetadataByMetadataString(ccUri);
+	    java.util.List<MetadataValue> carga = ContentServiceFactory.getInstance().getItemService().getMetadataByMetadataString(item, ccUri);
 	    String dato;
 	    String commercial="y";
 	    String derivatives="y";
-	    if (carga.length>0){
-	    	dato=carga[0].value;
+	    if (carga.size()>0){
+	    	dato=carga.get(0).getValue();
 	    	int inicio=dato.indexOf("/by")+1;
 	        if (inicio!=0){
 		    	String substring=dato.substring(inicio);
@@ -131,7 +133,8 @@ public class SediciCCLicenseStep extends AbstractSubmissionStep
 	    list.addItem(T_info1);
 	    list.setHead(T_head);
 
-	    if (AuthorizeManager.isAdmin(context, item) || AuthorizeManager.isAdmin(context, collection)){
+	    AuthorizeService authorizeService = AuthorizeServiceFactory.getInstance().getAuthorizeService();
+	    if (authorizeService.isAdmin(context, item) || authorizeService.isAdmin(context, collection)){
 	    	//si es administrador de la colección se debe mostrar un select en vez de los radios
         	List edit = div.addList("selectlist1", List.TYPE_SIMPLE, "horizontalVanilla");
 		    edit.addItem(message("xmlui.Submission.submit.SediciCCLicenseStep.administrador.pregunta"));
@@ -146,8 +149,8 @@ public class SediciCCLicenseStep extends AbstractSubmissionStep
 		    select.addOption("by-nd", message("xmlui.Submission.submit.SediciCCLicenseStep.administrador.by-nd"));
 		    select.addOption("by-sa", message("xmlui.Submission.submit.SediciCCLicenseStep.administrador.by-sa"));
 		   
-	        if (carga.length>0){
-		    	dato=carga[0].value;
+	        if (carga.size()>0){
+		    	dato=carga.get(0).getValue();
 		    	int inicio=dato.indexOf("/by")+1;
 		        if (inicio!=0){
 			    	String substring=dato.substring(inicio);

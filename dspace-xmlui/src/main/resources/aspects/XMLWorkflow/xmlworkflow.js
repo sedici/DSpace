@@ -11,11 +11,7 @@ importClass(Packages.java.lang.ClassLoader);
 importClass(Packages.org.dspace.app.xmlui.utils.FlowscriptUtils);
 importClass(Packages.org.apache.cocoon.environment.http.HttpEnvironment);
 importClass(Packages.org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem);
-importClass(Packages.org.dspace.xmlworkflow.XmlWorkflowManager);
-importClass(Packages.org.dspace.xmlworkflow.WorkflowFactory);
-
-importClass(Packages.org.dspace.handle.HandleManager);
-importClass(Packages.org.dspace.authorize.AuthorizeManager);
+importClass(Packages.org.dspace.xmlworkflow.factory.XmlWorkflowServiceFactory);
 
 importClass(Packages.org.dspace.app.xmlui.utils.ContextUtil);
 importClass(Packages.org.dspace.app.xmlui.cocoon.HttpServletRequestCocoonWrapper);
@@ -26,6 +22,23 @@ importClass(Packages.ar.edu.unlp.sedici.util.FlashMessagesUtil);
  * which errored out during processing of the last step.
  */
 var ERROR_FIELDS = null;
+
+
+function getWorkflowFactory()
+{
+    return XmlWorkflowServiceFactory.getInstance().getWorkflowFactory();
+}
+
+function getWorkflowItemService()
+{
+    return XmlWorkflowServiceFactory.getInstance().getWorkflowItemService();
+}
+
+
+function getWorkflowService()
+{
+    return XmlWorkflowServiceFactory.getInstance().getXmlWorkflowService();
+}
 
 
 /**
@@ -115,7 +128,7 @@ function doWorkflow()
     var contextPath = cocoon.request.getContextPath();
     var workflowItemId = cocoon.request.get("workflowID");
     // Get the collection handle for this item.
-    var xmlWorkflowItem = XmlWorkflowItem.find(getDSContext(), workflowItemId);
+    var xmlWorkflowItem = getWorkflowItemService().find(getDSContext(), workflowItemId);
     if(xmlWorkflowItem == null) {
         FlashMessagesUtil.setErrorMessage(getHttpRequest().getSession(), "sedici.XMLWorkflow.workflowitem.notfound");
         cocoon.sendPage("xmlworkflow/finalize");
@@ -125,7 +138,7 @@ function doWorkflow()
 
     var coll = xmlWorkflowItem.getCollection();
     var handle = coll.getHandle();
-    var workflow = WorkflowFactory.getWorkflow(coll);
+    var workflow = getWorkflowFactory().getWorkflow(coll);
     var step = workflow.getStep(cocoon.request.get("stepID"));
 
 
@@ -154,7 +167,7 @@ function doWorkflow()
             //Don't do anything just go back to the start of the loop
         }else{
             try{
-                action = XmlWorkflowManager.doState(getDSContext(), getDSContext().getCurrentUser(), getHttpRequest(), workflowItemId, workflow, action);
+                action = getWorkflowService().doState(getDSContext(), getDSContext().getCurrentUser(), getHttpRequest(), workflowItemId, workflow, action);
             }catch(exception){
                 sendPage("handle/"+handle+"/xmlworkflow/workflowexception",{"error":exception.toString()});
                 cocoon.exit();

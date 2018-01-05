@@ -3,11 +3,12 @@ package ar.edu.unlp.sedici.dspace.embargo;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.dspace.content.DCDate;
 import org.dspace.content.Item;
-import org.dspace.content.Metadatum;
+import org.dspace.content.MetadataValue;
 
 /**
 
@@ -28,38 +29,38 @@ public class SeDiCIEmbargoSetter extends DaysEmbargoSetter {
 	}
 
 	protected Date getEmbargoStartDate(Item item) {
-		Metadatum docTypes[] = item.getMetadataByMetadataString(typeMetadata);
+		List<MetadataValue> docTypes = getItemService().getMetadataByMetadataString(item,typeMetadata);
 		
-		if (item.getMetadataByMetadataString("sedici2003.identifier").length != 0){
+		if (getItemService().getMetadataByMetadataString(item,"sedici2003.identifier").size() != 0){
 			//Es un doc importado
-			Metadatum embargosViejos[] = item.getMetadataByMetadataString("sedici2003.fecha-hora-creacion");
-			if (embargosViejos.length > 0){
+			List<MetadataValue> embargosViejos = getItemService().getMetadataByMetadataString(item, "sedici2003.fecha-hora-creacion");
+			if (embargosViejos.size()> 0){
 				try{
-        			return new DCDate(sediciDatetimeFormat.parse(embargosViejos[0].value)).toDate();
+        			return new DCDate(sediciDatetimeFormat.parse(embargosViejos.get(0).getValue())).toDate();
         		}catch(ParseException e){
-        			log.warn("Error de parseo de fecha al procesar (sedici2003.fecha-hora-creacion)==("+embargosViejos[0].value+") del documento importado con id "+item.getMetadataByMetadataString("sedici2003.identifier")[0]);
+        			log.warn("Error de parseo de fecha al procesar (sedici2003.fecha-hora-creacion)==("+embargosViejos.get(0).getValue()+") del documento importado con id "+getItemService().getMetadataByMetadataString(item, "sedici2003.identifier").get(0));
                 } 
 			}
 			
-			throw new IllegalArgumentException("No se pudo procesar la fecha de creacion (sedici2003.fecha-creacion) del documento importado con id "+item.getMetadataByMetadataString("sedici2003.identifier")[0].value);
+			throw new IllegalArgumentException("No se pudo procesar la fecha de creacion (sedici2003.fecha-creacion) del documento importado con id "+getItemService().getMetadataByMetadataString(item, "sedici2003.identifier").get(0).getValue());
 		}
 		
-		if (docTypes.length == 0){
+		if (docTypes.size() == 0){
 			log.info("No se encontro un type para el doc "+item.getHandle());
 			return null;
 		}
-		if (!TYPE_TESIS.equalsIgnoreCase(docTypes[0].value)){
+		if (!TYPE_TESIS.equalsIgnoreCase(docTypes.get(0).getValue())){
 			log.trace("El doc "+item.getHandle()+" no es una tesis, no busco el campo "+exposureDateMetadata);
 			return null;
 		}
 		
-		Metadatum exposureDates[] = item.getMetadataByMetadataString(exposureDateMetadata);
-		if (exposureDates.length == 0){
+		List<MetadataValue>  exposureDates = getItemService().getMetadataByMetadataString(item, exposureDateMetadata);
+		if (exposureDates.size() == 0){
 			log.trace("No se encontro un campo "+exposureDateMetadata+" para el doc "+item.getHandle());
 			return null;
 		}
 		
-		return new DCDate(exposureDates[0].value).toDate();
+		return new DCDate(exposureDates.get(0).getValue()).toDate();
 	}
 	
 	

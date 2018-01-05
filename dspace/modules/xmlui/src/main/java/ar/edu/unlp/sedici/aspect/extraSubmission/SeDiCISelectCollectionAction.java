@@ -3,6 +3,7 @@ package ar.edu.unlp.sedici.aspect.extraSubmission;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import org.dspace.app.util.CollectionDropDown;
 import org.dspace.app.xmlui.aspect.xmlworkflow.AbstractXMLUIAction;
 import org.dspace.app.xmlui.utils.UIException;
 import org.dspace.app.xmlui.wing.Message;
@@ -14,11 +15,9 @@ import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.app.xmlui.wing.element.Select;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
+import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.core.Constants;
 import org.xml.sax.SAXException;
-
-import ar.edu.unlp.sedici.util.CollectionSearchSedici;
-import ar.edu.unlp.sedici.util.CollectionsWithCommunities;
 
 public class SeDiCISelectCollectionAction extends AbstractXMLUIAction {
 
@@ -44,8 +43,9 @@ public class SeDiCISelectCollectionAction extends AbstractXMLUIAction {
 		String actionURL = contextPath + "/handle/"+collection.getHandle() + "/xmlworkflow";
 
 		// Listado de colecciones disponibles
-		CollectionsWithCommunities collections = CollectionSearchSedici.findAuthorizedWithCommunitiesName(context, null, Constants.ADD);
-        
+		//CollectionsWithCommunities collections = CollectionSearchSedici.findAuthorizedWithCommunitiesName(context, null, Constants.ADD);
+        java.util.List<Collection> collections = ContentServiceFactory.getInstance().getCollectionService().findAuthorizedOptimized(context, Constants.ADD);
+
 		// Formulario con la lista de colecciones
         Division div = body.addInteractiveDivision("select-collection",actionURL,Division.METHOD_POST,"primary submission");
         div.setHead(T_submission_head);
@@ -57,23 +57,11 @@ public class SeDiCISelectCollectionAction extends AbstractXMLUIAction {
         select.setHelp(T_collection_help);
         
         select.addOption("",T_collection_default);
-        String communityName, collectionName;
-        Collection collectionOpt;
-        for (int i = 0; i < collections.getCollections().size(); i++) {
-        	collectionOpt = collections.getCollections().get(i);
-        	
-        	communityName = collections.getCommunitiesName().get(i);
-        	collectionName = collectionOpt.getName();
-
-   		   	if (communityName.length() > 40){
-   		   		communityName = communityName.substring(0, 39);
-            } 
-   		   	if (collectionName.length() > 40){
-   		   		collectionName = collectionName.substring(0, 39);
-            }
-        	select.addOption(collectionOpt.getHandle(),communityName+" > "+collectionName);
-        }
         
+        for (Collection c : collections)
+        {
+            select.addOption(c.getHandle(), CollectionDropDown.collectionPath(context, c));
+        }
         Button submit = list.addItem().addButton("submit");
         submit.setValue(T_submit_next);
         

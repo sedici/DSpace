@@ -7,9 +7,10 @@
  */
 package org.dspace.rest;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Iterator;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
@@ -17,17 +18,21 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.dspace.authorize.AuthorizeException;
+import org.dspace.authenticate.AuthenticationMethod;
+import org.dspace.authenticate.ShibAuthentication;
+import org.dspace.authenticate.factory.AuthenticateServiceFactory;
+import org.dspace.authenticate.service.AuthenticationService;
 import org.dspace.eperson.EPerson;
+import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.eperson.service.EPersonService;
 import org.dspace.rest.common.Status;
-import org.dspace.rest.common.User;
 import org.dspace.rest.exceptions.ContextException;
+import org.dspace.utils.DSpace;
 
 /**
  * Root of RESTful api. It provides login and logout. Also have method for
@@ -38,9 +43,8 @@ import org.dspace.rest.exceptions.ContextException;
  */
 @Path("/")
 public class RestIndex {
+    protected EPersonService epersonService = EPersonServiceFactory.getInstance().getEPersonService();
     private static Logger log = Logger.getLogger(RestIndex.class);
-
-    @javax.ws.rs.core.Context public static ServletContext servletContext;
 
     /**
      * Return html page with information about REST api. It contains methods all
@@ -50,7 +54,7 @@ public class RestIndex {
      */
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public String sayHtmlHello() { 
+    public String sayHtmlHello(@Context ServletContext servletContext) {
     	// TODO Better graphics, add arguments to all methods. (limit, offset, item and so on)
         return "<html><title>DSpace REST - index</title>" +
                 "<body>"
@@ -115,6 +119,32 @@ public class RestIndex {
                   		"<li>DELETE /bitstreams/{bitstream id} - Delete the specified bitstream from DSpace.</li>" +
                   		"<li>DELETE /bitstreams/{bitstream id}/policy/{policy_id} - Delete the specified bitstream policy.</li>" +
                   	"</ul>" +
+                  	"<h2>Hierarchy</h2>" +
+                  	"<ul>" +
+                  		"<li>GET /hierarchy - Return hierarchy of communities and collections in tree form. Each object is minimally populated (name, handle, id) for efficient retrieval.</li>" +
+                  	"</ul>" +
+                    "<h2>Metadata and Schema Registry</h2>" +
+                    "<ul>" +
+                        "<li>GET /registries/schema - Return the list of metadata schemas in the registry</li>" +
+                        "<li>GET /registries/schema/{schema_prefix} - Returns the specified metadata schema</li>" +
+                        "<li>GET /registries/schema/{schema_prefix}/metadata-fields/{element} - Returns the metadata field within a schema with an unqualified element name</li>" +
+                        "<li>GET /registries/schema/{schema_prefix}/metadata-fields/{element}/{qualifier} - Returns the metadata field within a schema with a qualified element name</li>" +
+                        "<li>POST /registries/schema/ - Add a schema to the schema registry</li>" +
+                        "<li>POST /registries/schema/{schema_prefix}/metadata-fields - Add a metadata field to the specified schema</li>" +
+                        "<li>GET /registries/metadata-fields/{field_id} - Return the specified metadata field</li>" +
+                        "<li>PUT /registries/metadata-fields/{field_id} - Update the specified metadata field</li>" +
+                        "<li>DELETE /registries/metadata-fields/{field_id} - Delete the specified metadata field from the metadata field registry</li>" +
+                        "<li>DELETE /registries/schema/{schema_id} - Delete the specified schema from the schema registry</li>" +
+                    "</ul>" +
+                    "<h2>Query/Reporting Tools</h2>" +
+                    "<ul>" +
+                        "<li>GET /reports - Return a list of report tools built on the rest api</li>" +
+                        "<li>GET /reports/{nickname} - Return a redirect to a specific report</li>" +
+                        "<li>GET /filters - Return a list of use case filters available for quality control reporting</li>" +
+                        "<li>GET /filtered-collections - Return collections and item counts based on pre-defined filters</li>" +
+                        "<li>GET /filtered-collections/{collection_id} - Return items and item counts for a collection based on pre-defined filters</li>" +
+                        "<li>GET /filtered-items - Retrieve a set of items based on a metadata query and a set of filters</li>" +
+                    "</ul>" +
                 "</body></html> ";
     }
     
@@ -133,26 +163,63 @@ public class RestIndex {
     /**
      * Method to login a user into REST API.
      * 
-     * @param user
-     *            User which will be logged in to REST API.
      * @return Returns response code OK and a token. Otherwise returns response
      *         code FORBIDDEN(403).
      */
     @POST
     @Path("/login")
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    public Response login(User user)
+    public Response login()
     {
-        String token = TokenHolder.login(user);
-        if (token == null)
-        {
-            log.info("REST Login Attempt failed for user: " + user.getEmail());
-            return Response.status(Response.Status.FORBIDDEN).build();
-        } else {
-            log.info("REST Login Success for user: " + user.getEmail());
-            return Response.ok(token, "text/plain").build();
-        }
+        //If you can get here, you are authenticated, the actual login is handled by spring security
+        return Response.ok().build();
     }
+
+	@GET
+	@Path("/shibboleth-login")
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public Response shibbolethLogin()
+	{
+		//If you can get here, you are authenticated, the actual login is handled by spring security
+		return Response.ok().build();
+	}
+
+	@GET
+	@Path("/login-shibboleth")
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public Response shibbolethLoginEndPoint()
+	{
+		org.dspace.core.Context context = null;
+		try {
+			context = Resource.createContext();
+			AuthenticationService authenticationService = AuthenticateServiceFactory.getInstance().getAuthenticationService();
+			Iterator<AuthenticationMethod> authenticationMethodIterator = authenticationService.authenticationMethodIterator();
+			while(authenticationMethodIterator.hasNext())
+            {
+                AuthenticationMethod authenticationMethod = authenticationMethodIterator.next();
+				if(authenticationMethod instanceof ShibAuthentication)
+				{
+					//TODO: Perhaps look for a better way of handling this ?
+					org.dspace.services.model.Request currentRequest = new DSpace().getRequestService().getCurrentRequest();
+					String loginPageURL = authenticationMethod.loginPageURL(context, currentRequest.getHttpServletRequest(), currentRequest.getHttpServletResponse());
+					if(StringUtils.isNotBlank(loginPageURL))
+					{
+						currentRequest.getHttpServletResponse().sendRedirect(loginPageURL);
+					}
+				}
+            }
+			context.abort();
+		} catch (ContextException | SQLException | IOException e) {
+			Resource.processException("Shibboleth endpoint error:  " + e.getMessage(), context);
+		} finally {
+			if(context != null && context.isValid())
+			{
+				context.abort();
+			}
+
+		}
+		return Response.ok().build();
+	}
 
     /**
      * Method to logout a user from DSpace REST API. Removes the token and user from
@@ -169,24 +236,7 @@ public class RestIndex {
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response logout(@Context HttpHeaders headers)
     {
-        List<String> list = headers.getRequestHeader(TokenHolder.TOKEN_HEADER);
-        String token = null;
-        boolean logout = false;
-        EPerson ePerson = null;
-        if (list != null)
-        {
-            token = list.get(0);
-            ePerson = TokenHolder.getEPerson(token);
-            logout = TokenHolder.logout(token);
-        }
-        if ((token == null) || (!logout))
-        {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        if(ePerson != null) {
-            log.info("REST Logout: " + ePerson.getEmail());
-        }
+        //If you can get here, you are logged out, this actual logout is handled by spring security
         return Response.ok().build();
     }
 
@@ -198,7 +248,9 @@ public class RestIndex {
      * epersonEMAIL: user@example.com
      * epersonNAME: John Doe
      * @param headers
-     * @return
+     *            Request header which contains the header named
+     *            "rest-dspace-token" containing the token as value.
+     * @return status
      */
     @GET
     @Path("/status")
@@ -207,14 +259,14 @@ public class RestIndex {
         org.dspace.core.Context context = null;
 
         try {
-            context = Resource.createContext(Resource.getUser(headers));
+            context = Resource.createContext();
             EPerson ePerson = context.getCurrentUser();
 
             if(ePerson != null) {
                 //DB EPerson needed since token won't have full info, need context
-                EPerson dbEPerson = EPerson.findByEmail(context, ePerson.getEmail());
-                String token = Resource.getToken(headers);
-                Status status = new Status(dbEPerson.getEmail(), dbEPerson.getFullName(), token);
+                EPerson dbEPerson = epersonService.findByEmail(context, ePerson.getEmail());
+
+                Status status = new Status(dbEPerson.getEmail(), dbEPerson.getFullName());
                 return status;
             }
 
@@ -223,8 +275,6 @@ public class RestIndex {
             Resource.processException("Status context error: " + e.getMessage(), context);
         } catch (SQLException e) {
             Resource.processException("Status eperson db lookup error: " + e.getMessage(), context);
-        } catch (AuthorizeException e) {
-            Resource.processException("Status eperson authorize exception: " + e.getMessage(), context);
         } finally {
             context.abort();
         }

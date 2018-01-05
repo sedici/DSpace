@@ -2,6 +2,7 @@ package ar.edu.unlp.sedici.aspect.extraSubmission.submit;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +12,7 @@ import org.apache.log4j.Logger;
 import org.dspace.app.util.SubmissionInfo;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
-import org.dspace.content.Metadatum;
+import org.dspace.content.MetadataValue;
 import org.dspace.core.Context;
 import org.dspace.submit.AbstractProcessingStep;
 
@@ -55,17 +56,17 @@ public class AutomaticIssuedMetadataStep extends AbstractProcessingStep {
         Item item = subInfo.getSubmissionItem().getItem();
 
         //Si no tiene cargado el metadato lo cargo
-        if (item.getMetadata("dc", "date", "issued", null).length == 0){
+        if (itemService.getMetadata(item, "dc", "date", "issued", null).size() == 0){
         	
         	//recupero sedici.date.exposure
-        	Metadatum[] exposure=item.getMetadata("sedici", "date", "exposure", null);
+        	List<MetadataValue> exposure = itemService.getMetadata(item, "sedici", "date", "exposure", null);
         	//si exposure esta cargado lo copio en date issued
-        	if (exposure.length !=0){
-        		item.addMetadata("dc", "date", "issued", null, exposure[0].value);
+        	if (exposure.size() !=0){
+        		itemService.addMetadata(context, item, "dc", "date", "issued", null, exposure.get(0).getValue());
         	};
         	
             // Save changes to database
-            subInfo.getSubmissionItem().update();
+        	itemService.update(context,item);
 
             // gaurdo los cambios
             context.commit();

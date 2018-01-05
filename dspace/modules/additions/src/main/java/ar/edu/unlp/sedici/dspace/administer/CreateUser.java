@@ -17,11 +17,15 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 import org.dspace.core.I18nUtil;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.eperson.service.EPersonService;
+import org.dspace.eperson.service.GroupService;
 
 import ar.edu.unlp.sedici.dspace.utils.*;
 
@@ -246,21 +250,23 @@ public final class CreateUser
     		String language, String pw, String sedici_eperson_id, String groupName)
     	throws Exception
     {
-    	// Of course we aren't an user yet so we need to
+        EPersonService epersonService = EPersonServiceFactory.getInstance().getEPersonService();
+        GroupService groupService= EPersonServiceFactory.getInstance().getGroupService();
+
+        // Of course we aren't an user yet so we need to
     	// circumvent authorisation
-    	context.setIgnoreAuthorization(true);
-    	
+    	context.turnOffAuthorisationSystem();
     	
     	// Find user group
     	Group group;
     	if (groupName == null || "".equals(groupName)){
     		groupName = "0 {anonymous}";
-    		group = Group.find(context, 0);
+    		group = groupService.findByLegacyId(context, 0);
     	}else if ("1".equals(groupName) || "administrator".equals(groupName)){
     		groupName = "1 {administrator}";
-    		group = Group.find(context, 1);
+    		group = groupService.findByLegacyId(context, 1);
     	}else{
-    		group = Group.findByName(context, groupName);
+    		group = groupService.findByName(context, groupName);
     	}
     	if (group == null)
     	{
@@ -289,18 +295,17 @@ public final class CreateUser
         	logger.info("Informacion: La cuenta de usuario no tiene nombre cargado");
         	
         }
-    	EPerson eperson = EPerson.findByEmail(context,email);
-        
+    	EPerson eperson = epersonService.findByEmail(context,email);
         // check if the email belongs to a registered user,
         // if not create a new user with this email
         if (eperson == null)
         {
-            eperson = EPerson.create(context);
+            eperson = epersonService.create(context);
             eperson.setEmail(email);
             eperson.setCanLogIn(false);
             if ((pw!="")&&(pw.length()>5)){
             	eperson.setCanLogIn(true);	
-            	eperson.setPassword(pw);
+            	epersonService.setPassword(eperson, pw);
             }else{
             	logger.info("Informacion: No tenia Password Cargado o la password tiene longitud menor a 6 caracteres");
             	
@@ -308,15 +313,15 @@ public final class CreateUser
             
             eperson.setRequireCertificate(false);
             eperson.setSelfRegistered(false);
-            eperson.setLastName(last);
-        	eperson.setFirstName(first);
-        	eperson.setLanguage(language);
+            eperson.setLastName(context, last);
+        	eperson.setFirstName(context, first);
+        	eperson.setLanguage(context, language);
         	
         	
-        	eperson.update();
+        	epersonService.update(context, eperson);
         	
-        	group.addMember(eperson);
-        	group.update();
+        	groupService.addMember(context, group, eperson);
+        	groupService.update(context, group);
         	
         	context.complete();
         	logger.info("La cuenta de usuario ha sido creada con dspace_eperson_id ="+eperson.getID()+" y sedici_eperson_id ="+sedici_eperson_id+ " y group "+groupName);

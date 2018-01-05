@@ -14,10 +14,11 @@ import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.*;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.factory.AuthorizeServiceFactory;
+import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
-import org.dspace.xmlworkflow.XmlWorkflowManager;
+import org.dspace.xmlworkflow.factory.XmlWorkflowServiceFactory;
 import org.dspace.xmlworkflow.state.actions.Action;
 import org.dspace.xmlworkflow.state.actions.processingaction.ReviewAction;
 import org.xml.sax.SAXException;
@@ -131,7 +132,7 @@ public class AcceptEditRejectAction extends AbstractXMLUIAction {
         Row row;
         
         // We show the Aprobal/Reject buttons only when the edit metadata is completed
-        if(workflowItem.getItem().isArchived() || XmlWorkflowManager.isWorkflowEdited(workflowItem.getItem())) {
+        if(workflowItem.getItem().isArchived() || XmlWorkflowServiceFactory.getInstance().getXmlWorkflowService().isWorkflowEdited(workflowItem.getItem())) {
         
 	        // Approve task
 	        row = table.addRow();
@@ -145,7 +146,7 @@ public class AcceptEditRejectAction extends AbstractXMLUIAction {
         row.addCell().addButton("submit_reject").setValue(T_reject_submit);
         
         try {
-			if (AuthorizeManager.authorizeActionBoolean(context,workflowItem.getItem(),org.dspace.core.Constants.DELETE)){
+			if (AuthorizeServiceFactory.getInstance().getAuthorizeService().authorizeActionBoolean(context,workflowItem.getItem(),org.dspace.core.Constants.DELETE)){
 				// Delete item
 			    row = table.addRow();
 			    row.addCellContent(T_delete_help);

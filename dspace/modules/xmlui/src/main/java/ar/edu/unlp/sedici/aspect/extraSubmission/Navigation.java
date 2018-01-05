@@ -34,20 +34,16 @@ import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.app.xmlui.wing.element.Options;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
-import org.dspace.content.Collection;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
+import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
-import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
-import org.dspace.workflow.WorkflowItem;
-import org.dspace.xmlworkflow.WorkflowFactory;
-import org.dspace.xmlworkflow.XmlWorkflowManager;
-import org.dspace.xmlworkflow.state.Workflow;
+import org.dspace.xmlworkflow.factory.XmlWorkflowServiceFactory;
 import org.dspace.xmlworkflow.storedcomponents.ClaimedTask;
-import org.dspace.xmlworkflow.storedcomponents.PoolTask;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
+import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
 import org.xml.sax.SAXException;
 
 
@@ -67,7 +63,9 @@ public class Navigation  extends AbstractDSpaceTransformer implements CacheableP
     public void addOptions(Options options) throws SAXException, WingException,
     UIException, SQLException, IOException, AuthorizeException
 {
-    
+    	XmlWorkflowItemService xmlWorkflowItemService = XmlWorkflowServiceFactory.getInstance().getXmlWorkflowItemService();
+    	ItemService itemService = ContentServiceFactory.getInstance().getItemService();
+    	
     	List context = options.addList("context");
     	
         // Agregamos el menu para editar un item desde el workflow si el item no esta ya en workflow
@@ -75,12 +73,12 @@ public class Navigation  extends AbstractDSpaceTransformer implements CacheableP
 		if (dso != null && dso.getType() == Constants.ITEM) {
 			Item item = (Item) dso;
 			try {			    
-				XmlWorkflowItem workflowItem=XmlWorkflowManager.GetWorkflowItem(this.context, item);
-				if (item.canEdit()) {
+				XmlWorkflowItem workflowItem=xmlWorkflowItemService.findByItem(this.context, item);
+				if (itemService.canEdit(this.context, item)) {
 					//si el usuario no puede editar el item, no hace nada, sino entra por aca
 					if (workflowItem!=null){
 						//si existe un workflowitem para este item entra por aca
-						java.util.List<ClaimedTask> ct = ClaimedTask.find(this.context, workflowItem);
+						java.util.List<ClaimedTask> ct = XmlWorkflowServiceFactory.getInstance().getClaimedTaskService().find(this.context, workflowItem);
 						if (ct.isEmpty()){
 							//si la tarea de edicion no fue tomada por nadie, le proveo la posibilidad de tomarla
 							context.addItem().addXref(contextPath+"/handle/"+item.getHandle()+"/edit_item_metadata", T_context_edit_item);
@@ -92,7 +90,7 @@ public class Navigation  extends AbstractDSpaceTransformer implements CacheableP
 				            String actionID = claimedT.getActionID();
 				            int workflowID = workflowItem.getID();
 				            
-							EPerson usuario=EPerson.find(this.context, claimedT.getOwnerID());
+							EPerson usuario=claimedT.getOwner();
 							
 							if (usuario.getID()==this.context.getCurrentUser().getID()){
 								//la tarea es del usuario, le proveo el link a la edición de metadatos

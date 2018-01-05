@@ -185,7 +185,7 @@
             <a class="image-link" href="{$href}">
                 <xsl:choose>
                     <xsl:when test="mets:fileGrp[@USE='THUMBNAIL']">
-                        <img class="img-responsive" alt="xmlui.mirage2.item-list.thumbnail" i18n:attr="alt">
+                        <img class="img-responsive img-thumbnail" alt="xmlui.mirage2.item-list.thumbnail" i18n:attr="alt">
                             <xsl:attribute name="src">
                                 <xsl:value-of
                                         select="mets:fileGrp[@USE='THUMBNAIL']/mets:file/mets:FLocat[@LOCTYPE='URL']/@xlink:href"/>
@@ -193,7 +193,7 @@
                         </img>
                     </xsl:when>
                     <xsl:otherwise>
-                        <img alt="xmlui.mirage2.item-list.thumbnail" i18n:attr="alt">
+                        <img class="img-thumbnail" alt="xmlui.mirage2.item-list.thumbnail" i18n:attr="alt">
                             <xsl:attribute name="data-src">
                                 <xsl:text>holder.js/100%x</xsl:text>
                                 <xsl:value-of select="$thumbnail.maxheight"/>

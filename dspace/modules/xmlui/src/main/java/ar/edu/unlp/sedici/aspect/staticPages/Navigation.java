@@ -126,13 +126,13 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
 	private static Map<String, String> generarUrls() {
 		int inicial=1;
 		Map<String, String> retorno=new HashMap<String, String>();
-		String valor=ConfigurationManager.getProperty("sedici.pages", "map.url"+inicial);
-		String nombre=ConfigurationManager.getProperty("sedici.pages", "map.url"+inicial+".nombre");
+		String valor=ConfigurationManager.getProperty("sedici", "pages.map.url"+inicial);
+		String nombre=ConfigurationManager.getProperty("sedici", "pages.map.url"+inicial+".nombre");
 		while (valor!=null){
 			retorno.put(nombre, valor);
 			inicial+=1;
-			valor=ConfigurationManager.getProperty("sedici.pages", "map.url"+inicial);
-			nombre=ConfigurationManager.getProperty("sedici.pages", "map.url"+inicial+".nombre");
+			valor=ConfigurationManager.getProperty("sedici", "pages.map.url"+inicial);
+			nombre=ConfigurationManager.getProperty("sedici", "pages.map.url"+inicial+".nombre");
 			
 		}
 		return retorno;

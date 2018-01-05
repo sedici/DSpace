@@ -11,11 +11,11 @@ importClass(Packages.org.dspace.app.xmlui.utils.FlowscriptUtils);
 
 importClass(Packages.org.dspace.core.ConfigurationManager);
 importClass(Packages.org.dspace.core.Context);
-importClass(Packages.org.dspace.content.Collection);
-importClass(Packages.org.dspace.eperson.EPerson);
-importClass(Packages.org.dspace.eperson.AccountManager);
-importClass(Packages.org.dspace.eperson.Subscribe);
 importClass(Packages.org.dspace.authorize.AuthorizeException);
+importClass(Packages.org.dspace.eperson.factory.EPersonServiceFactory);
+importClass(Packages.org.dspace.content.factory.ContentServiceFactory);
+importClass(Packages.java.util.UUID)
+
 
 importClass(Packages.org.dspace.app.xmlui.cocoon.HttpServletRequestCocoonWrapper);
 importClass(Packages.org.dspace.app.xmlui.utils.AuthenticationUtil);
@@ -67,6 +67,28 @@ function getEPerson()
     return getDSContext().getCurrentUser();
 }
 
+function getAccountService()
+{
+    return EPersonServiceFactory.getInstance().getAccountService();
+}
+
+function getEPersonService()
+{
+    return EPersonServiceFactory.getInstance().getEPersonService();
+}
+
+function getSubscribeService()
+{
+    return EPersonServiceFactory.getInstance().getSubscribeService();
+}
+
+function getCollectionService()
+{
+    return ContentServiceFactory.getInstance().getCollectionService();
+}
+
+
+
 
 
 /**
@@ -103,8 +125,7 @@ function doRegister()
             {
                 // The user attempted to register with an email address that already exists then they clicked
                 // the "I forgot my password" button. In this case, we send them a forgot password token.
-                AccountManager.sendForgotPasswordInfo(getDSContext(),email);
-                getDSContext().commit();
+                getAccountService().sendForgotPasswordInfo(getDSContext(),email);
 
                 cocoon.sendPage("forgot/verify", {"email":email});
                 return;
@@ -112,7 +133,7 @@ function doRegister()
             
             email = cocoon.request.getParameter("email");
             email = email.toLowerCase(); // all emails should be lowercase
-            var epersonFound = (EPerson.findByEmail(getDSContext(),email) != null);
+            var epersonFound = (getEPersonService().findByEmail(getDSContext(),email) != null);
             
             if (epersonFound) 
             {
@@ -127,9 +148,8 @@ function doRegister()
                 try 
                 {
                     // May throw the AddressException or a variety of SMTP errors.
-                    AccountManager.sendRegistrationInfo(getDSContext(),email);
-                    getDSContext().commit();
-                } 
+                    getAccountService().sendRegistrationInfo(getDSContext(),email);
+                }
                 catch (error) 
                 {
                     // If any errors occurred while trying to send the email set the field in error.
@@ -151,7 +171,7 @@ function doRegister()
     else 
     {
         // We have a token. Find out who it's for
-        var email = AccountManager.getEmail(getDSContext(), token);
+        var email = getAccountService().getEmail(getDSContext(), token);
         
         if (email == null) 
         {
@@ -166,7 +186,7 @@ function doRegister()
             cocoon.sendPageAndWait("register/profile",{"email" : email, "allowSetPassword":setPassword , "errors" : errors.join(',')});
             
             // If the user had to retry the form a user may already be created.
-            var eperson = EPerson.findByEmail(getDSContext(),email);
+            var eperson = getEPersonService().findByEmail(getDSContext(),email);
             if (eperson == null)
             {
                 eperson = AuthenticationUtil.createNewEperson(getObjectModel(),email);
@@ -189,9 +209,8 @@ function doRegister()
         
         // Log the newly created user in.
         AuthenticationUtil.logIn(getObjectModel(),eperson);
-        AccountManager.deleteToken(getDSContext(), token);
-        getDSContext().commit();
-        
+        getAccountService().deleteToken(getDSContext(), token);
+
         cocoon.sendPage("register/finished");
         return;
     }
@@ -219,7 +238,7 @@ function doForgotPassword()
             email = cocoon.request.getParameter("email");
             errors = new Array();
 
-            var epersonFound = (EPerson.findByEmail(getDSContext(),email) != null);
+            var epersonFound = (getEPersonService().findByEmail(getDSContext(),email) != null);
 
             if (!epersonFound)
             {
@@ -231,8 +250,7 @@ function doForgotPassword()
 
             // An Eperson was found for the given email, so use the forgot password 
             // mechanism. This may throw a AddressException if the email is ill-formed.
-            AccountManager.sendForgotPasswordInfo(getDSContext(),email);
-            getDSContext().commit();
+            getAccountService().sendForgotPasswordInfo(getDSContext(),email);
         } while (errors.length > 0)
         
         cocoon.sendPage("forgot/verify", {"email":email});
@@ -240,7 +258,7 @@ function doForgotPassword()
     else 
     {
         // We have a token. Find out who the it's for
-        var email = AccountManager.getEmail(getDSContext(), token);
+        var email = getAccountService().getEmail(getDSContext(), token);
 
         if (email == null) 
         {
@@ -248,7 +266,7 @@ function doForgotPassword()
             return;
         }
 
-        var epersonFound = (AccountManager.getEPerson(getDSContext(), token) != null);
+        var epersonFound = (getAccountService().getEPerson(getDSContext(), token) != null);
 
         if (!epersonFound)
         {
@@ -262,7 +280,7 @@ function doForgotPassword()
             cocoon.sendPageAndWait("forgot/reset", { "email" : email, "errors" : errors.join(',') });
 
             // Get the eperson associated with the password change
-            var eperson = AccountManager.getEPerson(getDSContext(), token);
+            var eperson = getAccountService().getEPerson(getDSContext(), token);
 
             // Temporarily log the user in so that they can update their password.
             getDSContext().setCurrentUser(eperson);
@@ -275,8 +293,7 @@ function doForgotPassword()
 
         // Log the user in and remove the token.
         AuthenticationUtil.logIn(getObjectModel(),eperson);
-        AccountManager.deleteToken(getDSContext(), token);
-        getDSContext().commit();
+        getAccountService().deleteToken(getDSContext(), token);
 
         cocoon.sendPage("forgot/finished");
     }
@@ -332,11 +349,10 @@ function doUpdateProfile()
         else if (cocoon.request.get("submit_subscriptions_add"))
         {
             // Add the a new subscription
-            var collection = Collection.find(getDSContext(),cocoon.request.get("subscriptions"));
+            var collection = getCollectionService().find(getDSContext(),UUID.fromString(cocoon.request.get("subscriptions")));
             if (collection != null)
             {
-                Subscribe.subscribe(getDSContext(),getEPerson(),collection);
-                getDSContext().commit();
+                getSubscribeService().subscribe(getDSContext(),getEPerson(),collection);
             }
         }
         else if (cocoon.request.get("submit_subscriptions_delete"))
@@ -348,12 +364,11 @@ function doUpdateProfile()
 	            for (var i = 0; i < names.length; i++)
 	            {
 	            	var collectionID = cocoon.request.get(names[i]);
-	                var collection = Collection.find(getDSContext(),collectionID);
+	                var collection = getCollectionService().find(getDSContext(),UUID.fromString(collectionID));
 	                if (collection != null)
-	                    Subscribe.unsubscribe(getDSContext(),getEPerson(),collection);
+                        getSubscribeService().unsubscribe(getDSContext(),getEPerson(),collection);
 	            }
             }
-            getDSContext().commit();
         }
             
     } while (errors.length > 0 || !cocoon.request.get("submit")) 
@@ -420,12 +435,12 @@ function updateInformation(eperson)
 		FlashMessagesUtil.setAlertMessage(getHttpRequest().getSession(), "sedici.EPerson.string-too-long", Arrays.asList(["Teléfono", "32"]));
 	}
 
-	eperson.setFirstName(firstName);
-	eperson.setLastName(lastName);
+	eperson.setFirstName(getDSContext(), firstName);
+	eperson.setLastName(getDSContext(), lastName);
 	
-	eperson.setMetadata("phone", phone);
-        eperson.setLanguage(language);
-	eperson.update();
+    getEPersonService().setMetadata(getDSContext(), eperson, "phone", phone);
+    eperson.setLanguage(getDSContext(), language);
+    getEPersonService().update(getDSContext(), eperson);
 	
     return new Array();
 }
@@ -463,8 +478,8 @@ function updatePassword(eperson)
 	    return new Array("password_confirm");
 	} 
     
-	eperson.setPassword(password);
-	eperson.update();
+    getEPersonService().setPassword(eperson, password);
+    getEPersonService().update(getDSContext(), eperson);
 	
 	return new Array();
 }

@@ -1,14 +1,17 @@
 package ar.edu.unlp.sedici.dspace.curation;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import org.dspace.content.DCDate;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
-import org.dspace.content.Metadatum;
+import org.dspace.content.MetadataValue;
 import org.dspace.core.Constants;
+import org.dspace.core.Context;
 import org.dspace.curate.AbstractCurationTask;
 import org.dspace.curate.Curator;
 
@@ -26,6 +29,13 @@ public class CopyMetadata extends AbstractCurationTask {
 
 	@Override
 	public int perform(DSpaceObject dso) throws IOException {
+		Context c;
+		try {
+			c = Curator.curationContext();
+		} catch (SQLException e) {
+			throw new IOException(e);
+		}
+		
 		if (dso.getType() != Constants.ITEM) {
 	           setResult("Omitido por no ser Item");
 	           return Curator.CURATE_SKIP;
@@ -35,30 +45,30 @@ public class CopyMetadata extends AbstractCurationTask {
         try {
             Item item = (Item)dso;
             
-            report("Procesando Item "+item.getID()+ " - canEdit: "+item.canEdit());
+            report("Procesando Item "+item.getID()+ " - canEdit: "+itemService.canEdit(c, item));
 			
             
             //copio el metadato fecha_hora_creacion
-            Metadatum[] metadata=item.getMetadataByMetadataString("sedici2003.fecha-hora-creacion");
+            List<MetadataValue> metadata = itemService.getMetadataByMetadataString(item, "sedici2003.fecha-hora-creacion");
             Boolean creacion_bool=true;
             Boolean disponibilidad_bool=true;        	
-        	if (metadata.length>0){
-        		DCDate fhCreacion = new DCDate(sediciDatetimeFormat.parse(metadata[0].value));
+        	if (metadata.size()>0){
+        		DCDate fhCreacion = new DCDate(sediciDatetimeFormat.parse(metadata.get(0).getValue()));
         		
-        		item.clearMetadata("dc", "date", "accessioned", null);
+        		itemService.clearMetadata(c, item, "dc", "date", "accessioned", null);
 	            // Insertamos el metadato actualizado
-	        	item.addMetadata("dc", "date", "accessioned", null, fhCreacion.toString());
+	        	itemService.addMetadata(c, item, "dc", "date", "accessioned", null, fhCreacion.toString());
             } else {
             	//en caso de que no exista el metadato en cuestion reportamos esto
             	creacion_bool=false;
             	report("El item no posee el metadato sedici2003.fecha-hora-creacion");
             };
             //copio el metadato fecha_disponiblidad
-            metadata=item.getMetadataByMetadataString("sedici2003.fecha-disponibilidad");                   	
-            if (metadata.length>0){
-        		DCDate fDisponibilidad= new DCDate(sediciDateFormat.parse(metadata[0].value));
-            	item.clearMetadata("dc", "date", "available", null);
-	        	item.addMetadata("dc", "date", "available", null, fDisponibilidad.toString());
+            metadata=itemService.getMetadataByMetadataString(item, "sedici2003.fecha-disponibilidad");                   	
+            if (metadata.size()>0){
+        		DCDate fDisponibilidad= new DCDate(sediciDateFormat.parse(metadata.get(0).getValue()));
+            	itemService.clearMetadata(c, item, "dc", "date", "available", null);
+            	itemService.addMetadata(c,item, "dc", "date", "available", null, fDisponibilidad.toString());
             } else {
             	//en caso de que no exista el metadato en cuestion reportamos esto
             	disponibilidad_bool=false;
@@ -68,7 +78,7 @@ public class CopyMetadata extends AbstractCurationTask {
             report("------------------------------------------------------------");
             
             //Guardo los cambios
-            item.update();
+            itemService.update(c, item);
 			
             //Si se guardaron ambos metadatos, informo la corrección de la curation, en caso contrario notifico el fallo.
             if(creacion_bool && disponibilidad_bool) {

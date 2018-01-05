@@ -18,7 +18,7 @@ package ar.edu.unlp.sedici.aspect.extraSubmission;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Set;
+import java.util.List;
 
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.excalibur.source.SourceValidity;
@@ -32,6 +32,8 @@ import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.eperson.service.GroupService;
 import org.xml.sax.SAXException;
 
 /**
@@ -63,22 +65,23 @@ public class GenerateAutoArchivePageMeta extends AbstractDSpaceTransformer
 			AuthorizeException {
 		// Guardo las communities que serán desplegables
 		String dropdownCommunities = ConfigurationManager.getProperty(
-				"sedici-dspace", "xmlui.community-list.expandable-communities");
+				"sedici", "xmlui.community-list.expandable-communities");
 		Metadata meta = pageMeta.addMetadata("dropdown-communities");
 		meta.addContent(dropdownCommunities);
 
 		// Recupero el id de la coleccion de autoarchivo y lo agrego al pageMeta
-		String handleConfig = ConfigurationManager.getProperty("sedici-dspace",
+		String handleConfig = ConfigurationManager.getProperty("sedici",
 				"autoArchiveCollectionHandle");
 		meta = pageMeta.addMetadata("autoArchive", "handle");
 		meta.addContent(handleConfig);
 
 		// Verificamos que el usuario logueado sea solamente un Anonymous (tenga un solo grupo y este sea el cero)
 		Boolean onlyAutoArchiveSubmit = false;
-		Set<Integer> groupIDs = Group.allMemberGroupIDs(context, context.getCurrentUser());
-		if (groupIDs.size() == 1 && groupIDs.contains(Integer.valueOf(0))) {
+		GroupService groupService = EPersonServiceFactory.getInstance().getGroupService();
+		List<Group> groups = groupService.allMemberGroups(context, context.getCurrentUser());
+		if (groups.size() == 1 && groups.contains(groupService.findByLegacyId(context, Integer.valueOf(0)))) {
 			onlyAutoArchiveSubmit = true;
-		}
+			}
 
 		meta = pageMeta.addMetadata("autoArchive", "submit");
 		meta.addContent(onlyAutoArchiveSubmit.toString());

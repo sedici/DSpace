@@ -16,7 +16,6 @@ import java.math.BigInteger;
 import java.rmi.dgc.VMID;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -218,6 +217,7 @@ public final class Utils
      *            The InputStream to obtain data from.
      * @param output
      *            The OutputStream to copy data to.
+     * @throws IOException if IO error
      */
     public static void copy(final InputStream input, final OutputStream output)
             throws IOException
@@ -254,6 +254,7 @@ public final class Utils
      *            The InputStream to obtain data from.
      * @param destination
      *            The OutputStream to copy data to.
+     * @throws IOException if IO error
      */
     public static void bufferedCopy(final InputStream source,
             final OutputStream destination) throws IOException
@@ -268,8 +269,8 @@ public final class Utils
     /**
      * Replace characters that could be interpreted as HTML codes with symbolic
      * references (entities). This function should be called before displaying
-     * any metadata fields that could contain the characters " <", ">", "&",
-     * "'", and double quotation marks. This will effectively disable HTML links
+     * any metadata fields that could contain the characters {@code "<", ">", "&", "'"},
+     * and double quotation marks. This will effectively disable HTML links
      * in metadata.
      * 
      * @param value
@@ -284,7 +285,7 @@ public final class Utils
     }
 
     /**
-     * Utility method to parse durations defined as \d+[smhdwy] (seconds,
+     * Utility method to parse durations defined as {@code \d+[smhdwy]} (seconds,
      * minutes, hours, days, weeks, years)
      * 
      * @param duration

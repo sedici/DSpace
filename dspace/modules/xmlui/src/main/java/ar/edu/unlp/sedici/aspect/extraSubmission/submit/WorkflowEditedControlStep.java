@@ -12,7 +12,7 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
 import org.dspace.core.Context;
 import org.dspace.submit.AbstractProcessingStep;
-import org.dspace.xmlworkflow.XmlWorkflowManager;
+import org.dspace.xmlworkflow.factory.XmlWorkflowServiceFactory;
 
 public class WorkflowEditedControlStep extends AbstractProcessingStep {
 
@@ -26,7 +26,7 @@ public class WorkflowEditedControlStep extends AbstractProcessingStep {
 
         // Si esta en el workflow, seteo el flag
         if(subInfo.isInWorkflow())
-        	XmlWorkflowManager.setWorkflowEdited(context, item);
+        	XmlWorkflowServiceFactory.getInstance().getXmlWorkflowService().setWorkflowEdited(context, item);
         
         // completed without errors
         return STATUS_COMPLETE;

@@ -63,8 +63,13 @@ public class GenerateHomeLinksPageMeta  extends AbstractDSpaceTransformer implem
     public void addPageMeta(PageMeta pageMeta) throws SAXException, WingException, UIException, SQLException, IOException, AuthorizeException
     {
     	// Guardo las communities que serán links
-    	Map<String,String> communityLinks = ConfigurationUtil.readMultipleProperties("sedici-dspace", "xmlui.community-list.home-link");
-    	String orderedHomeLinks = ConfigurationManager.getProperty("sedici-dspace","xmlui.community-list.ordered-home-links");
+    	Map<String,String> communityLinks = ConfigurationUtil.readMultipleProperties("sedici", "xmlui.community-list.home-link");
+    	String orderedHomeLinks = ConfigurationManager.getProperty("sedici","xmlui.community-list.ordered-home-links");
+    	
+    	if (orderedHomeLinks == null || "".equals(orderedHomeLinks.trim()) ){
+    		this.getLogger().warn("La propiedad sedici.xmlui.community-list.ordered-home-links está vacía, no debería. ");
+    	}
+    		
     	
     	for(String key : orderedHomeLinks.split(",")) {
     		pageMeta.addMetadata("home-link", key.trim()).addContent(communityLinks.get(key.trim()));

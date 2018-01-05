@@ -186,13 +186,7 @@ public class MailReporter {
 	 * @throws MessagingException
 	 */
 	public static void reportMissingAuthorityKey(String field, String key) {
-		Context context;
-		try {
-			context = new Context();
-		} catch (SQLException e2) {
-			log.error("No se pudo instanciar el Context ... algo raro pasa", e2);
-			throw new RuntimeException(e2);
-		} 
+		Context context = new Context();
 
 		try {
 			//            {4} Field
@@ -222,13 +216,7 @@ public class MailReporter {
 	}
 	
 	public static void reportUnknownException(String message, Throwable e, String url, String parameters) {
-		Context context;
-		try {
-			context = new Context();
-		} catch (SQLException e2) {
-			log.error("No se pudo instanciar el Context ... algo raro pasa", e2);
-			throw new RuntimeException(e2);
-		} 
+		Context context = new Context();
 
 		try {
 			MailReporter.reportUnknownException(context, message, e, url, parameters);

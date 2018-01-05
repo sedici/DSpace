@@ -100,7 +100,7 @@ public class CollectionViewer extends AbstractDSpaceTransformer implements Cache
 	            DSpaceValidity validity = new DSpaceValidity();
 	            
 	            // Add the actual collection;
-	            validity.add(collection);
+	            validity.add(context, collection);
 	
 	            this.validity = validity.complete();
 	        }
@@ -126,17 +126,17 @@ public class CollectionViewer extends AbstractDSpaceTransformer implements Cache
            return;
        }
 
-       Community[] superCommunities=((Collection) dso).getCommunities();
+       java.util.List<Community> superCommunities=((Collection) dso).getCommunities();
        
        int i = 0;
-       while(i < superCommunities.length)
+       while(i < superCommunities.size())
        {
-    	   if(superCommunities[i].getLogo() != null) 
+    	   if(superCommunities.get(i).getLogo() != null) 
     	   {
     	       // Agrego la referencia a la comunidad root
     	   	   Division viewer =  body.addDivision("community-view-root","secondary");
     	       ReferenceSet mainInclude = viewer.addReferenceSet("community-view-root", ReferenceSet.TYPE_DETAIL_LIST);
-    	       mainInclude.addReference(superCommunities[i]);
+    	       mainInclude.addReference(superCommunities.get(i));
     	       break;
     	   }
     	   i++;

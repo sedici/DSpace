@@ -7,9 +7,12 @@
  */
 package org.dspace.app.mediafilter;
 
+import org.dspace.content.Item;
+
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.file.Files;
 
 
 /**
@@ -21,18 +24,36 @@ public class ImageMagickImageThumbnailFilter extends ImageMagickThumbnailFilter
 {
 
     /**
-     * @param source
-     *            source input stream
+     * @param currentItem item
+     * @param source  source input stream
+     * @param verbose verbose mode
      * 
      * @return InputStream the resulting input stream
+     * @throws Exception if error
      */
-    public InputStream getDestinationStream(InputStream source)
+    @Override
+    public InputStream getDestinationStream(Item currentItem, InputStream source, boolean verbose)
             throws Exception
     {
 		File f = inputStreamToTempFile(source, "imthumb", ".tmp");
-    	File f2 = getThumbnailFile(f);
-		return new FileInputStream(f2);
-    }
+    	File f2 = null;
+	    try
+	    {
+		    f2 = getThumbnailFile(f, verbose);
+		    byte[] bytes = Files.readAllBytes(f2.toPath());
+		    return new ByteArrayInputStream(bytes);
+	    }
+	    finally
+	    {
+		    //noinspection ResultOfMethodCallIgnored
+		    f.delete();
+		    if (f2 != null)
+		    {
+			    //noinspection ResultOfMethodCallIgnored
+			    f2.delete();
+		    }
+	    }
+	}
 
 
 }

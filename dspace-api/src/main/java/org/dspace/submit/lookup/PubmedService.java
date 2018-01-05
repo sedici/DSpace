@@ -49,7 +49,7 @@ public class PubmedService
 
     private static final Logger log = Logger.getLogger(PubmedService.class);
 
-    private int timeout = 1000;
+    protected int timeout = 1000;
 
     public void setTimeout(int timeout)
     {
@@ -76,7 +76,7 @@ public class PubmedService
         if (StringUtils.isNotBlank(title))
         {
             query.append("((").append(title).append("[TI]) OR (");
-            // [TI] non funziona sempre, titolo di capitoli di libro
+            // [TI] does not always work, book chapter title
             query.append("(").append(title).append("[book]))");
         }
         if (StringUtils.isNotBlank(author))
@@ -98,7 +98,7 @@ public class PubmedService
 
     public List<Record> search(String query) throws IOException, HttpException
     {
-        List<Record> results = null;
+        List<Record> results = new ArrayList<>();
         if (!ConfigurationManager.getBooleanProperty(SubmissionLookupService.CFG_MODULE, "remoteservice.demo"))
         {
             HttpGet method = null;

@@ -2,7 +2,8 @@ package ar.edu.unlp.sedici.dspace.xmlworkflow.state.actions.processingaction;
 
 import java.sql.SQLException;
 
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.factory.AuthorizeServiceFactory;
+import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.core.Context;
 import org.dspace.xmlworkflow.WorkflowConfigurationException;
 import org.dspace.xmlworkflow.state.actions.userassignment.ClaimAction;
@@ -16,10 +17,15 @@ import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
  * @author nestor
  */
 public class SkipAdminClaimAction extends ClaimAction {
-
+	protected AuthorizeService authorizeService;
+	
+	public SkipAdminClaimAction() {
+		authorizeService = AuthorizeServiceFactory.getInstance().getAuthorizeService();
+	}
+	
 	@Override
 	public boolean isValidUserSelection(Context context, XmlWorkflowItem wfi, boolean hasUI) throws WorkflowConfigurationException, SQLException {
-		if(AuthorizeManager.isAdmin(context, wfi.getCollection()))
+		if(authorizeService.isAdmin(context, wfi.getCollection()))
 			return false;
 		return super.isValidUserSelection(context, wfi, hasUI);
 	}
