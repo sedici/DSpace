@@ -718,8 +718,9 @@ public class SolrLogger
 
         public void execute(String query) throws SolrServerException, IOException {
             Map<String, String> params = new HashMap<String, String>();
+            int maxDocumetsPerProcess= ConfigurationManager.getIntProperty("solr-statistics", "spiders.resultProcessor.maxDocuments",10);
             params.put("q", query);
-            params.put("rows", "10");
+            params.put("rows", String.valueOf(maxDocumetsPerProcess));
             if(0 < statisticYearCores.size()){
                 params.put(ShardParams.SHARDS, StringUtils.join(statisticYearCores.iterator(), ','));
             }
@@ -732,7 +733,7 @@ public class SolrLogger
             process(response.getResults());
 
             // Run over the rest
-            for (int i = 10; i < numbFound; i += 10)
+            for (int i = maxDocumetsPerProcess; i < numbFound; i += maxDocumetsPerProcess)
             {
                 params.put("start", String.valueOf(i));
                 solrParams = new MapSolrParams(params);
@@ -797,7 +798,83 @@ public class SolrLogger
         }
 
     }
-
+    
+    /**
+     * Iterate over all agents patterns expressed at agents files (all files under 
+     * {dspace.dir}/config/spiders/agents directory), and marks all registries whose 
+     * "userAgent" field match with those patterns.
+     */
+    public static void markRobotsByUserAgent(){
+        SolrLogger.markRobotsBy("userAgent", SpiderDetector.getSpiderAgents());
+    }
+    
+    /**
+     * Iterate over all domains patterns expressed at agents files (all files under 
+     * {dspace.dir}/config/spiders/domains directory), and marks all registries whose 
+     * "dns" field match with those patterns.
+     */
+    public static void markRobotsByDomain() {
+        SolrLogger.markRobotsBy("dns", SpiderDetector.getSpiderDomains());
+    }
+    
+    /**
+     * Iterate over a list of patterns and update the corresponding usage records not mark as robots
+     * that match with the specified patterns.
+     * @param solrFieldName is the name of the field in Solr corresponding with the patterns specified.
+     * @param listOfPatterns is the list of patterns to check.
+     */
+    private static void markRobotsBy(String solrFieldName, Set<String> listOfPatterns){
+        listOfPatterns = (listOfPatterns == null)? new HashSet<String>(): listOfPatterns;
+        int counter = 0;
+        if(solrFieldName == null && solrFieldName.isEmpty()) {
+            log.error("Invalid solr field name passed when marking bots: is null or empty.");
+            return;
+        }
+        
+        for(String pattern : listOfPatterns)
+        {
+            log.info("(" + counter + "/" + listOfPatterns.size() + ") Processing pattern for solr field \"" + solrFieldName + "\", pattern value: \"" + pattern + "\"");
+            try {
+                /* Result Process to alter record to be identified as a bot */
+                ResultProcessor processor = new ResultProcessor(){
+                    @Override
+                    public void process(SolrDocument doc) throws IOException, SolrServerException {
+                        doc.removeFields("isBot");
+                        doc.addField("isBot", true);
+                        SolrInputDocument newInput = ClientUtils.toSolrInputDocument(doc);
+                        solr.add(newInput);
+                    }
+                };
+                /* query for the specified spider pattern, exclude results previously set as bots. */
+                processor.execute(solrFieldName + ":/" + buildSolrRegex(pattern) + "/ AND -isBot:true");
+                
+                solr.commit();
+            } catch (Exception e) {
+                log.error(e.getMessage(),e);
+            }
+            counter++;
+        }
+        
+    }
+    
+    /**
+     * <p>Mark usage registries as robots according to the following criterias:
+     * <ul>
+     * <li> by registry's IP</li>
+     * <li> by registry's userAgent</li>
+     * <li> by registry's domain (reverse DNS Lookup).</li>
+     * </ul>
+     * </p>
+     */
+    public static void markRobots() {
+        log.info("Marking robots by IP starting now...");
+        SolrLogger.markRobotsByIP();
+        log.info("Marking robots by User Agent starting now...");
+        SolrLogger.markRobotsByUserAgent();
+        log.info("Marking robots by Domain starting now...");
+        SolrLogger.markRobotsByDomain();
+    }
+    
     public static void markRobotByUserAgent(String agent){
         try {
 
@@ -837,12 +914,31 @@ public class SolrLogger
             log.error(e.getMessage(),e);
         }
     }
-
-
-    public static void deleteRobotsByIP()
+    
+    /**
+     * Delete robots by multiple criteria: IP, User Agent, and Domain.
+     */
+    public static void deleteRobots()
     {
+        log.info("Delete robots by IP starting now...");
         for(String ip : SpiderDetector.getSpiderIpAddresses()){
             deleteIP(ip);
+        }
+        log.info("Delete robots by User Agent starting now...");
+        for(String agent : SpiderDetector.getSpiderAgents()) {
+            try {
+                solr.deleteByQuery("userAgent:/"+ buildSolrRegex(agent) + "/");
+            } catch (Exception e) {
+                 log.error("[pattern '" + agent + "']" + e.getMessage(),e);
+            }
+        }
+        log.info("Delete robots by Domain starting now...");
+        for(String domain : SpiderDetector.getSpiderDomains()) {
+            try {
+                solr.deleteByQuery("dns:/"+ buildSolrRegex(domain) + "/");
+            } catch (Exception e) {
+                log.error("[pattern '" + domain + "']" + e.getMessage(),e);
+            }
         }
     }
 
@@ -1681,5 +1777,26 @@ public class SolrLogger
             solrQuery.add(ShardParams.SHARDS, StringUtils.join(statisticYearCores.iterator(), ","));
         }
 
+    }
+    
+    /**
+     * Process the pattern passed as parameter to remove leading and ending anchoring syntax (^ and $ symbols) if exists.
+     * By defaults add the ".*" expression at both sides of the regex.
+     * @param pattern
+     */
+    private static String buildSolrRegex(String pattern) {
+        if (pattern != null || pattern.length() > 0) {
+            if (pattern.startsWith("^")) {
+                pattern = StringUtils.right(pattern, pattern.length() - 1);
+            } else {
+                pattern = ".*" + pattern;
+            }
+            if (pattern.endsWith("$")) {
+                pattern = StringUtils.chop(pattern);
+            } else {
+                pattern = pattern + ".*";
+            }
+        }
+        return pattern;
     }
 }
