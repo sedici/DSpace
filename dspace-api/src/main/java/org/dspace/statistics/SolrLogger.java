@@ -48,6 +48,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrServer.RemoteSolrException;
 import org.apache.solr.client.solrj.request.AbstractUpdateRequest;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
 import org.apache.solr.client.solrj.request.CoreAdminRequest;
@@ -794,9 +795,14 @@ public class SolrLogger
                 //Disable external commit, because the ResultProcessor always makes a commit at each processing batch...
                 //solr.commit();
 
-            } catch (Exception e) {
+            } catch (SolrServerException | IOException e) {
                 log.error("ERROR when processing pattern for solr field \"ip\", "
                         + "with pattern value: \"" + ip + "\".\n" + e.getMessage(), e);
+            } catch (RemoteSolrException e) {
+                log.fatal("ERROR when processing pattern for solr field \"ip\", "
+                        + "with pattern value: \"" + ip + "\".\n" + e.getMessage(), e);
+                //Stop execution re-throwing runtime exception...
+                throw e;
             }
 
 
@@ -830,7 +836,7 @@ public class SolrLogger
      */
     private static void markRobotsBy(String solrFieldName, Set<String> listOfPatterns){
         listOfPatterns = (listOfPatterns == null)? new HashSet<String>(): listOfPatterns;
-        int counter = 0;
+        int counter = 1;
         if(solrFieldName == null || solrFieldName.isEmpty()) {
             log.error("Invalid solr field name passed when marking bots: is null or empty.");
             return;
@@ -854,11 +860,16 @@ public class SolrLogger
                 /* query for the specified spider pattern, exclude results previously set as bots. */
                 processor.execute(solrFieldName + ":/" + buildSolrRegex(pattern) + "/ AND -isBot:true");
                 
-                /** The processor is configured to make at every doc processing... See ResultProcessor.alwaysCommitAtProcess() */
+                //Disable external commit, because the ResultProcessor always makes a commit at each processing batch.
                 //solr.commit();
-            } catch (Exception e) {
+            } catch (SolrServerException | IOException e) {
                 log.error("ERROR when processing pattern for solr field \"" + solrFieldName + "\", "
                         + "with pattern value: \"" + pattern + "\".\n" + e.getMessage(), e);
+            } catch (RemoteSolrException e) {
+                log.fatal("ERROR when processing pattern for solr field \"" + solrFieldName + "\", "
+                        + "with pattern value: \"" + pattern + "\".\n" + e.getMessage(), e);
+              //Stop execution re-throwing runtime exception...
+                throw e;
             }
             counter++;
         }
@@ -934,6 +945,11 @@ public class SolrLogger
         } catch (SolrServerException | IOException e) {
             log.error("ERROR when deleting records for delete query \"" + query + "\".\n" 
                          + e.getMessage(), e);
+        } catch (RemoteSolrException e) {
+            log.fatal("ERROR when deleting records for delete query \"" + query + "\".\n" 
+                    + e.getMessage(), e);
+            //Stop execution re-throwing runtime exception...
+            throw e;
         }
     }
     
