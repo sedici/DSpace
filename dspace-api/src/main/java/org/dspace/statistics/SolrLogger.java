@@ -715,15 +715,10 @@ public class SolrLogger
 
     public static class ResultProcessor
     {
-        /**
-         * If true, every time when process a list of documents using {@link ResultProcessor#process(List)} a 
-         * {@link HttpSolrServer#commit()} will be executed.
-         */
-        private boolean commitAtEveryProcess = false;
 
         public void execute(String query) throws SolrServerException, IOException {
             Map<String, String> params = new HashMap<String, String>();
-            int maxDocumetsPerProcess= ConfigurationManager.getIntProperty("solr-statistics", "spiders.resultProcessor.maxDocuments",10);
+            int maxDocumetsPerProcess= ConfigurationManager.getIntProperty("solr-statistics", "spiderDetector.batchUpdateSize",10);
             params.put("q", query);
             params.put("rows", String.valueOf(maxDocumetsPerProcess));
             if(0 < statisticYearCores.size()){
@@ -740,13 +735,8 @@ public class SolrLogger
             // Run over the rest
             for (int i = maxDocumetsPerProcess; i < numbFound; i += maxDocumetsPerProcess)
             {
-                if(commitAtEveryProcess) {
-                    commit();
-                } else {
-                    //If not use commit at each set of changes, pagination must be used To avoid solr version conflict when update a doc.
-                    //See "Optimistic concurrency control" in Solr.
-                    params.put("start", String.valueOf(i));
-                }
+                //force solr commit to avoid trigering autocommits inside solr
+                commit();
                 solrParams = new MapSolrParams(params);
                 response = solr.query(solrParams);
                 process(response.getResults());
@@ -770,21 +760,6 @@ public class SolrLogger
             }
         }
         
-        /**
-         * Set the processor to always make a commit of the changes to Solr when call {@link ResultProcessor#process(List)}.
-         */
-        public void alwaysCommitAtProcess() {
-            commitAtEveryProcess = true;
-        }
-        
-        /**
-         * The processor will not manage the commits of changes, it will be delegated to the default Solr configuration.
-         * Is the oposite of {@link ResultProcessor#alwaysCommitAtProcess()}.
-         */
-        public void onlyAutoCommit() {
-            commitAtEveryProcess = false;
-        }
-
         /**
          * Override to manage individual documents
          * @param doc
@@ -815,11 +790,13 @@ public class SolrLogger
 
                 /* query for ip, exclude results previously set as bots. */
                 processor.execute("ip:"+ip+ "* AND -isBot:true");
-
-                solr.commit();
+                
+                //Disable external commit, because the ResultProcessor always makes a commit at each processing batch...
+                //solr.commit();
 
             } catch (Exception e) {
-                log.error(e.getMessage(),e);
+                log.error("ERROR when processing pattern for solr field \"ip\", "
+                        + "with pattern value: \"" + ip + "\".\n" + e.getMessage(), e);
             }
 
 
@@ -870,8 +847,6 @@ public class SolrLogger
             }
         };
         
-        processor.alwaysCommitAtProcess();
-        
         for(String pattern : listOfPatterns)
         {
             log.info("(" + counter + "/" + listOfPatterns.size() + ") Processing pattern for solr field \"" + solrFieldName + "\", pattern value: \"" + pattern + "\"");
@@ -882,7 +857,8 @@ public class SolrLogger
                 /** The processor is configured to make at every doc processing... See ResultProcessor.alwaysCommitAtProcess() */
                 //solr.commit();
             } catch (Exception e) {
-                log.error(e.getMessage(),e);
+                log.error("ERROR when processing pattern for solr field \"" + solrFieldName + "\", "
+                        + "with pattern value: \"" + pattern + "\".\n" + e.getMessage(), e);
             }
             counter++;
         }
@@ -956,7 +932,8 @@ public class SolrLogger
         try {
             solr.deleteByQuery(query);
         } catch (SolrServerException | IOException e) {
-            log.error(e.getMessage(),e);
+            log.error("ERROR when deleting records for delete query \"" + query + "\".\n" 
+                         + e.getMessage(), e);
         }
     }
     
