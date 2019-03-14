@@ -71,12 +71,6 @@ public class TesauroAuthority extends SimpleSPARQLAuthorityProvider {
 		return pqs;
 	}
 
-	private String normalizeTextForParserSPARQL10(String text) {
-		if (text.indexOf("(") >= 0) text = text.replace("(", "\\\\(");
-		if (text.indexOf(")") >= 0) text = text.replace(")", "\\\\)");
-		return text;
-	}
-
 	@Override
 	protected Choice extractChoice(QuerySolution solution) {
 		String key = solution.getResource("term").getURI();
