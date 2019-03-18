@@ -63,7 +63,8 @@ public class TesauroAuthority extends SimpleSPARQLAuthorityProvider {
 		pqs.append("?term a "+ rdfType +"; skos:prefLabel ?label .\n");
 		pqs.append("OPTIONAL { ?term skos:broader ?parent . ?parent skos:prefLabel ?parentLabel } \n");
 		if (!"".equals(text.trim())) {
-			pqs.append("FILTER(REGEX(?label, '"+text.trim()+"', 'i'))\n");
+			pqs.append("FILTER(REGEX(?label, ?text, 'i'))\n");
+			pqs.setLiteral("text", text.trim());
 		}
 		pqs.append("}\n");
 		pqs.append("ORDER BY ASC(?label)\n");
