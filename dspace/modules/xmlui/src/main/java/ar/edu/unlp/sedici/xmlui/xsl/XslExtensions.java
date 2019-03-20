@@ -3,6 +3,7 @@ package ar.edu.unlp.sedici.xmlui.xsl;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,11 +18,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.xpath.NodeSet;
+import org.dspace.content.Item;
+import org.dspace.content.ItemIterator;
+import org.dspace.core.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Text;
 
+import ar.edu.unlp.sedici.dspace.utils.Utils;
 import ar.edu.unlp.sedici.util.SediciUtils;
 
 /**
@@ -164,6 +169,13 @@ public class XslExtensions {
 	
 	public static String getFileExtension(String filename) {
 		return filename.substring(filename.lastIndexOf(".") + 1).toUpperCase();
+	}
+
+	//Total de items disponibles en el repo, redondeado hacia abajo a la unidad de centena inferior mas cercana.
+	//Es decir, si hay 67160 items redondea a 67100.
+	public static int availableItemsCount() throws SQLException {
+		int totalItems = Utils.countAvailableItems(new Context());
+		return Math.floorDiv(totalItems, 100) * 100;
 	}
 	
 }
