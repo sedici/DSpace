@@ -169,11 +169,8 @@ public class XslExtensions {
 		return filename.substring(filename.lastIndexOf(".") + 1).toUpperCase();
 	}
 
-	//Total de items disponibles en el repo, redondeado hacia abajo a la unidad de centena inferior mas cercana.
-	//Es decir, si hay 67160 items redondea a 67100.
 	public static int availableItemsCount() throws SQLException {
-		int totalItems = Utils.countAvailableItems(new Context());
-		return Math.floorDiv(totalItems, 100) * 100;
+		return Utils.countAvailableItems(new Context());
 	}
 	
 }

@@ -24,13 +24,14 @@ public class Utils {
     }
 
 	/*
-	 * Método que retorna la cantidad de items disponibles en el repositorio.
-	 * Esto es, el total de items archivados pero no retirados.
-	 *
+	 * Método que retorna la cantidad de items disponibles en el repositorio,
+	 * esto es, el total de items archivados pero no retirados,
+	 * redondeado hacia abajo a la unidad de centena inferior mas cercana.
+	 * Es decir, si hay 67160 items redondea a 67100.
 	 */
 	public static int countAvailableItems(Context context) throws SQLException
 	{
-		String myQuery = "SELECT count(*) as total FROM item WHERE in_archive='1' and withdrawn='0'";
+		String myQuery = "SELECT count(*) / 100 * 100 as total FROM item WHERE in_archive='1' and withdrawn='0'";
 
 		TableRow row = DatabaseManager.querySingle(context, myQuery);
 
