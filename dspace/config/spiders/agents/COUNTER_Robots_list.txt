@@ -18,6 +18,7 @@ AllenTrack
 almaden
 appie
 API[\+\s]scraper
+Arachni
 Arachmo
 architext
 ArchiveTeam
@@ -84,6 +85,7 @@ EThOS\+\(British\+Library\)
 facebookexternalhit\/
 favorg
 FDM(\s|\+)\d
+Feedbin
 feedburner
 FeedFetcher
 feedreader
@@ -150,7 +152,7 @@ LOCKSS
 LongURL.API
 ltx71
 lwp
-lycos[\_\+]
+lycos[_+]
 mail.ru
 MarcEdit.5.2.Web.Client
 mediapartners\-google
@@ -218,6 +220,7 @@ scientificcommons
 scirus
 scooter
 Scrapy\/\d
+ScoutJet
 ^scrutiny\/\d
 SearchBloxIntra
 shoutcast
@@ -275,5 +278,6 @@ y!j
 yacy
 yahoo
 yandex
+Yeti\/\d
 zeus
 zyborg
