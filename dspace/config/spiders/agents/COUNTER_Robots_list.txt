@@ -6,7 +6,7 @@ crawl
 ^IDA$
 ^ruby$
 ^voyager\/
-^@ozilla\/\d
+^@ozilla\/[0-9]
 ^脝脝陆芒潞贸碌脛$
 ^破解后的$
 AddThis
@@ -17,12 +17,12 @@ Alexandria(\s|\+)prototype(\s|\+)project
 AllenTrack
 almaden
 appie
-API[\+\s]scraper
+API[\ +]scraper
 Arachni
 Arachmo
 architext
 ArchiveTeam
-aria2\/\d
+aria2\/[0-9]
 arks
 ^Array$
 asterias
@@ -34,7 +34,7 @@ biglotron
 BingPreview
 binlar
 bjaaland
-Blackboard[\+\s]Safeassign
+Blackboard[\ \s]Safeassign
 blaiz\-bee
 bloglines
 blogpulse
@@ -48,10 +48,10 @@ celestial
 cfnetwork
 checklink
 checkprivacy
-China\sLocal\sBrowse\s2\.6
+China\ Local\ Browse\ 2\.6
 cloakDetect
 coccoc\/1\.0
-Code\sSample\sWeb\sClient
+Code\ Sample\ Web\ Client
 ColdFusion
 collection@infegy.com
 com\.plumanalytics
@@ -71,26 +71,26 @@ DeuSu\/
 Dispatch\/\d
 Docoloc
 docomo
-Download\+Master
+Download\ +Master
 DSurf
 DTS Agent
-EasyBib[\+\s]AutoCite[\+\s]
+EasyBib[\ \s]AutoCite[\ \s]
 easydl
-EBSCO\sEJS\sContent\sServer
+EBSCO\ EJS\ Content\ Server
 ELinks\/
 EmailSiphon
 EmailWolf
 Embedly
-EThOS\+\(British\+Library\)
+EThOS\ \(British\ Library\)
 facebookexternalhit\/
 favorg
-FDM(\s|\+)\d
+FDM(\ |\ +)[0-9]
 Feedbin
 feedburner
 FeedFetcher
 feedreader
 ferret
-Fetch(\s|\+)API(\s|\+)Request
+Fetch(\ |\ +)API(\ |\ +)Request
 findlinks
 findthatfile
 ^FileDown$
@@ -104,7 +104,7 @@ GetRight
 geturl
 G-i-g-a-b-o-t
 GLMSLinkAnalysis
-Goldfire(\s|\+)Server
+Goldfire(\ |\ +)Server
 google
 Grammarly
 grub
@@ -125,12 +125,12 @@ ichiro
 iktomi
 ilse
 Indy Library
-^integrity\/\d
+^integrity\/[0-9]
 internetseer
 intute
 iSiloX
 iskanie
-^java\/\d{1,2}.\d
+^Java\/[1-2]\.[0-9]
 jeeves
 jobo
 kyluka
@@ -157,8 +157,8 @@ mail.ru
 MarcEdit.5.2.Web.Client
 mediapartners\-google
 megite
-MetaURI[\+\s]API\/\d\.\d
-Microsoft(\s|\+)URL(\s|\+)Control
+MetaURI[\ +]API\/[0-9]\.[0-9]
+Microsoft(\ +)URL(\ |\ +)Control
 Microsoft Office Existence Discovery
 Microsoft Office Protocol Discovery
 Microsoft-WebDAV-MiniRedir
@@ -179,7 +179,7 @@ motor
 MuscatFerre
 myweb
 nagios
-^NetAnts\/\d
+^NetAnts\/[0-9]
 netcraft
 netluchs
 ng\/2\.
@@ -189,7 +189,7 @@ nomad
 nutch
 ^oaDOI$
 ocelli
-Offline(\s|\+)Navigator
+Offline(\ |\ +)Navigator
 ^okhttp$
 onetszukaj
 ^Opera\/4$
@@ -203,7 +203,7 @@ PHP\/
 pioneer
 playmusic\.com
 playstarmusic\.com
-^Postgenomic(\s|\+)v2
+^Postgenomic(\ |\ +)v2
 powermarks
 proximic
 PycURL
@@ -219,9 +219,9 @@ scan4mail
 scientificcommons
 scirus
 scooter
-Scrapy\/\d
+Scrapy\/[0-9]
 ScoutJet
-^scrutiny\/\d
+^scrutiny\/[0-9]
 SearchBloxIntra
 shoutcast
 SkypeUriPreview
@@ -234,9 +234,9 @@ sunrise
 Sysomos
 T\-H\-U\-N\-D\-E\-R\-S\-T\-O\-N\-E
 tailrank
-Teleport(\s|\+)Pro
+Teleport(\ |\ +)Pro
 Teoma
-The\+Knowledge\+AI
+The\ +Knowledge\ +AI
 titan
 ^Traackr\.com$
 Trove
@@ -256,7 +256,7 @@ voila
 voyager\/
 w3af.org
 Wanadoo
-Web(\s|\+)Downloader
+Web(\ |\ +)Downloader
 WebCloner
 webcollage
 WebCopier
@@ -278,6 +278,6 @@ y!j
 yacy
 yahoo
 yandex
-Yeti\/\d
+Yeti\/[0-9]
 zeus
 zyborg
