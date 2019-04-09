@@ -6,7 +6,7 @@ crawl
 ^IDA$
 ^ruby$
 ^voyager\/
-^@ozilla\/[0-9]
+^\@ozilla\/[0-9]
 ^脝脝陆芒潞贸碌脛$
 ^破解后的$
 AddThis
