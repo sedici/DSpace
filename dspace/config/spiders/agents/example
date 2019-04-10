@@ -1,7 +1,7 @@
 Mozilla\/5\.0 \(compatible; PRTG Network Monitor \(www\.paessler\.com\); Windows\)
 Mozilla\/5\.0 \(compatible; monitis \- premium monitoring service; http:\/\/www\.monitis\.com\)
 Pingdom\.com_bot_version_1\.4_\(http:\/\/www\.pingdom\.com\/\)
-Alexandria(\ |\ +)prototype(\ |\ +)project
+Alexandria(\ |\+)prototype(\ |\+)project
 AllenTrack
 Arachmo
 Brutus\/AET
@@ -13,30 +13,30 @@ DataCha0s\/2\.0
 Demo\ Bot
 EmailSiphon
 EmailWolf
-FDM(\ |\ +)1
-Fetch(\ |\ +)API(\ |\ +)Request
+FDM(\ |\+)1
+Fetch(\ |\+)API(\ |\+)Request
 GetRight
-Goldfire(\ |\ +)Server
+Goldfire(\ |\+)Server
 Googlebot
 HTTrack
 LOCKSS
 LWP\:\:Simple
 MSNBot
-Microsoft(\ |\ +)URL(\ |\ +)Control
+Microsoft(\ |\+)URL(\ |\+)Control
 Milbot
 MuscatFerre
 NABOT
 NaverBot
-Offline(\ |\ +)Navigator
+Offline(\ |\+)Navigator
 OurBrowser
 Python\-urllib
 Readpaper
 Strider
 T\-H\-U\-N\-D\-E\-R\-S\-T\-O\-N\-E
-Teleport(\ |\ +)Pro
+Teleport(\ |\+)Pro
 Teoma
 Wanadoo
-Web(\ |\ +)Downloader
+Web(\ |\+)Downloader
 WebCloner
 WebCopier
 WebReaper
@@ -45,7 +45,7 @@ WebZIP
 Webinator
 Webmetrics
 Wget
-Xenu(\ |\ +)Link(\ |\ +)Sleuth
+Xenu(\ |\+)Link(\ |\+)Sleuth
 #[+\:,\.\;\/\\\-]bot
 [^a]fish
 ^voyager\/

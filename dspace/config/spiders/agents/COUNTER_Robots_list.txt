@@ -13,11 +13,11 @@ AddThis
 A6\-Indexer
 ADmantX
 alexa
-Alexandria(\s|\+)prototype(\s|\+)project
+Alexandria(\ |\+)prototype(\ |\+)project
 AllenTrack
 almaden
 appie
-API[\ +]scraper
+API[\ \+]scraper
 Arachni
 Arachmo
 architext
@@ -34,7 +34,7 @@ biglotron
 BingPreview
 binlar
 bjaaland
-Blackboard[\ \s]Safeassign
+Blackboard[\ \+]Safeassign
 blaiz\-bee
 bloglines
 blogpulse
@@ -71,17 +71,17 @@ DeuSu\/
 Dispatch\/\d
 Docoloc
 docomo
-Download\ +Master
+Download[\ \+]Master
 DSurf
 DTS Agent
-EasyBib[\ \s]AutoCite[\ \s]
+EasyBib[\ \+]AutoCite[\ \+]
 easydl
 EBSCO\ EJS\ Content\ Server
 ELinks\/
 EmailSiphon
 EmailWolf
 Embedly
-EThOS\ \(British\ Library\)
+EThOS\+\(British\+Library\)
 facebookexternalhit\/
 favorg
 FDM(\ |\ +)[0-9]
@@ -90,7 +90,7 @@ feedburner
 FeedFetcher
 feedreader
 ferret
-Fetch(\ |\ +)API(\ |\ +)Request
+Fetch(\ |\+)API(\ |\+)Request
 findlinks
 findthatfile
 ^FileDown$
@@ -104,7 +104,7 @@ GetRight
 geturl
 G-i-g-a-b-o-t
 GLMSLinkAnalysis
-Goldfire(\ |\ +)Server
+Goldfire(\ |\+)Server
 google
 Grammarly
 grub
@@ -157,8 +157,8 @@ mail.ru
 MarcEdit.5.2.Web.Client
 mediapartners\-google
 megite
-MetaURI[\ +]API\/[0-9]\.[0-9]
-Microsoft(\ +)URL(\ |\ +)Control
+MetaURI[\ \+]API\/[0-9]\.[0-9]
+Microsoft(\ |\+)URL(\ |\+)Control
 Microsoft Office Existence Discovery
 Microsoft Office Protocol Discovery
 Microsoft-WebDAV-MiniRedir
@@ -189,7 +189,7 @@ nomad
 nutch
 ^oaDOI$
 ocelli
-Offline(\ |\ +)Navigator
+Offline(\ |\+)Navigator
 ^okhttp$
 onetszukaj
 ^Opera\/4$
@@ -203,7 +203,7 @@ PHP\/
 pioneer
 playmusic\.com
 playstarmusic\.com
-^Postgenomic(\ |\ +)v2
+^Postgenomic(\ |\+)v2
 powermarks
 proximic
 PycURL
@@ -234,9 +234,9 @@ sunrise
 Sysomos
 T\-H\-U\-N\-D\-E\-R\-S\-T\-O\-N\-E
 tailrank
-Teleport(\ |\ +)Pro
+Teleport(\ |\+)Pro
 Teoma
-The\ +Knowledge\ +AI
+The(\ |\+)Knowledge(\ |\+)AI
 titan
 ^Traackr\.com$
 Trove
@@ -256,7 +256,7 @@ voila
 voyager\/
 w3af.org
 Wanadoo
-Web(\ |\ +)Downloader
+Web(\ |\+)Downloader
 WebCloner
 webcollage
 WebCopier
