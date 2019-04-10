@@ -2,47 +2,35 @@
 xmlns:i18n="http://apache.org/cocoon/i18n/2.1" version="1.1">
 
 <meta>
-	<pageMeta>
-		<metadata element="title">SEDICI - Crecimiento de contenidos</metadata>
-	</pageMeta>
+    <pageMeta>
+        <metadata element="title">SEDICI - Estadísticas de crecimiento del repositorio</metadata>
+    </pageMeta>
 </meta>
 
 <body>
-	<div>
-		<head>Estadisticas de crecimiento de contenidos</head>
-		
-		<div id='pagina_estatica' class="pagina_reportesContenido">
-			<div id="crecimiento_mensual_año_actual">
-				<h3>Crecimiento mensual del repositorio</h3>
-				<p> 
-					A continuación se detalla un reporte estadístico indicando el crecimiento mensual para el 
-					año vigente en el contenido del repositorio.
-				</p>
-				
-				<div id="grafico">
-					<img src="static/resources/Crecimiento_mensual_repositorio.png"/>
-					<!-- 
-					<iframe width="600" height="371" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRPMopBammb_n5yXOZ-c7uTlEUTQG9VNis9EzFxm4FtQWWu-1obDFqufyA7hQVSBQPpivSVsHugvmki/pubchart?oid=813404645&amp;format=interactive">Grafico mensual</iframe>
-					-->
-				</div>
-			</div>
-			
-			<div id="crecimiento_anual">
-				<h3>Crecimiento anual del repositorio</h3>
-				<p> 
-					A continuación se detalla un reporte estadístico indicando el crecimiento en el contenido del
-					repositorio, desde sus orígenes en el año 2003 hasta la actualidad.
-				</p>
-				
-				<div id="grafico">
-					<img src="static/resources/Crecimiento_mensual_del_repositorio_institucional_SEDICI.png"/>
-					<!-- 
-					<iframe width="708" height="335" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRPMopBammb_n5yXOZ-c7uTlEUTQG9VNis9EzFxm4FtQWWu-1obDFqufyA7hQVSBQPpivSVsHugvmki/pubchart?oid=84460176&amp;format=interactive">Grafico anual</iframe>
-					-->
-				</div>
-			</div>
-		</div>
-	</div>
+    <div>
+        <head>Estadisticas de crecimiento de contenidos en el repositorio</head>
+        
+        <div id='pagina_estatica' class="pagina_reportesContenido">
+            <div id="crecimiento_mensual_año_actual">
+                <div id="grafico">
+                    <iframe width="600" height="371" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRPMopBammb_n5yXOZ-c7uTlEUTQG9VNis9EzFxm4FtQWWu-1obDFqufyA7hQVSBQPpivSVsHugvmki/pubchart?oid=813404645&amp;format=interactive"></iframe>
+                </div>
+                <p> 
+                    Gráfico interactivo donde se visualiza el crecimiento mensual en el contenido del repositorio para el año vigente.
+                </p>
+            </div>
+            
+            <div id="crecimiento_anual">
+                <div id="grafico">
+                    <iframe width="708" height="335" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRPMopBammb_n5yXOZ-c7uTlEUTQG9VNis9EzFxm4FtQWWu-1obDFqufyA7hQVSBQPpivSVsHugvmki/pubchart?oid=84460176&amp;format=interactive">Grafico anual</iframe>
+                </div>
+                <p> 
+                    Gráfico interactivo donde se visualiza el crecimiento anual, mes a mes, en el contenido del repositorio, desde sus orígenes en el año 2003 hasta la actualidad.
+                </p>
+            </div>
+        </div>
+    </div>
 </body>
 
 </document>
