@@ -301,7 +301,7 @@ public class CertificateGenerator extends AbstractReader implements Recyclable
         String string = "";
         if (metadata.length > 0) {
             for (int i = 0; i < metadata.length; i++) {
-                string += metadata[i].value;                        
+                string += metadata[i].value.replaceAll("\\<.*?>","");                        
                 if (i < metadata.length - 1) {
                     string += " y ";
                 }
