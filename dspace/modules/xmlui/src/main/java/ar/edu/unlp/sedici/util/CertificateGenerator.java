@@ -176,7 +176,7 @@ public class CertificateGenerator extends AbstractReader implements Recyclable
                     simpleDateFormat.setTimeZone(timeZone);               
                     GregorianCalendar gcalendar = new GregorianCalendar();
                     
-                    limit = printLine(content, "Este documento fue generado el día " + String.valueOf(gcalendar.get(Calendar.DAY_OF_MONTH)) + "/" + String.valueOf(gcalendar.get(Calendar.MONTH)) + "/" + String.valueOf(gcalendar.get(Calendar.YEAR)) + " a las " + simpleDateFormat.format(calendar.getTime()) + " hs desde el sitio" , limit);
+                    limit = printLine(content, "Este documento fue generado el día " + String.valueOf(gcalendar.get(Calendar.DAY_OF_MONTH)) + "/" + String.valueOf(gcalendar.get(Calendar.MONTH) + 1) + "/" + String.valueOf(gcalendar.get(Calendar.YEAR)) + " a las " + simpleDateFormat.format(calendar.getTime()) + " hs desde el sitio" , limit);
                     content.setFont(PDType1Font.HELVETICA_BOLD, FONT_SIZE);
                     limit = printLine(content, "http://sedici.unlp.edu.ar", limit);
                     content.setFont(PDType1Font.HELVETICA, FONT_SIZE);
