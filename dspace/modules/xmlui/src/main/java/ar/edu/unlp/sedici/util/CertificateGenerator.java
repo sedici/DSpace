@@ -38,6 +38,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.dspace.app.bulkedit.MetadataExport;
 import org.dspace.app.xmlui.cocoon.MetadataExportReader;
@@ -97,7 +100,7 @@ public class CertificateGenerator extends AbstractReader implements Recyclable
     MetadataExport exporter = null;
     String filename = null;
     File file = null;
-   
+    PDType0Font font = null;   
     /**
     * Set up the export reader.
     *
@@ -136,6 +139,7 @@ public class CertificateGenerator extends AbstractReader implements Recyclable
                     content.setLeading(14.5f);
                     Integer limit = 105;
                     content.setNonStrokingColor(Color.BLACK);
+                    font = PDType0Font.load(pdfDocument, org.apache.commons.io.FileUtils.toFile(getClass().getResource("/LiberationSans-Regular.ttf")));
 
                     content.setFont(PDType1Font.HELVETICA, FONT_SIZE);
                     limit = printLine(content, "Por medio del presente certificado, el", limit);
@@ -149,7 +153,11 @@ public class CertificateGenerator extends AbstractReader implements Recyclable
                     } else {
                         limit = printLine(content, metadatumToString(dso.getMetadataByMetadataString("dc.identifier.uri")), limit);                        
                     }
-                    content.setFont(PDType1Font.HELVETICA, FONT_SIZE);
+//                  content.setFont(PDType1Font.HELVETICA, FONT_SIZE);
+                    PDType0Font font = PDType0Font.load(pdfDocument, org.apache.commons.io.FileUtils.toFile(getClass().getResource("/LiberationSans-Regular.ttf")));
+
+                    content.setFont(font, FONT_SIZE);
+
                     limit = printNewLine(content);
                     limit = printMetadata(dso, content, limit, "   - Título:", "dc.title");
                     limit = printMetadata(dso, content, limit, "   - Autor(es):", "sedici.creator.person");
@@ -235,7 +243,7 @@ public class CertificateGenerator extends AbstractReader implements Recyclable
         if (metadata.length > 0) {
             content.setFont(PDType1Font.HELVETICA_BOLD, 10);
             limit = printLine(content, label, limit);
-            content.setFont(PDType1Font.HELVETICA, 10);
+            content.setFont(font, 10);
             limit = printLine(content, metadatumToString(metadata), limit);
             if (metadataString.equals("thesis.degree.grantor")) {
             	// Hardcodeamos "(Universidad Nacional de La Plata)" porque nos lo pidieron. Podríamos usar autoridades pero el label (cuando se busca por id de autoridad ) no devulve la institucion padre 
