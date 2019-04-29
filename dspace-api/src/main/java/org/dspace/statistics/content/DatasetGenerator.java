@@ -19,8 +19,8 @@ package org.dspace.statistics.content;
  */
 public abstract class DatasetGenerator {
     
-    /** The type of generator can either be CATEGORY or SERIE **/
-    protected int datasetType;
+    /** The type of object to search (item, bitstream, etc) **/
+    protected int datasetType = -1;
 
     protected boolean includeTotal = false;
 

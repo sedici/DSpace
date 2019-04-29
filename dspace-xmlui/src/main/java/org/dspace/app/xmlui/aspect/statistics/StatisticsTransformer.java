@@ -176,10 +176,11 @@ public class StatisticsTransformer extends AbstractDSpaceTransformer {
 			statListing.setId("list1");
 
 			DatasetDSpaceObjectGenerator dsoAxis = new DatasetDSpaceObjectGenerator();
-			dsoAxis.addDsoChild(dso.getType(), 10, false, -1);
+			dsoAxis.addDsoChild(Constants.ITEM, 1, false, -1);
+			dsoAxis.setIncludeTotal(true);
 			statListing.addDatasetGenerator(dsoAxis);
 
-			addDisplayListing(division, statListing);
+			addDisplayTotal(dso, division, statListing);
 
 		} catch (Exception e) {
 			log.error(
@@ -202,7 +203,7 @@ public class StatisticsTransformer extends AbstractDSpaceTransformer {
 			statisticsTable.addDatasetGenerator(timeAxis);
 
 			DatasetDSpaceObjectGenerator dsoAxis = new DatasetDSpaceObjectGenerator();
-			dsoAxis.addDsoChild(dso.getType(), 10, false, -1);
+			dsoAxis.addDsoChild(Constants.ITEM, 10, false, -1);
 			statisticsTable.addDatasetGenerator(dsoAxis);
 
 			addDisplayTable(division, statisticsTable);
@@ -250,6 +251,7 @@ public class StatisticsTransformer extends AbstractDSpaceTransformer {
 
             DatasetTypeGenerator typeAxis = new DatasetTypeGenerator();
             typeAxis.setType("countryCode");
+            typeAxis.setDatasetType(Constants.ITEM);
             typeAxis.setMax(10);
             statListing.addDatasetGenerator(typeAxis);
 
@@ -273,6 +275,7 @@ public class StatisticsTransformer extends AbstractDSpaceTransformer {
 
             DatasetTypeGenerator typeAxis = new DatasetTypeGenerator();
             typeAxis.setType("city");
+            typeAxis.setDatasetType(Constants.ITEM);
             typeAxis.setMax(10);
             statListing.addDatasetGenerator(typeAxis);
 
@@ -408,6 +411,59 @@ public class StatisticsTransformer extends AbstractDSpaceTransformer {
 			}
 
 		}
+
+	}
+
+	private void addDisplayTotal(DSpaceObject dso, Division mainDiv, StatisticsListing display)
+				throws SAXException, WingException, SQLException,
+				SolrServerException, IOException, ParseException {
+
+			String title = display.getTitle();
+
+			Dataset dataset = display.getDataset();
+
+			if (dataset == null) {
+				/** activate dataset query */
+				dataset = display.getDataset(context);
+			}
+
+			if (dataset != null) {
+
+				String[][] matrix = dataset.getMatrix();
+
+				// String[] rLabels = dataset.getRowLabels().toArray(new String[0]);
+
+				Table table = mainDiv.addTable("list-table", matrix.length, 2,
+						title == null ? "detailtable" : "tableWithTitle detailtable");
+				if (title != null) {
+				    table.setHead(message(title));
+				}
+
+				Row headerRow = table.addRow();
+
+				headerRow.addCell("", Cell.ROLE_HEADER, "labelcell");
+
+				headerRow.addCell("", Cell.ROLE_HEADER, "labelcell").addContent(message(T_head_visits_views));
+
+				/** Generate Table Body */
+				int col = matrix[0].length -1 ;
+					Row valListRow = table.addRow();
+
+					Cell catCell = valListRow.addCell("1", Cell.ROLE_DATA,
+							"labelcell");
+					catCell.addContent(dso.getName());
+
+					Cell valCell = valListRow.addCell("2", Cell.ROLE_DATA,
+							"datacell");
+					valCell.addContent(matrix[0][col]);
+
+
+				if (!"".equals(display.getCss())) {
+					List attrlist = mainDiv.addList("divattrs");
+					attrlist.addItem("style", display.getCss());
+				}
+
+			}
 
 	}
 

@@ -265,7 +265,7 @@ public class StatisticsDataVisits extends StatisticsData
 
             ObjectCount[] topCounts1 = null;
 //            if(firsDataset.getQueries().size() == 1){
-            topCounts1 = queryFacetField(firsDataset, firsDataset.getQueries().get(0).getQuery(), filterQuery);
+            topCounts1 = queryFacetField(firsDataset, firsDataset.getQueries().get(0).getQuery(), filterQuery, showTotal);
 //            }else{
 //                TODO: do this
 //            }
@@ -273,7 +273,7 @@ public class StatisticsDataVisits extends StatisticsData
             if(datasetQueries.size() == 2){
                 DatasetQuery secondDataSet = datasetQueries.get(1);
                 // Now do the second one
-                ObjectCount[] topCounts2 = queryFacetField(secondDataSet, secondDataSet.getQueries().get(0).getQuery(), filterQuery);
+                ObjectCount[] topCounts2 = queryFacetField(secondDataSet, secondDataSet.getQueries().get(0).getQuery(), filterQuery, showTotal);
                 // Now that have results for both of them lets do x.y queries
                 List<String> facetQueries = new ArrayList<String>();
                 for (ObjectCount count2 : topCounts2) {
@@ -456,7 +456,15 @@ public class StatisticsDataVisits extends StatisticsData
             Query query = new Query();
             if(currentDso != null)
             {
-                query.setDso(currentDso, currentDso.getType());
+                if (typeAxis.getDatasetType() > -1 && typeAxis.getDatasetType() != currentDso.getType()) {
+                    //We are looking for childrens of an object
+                    query.setOwningDso(currentDso);
+                    query.setDsoType(typeAxis.getDatasetType());
+                }
+                else {
+                    //Our type is our current object
+                    query.setDso(currentDso, currentDso.getType());
+                }
             }
             datasetQuery.addQuery(query);
 
@@ -696,12 +704,12 @@ public class StatisticsDataVisits extends StatisticsData
 
 
     protected ObjectCount[] queryFacetField(DatasetQuery dataset, String query,
-            String filterQuery) throws SolrServerException
+            String filterQuery, boolean showTotal) throws SolrServerException
     {
         String facetType = dataset.getFacetField() == null ? "id" : dataset
                 .getFacetField();
         return solrLoggerService.queryFacetField(query, filterQuery, facetType,
-                dataset.getMax(), false, null);
+                dataset.getMax(), showTotal, null);
     }
 
     public static class DatasetQuery {
