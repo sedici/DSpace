@@ -215,28 +215,26 @@ public class StatisticsTransformer extends AbstractDSpaceTransformer {
 							+ " and handle: " + dso.getHandle(), e);
 		}
 
-         if(dso instanceof org.dspace.content.Item){
-             //Make sure our item has at least one bitstream
-             org.dspace.content.Item item = (org.dspace.content.Item) dso;
-            try {
-                if(itemService.hasUploadedFiles(item)){
-                    StatisticsListing statsList = new StatisticsListing(new StatisticsDataVisits(dso));
+        try {
+            //if dso its an item, make sure it has at least one bitstream
+            if(!(dso instanceof org.dspace.content.Item) ||
+                    (dso instanceof org.dspace.content.Item && itemService.hasUploadedFiles((org.dspace.content.Item) dso))){
+                StatisticsListing statsList = new StatisticsListing(new StatisticsDataVisits(dso));
 
-                    statsList.setTitle(T_head_visits_bitstream);
-                    statsList.setId("list-bit");
+                statsList.setTitle(T_head_visits_bitstream);
+                statsList.setId("list-bit");
 
-                    DatasetDSpaceObjectGenerator dsoAxis = new DatasetDSpaceObjectGenerator();
-                    dsoAxis.addDsoChild(Constants.BITSTREAM, 10, false, -1);
-                    statsList.addDatasetGenerator(dsoAxis);
+                DatasetDSpaceObjectGenerator dsoAxis = new DatasetDSpaceObjectGenerator();
+                dsoAxis.addDsoChild(Constants.BITSTREAM, 10, false, -1);
+                statsList.addDatasetGenerator(dsoAxis);
 
-                    addDisplayListing(division, statsList);
-                }
-            } catch (Exception e) {
-                log.error(
-                        "Error occurred while creating statistics for dso with ID: "
-                                + dso.getID() + " and type " + dso.getType()
-                                + " and handle: " + dso.getHandle(), e);
-            }
+                addDisplayListing(division, statsList);
+        }
+        } catch (Exception e) {
+            log.error(
+                    "Error occurred while creating statistics for dso with ID: "
+                            + dso.getID() + " and type " + dso.getType()
+                            + " and handle: " + dso.getHandle(), e);
         }
 
         try {
