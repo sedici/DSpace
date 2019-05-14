@@ -40,10 +40,12 @@ public class StatisticsTransformer extends AbstractDSpaceTransformer {
     private static final Message T_statistics_trail = message("xmlui.statistics.trail");
     private static final String T_head_visits_total = "xmlui.statistics.visits.total";
     private static final String T_head_visits_month = "xmlui.statistics.visits.month";
+    private static final String T_head_visits_items_month = "xmlui.statistics.visits.items.month";
     private static final String T_head_visits_views = "xmlui.statistics.visits.views";
     private static final String T_head_visits_countries = "xmlui.statistics.visits.countries";
     private static final String T_head_visits_cities = "xmlui.statistics.visits.cities";
     private static final String T_head_visits_bitstream = "xmlui.statistics.visits.bitstreams";
+    private static final String T_head_downloads_total = "xmlui.statistics.downloads.total";
 
     private Date dateStart = null;
     private Date dateEnd = null;
@@ -189,7 +191,26 @@ public class StatisticsTransformer extends AbstractDSpaceTransformer {
 							+ " and handle: " + dso.getHandle(), e);
 		}
 		
-		
+		try {
+			StatisticsListing statListing = new StatisticsListing(
+					new StatisticsDataVisits(dso));
+
+			statListing.setTitle(T_head_downloads_total);
+			statListing.setId("listTotalDownload");
+
+			DatasetDSpaceObjectGenerator dsoAxis = new DatasetDSpaceObjectGenerator();
+			dsoAxis.addDsoChild(Constants.BITSTREAM, 1, false, -1);
+			dsoAxis.setIncludeTotal(true);
+			statListing.addDatasetGenerator(dsoAxis);
+
+			addDisplayTotal(dso, division, statListing);
+
+		} catch (Exception e) {
+			log.error(
+					"Error occurred while creating statistics for dso with ID: "
+							+ dso.getID() + " and type " + dso.getType()
+							+ " and handle: " + dso.getHandle(), e);
+		}
 		
 		try {
 
@@ -197,6 +218,30 @@ public class StatisticsTransformer extends AbstractDSpaceTransformer {
 
 			statisticsTable.setTitle(T_head_visits_month);
 			statisticsTable.setId("tab1");
+
+			DatasetTimeGenerator timeAxis = new DatasetTimeGenerator();
+			timeAxis.setDateInterval("month", "-6", "+1");
+			statisticsTable.addDatasetGenerator(timeAxis);
+
+			DatasetDSpaceObjectGenerator dsoAxis = new DatasetDSpaceObjectGenerator();
+			dsoAxis.addDsoChild(Constants.ITEM, -1, false, -1);
+			statisticsTable.addDatasetGenerator(dsoAxis);
+
+			addDisplayTotalTable(dso, division, statisticsTable);
+
+		} catch (Exception e) {
+			log.error(
+					"Error occurred while creating statistics for dso with ID: "
+							+ dso.getID() + " and type " + dso.getType()
+							+ " and handle: " + dso.getHandle(), e);
+		}
+
+		try {
+
+			StatisticsTable statisticsTable = new StatisticsTable(new StatisticsDataVisits(dso));
+
+			statisticsTable.setTitle(T_head_visits_items_month);
+			statisticsTable.setId("tab2");
 
 			DatasetTimeGenerator timeAxis = new DatasetTimeGenerator();
 			timeAxis.setDateInterval("month", "-6", "+1");
@@ -429,8 +474,6 @@ public class StatisticsTransformer extends AbstractDSpaceTransformer {
 
 				String[][] matrix = dataset.getMatrix();
 
-				// String[] rLabels = dataset.getRowLabels().toArray(new String[0]);
-
 				Table table = mainDiv.addTable("list-table", matrix.length, 2,
 						title == null ? "detailtable" : "tableWithTitle detailtable");
 				if (title != null) {
@@ -463,6 +506,57 @@ public class StatisticsTransformer extends AbstractDSpaceTransformer {
 
 			}
 
+	}
+
+	private void addDisplayTotalTable(DSpaceObject dso, Division mainDiv, StatisticsTable display)
+			throws SAXException, WingException, SQLException,
+			SolrServerException, IOException, ParseException {
+
+		String title = display.getTitle();
+
+		Dataset dataset = display.getDataset();
+
+		if (dataset == null) {
+			/** activate dataset query */
+			dataset = display.getDataset(context);
+		}
+
+		if (dataset != null) {
+
+			String[][] matrix = dataset.getMatrix();
+
+			/** Generate Table */
+			Division wrapper = mainDiv.addDivision("tablewrapper");
+			Table table = wrapper.addTable("list-table", 1, 1,
+					title == null ? "detailtable" : "tableWithTitle detailtable");
+
+			if (title != null){
+			    table.setHead(message(title));
+			}
+
+			/** Generate Header Row */
+			Row headerRow = table.addRow();
+			headerRow.addCell("spacer", Cell.ROLE_HEADER, "labelcell");
+
+			String[] cLabels = dataset.getColLabels().toArray(new String[0]);
+			for (int row = 0; row < (cLabels.length); row++) {
+				Cell cell = headerRow.addCell(0 + "-" + row + "-h",
+                        Cell.ROLE_HEADER, "labelcell");
+				cell.addContent(cLabels[row]);
+			}
+
+			/** Generate Table Body */
+			Row valListRow = table.addRow();
+			/** Add Row Title */
+			valListRow.addCell("" + 1, Cell.ROLE_DATA, "labelcell")
+			.addContent(dso.getName());
+			/** Add Rest of Row */
+			for (int col = 0; col < matrix[0].length; col++) {
+				Cell cell = valListRow.addCell(1 + "-" + col,
+					Cell.ROLE_DATA, "datacell");
+				cell.addContent(matrix[0][col]);
+			}
+		}
 	}
 
 }

@@ -2066,8 +2066,10 @@
     <message key="xmlui.statistics.search.error">There was an error while generating the search statistics, please try again later.</message>
     <message key="xmlui.statistics.search.no-results">No search statistics available for the selected period.</message>
     <message key="xmlui.statistics.workflow.title">Workflow Statistics</message>
+    <message key="xmlui.statistics.downloads.total">Total Downloads</message>
     <message key="xmlui.statistics.visits.total">Total Visits</message>
     <message key="xmlui.statistics.visits.month">Total Visits Per Month</message>
+    <message key="xmlui.statistics.visits.items.month">Top item views last 6 months</message>
     <message key="xmlui.statistics.visits.views">Views</message>
     <message key="xmlui.statistics.visits.countries">Top country views</message>
     <message key="xmlui.statistics.visits.cities">Top cities views</message>
