@@ -294,7 +294,7 @@ public class StatisticsTransformer extends AbstractDSpaceTransformer {
 
             DatasetTypeGenerator typeAxis = new DatasetTypeGenerator();
             typeAxis.setType("countryCode");
-            typeAxis.setDatasetType(Constants.ITEM);
+            typeAxis.setSearchDsoType(-1);
             typeAxis.setMax(10);
             statListing.addDatasetGenerator(typeAxis);
 
@@ -318,7 +318,7 @@ public class StatisticsTransformer extends AbstractDSpaceTransformer {
 
             DatasetTypeGenerator typeAxis = new DatasetTypeGenerator();
             typeAxis.setType("city");
-            typeAxis.setDatasetType(Constants.ITEM);
+            typeAxis.setSearchDsoType(-1);
             typeAxis.setMax(10);
             statListing.addDatasetGenerator(typeAxis);
 

@@ -107,6 +107,7 @@ public class StatisticsWorkflowTransformer extends AbstractStatisticsDataTransfo
             //Set our type to previousworkflow step (indicates our performed actions !)
             queryGenerator.setType("previousWorkflowStep");
             queryGenerator.setMax(10);
+            queryGenerator.setSearchDsoType(dso.getType());
             statisticsTable.addDatasetGenerator(queryGenerator);
             if(dateFilter != null){
                 statisticsTable.addFilter(dateFilter);

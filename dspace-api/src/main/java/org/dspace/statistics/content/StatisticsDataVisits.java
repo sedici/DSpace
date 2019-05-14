@@ -456,14 +456,14 @@ public class StatisticsDataVisits extends StatisticsData
             Query query = new Query();
             if(currentDso != null)
             {
-                if (typeAxis.getDatasetType() > -1 && typeAxis.getDatasetType() != currentDso.getType()) {
-                    //We are looking for childrens of an object
-                    query.setOwningDso(currentDso);
-                    query.setDsoType(typeAxis.getDatasetType());
+                if (typeAxis.getSearchDsoType() == currentDso.getType()) {
+                    //Looking for registries of a certain object
+                    query.setDso(currentDso, currentDso.getType());
                 }
                 else {
-                    //Our type is our current object
-                    query.setDso(currentDso, currentDso.getType());
+                    //We are looking for childrens of an object
+                    query.setOwningDso(currentDso);
+                    query.setDsoType(typeAxis.getSearchDsoType());
                 }
             }
             datasetQuery.addQuery(query);

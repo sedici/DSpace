@@ -23,6 +23,10 @@ public class DatasetTypeGenerator extends DatasetGenerator {
     private String type;
     /** The number of values shown (max) **/
     private int max;
+    /** The type of dso to search (item, bitstream, etc)
+     *  -1 means no type
+     **/
+    protected int searchDsoType = -1;
 
 
     public DatasetTypeGenerator() {
@@ -42,5 +46,13 @@ public class DatasetTypeGenerator extends DatasetGenerator {
 
     public void setMax(int max) {
         this.max = max;
+    }
+
+    public int getSearchDsoType() {
+		return searchDsoType;
+    }
+
+    public void setSearchDsoType(int searchDsoType) {
+		this.searchDsoType = searchDsoType;
     }
 }
