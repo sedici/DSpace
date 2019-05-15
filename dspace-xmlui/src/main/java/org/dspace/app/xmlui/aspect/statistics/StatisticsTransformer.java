@@ -238,21 +238,22 @@ public class StatisticsTransformer extends AbstractDSpaceTransformer {
 
 		try {
 
-			StatisticsTable statisticsTable = new StatisticsTable(new StatisticsDataVisits(dso));
+			if(!(dso instanceof org.dspace.content.Item)){
+			    StatisticsTable statisticsTable = new StatisticsTable(new StatisticsDataVisits(dso));
 
-			statisticsTable.setTitle(T_head_visits_items_month);
-			statisticsTable.setId("tab2");
+			    statisticsTable.setTitle(T_head_visits_items_month);
+			    statisticsTable.setId("tab2");
 
-			DatasetTimeGenerator timeAxis = new DatasetTimeGenerator();
-			timeAxis.setDateInterval("month", "-6", "+1");
-			statisticsTable.addDatasetGenerator(timeAxis);
+			    DatasetTimeGenerator timeAxis = new DatasetTimeGenerator();
+			    timeAxis.setDateInterval("month", "-6", "+1");
+			    statisticsTable.addDatasetGenerator(timeAxis);
 
-			DatasetDSpaceObjectGenerator dsoAxis = new DatasetDSpaceObjectGenerator();
-			dsoAxis.addDsoChild(Constants.ITEM, 10, false, -1);
-			statisticsTable.addDatasetGenerator(dsoAxis);
+			    DatasetDSpaceObjectGenerator dsoAxis = new DatasetDSpaceObjectGenerator();
+			    dsoAxis.addDsoChild(Constants.ITEM, 10, false, -1);
+			    statisticsTable.addDatasetGenerator(dsoAxis);
 
-			addDisplayTable(division, statisticsTable);
-
+			    addDisplayTable(division, statisticsTable);
+			}
 		} catch (Exception e) {
 			log.error(
 					"Error occurred while creating statistics for dso with ID: "
