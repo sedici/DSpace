@@ -1093,6 +1093,7 @@ public class GoogleMetadata
 		boolean result = false;
 		try {
             result = AuthorizeManager.authorizeActionBoolean(ourContext, bitstream, Constants.READ, true)
+                    //SEDICI-Ticket#5688
                     && priorityList.contains(bitstream.getFormat().getShortDescription());
 		} catch (SQLException e) {
 			log.error("Cannot determine whether bitstream is public, assuming it isn't. bitstream_id=" + bitstream.getID(), e);
