@@ -107,39 +107,32 @@
 	<xsl:template name="setDissertationMetadata">
 		<dissertation language="" publication_type="full_text"
 			reference_distribution_opts="none"
-			xmlns="http://www.crossref.org/schema/4.4.2"
 			xmlns:jats="http://www.ncbi.nlm.nih.gov/JATS1"
 			xmlns:fr="http://www.crossref.org/fundref.xsd"
 			xmlns:ai="http://www.crossref.org/AccessIndicators.xsd"
 			xmlns:rel="http://www.crossref.org/relations.xsd">
-			<person_name contributor_role="" language=""
-				name-style="" sequence="">
-				{1,unbounded}
-			</person_name>
-			<contributors>
-				{1,1}
-			</contributors>
-			<titles>
-				<title>
-					<xsl:value-of
-						select="//dspace:field[@mdschema='dc' and @element='title' and not(@qualifier='alternative')]" />
-				</title>
-				<subtitle>
-					<xsl:value-of
-						select="//dspace:field[@mdschema='sedici' and @element='title' and not(@qualifier='subtitlr')]" />
-				</subtitle>
-			</titles>
-			<jats:abstract abstract-type="" xml:base="" id=""
-				xml:lang="" specific-use="">
-				{0,unbounded}
-			</jats:abstract>
-			<approval_date media_type="print">
-				{1,10}
-			</approval_date>
-			<institution>
-				{1,6}
-			</institution>
-			<degree>{0,10}</degree>
+
+			<!-- contributors -->
+			<xsl:call-template name="setContributors" />
+
+			<!-- titles -->
+			<xsl:call-template name="setTitles" />
+
+			<!-- jats:abstract -->
+			<xsl:call-template name="setAbstract" />
+
+			<!-- approval_date -->
+			<xsl:call-template name="setApprovalDate" />
+
+			<!-- institution -->
+			<xsl:call-template name="setInstitution" />
+
+			<!-- degree -->
+			<degree>
+				<xsl:value-of
+					select="//dspace:field[@mdschema='thesis' and @element='degree' and @qualifier='name']" />
+			</degree>
+
 			<isbn media_type="print">{0,6}</isbn>
 			<publisher_item>
 				{0,1}
@@ -172,5 +165,124 @@
 				{0,1}
 			</component_list>
 		</dissertation>
+	</xsl:template>
+
+	<xsl:template name="setTitles">
+		<titles>
+			<title>
+				<xsl:value-of
+					select="//dspace:field[@mdschema='dc' and @element='title' and not(@qualifier='alternative')]" />
+			</title>
+			<xsl:if
+				test="//dspace:field[@mdschema='sedici' and @element='title' and not(@qualifier='subtitlo')]">
+				<subtitle>
+					<xsl:value-of
+						select="//dspace:field[@mdschema='sedici' and @element='title' and not(@qualifier='subtitlo')]" />
+				</subtitle>
+			</xsl:if>
+		</titles>
+	</xsl:template>
+
+	<xsl:template name="setContributors">
+		<contributors>
+
+			<!-- <person-name role=author> -->
+			<xsl:call-template name="setPersonName">
+				<xsl:with-param name="person"
+					select="//dspace:field[@mdschema='sedici' and @element='creator' and @qualifier='person']" />
+				<xsl:with-param name="role">
+					author
+				</xsl:with-param>
+				<xsl:with-param name="sequence">
+					first
+				</xsl:with-param>
+			</xsl:call-template>
+
+			<!-- <organization> -->
+			<xsl:for-each
+				select="//dspace:field[@mdschema='sedici' and @element='contributor' and @qualifier='corporate]']">
+				<organization contributor_role="author"
+					sequence="first">
+					<xsl:value-of select="." />
+				</organization>
+			</xsl:for-each>
+
+			<!-- <person-name role=editor> -->
+			<xsl:for-each
+				select="//dspace:field[@mdschema='sedici' and @element='contributor' and @qualifier='editor']" ">
+				<xsl:call-template name="setPersonName">
+					<xsl:with-param name="person" select="." />
+					<xsl:with-param name="role">
+						editor
+					</xsl:with-param>
+					<xsl:with-param name="sequence">
+						first
+					</xsl:with-param>
+				</xsl:call-template>
+			</xsl:for-each>
+		</contributors>
+	</xsl:template>
+
+	<xsl:template name="setPersonName">
+		<xsl:param name="person" />
+		<xsl:param name="role" />
+		<xsl:param name="sequence" />
+		<person-name contributor_role="$role" sequence="$sequence"
+			language="$person/@language">
+			<xsl:if test="contains($person,',')">
+				<given-name>
+					<xsl:value-of
+						select="substring(substring-after($person,','),1,60)" />
+				</given-name>
+			</xsl:if>
+			<surname>
+				<xsl:value-of
+					select="substring(substring-before($person,','),1,60)" />
+			</surname>
+		</person-name>
+	</xsl:template>
+
+	<xsl:template name="setAbstract" m>
+		<xsl:for-each
+			select="//dspace:field[@mdschema='dc' and @element='description' and @qualifier='abstract']">
+			<jats:abstract xml:lang="./@language">
+				<p>
+					<xsl:value-of select="." />
+				</p>
+			</jats:abstract>
+		</xsl:for-each>
+	</xsl:template>
+
+	<xsl:template name="setApprovalDate">
+		<xsl:for-each
+			select="//dspace:field[@mdschema='sedici' and @element='date' and @qualifier='exposure']">
+			<approval_date>
+				<xsl:if test="string-length(./text()) &gt; 5">
+					<month>
+						<xsl:value-of select="substring(./text(),6,2)" />
+					</month>
+				</xsl:if>
+				<xsl:if test="string-length(./text()) &gt; 8">
+					<day>
+						<xsl:value-of select="substring(./text(),9)" />
+					</day>
+				</xsl:if>
+				<year>
+					<xsl:value-of select="substring(./text(),1,4)" />
+				</year>
+			</approval_date>
+		</xsl:for-each>
+	</xsl:template>
+
+	<xsl:template name="setInstitution">
+		<xsl:if
+			test="//dspace:field[@mdschema='thesis' and @element='degree' and @qualifier='grantor']">
+			<institution>
+				<institution_name>
+					<xsl:value-of
+						select="//dspace:field[@mdschema='thesis' and @element='degree' and @qualifier='grantor']" />
+				</institution_name>
+			</institution>
+		</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>
