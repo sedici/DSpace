@@ -133,37 +133,45 @@
 					select="//dspace:field[@mdschema='thesis' and @element='degree' and @qualifier='name']" />
 			</degree>
 
-			<isbn media_type="print">{0,6}</isbn>
-			<publisher_item>
-				{0,1}
-			</publisher_item>
-			<crossmark>
-				{0,1}
-			</crossmark>
-			<fr:program name="fundref">
-				{0,1}
-			</fr:program>
-			<ai:program name="AccessIndicators">
-				{0,1}
-			</ai:program>
-			<rel:program name="relations">
-				{0,1}
-			</rel:program>
-			<archive_locations>
-				{0,1}
-			</archive_locations>
-			<scn_policies>
-				{0,1}
-			</scn_policies>
+			<!-- isbn -->
+			<xsl:call-template name="setISBN" />
+
+			<!-- publisher_item -->
+			<xsl:call-template name="setPublisherItem" />
+
+			<!--
+			<crossmark></crossmark>
+			-->
+
+			<!-- No se mapea, no tenemos información de fundRef
+			<fr:program name="fundref"></fr:program>
+			-->
+
+			<!-- ai:program -->
+			<xsl:call-template name="setAIProgram" />
+
+			<!-- rel:program -->
+			<xsl:call-template name="setRelationsProgram" />
+
+			<!-- No se mapea porque no usamos ninguna red de preservación
+			<archive_locations></archive_locations>
+			-->
+
+			<!-- No se mapea porque no utilizamos Scholarly Sharing Network (SCN) policies
+			<scn_policies></scn_policies>
+			-->
+
 			<doi_data>
-				{1,1}
+			<!-- To Do -->
 			</doi_data>
-			<citation_list>
-				{0,1}
-			</citation_list>
-			<component_list>
-				{0,1}
-			</component_list>
+
+			<!-- No se mapea, no tenemos esa información
+			<citation_list></citation_list>
+			-->
+
+			<!-- No se mapea, no aplica a ningún metadato que tengamos
+			<component_list></component_list>
+			-->
 		</dissertation>
 	</xsl:template>
 
@@ -246,9 +254,9 @@
 		<xsl:for-each
 			select="//dspace:field[@mdschema='dc' and @element='description' and @qualifier='abstract']">
 			<jats:abstract xml:lang="./@language">
-				<p>
+				<jats:p>
 					<xsl:value-of select="." />
-				</p>
+				</jats:p>
 			</jats:abstract>
 		</xsl:for-each>
 	</xsl:template>
@@ -284,5 +292,169 @@
 				</institution_name>
 			</institution>
 		</xsl:if>
+	</xsl:template>
+
+	<xsl:template name="setISBN">
+		<xsl:for-each
+			select="//dspace:field[@mdschema='sedici' and @element='identifier' and @qualifier='isbn']">
+			<isbn>
+				<xsl:value-of select="." />
+			</isbn>
+		</xsl:for-each>
+	</xsl:template>
+
+	<xsl:template name="setPublisherItem">
+		<publisher_item>
+			<!-- dc.identifier.uri -->
+			<identifier id_type="other">
+				<xsl:value-of
+					select="//dspace:field[@mdschema='dc' and @element='identifier' and @qualifier='uri']" />
+			</identifier>
+
+			<!-- sedici.identifier.doi -->
+			<xsl:if
+				test="//dspace:field[@mdschema='sedici' and @element='identifier' and @qualifier='doi']">
+				<identifier id_type="doi">
+					<xsl:value-of
+						select="//dspace:field[@mdschema='dc' and @element='identifier' and @qualifier='doi']" />
+				</identifier>
+			</xsl:if>
+
+			<!-- dc.identifier.expendiente -->
+			<xsl:if
+				test="//dspace:field[@mdschema='sedici' and @element='identifier' and @qualifier='expediente']">
+				<item_number item_number_type="record_number">
+					<xsl:value-of
+						select="//dspace:field[@mdschema='dc' and @element='identifier' and @qualifier='expendiente']" />
+				</item_number>
+			</xsl:if>
+		</publisher_item>
+	</xsl:template>
+
+	<xsl:template name="setAIProgram">
+		<ai:program name="AccessIndicators">
+			<license_ref>
+				<xsl:value-of
+					select="//dspace:field[@mdschema='sedici' and @element='rights' and @qualifier='uri']" />
+			</license_ref>
+		</ai:program>
+	</xsl:template>
+
+	<xsl:template name="setRelationsProgram">
+		<rel:program name="relations">
+			<!-- sedici.relation.journalTitle -->
+			<xsl:if
+				test="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='journalTitle']">
+				<rel:related_item>
+					<description>Journal title which the item is part of</description>
+					<rel:inter_work_relation
+						identifier-type="other" relationship-type="isPartOf">
+						<xsl:value-of
+							select="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='journalTitle']" />
+					</rel:inter_work_relation>
+				</rel:related_item>
+			</xsl:if>
+
+			<!-- sedici.relation.journalVolumeAndIssue -->
+			<xsl:if
+				test="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='journalVolumeAndIssue']">
+				<rel:related_item>
+					<description>Journal issue or volume which the item is part of</description>
+					<rel:inter_work_relation
+						identifier-type="other" relationship-type="isPartOf">
+						<xsl:value-of
+							select="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='journalVolumeAndIssue']" />
+					</rel:inter_work_relation>
+				</rel:related_item>
+			</xsl:if>
+
+			<!-- sedici.relation.event -->
+			<xsl:if
+				test="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='event']">
+				<rel:related_item>
+					<description>Event name the item is part of</description>
+					<rel:inter_work_relation
+						identifier-type="other" relationship-type="isPartOf">
+						<xsl:value-of
+							select="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='event']" />
+					</rel:inter_work_relation>
+				</rel:related_item>
+			</xsl:if>
+
+			<!-- sedici.relation.isRelatedWith -->
+			<xsl:if
+				test="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='isRelatedWith']">
+				<rel:related_item>
+					<rel:inter_work_relation
+						identifier-type="uri" relationship-type="isRelatedMaterial">
+						<xsl:value-of
+							select="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='isRelatedWith']" />
+					</rel:inter_work_relation>
+				</rel:related_item>
+			</xsl:if>
+
+			<!-- sedici.relation.ciclo -->
+			<xsl:if
+				test="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='ciclo']">
+				<rel:related_item>
+					<description>Program name which the item is part of</description>
+					<rel:inter_work_relation
+						identifier-type="other" relationship-type="isPartOf">
+						<xsl:value-of
+							select="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='ciclo']" />
+					</rel:inter_work_relation>
+				</rel:related_item>
+			</xsl:if>
+
+			<!-- sedici.relation.isPartOfSeries -->
+			<xsl:if
+				test="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='isPartOfSeries']">
+				<rel:related_item>
+					<description>Series which the item is part of</description>
+					<rel:inter_work_relation
+						identifier-type="other" relationship-type="isPartOf">
+						<xsl:value-of
+							select="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='isPartOfSeries']" />
+					</rel:inter_work_relation>
+				</rel:related_item>
+			</xsl:if>
+
+			<!-- sedici.relation.bookTitle -->
+			<xsl:if
+				test="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='bookTitle']">
+				<rel:related_item>
+					<description>Book title which the item is part of</description>
+					<rel:inter_work_relation
+						identifier-type="other" relationship-type="isPartOf">
+						<xsl:value-of
+							select="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='bookTitle']" />
+					</rel:inter_work_relation>
+				</rel:related_item>
+			</xsl:if>
+
+			<!-- sedici.relation.isReviewOf -->
+			<xsl:if
+				test="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='isReviewOf']">
+				<rel:related_item>
+					<rel:inter_work_relation
+						identifier-type="uri" relationship-type="isReviewOf">
+						<xsl:value-of
+							select="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='isReviewOf']" />
+					</rel:inter_work_relation>
+				</rel:related_item>
+			</xsl:if>
+
+			<!-- sedici.relation.isReviewedBy -->
+			<xsl:if
+				test="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='isReviewedBy']">
+				<rel:related_item>
+					<rel:inter_work_relation
+						identifier-type="uri" relationship-type="hasReview">
+						<xsl:value-of
+							select="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='isReviewedBy']" />
+					</rel:inter_work_relation>
+				</rel:related_item>
+			</xsl:if>
+		</rel:program>
 	</xsl:template>
 </xsl:stylesheet>
