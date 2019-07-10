@@ -20,7 +20,9 @@
 
 			<head>
 				<doi_batch_id>string(4,100)</doi_batch_id>
-				<timestamp>now()</timestamp>
+				<timestamp>
+					<xsl:value-of select="current-dateTime()" />
+				</timestamp>
 
 				<depositor>
 					<depositor_name>Universidad Nacional de La Plata</depositor_name>
@@ -34,45 +36,40 @@
 				<xsl:choose
 					test="//dspace:field[@mdschema='dc' and @element='type']">
 					<xsl:when test="string(text())='Tesis de doctorado'">
-						<xsl:call-template
-							name="setDissertationMetadata" />
+						<xsl:call-template name="setDissertation" />
 					</xsl:when>
 					<xsl:when test="string(text())='Tesis de maestria'">
-						<xsl:call-template
-							name="setDissertationMetadata" />
+						<xsl:call-template name="setDissertation" />
 					</xsl:when>
 					<xsl:when
 						test="string(text())='Trabajo de especializacion'">
-						<xsl:call-template
-							name="setDissertationMetadata" />
+						<xsl:call-template name="setDissertation" />
 					</xsl:when>
 					<xsl:when test="string(text())='Tesis de grado'">
-						<xsl:call-template
-							name="setDissertationMetadata" />
+						<xsl:call-template name="setDissertation" />
 					</xsl:when>
 					<xsl:when test="string(text())='Trabajo final de grado'">
-						<xsl:call-template
-							name="setDissertationMetadata" />
+						<xsl:call-template name="setDissertation" />
 					</xsl:when>
+					<xsl:when test="string(text())='Articulo'">
+						<xsl:call-template name="setJournal" />
+					</xsl:when>
+					<!-- No se exporta
+					<xsl:when test="$subtype='Preprint'"> artículo </xsl:when> -->
+					<!-- No se exporta
+					<xsl:when test="$subtype='Contribucion a revista'"> artículo </xsl:when> -->
 					<!-- <xsl:when test="string(text())='Documento de trabajo'"> -->
 					<!-- documento de trabajo -->
-					<!-- </xsl:when> -->
-					<!-- No se exporta <xsl:when test="$subtype='Preprint'"> artículo </xsl:when> -->
-					<!-- <xsl:when test="string(text())='Articulo'"> -->
-					<!-- artículo -->
 					<!-- </xsl:when> -->
 					<!-- <xsl:when test="$subtype='Resumen'"> -->
 					<!-- documento de conferencia -->
 					<!-- </xsl:when> -->
-					<!-- No se exporta <xsl:when test="$subtype='Comunicacion'"> artículo 
-						<!-- </xsl:when> -->
-					-->
+					<!-- No se exporta
+					<xsl:when test="$subtype='Comunicacion'"> artículo </xsl:when> -->
 					<!-- <xsl:when test="string(text())='Revision'"> -->
 					<!-- reseña artículo -->
 					<!-- </xsl:when> -->
-					<!-- No se exporta <xsl:when test="$subtype='Contribucion a revista'"> 
-						<!-- artículo </xsl:when> -->
-					-->
+
 					<!-- <xsl:when test="string(text())='Reporte'"> -->
 					<!-- informe técnico -->
 					<!-- </xsl:when> -->
@@ -91,21 +88,20 @@
 					<!-- <xsl:when test="string(text())='Conjunto de datos'"> -->
 					<!-- conjunto de datos -->
 					<!-- </xsl:when> -->
-					<!-- No se exportan <xsl:when test="$subtype='Documento institucional'"> 
-						otros </xsl:when> <xsl:when test="$subtype='Resolucion'"> otros </xsl:when> 
-						<xsl:when test="$subtype='Imagen fija'"> fotografía </xsl:when> <xsl:when 
-						test="$subtype='Video'"> videograbación </xsl:when> <xsl:when test="$subtype='Audio'"> 
-						otros </xsl:when> -->
-					<xsl:otherwise>
-					</xsl:otherwise>
+					<!-- No se exportan
+					<xsl:when test="$subtype='Documento institucional'"> otros </xsl:when>
+					<xsl:when test="$subtype='Resolucion'"> otros </xsl:when>
+					<xsl:when test="$subtype='Imagen fija'"> fotografía </xsl:when>
+					<xsl:when test="$subtype='Video'"> videograbación </xsl:when>
+					<xsl:when test="$subtype='Audio'"> otros </xsl:when> -->
 				</xsl:choose>
 			</body>
 		</doi_batch>
 
 	</xsl:template>
 
-	<xsl:template name="setDissertationMetadata">
-		<dissertation language="" publication_type="full_text"
+	<xsl:template name="setDissertation">
+		<dissertation publication_type="full_text"
 			reference_distribution_opts="none"
 			xmlns:jats="http://www.ncbi.nlm.nih.gov/JATS1"
 			xmlns:fr="http://www.crossref.org/fundref.xsd"
@@ -139,13 +135,10 @@
 			<!-- publisher_item -->
 			<xsl:call-template name="setPublisherItem" />
 
-			<!--
-			<crossmark></crossmark>
-			-->
+			<!-- <crossmark></crossmark> -->
 
 			<!-- No se mapea, no tenemos información de fundRef
-			<fr:program name="fundref"></fr:program>
-			-->
+			<fr:program name="fundref"></fr:program> -->
 
 			<!-- ai:program -->
 			<xsl:call-template name="setAIProgram" />
@@ -154,25 +147,104 @@
 			<xsl:call-template name="setRelationsProgram" />
 
 			<!-- No se mapea porque no usamos ninguna red de preservación
-			<archive_locations></archive_locations>
-			-->
+			<archive_locations></archive_locations> -->
 
-			<!-- No se mapea porque no utilizamos Scholarly Sharing Network (SCN) policies
-			<scn_policies></scn_policies>
-			-->
+			<!-- No se mapea porque no utilizamos Scholarly Sharing Network (SCN)
+				policies
+			<scn_policies></scn_policies> -->
 
-			<doi_data>
-			<!-- To Do -->
-			</doi_data>
+			<!-- doi_data -->
+			<xsl:call-template name="setDOIData" />
 
 			<!-- No se mapea, no tenemos esa información
-			<citation_list></citation_list>
-			-->
+			<citation_list></citation_list> -->
 
 			<!-- No se mapea, no aplica a ningún metadato que tengamos
-			<component_list></component_list>
-			-->
+			<component_list></component_list> -->
 		</dissertation>
+	</xsl:template>
+
+	<xsl:template name="setJournal">
+		<journal>
+
+			<journal_metadata reference_distribution_opts="none">
+
+				<!-- full_title -->
+				<xsl:call-template name="setFullTitle" />
+
+				<!-- issn -->
+				<xsl:call-template name="setISSN" />
+
+				<!-- No mapea, no tenemos metadatos de coden
+				<coden></coden> -->
+
+				<!-- No se mapea porque no usamos ninguna red de preservación
+				<archive_locations></archive_locations> -->
+
+				<!-- doi_data no aplica, no tenemos doi para journals -->
+				<!-- <xsl:call-template name="setDOIData" /> -->
+			</journal_metadata>
+
+			<!-- No tenemos suficiente información de una issue de un journal
+			<journal_issue>
+			</journal_issue> -->
+
+			<journal_article publication_type="full_text"
+				reference_distribution_opts="none">
+
+				<!-- titles -->
+				<xsl:call-template name="setTitles" />
+
+				<!-- contributors -->
+				<xsl:call-template name="setContributors" />
+
+				<!-- jats:abstract -->
+				<xsl:call-template name="setAbstract" />
+
+				<!-- publication_date -->
+				<xsl:call-template name="setPublicationDate" />
+
+				<!-- publisher_item -->
+				<xsl:call-template name="setPublisherItem" />
+
+				<!-- pages -->
+				<xsl:call-template name="setPages" />
+
+				<!-- <crossmark></crossmark> -->
+
+				<!-- No se mapea, no tenemos información de fundRef
+				<fr:program name="fundref"></fr:program> -->
+
+				<!-- ai:program -->
+				<xsl:call-template name="setAIProgram" />
+
+				<!-- rel:program -->
+				<xsl:call-template name="setRelationsProgram" />
+
+				<!-- No se mapea porque no usamos ninguna red de preservación
+				<archive_locations></archive_locations> -->
+
+				<!-- No se mapea porque no utilizamos Scholarly Sharing Network (SCN)
+					policies
+				<scn_policies></scn_policies> -->
+
+				<!-- doi_data -->
+				<xsl:call-template name="setDOIData" />
+
+				<!-- No se mapea, no tenemos esa información
+				<citation_list></citation_list> -->
+
+				<!-- No se mapea, no aplica a ningún metadato que tengamos
+				<component_list></component_list> -->
+			</journal_article>
+		</journal>
+	</xsl:template>
+
+	<xsl:template name="setFullTitle">
+		<full_title>
+			<xsl:value-of
+				select="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='journalTitle']" />
+		</full_title>
 	</xsl:template>
 
 	<xsl:template name="setTitles">
@@ -261,6 +333,27 @@
 		</xsl:for-each>
 	</xsl:template>
 
+	<xsl:template name="setPublicationlDate">
+		<xsl:for-each
+			select="//dspace:field[@mdschema='dc' and @element='date' and @qualifier='issued']">
+			<publication_date>
+				<xsl:if test="string-length(./text()) &gt; 5">
+					<month>
+						<xsl:value-of select="substring(./text(),6,2)" />
+					</month>
+				</xsl:if>
+				<xsl:if test="string-length(./text()) &gt; 8">
+					<day>
+						<xsl:value-of select="substring(./text(),9)" />
+					</day>
+				</xsl:if>
+				<year>
+					<xsl:value-of select="substring(./text(),1,4)" />
+				</year>
+			</publication_date>
+		</xsl:for-each>
+	</xsl:template>
+
 	<xsl:template name="setApprovalDate">
 		<xsl:for-each
 			select="//dspace:field[@mdschema='sedici' and @element='date' and @qualifier='exposure']">
@@ -342,18 +435,6 @@
 
 	<xsl:template name="setRelationsProgram">
 		<rel:program name="relations">
-			<!-- sedici.relation.journalTitle -->
-			<xsl:if
-				test="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='journalTitle']">
-				<rel:related_item>
-					<description>Journal title which the item is part of</description>
-					<rel:inter_work_relation
-						identifier-type="other" relationship-type="isPartOf">
-						<xsl:value-of
-							select="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='journalTitle']" />
-					</rel:inter_work_relation>
-				</rel:related_item>
-			</xsl:if>
 
 			<!-- sedici.relation.journalVolumeAndIssue -->
 			<xsl:if
@@ -456,5 +537,61 @@
 				</rel:related_item>
 			</xsl:if>
 		</rel:program>
+	</xsl:template>
+
+	<xsl:template name="setISSN">
+		<xsl:if
+			test="//dspace:field[@mdschema='sedici' and @element='identifier' and @qualifier='issn']">
+			<issn>
+				<xsl:value-of
+					select="//dspace:field[@mdschema='sedici' and @element='identifier' and @qualifier='issn']" />
+			</issn>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template name="setPages">
+		<xsl:for-each
+			select="//dspace:field[@mdschema='dc' and @element='format' and @qualifier='extent']">
+			<xsl:if
+				test="contains(./text(),'p.') or contains(./text(),'P.')">
+				<xsl:variable name="pages"
+					select="translate(./text(),'Pp. ','')" />
+				<xsl:choose>
+					<xsl:when test="contains($pages,'-')">
+						<first_page>
+							<xsl:value-of select="substring-before($pages,'-')" />
+						</first_page>
+						<last_page>
+							<xsl:value-of select="substring-after($pages,'-')" />
+						</last_page>
+					</xsl:when>
+					<xsl:otherwise>
+						<first_page>
+							<xsl:value-of select="$pages" />
+						</first_page>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+		</xsl:for-each>
+	</xsl:template>
+
+	<xsl:template name="setDOIData">
+		<doi_data>
+
+			<doi>10.xxxx/xxxx</doi>
+
+			<timestamp>
+				<xsl:value-of select="current-dateTime()" />
+			</timestamp>
+
+			<!-- dc.identifier.uri -->
+			<resource>
+				<xsl:value-of
+					select="//dspace:field[@mdschema='dc' and @element='identifier' and @qualifier='uri']" />
+			</resource>
+
+			<!-- No mapeamos un doi a varios recursos
+			<collection multi-resolution="" property=""></collection> -->
+		</doi_data>
 	</xsl:template>
 </xsl:stylesheet>
