@@ -2,9 +2,10 @@
 
 <!-- Document : DIM2Crossref.xsl Description: Converts metadata from DSpace
 	Intermediat Format (DIM) into metadata following the Crossref Schema -->
-<xsl:stylesheet
+<xsl:stylesheet  version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:dspace="http://www.dspace.org/xmlns/dspace/dim">
+	xmlns:dspace="http://www.dspace.org/xmlns/dspace/dim"
+	xmlns:java="http://xml.apache.org/xalan/java" >
 
 	<xsl:output method="xml" indent="yes" encoding="utf-8" />
 
@@ -16,12 +17,13 @@
 
 		<doi_batch version="4.4.2"
 			xmlns="http://www.crossref.org/schema/4.4.2"
-			xsi:schemaLocation="http://www.crossref.org/schema/4.4.2 https://www.crossref.org/schemas/crossref4.4.2.xsd">
+			xsl:schemaLocation="http://www.crossref.org/schema/4.4.2 https://www.crossref.org/schemas/crossref4.4.2.xsd">
 
 			<head>
-				<doi_batch_id>string(4,100)</doi_batch_id>
+				<doi_batch_id>someid</doi_batch_id>
+
 				<timestamp>
-					<xsl:value-of select="current-dateTime()" />
+					<xsl:value-of select="java:java.lang.System.currentTimeMillis()" />
 				</timestamp>
 
 				<depositor>
@@ -33,39 +35,47 @@
 			</head>
 
 			<body>
-				<xsl:choose
-					test="//dspace:field[@mdschema='dc' and @element='type']">
-					<xsl:when test="string(text())='Tesis de doctorado'">
+				<xsl:variable name="type" select="//dspace:field[@mdschema='dc' and @element='type']/text()"/>
+				<xsl:choose>
+					<xsl:when test="$type='Tesis de doctorado'">
 						<xsl:call-template name="setDissertation" />
 					</xsl:when>
-					<xsl:when test="string(text())='Tesis de maestria'">
+					<xsl:when test="$type='Tesis de maestria'">
 						<xsl:call-template name="setDissertation" />
 					</xsl:when>
 					<xsl:when
-						test="string(text())='Trabajo de especializacion'">
+						test="$type='Trabajo de especializacion'">
 						<xsl:call-template name="setDissertation" />
 					</xsl:when>
-					<xsl:when test="string(text())='Tesis de grado'">
+					<xsl:when test="$type='Tesis de grado'">
 						<xsl:call-template name="setDissertation" />
 					</xsl:when>
-					<xsl:when test="string(text())='Trabajo final de grado'">
+					<xsl:when test="$type='Trabajo final de grado'">
 						<xsl:call-template name="setDissertation" />
 					</xsl:when>
-					<xsl:when test="string(text())='Articulo'">
+					<xsl:when test="$type='Articulo'">
 						<xsl:call-template name="setJournal" />
 					</xsl:when>
 					<!-- No se exporta
 					<xsl:when test="$subtype='Preprint'"> artículo </xsl:when> -->
 					<!-- No se exporta
 					<xsl:when test="$subtype='Contribucion a revista'"> artículo </xsl:when> -->
+					<!-- No se exporta
+					<xsl:when test="$subtype='Comunicacion'"> artículo </xsl:when> -->
+
+					<!-- <xsl:when test="$type='Libro'">
+						<xsl:call-template name="setBook" />
+					</xsl:when>
+					<xsl:when test="$type='Capitulo de libro'">
+						<xsl:call-template name="setBook" />
+					</xsl:when>  -->
+
 					<!-- <xsl:when test="string(text())='Documento de trabajo'"> -->
 					<!-- documento de trabajo -->
 					<!-- </xsl:when> -->
 					<!-- <xsl:when test="$subtype='Resumen'"> -->
 					<!-- documento de conferencia -->
 					<!-- </xsl:when> -->
-					<!-- No se exporta
-					<xsl:when test="$subtype='Comunicacion'"> artículo </xsl:when> -->
 					<!-- <xsl:when test="string(text())='Revision'"> -->
 					<!-- reseña artículo -->
 					<!-- </xsl:when> -->
@@ -75,12 +85,6 @@
 					<!-- </xsl:when> -->
 					<!-- <xsl:when test="string(text())='Patente'"> -->
 					<!-- patente -->
-					<!-- </xsl:when> -->
-					<!-- <xsl:when test="string(text())='Libro'"> -->
-					<!-- libro -->
-					<!-- </xsl:when> -->
-					<!-- <xsl:when test="string(text())='Capitulo de libro'"> -->
-					<!-- parte de libro -->
 					<!-- </xsl:when> -->
 					<!-- <xsl:when test="string(text())='Objeto de conferencia'"> -->
 					<!-- documento de conferencia -->
@@ -103,10 +107,7 @@
 	<xsl:template name="setDissertation">
 		<dissertation publication_type="full_text"
 			reference_distribution_opts="none"
-			xmlns:jats="http://www.ncbi.nlm.nih.gov/JATS1"
-			xmlns:fr="http://www.crossref.org/fundref.xsd"
-			xmlns:ai="http://www.crossref.org/AccessIndicators.xsd"
-			xmlns:rel="http://www.crossref.org/relations.xsd">
+			xmlns:fr="http://www.crossref.org/fundref.xsd" >
 
 			<!-- contributors -->
 			<xsl:call-template name="setContributors" />
@@ -132,8 +133,8 @@
 			<!-- isbn -->
 			<xsl:call-template name="setISBN" />
 
-			<!-- publisher_item -->
-			<xsl:call-template name="setPublisherItem" />
+			<!-- No se mapea, el indentifier ya lo mapeamos en doi_data
+			<publisher_item></publisher_item>  -->
 
 			<!-- <crossmark></crossmark> -->
 
@@ -204,11 +205,11 @@
 				<!-- publication_date -->
 				<xsl:call-template name="setPublicationDate" />
 
-				<!-- publisher_item -->
-				<xsl:call-template name="setPublisherItem" />
-
 				<!-- pages -->
 				<xsl:call-template name="setPages" />
+
+				<!-- No se mapea, el indentifier ya lo mapeamos en doi_data
+				<publisher_item></publisher_item>  -->
 
 				<!-- <crossmark></crossmark> -->
 
@@ -238,6 +239,29 @@
 				<component_list></component_list> -->
 			</journal_article>
 		</journal>
+	</xsl:template>
+
+	<xsl:template name="setBook">
+		<!-- TO DO -->
+		<book book_type="other">
+
+			<book_metadata reference_distribution_opts="none">
+			</book_metadata>
+
+			<book_series_metadata reference_distribution_opts="none">
+			</book_series_metadata>
+
+			<book_set_metadata reference_distribution_opts="none">
+			</book_set_metadata>
+
+			<xsl:if
+					test="//dspace:field[@mdschema='dc' and @element='type']/text() = 'Capitulo de libro'">
+				<content_item component_type="chapter"
+					level_sequence_number="1" publication_type="full_text"
+					reference_distribution_opts="none">
+				</content_item>
+			</xsl:if>
+		</book>
 	</xsl:template>
 
 	<xsl:template name="setFullTitle">
@@ -289,7 +313,7 @@
 
 			<!-- <person-name role=editor> -->
 			<xsl:for-each
-				select="//dspace:field[@mdschema='sedici' and @element='contributor' and @qualifier='editor']" ">
+				select="//dspace:field[@mdschema='sedici' and @element='contributor' and @qualifier='editor']" >
 				<xsl:call-template name="setPersonName">
 					<xsl:with-param name="person" select="." />
 					<xsl:with-param name="role">
@@ -322,10 +346,12 @@
 		</person-name>
 	</xsl:template>
 
-	<xsl:template name="setAbstract" m>
+	<xsl:template name="setAbstract">
 		<xsl:for-each
 			select="//dspace:field[@mdschema='dc' and @element='description' and @qualifier='abstract']">
-			<jats:abstract xml:lang="./@language">
+			<jats:abstract
+				xmlns:jats="http://www.ncbi.nlm.nih.gov/JATS1"
+				xml:lang="./@language">
 				<jats:p>
 					<xsl:value-of select="." />
 				</jats:p>
@@ -333,7 +359,7 @@
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template name="setPublicationlDate">
+	<xsl:template name="setPublicationDate">
 		<xsl:for-each
 			select="//dspace:field[@mdschema='dc' and @element='date' and @qualifier='issued']">
 			<publication_date>
@@ -396,36 +422,10 @@
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template name="setPublisherItem">
-		<publisher_item>
-			<!-- dc.identifier.uri -->
-			<identifier id_type="other">
-				<xsl:value-of
-					select="//dspace:field[@mdschema='dc' and @element='identifier' and @qualifier='uri']" />
-			</identifier>
-
-			<!-- sedici.identifier.doi -->
-			<xsl:if
-				test="//dspace:field[@mdschema='sedici' and @element='identifier' and @qualifier='doi']">
-				<identifier id_type="doi">
-					<xsl:value-of
-						select="//dspace:field[@mdschema='dc' and @element='identifier' and @qualifier='doi']" />
-				</identifier>
-			</xsl:if>
-
-			<!-- dc.identifier.expendiente -->
-			<xsl:if
-				test="//dspace:field[@mdschema='sedici' and @element='identifier' and @qualifier='expediente']">
-				<item_number item_number_type="record_number">
-					<xsl:value-of
-						select="//dspace:field[@mdschema='dc' and @element='identifier' and @qualifier='expendiente']" />
-				</item_number>
-			</xsl:if>
-		</publisher_item>
-	</xsl:template>
-
 	<xsl:template name="setAIProgram">
-		<ai:program name="AccessIndicators">
+		<ai:program
+			xmlns:ai="http://www.crossref.org/AccessIndicators.xsd"
+			name="AccessIndicators">
 			<license_ref>
 				<xsl:value-of
 					select="//dspace:field[@mdschema='sedici' and @element='rights' and @qualifier='uri']" />
@@ -434,7 +434,8 @@
 	</xsl:template>
 
 	<xsl:template name="setRelationsProgram">
-		<rel:program name="relations">
+		<rel:program
+			xmlns:rel="http://www.crossref.org/relations.xsd" name="relations">
 
 			<!-- sedici.relation.journalVolumeAndIssue -->
 			<xsl:if
@@ -578,16 +579,20 @@
 	<xsl:template name="setDOIData">
 		<doi_data>
 
-			<doi>10.xxxx/xxxx</doi>
+			<doi>
+				<xsl:variable name="doiUrl" select="//dspace:field[@mdschema='dc' and @element='identifier' and @qualifier='uri' and starts-with(., 'http://dx.doi.org/')]" />
+				<xsl:value-of
+					select="substring($doiUrl, 19)" />
+			</doi>
 
 			<timestamp>
-				<xsl:value-of select="current-dateTime()" />
+				<xsl:value-of select="java:java.lang.System.currentTimeMillis()" />
 			</timestamp>
 
 			<!-- dc.identifier.uri -->
 			<resource>
 				<xsl:value-of
-					select="//dspace:field[@mdschema='dc' and @element='identifier' and @qualifier='uri']" />
+					select="//dspace:field[@mdschema='dc' and @element='identifier' and @qualifier='uri' and not(starts-with(., 'http://dx.doi.org/'))]" />
 			</resource>
 
 			<!-- No mapeamos un doi a varios recursos
