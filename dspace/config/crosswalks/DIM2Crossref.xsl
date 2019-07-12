@@ -20,7 +20,9 @@
 			xsl:schemaLocation="http://www.crossref.org/schema/4.4.2 https://www.crossref.org/schemas/crossref4.4.2.xsd">
 
 			<head>
-				<doi_batch_id>someid</doi_batch_id>
+				<doi_batch_id>
+					<xsl:value-of select="java:java.time.LocalDateTime.now()" />
+				</doi_batch_id>
 
 				<timestamp>
 					<xsl:value-of select="java:java.lang.System.currentTimeMillis()" />
@@ -294,11 +296,12 @@
 			<xsl:call-template name="setPersonName">
 				<xsl:with-param name="person"
 					select="//dspace:field[@mdschema='sedici' and @element='creator' and @qualifier='person']" />
+				<xsl:with-param name="language"  select="//dspace:field[@mdschema='sedici' and @element='creator' and @qualifier='person']/@lang" />
 				<xsl:with-param name="role">
-					author
+					<xsl:text>author</xsl:text>
 				</xsl:with-param>
 				<xsl:with-param name="sequence">
-					first
+					<xsl:text>first</xsl:text>
 				</xsl:with-param>
 			</xsl:call-template>
 
@@ -316,11 +319,12 @@
 				select="//dspace:field[@mdschema='sedici' and @element='contributor' and @qualifier='editor']" >
 				<xsl:call-template name="setPersonName">
 					<xsl:with-param name="person" select="." />
+					<xsl:with-param name="language"  select="./@lang" />
 					<xsl:with-param name="role">
-						editor
+						<xsl:text>editor</xsl:text>
 					</xsl:with-param>
 					<xsl:with-param name="sequence">
-						first
+						<xsl:text>first</xsl:text>
 					</xsl:with-param>
 				</xsl:call-template>
 			</xsl:for-each>
@@ -329,10 +333,19 @@
 
 	<xsl:template name="setPersonName">
 		<xsl:param name="person" />
+		<xsl:param name="language" />
 		<xsl:param name="role" />
 		<xsl:param name="sequence" />
-		<person-name contributor_role="$role" sequence="$sequence"
-			language="$person/@language">
+		<person-name>
+			<xsl:attribute name="contributor_role">
+				<xsl:value-of select="$role" />
+			</xsl:attribute>
+			<xsl:attribute name="sequence">
+				<xsl:value-of select="$sequence" />
+			</xsl:attribute>
+			<xsl:attribute name="language">
+				<xsl:value-of select="$language" />
+			</xsl:attribute>
 			<xsl:if test="contains($person,',')">
 				<given-name>
 					<xsl:value-of
@@ -350,8 +363,10 @@
 		<xsl:for-each
 			select="//dspace:field[@mdschema='dc' and @element='description' and @qualifier='abstract']">
 			<jats:abstract
-				xmlns:jats="http://www.ncbi.nlm.nih.gov/JATS1"
-				xml:lang="./@language">
+				xmlns:jats="http://www.ncbi.nlm.nih.gov/JATS1">
+				<xsl:attribute name="xml:lang">
+					<xsl:value-of select="./@lang" />
+				</xsl:attribute>
 				<jats:p>
 					<xsl:value-of select="." />
 				</jats:p>
@@ -416,9 +431,11 @@
 	<xsl:template name="setISBN">
 		<xsl:for-each
 			select="//dspace:field[@mdschema='sedici' and @element='identifier' and @qualifier='isbn']">
-			<isbn>
-				<xsl:value-of select="." />
-			</isbn>
+			<xsl:if test="string-length(.) &gt; 9">
+				<isbn>
+					<xsl:value-of select="substring(.,1,17)" />
+				</isbn>
+			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
 
@@ -542,10 +559,10 @@
 
 	<xsl:template name="setISSN">
 		<xsl:if
-			test="//dspace:field[@mdschema='sedici' and @element='identifier' and @qualifier='issn']">
+			test="string-length(//dspace:field[@mdschema='sedici' and @element='identifier' and @qualifier='issn']) &gt; 7">
 			<issn>
 				<xsl:value-of
-					select="//dspace:field[@mdschema='sedici' and @element='identifier' and @qualifier='issn']" />
+					select="substring(//dspace:field[@mdschema='sedici' and @element='identifier' and @qualifier='issn'],1,9)" />
 			</issn>
 		</xsl:if>
 	</xsl:template>
@@ -558,18 +575,34 @@
 				<xsl:variable name="pages"
 					select="translate(./text(),'Pp. ','')" />
 				<xsl:choose>
-					<xsl:when test="contains($pages,'-')">
-						<first_page>
-							<xsl:value-of select="substring-before($pages,'-')" />
-						</first_page>
-						<last_page>
-							<xsl:value-of select="substring-after($pages,'-')" />
-						</last_page>
+					<xsl:when test="contains($pages,'+')">
+						<xsl:variable name="parsedPages"
+							select="substring-before($pages,'+')" />
+						<xsl:if test="contains($parsedPages,'-')">
+							<pages>
+								<first_page>
+									<xsl:value-of
+										select="substring-before($parsedPages,'-')" />
+								</first_page>
+								<last_page>
+									<xsl:value-of
+										select="substring-after($parsedPages,'-')" />
+								</last_page>
+							</pages>
+						</xsl:if>
 					</xsl:when>
 					<xsl:otherwise>
-						<first_page>
-							<xsl:value-of select="$pages" />
-						</first_page>
+						<xsl:if test="contains($pages,'-')">
+							<pages>
+								<first_page>
+									<xsl:value-of
+										select="substring-before($pages,'-')" />
+								</first_page>
+								<last_page>
+									<xsl:value-of select="substring-after($pages,'-')" />
+								</last_page>
+							</pages>
+						</xsl:if>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:if>
