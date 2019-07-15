@@ -420,14 +420,17 @@
 	</xsl:template>
 
 	<xsl:template name="setAIProgram">
-		<ai:program
-			xmlns:ai="http://www.crossref.org/AccessIndicators.xsd"
-			name="AccessIndicators">
-			<ai:license_ref>
-				<xsl:value-of
-					select="//dspace:field[@mdschema='sedici' and @element='rights' and @qualifier='uri']" />
-			</ai:license_ref>
-		</ai:program>
+		<xsl:if
+			test="//dspace:field[@mdschema='sedici' and @element='rights' and @qualifier='uri']">
+			<ai:program
+				xmlns:ai="http://www.crossref.org/AccessIndicators.xsd"
+				name="AccessIndicators">
+				<ai:license_ref>
+					<xsl:value-of
+						select="//dspace:field[@mdschema='sedici' and @element='rights' and @qualifier='uri']" />
+				</ai:license_ref>
+			</ai:program>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template name="setRelationsProgram">
