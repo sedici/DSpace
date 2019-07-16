@@ -239,10 +239,13 @@
 	</xsl:template>
 
 	<xsl:template name="setFullTitle">
-		<full_title xmlns="http://www.crossref.org/schema/4.4.2">
-			<xsl:value-of
+		<xsl:if
+			test="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='journalTitle']">
+			<full_title xmlns="http://www.crossref.org/schema/4.4.2">
+				<xsl:value-of
 				select="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='journalTitle']" />
-		</full_title>
+			</full_title>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template name="setTitles">
@@ -454,7 +457,7 @@
 			<xsl:if
 				test="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='event']">
 				<rel:related_item>
-					<description>Event name the item is part of</description>
+					<rel:description>Event name the item is part of</rel:description>
 					<rel:inter_work_relation
 						identifier-type="other" relationship-type="isPartOf">
 						<xsl:value-of
@@ -479,7 +482,7 @@
 			<xsl:if
 				test="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='ciclo']">
 				<rel:related_item>
-					<description>Program name which the item is part of</description>
+					<rel:description>Program name which the item is part of</rel:description>
 					<rel:inter_work_relation
 						identifier-type="other" relationship-type="isPartOf">
 						<xsl:value-of
@@ -492,7 +495,7 @@
 			<xsl:if
 				test="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='isPartOfSeries']">
 				<rel:related_item>
-					<description>Series which the item is part of</description>
+					<rel:description>Series which the item is part of</rel:description>
 					<rel:inter_work_relation
 						identifier-type="other" relationship-type="isPartOf">
 						<xsl:value-of
@@ -505,7 +508,7 @@
 			<xsl:if
 				test="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='bookTitle']">
 				<rel:related_item>
-					<description>Book title which the item is part of</description>
+					<rel:description>Book title which the item is part of</rel:description>
 					<rel:inter_work_relation
 						identifier-type="other" relationship-type="isPartOf">
 						<xsl:value-of
@@ -593,26 +596,36 @@
 	</xsl:template>
 
 	<xsl:template name="setDOIData">
+
 		<doi_data xmlns="http://www.crossref.org/schema/4.4.2">
 
 			<doi>
-				<xsl:variable name="doiUrl" select="//dspace:field[@mdschema='dc' and @element='identifier' and @qualifier='uri' and starts-with(., 'http://dx.doi.org/')]" />
-				<xsl:value-of
-					select="substring($doiUrl, 19)" />
+				<!-- Solo seteo el doi si ya existe alguno en sedici.identifier.doi, sino se setea uno nuevo despúes, por afuera del xsl -->
+				<xsl:if
+				test="//dspace:field[@mdschema='sedici' and @element='identifier' and @qualifier='doi' and contains(., '10.')]">
+					<xsl:variable name="doi"
+					select="//dspace:field[@mdschema='sedici' and @element='identifier' and @qualifier='doi']" />
+					<xsl:variable name="doiStartIndex"
+					select="string-length(substring-before($doi,'10.'))+1" />
+					<xsl:value-of select="substring($doi,$doiStartIndex)" />
+				</xsl:if>
 			</doi>
 
 			<timestamp>
-				<xsl:value-of select="java:java.lang.System.currentTimeMillis()" />
+				<xsl:value-of
+					select="java:java.lang.System.currentTimeMillis()" />
 			</timestamp>
 
 			<!-- dc.identifier.uri -->
 			<resource>
 				<xsl:value-of
-					select="//dspace:field[@mdschema='dc' and @element='identifier' and @qualifier='uri' and not(starts-with(., 'http://dx.doi.org/'))]" />
+					select="//dspace:field[@mdschema='dc' and @element='identifier' and @qualifier='uri']" />
 			</resource>
 
 			<!-- No mapeamos un doi a varios recursos
 			<collection multi-resolution="" property=""></collection> -->
 		</doi_data>
+
 	</xsl:template>
+
 </xsl:stylesheet>
