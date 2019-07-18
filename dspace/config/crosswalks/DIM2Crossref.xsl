@@ -239,13 +239,10 @@
 	</xsl:template>
 
 	<xsl:template name="setFullTitle">
-		<xsl:if
-			test="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='journalTitle']">
-			<full_title xmlns="http://www.crossref.org/schema/4.4.2">
-				<xsl:value-of
-				select="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='journalTitle']" />
-			</full_title>
-		</xsl:if>
+		<full_title xmlns="http://www.crossref.org/schema/4.4.2">
+			<xsl:value-of
+			select="//dspace:field[@mdschema='sedici' and @element='relation' and @qualifier='journalTitle']" />
+		</full_title>
 	</xsl:template>
 
 	<xsl:template name="setTitles">
