@@ -813,11 +813,14 @@ public class DOIIdentifierProvider
         }
         else
         {
+            if (dso.getHandle() == null) {
+                throw new IllegalStateException("Trying to assign a DOI "
+                        + "to an item without a handle!");
+            }
             // We need to generate a new DOI.
             doiRow = DatabaseManager.create(context, "Doi");
 
-            doi = this.getPrefix() + "/" + this.getNamespaceSeparator() + 
-                    doiRow.getIntColumn("doi_id");
+            doi = this.getPrefix() + "/" + dso.getHandle();
         }
                     
         doiRow.setColumn("doi", doi);
