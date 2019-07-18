@@ -97,6 +97,11 @@ implements DOIConnector
      */
     protected String DEPOSIT_PATH;
     /**
+     * Prefix of the deposit filename used in "fname" parameter for the "doMDUpload" operation when deposit at Crossref API.
+     * Set by spring dependency injection.
+     */
+    protected String DEPOSIT_PREFIX_FILENAME;
+    /**
      * Path on the Crossref Server used to poll the results about deposits of records already made.
      * Set by spring dependency injection.
      */
@@ -115,9 +120,11 @@ implements DOIConnector
     protected DisseminationCrosswalk xwalk;
     
     protected ConfigurationService configurationService;
-    
+
     protected String USERNAME;
     protected String PASSWORD;
+    
+    private String PROCESSING_DATE;
 
     //CRossref PARAMETERS names & values
     public static String OPERATION_PARAM = "operation";
@@ -147,6 +154,7 @@ implements DOIConnector
         this.xwalk = null;
         this.USERNAME = null;
         this.PASSWORD = null;
+        this.PROCESSING_DATE = null;
     }
 
     /**
@@ -201,6 +209,10 @@ implements DOIConnector
         }
         
         this.SUBMISSION_PATH = CROSSREF_SUBMISSION_PATH;
+    }
+    
+    public void setDEPOSIT_PREFIX_FILENAME(String DEPOSIT_PREFIX_FNAME) {
+        this.DEPOSIT_PREFIX_FILENAME = DEPOSIT_PREFIX_FNAME;
     }
     
     
@@ -275,7 +287,15 @@ implements DOIConnector
      * the name of the deposited file at "/deposit".
      */
     private String getDepositFileName(String doi) {
-        return "sedici_doi_" + doi + XML_EXTENSION;
+        return DEPOSIT_PREFIX_FILENAME + "_" + doi.replace("/", "_") + "_" + PROCESSING_DATE  + XML_EXTENSION;
+    }
+    
+    /**
+     * Set the exact time for the process of this connector.
+     */
+    private void initProcessingDate() {
+        DateFormat df = new SimpleDateFormat("yy-MM-dd_HHmmss.SSS");
+        PROCESSING_DATE = df.format(new Date());
     }
 
     /**
@@ -306,6 +326,7 @@ implements DOIConnector
     }
     
     @Override
+    //TODO adaptar a Crossref
     public boolean isDOIRegistered(Context context, DSpaceObject dso, String doi)
             throws DOIIdentifierException
     {
@@ -390,36 +411,37 @@ implements DOIConnector
     public void deleteDOI(Context context, String doi)
             throws DOIIdentifierException
     {
-        if (!isDOIReserved(context, doi))
-            return;
-        
-        // delete mds/metadata/<doi>
-        DataCiteResponse resp = this.sendMetadataDeleteRequest(doi);
-        switch(resp.getStatusCode())
-        {
-            //ok
-            case (200) :
-            {
-                return;
-            }
-            // 404 "Not Found" means DOI is neither reserved nor registered.
-            case (404) :
-            {
-                log.error("DOI {} is at least reserved, but a delete request "
-                        + "told us that it is unknown!", doi);
-                return;
-            }
-            // Catch all other http status code in case we forgot one.
-            default :
-            {
-                log.warn("While deleting metadata of DOI {}, we got a "
-                        + "http status code {} and the message \"{}\".",
-                        new String[] {doi, Integer.toString(resp.statusCode), resp.getContent()});
-                throw new DOIIdentifierException("Unable to parse an answer from "
-                        + "DataCite API. Please have a look into DSpace logs.",
-                        DOIIdentifierException.BAD_ANSWER);
-            }
-        }
+        throw new UnsupportedOperationException("Deletion of DOI " + doi + " must be requested manually");
+//        if (!isDOIReserved(context, doi))
+//            return;
+//        
+//        // delete mds/metadata/<doi>
+//        DataCiteResponse resp = this.sendMetadataDeleteRequest(doi);
+//        switch(resp.getStatusCode())
+//        {
+//            //ok
+//            case (200) :
+//            {
+//                return;
+//            }
+//            // 404 "Not Found" means DOI is neither reserved nor registered.
+//            case (404) :
+//            {
+//                log.error("DOI {} is at least reserved, but a delete request "
+//                        + "told us that it is unknown!", doi);
+//                return;
+//            }
+//            // Catch all other http status code in case we forgot one.
+//            default :
+//            {
+//                log.warn("While deleting metadata of DOI {}, we got a "
+//                        + "http status code {} and the message \"{}\".",
+//                        new String[] {doi, Integer.toString(resp.statusCode), resp.getContent()});
+//                throw new DOIIdentifierException("Unable to parse an answer from "
+//                        + "DataCite API. Please have a look into DSpace logs.",
+//                        DOIIdentifierException.BAD_ANSWER);
+//            }
+//        }
     }
 
     /**
@@ -453,6 +475,8 @@ implements DOIConnector
 //            // doi is registered for this object, we're done
 //            return;
 //        }
+
+        initProcessingDate();
 
         this.prepareXwalk();
         
@@ -550,6 +574,19 @@ implements DOIConnector
             }
         }
         // Check at "submissionDownload" the result of metadata send to "/deposit" in the previous step
+        //FIXME (Ver ticket#5914) Por ahora, se elimina la etapa de revisión del envío, hasta encontrar una solución factible...
+        //checkSubmissionProcess(doi);
+        
+    }
+
+    /**
+     * Check at "/submissionDownload" the result of metadata send to "/deposit" related to the "doi" parameter value.
+     * Raise an exception only if the submission was not processed correctly or another problem exists.
+     * @param doi   the doi to check its submission state at Crossref.
+     * @throws DOIIdentifierException if the submission for doi specified does not exists in Crossref, if the deposit
+     *              was made with errors, and if the XML submitted was invalid.
+     */
+    private void checkSubmissionProcess(String doi) throws DOIIdentifierException {
         Document submissionResultDoc = null;
         String submissionResultResponse = null;
         try {
@@ -583,14 +620,17 @@ implements DOIConnector
                         //TODO completar y poner mas información todos los casos de respuesta...
                         if( success_count < record_count) {
                             throw new DOIIdentifierException("Crossref Submission Log results with deposit errors (success_count="
-                                    + String.valueOf(success_count) + " < record_count=" + String.valueOf(record_count) + ").");
+                                    + String.valueOf(success_count) + " < record_count=" + String.valueOf(record_count) + ").\n"
+                                            + "Response was " + submissionResultResponse);
                         }
                         if( record_count == 1 && failure_count == 1) {
                             throw new DOIIdentifierException("Crossref Submission Log with XML validation error.");
                         }
-                        if(warning_count > 0) {
-                            throw new DOIIdentifierException("Crossref Submission Log with warnings. Some of submitted DOI is in conflict with a existing one. \n "
+                        if(warning_count > 0 && failure_count == 0 
+                                && (warning_count + success_count) == record_count ) {
+                            log.warn("Crossref Submission Log with warnings. The submitted DOIs where sucessfully procesed but some are in conflict. \n "
                                     + "Response was " + submissionResultResponse);
+                            return;
                         }
                         if( failure_count == 0 && success_count == record_count) {
                             //Registration submission was successful!
@@ -605,9 +645,9 @@ implements DOIConnector
                     + "filename=" + getDepositFileName(doi), e,
                     DOIIdentifierException.BAD_ANSWER);
         }
-        
     }
     
+
     /**
      * Get the status of a Deposit through "/deposit" endpoint. Further information at https://support.crossref.org/hc/en-us/articles/217515926.
      * @param doi
@@ -754,7 +794,7 @@ implements DOIConnector
         try
         {
             String filename = this.getDepositFileName(doi);
-            tmp = File.createTempFile(filename.substring(0, filename.replace("/", "_").indexOf(XML_EXTENSION)), XML_EXTENSION);
+            tmp = File.createTempFile(filename.substring(0, filename.indexOf(XML_EXTENSION)), XML_EXTENSION);
             xout.output(metadataRoot, new FileWriter(tmp));
             MultipartEntityBuilder builder = 
                     MultipartEntityBuilder.create().setMode(HttpMultipartMode.STRICT)
@@ -966,8 +1006,8 @@ implements DOIConnector
      */
     protected String extractDOI(Element root){
         String xpath_expression = "//crossref:doi_data/crossref:doi";
-        Element doiData = getElementFromPath(root, xpath_expression, "crossref", root.getNamespaceURI());
-        return (null == doiData) ? null : doiData.getChildTextTrim("doi", doiData.getNamespace());
+        Element doiElement = getElementFromPath(root, xpath_expression, "crossref", root.getNamespaceURI());
+        return (null == doiElement) ? null : doiElement.getTextTrim();
     }
 
     /**
@@ -1090,4 +1130,5 @@ implements DOIConnector
         }
         
     }
+    
 }
