@@ -633,19 +633,20 @@ implements DOIConnector
     private void checkSubmissionProcess(String doi) throws DOIIdentifierException {
         Document submissionResultDoc = null;
         String submissionResultResponse = null;
+        String depositFilename = getDepositFileName(doi);
         try {
             submissionResultResponse = pollResultsForSentMetadata(doi).getContent();
             submissionResultDoc = parseXMLContent(submissionResultResponse);
             if(submissionResultDoc == null) {
                 throw new DOIIdentifierException("Unable to obtain Crossref Submission result ('/submissionDownload') "
-                        + "for filename=" + getDepositFileName(doi) + ". The response is empty...", DOIIdentifierException.INTERNAL_ERROR);
+                        + "for filename=" + depositFilename + ". The response is empty...", DOIIdentifierException.INTERNAL_ERROR);
             } else {
                 Element submissionRoot = submissionResultDoc.getRootElement();
                 Attribute doi_batch_status = getAttributeFromPath(submissionRoot, "/doi_batch_diagnostic/@status");
                 if(doi_batch_status != null && doi_batch_status.getValue().equalsIgnoreCase(DBD_STATUS_UNKNOWN)) {
-                    log.warn("Crossref Submission for filename='{}' no exists at crossref submission queue.", getDepositFileName(doi));
+                    log.warn("Crossref Submission for filename='{}' no exists at crossref submission queue.", depositFilename);
                     throw new DOIIdentifierException("Unable to obtain Crossref Submission result ('/submissionDownload'). "
-                            + "There is no exists any submission for filename=" + getDepositFileName(doi), DOIIdentifierException.BAD_REQUEST);
+                            + "There is no exists any submission for filename=" + depositFilename, DOIIdentifierException.BAD_REQUEST);
                 } else if(doi_batch_status != null && doi_batch_status.getValue().equalsIgnoreCase(DBD_STATUS_COMPLETED)) {
                     // Checking if DOI was processed successfully...
                     // More info at https://support.crossref.org/hc/en-us/articles/214337306-Interpreting-Submission-Logs#log1
@@ -686,7 +687,7 @@ implements DOIConnector
         } catch (JDOMException e) {
             throw new DOIIdentifierException("Got a JDOMException while parsing "
                     + "a response from the Crossref Submission results ('/submissionDownload') endpoint,"
-                    + "filename=" + getDepositFileName(doi), e,
+                    + "filename=" + depositFilename, e,
                     DOIIdentifierException.BAD_ANSWER);
         }
     }
@@ -872,7 +873,7 @@ implements DOIConnector
             }
             catch (IOException ioe)
             {
-               log.info("Caught an IOException while releasing an HTTPEntity:"
+               log.error("Caught an IOException while releasing an HTTPEntity:"
                        + ioe.getMessage());
             }
         }
@@ -960,7 +961,7 @@ implements DOIConnector
                 // another party or if there is a login problem.
                 case (403) :
                 {
-                    log.info("Unsuccesful submission for (doi={}, user=" + this.getUsername() +") : {}", doi, content);
+                    log.error("Unsuccesful submission for (doi={}, user=" + this.getUsername() +") : {}", doi, content);
                     throw new DOIIdentifierException("We can register DOIs that belong to us only.",
                             DOIIdentifierException.BAD_REQUEST);
                 }
@@ -998,7 +999,7 @@ implements DOIConnector
             }
             catch (IOException e)
             {
-                log.warn("Can't release HTTP-Entity: " + e.getMessage());
+                log.warn("Can't release HTTP-Entity: " + e.getMessage(), e);
             }
         }
     }
@@ -1026,6 +1027,7 @@ implements DOIConnector
         }
         catch (JDOMException jde)
         {
+            //TODO hacer un log en este punto
             throw new DOIIdentifierException("Got a JDOMException while parsing "
                     + "a response from the DataCite API.", jde,
                     DOIIdentifierException.BAD_ANSWER);
