@@ -155,7 +155,7 @@ implements DOIConnector
     //DOI-to-metadata query constants
     // https://support.crossref.org/hc/en-us/articles/213566986
     public static String QUERY_PID = "pid";
-    /** Parameter where put the DOI to query... */
+    /** Parameter where put the DOI to query. It has the format "id=&lt;username&gt;:&lt;password&gt;".*/
     public static String QUERY_DOI_FIELD = "id";
     public static String QUERY_FORMAT_PARAM = "format";
     /** UNIXREF Query Output Format 
@@ -766,7 +766,6 @@ implements DOIConnector
         return sendHttpRequest(httpdelete, doi);
     }
     
-  //TODO adaptar a Crossref/fijarse si se sigue usando....
     /**
      * Check if specified DOI is already registered at Crossref.
      * @param doi   the DOI to check if registered.
@@ -1004,7 +1003,7 @@ implements DOIConnector
         }
     }
 
-  //TODO adaptar a formato XML de Crossref
+  //TODO adaptar a formato XML de Crossref. Fijarse si se sigue usando...
     // returns null or handle
     protected String extractAlternateIdentifier(Context context, String content)
     throws SQLException, DOIIdentifierException
