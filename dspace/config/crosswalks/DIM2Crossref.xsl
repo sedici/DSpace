@@ -80,6 +80,8 @@
 		<dissertation publication_type="full_text"
 			reference_distribution_opts="none"
 			xmlns="http://www.crossref.org/schema/4.4.2" >
+			<xsl:call-template name="setDocLanguageAttr" />
+			<xsl:call-template name="setPublicationTypeAttr" />
 
 			<!-- contributors -->
 			<xsl:call-template name="setContributors" />
@@ -165,6 +167,8 @@
 
 			<journal_article publication_type="full_text"
 				reference_distribution_opts="none">
+				<xsl:call-template name="setDocLanguageAttr" />
+				<xsl:call-template name="setPublicationTypeAttr" />
 
 				<!-- titles -->
 				<xsl:call-template name="setTitles" />
@@ -268,7 +272,6 @@
 			<xsl:call-template name="setPersonName">
 				<xsl:with-param name="person"
 					select="//dspace:field[@mdschema='sedici' and @element='creator' and @qualifier='person']" />
-				<xsl:with-param name="language"  select="//dspace:field[@mdschema='sedici' and @element='creator' and @qualifier='person']/@lang" />
 				<xsl:with-param name="role">
 					<xsl:text>author</xsl:text>
 				</xsl:with-param>
@@ -291,7 +294,6 @@
 				select="//dspace:field[@mdschema='sedici' and @element='contributor' and @qualifier='editor']" >
 				<xsl:call-template name="setPersonName">
 					<xsl:with-param name="person" select="." />
-					<xsl:with-param name="language"  select="./@lang" />
 					<xsl:with-param name="role">
 						<xsl:text>editor</xsl:text>
 					</xsl:with-param>
@@ -305,7 +307,6 @@
 
 	<xsl:template name="setPersonName">
 		<xsl:param name="person" />
-		<xsl:param name="language" />
 		<xsl:param name="role" />
 		<xsl:param name="sequence" />
 		<person_name xmlns="http://www.crossref.org/schema/4.4.2">
@@ -314,9 +315,6 @@
 			</xsl:attribute>
 			<xsl:attribute name="sequence">
 				<xsl:value-of select="$sequence" />
-			</xsl:attribute>
-			<xsl:attribute name="language">
-				<xsl:value-of select="$language" />
 			</xsl:attribute>
 			<xsl:choose>
 				<xsl:when test="contains($person,',')">
@@ -623,6 +621,32 @@
 			<collection multi-resolution="" property=""></collection> -->
 		</doi_data>
 
+	</xsl:template>
+
+	<xsl:template name="setDocLanguageAttr">
+		<xsl:if
+			test="//dspace:field[@mdschema='dc' and @element='language']">
+			<xsl:attribute name="language">
+				<xsl:value-of
+					select="//dspace:field[@mdschema='dc' and @element='language']" />
+			</xsl:attribute>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template name="setPublicationTypeAttr">
+		<xsl:if
+			test="//dspace:field[@mdschema='sedici' and @element='description' and @qualifier='fulltext']">
+				<xsl:attribute name="publication_type">
+					<xsl:choose>
+						<xsl:when test="//dspace:field[@mdschema='sedici' and @element='description' and @qualifier='fulltext'] = 'true'">
+							<xsl:text>full_text</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>bibliographic_record</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+		</xsl:if>
 	</xsl:template>
 
 </xsl:stylesheet>
