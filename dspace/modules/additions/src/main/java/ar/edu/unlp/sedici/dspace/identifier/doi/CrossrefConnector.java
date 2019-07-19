@@ -107,6 +107,11 @@ implements DOIConnector
      */
     protected String SUBMISSION_PATH;
     /**
+     * Path on the Crossref Server used to make queries for already registered content at Crossref.
+     * Set by spring dependency injection.
+     */
+    protected String QUERY_PATH;
+    /**
      * Name of crosswalk to convert metadata into DataCite Metadata Scheme. Set 
      * by spring dependency injection.
      */
@@ -147,6 +152,16 @@ implements DOIConnector
     public static String DBD_STATUS_COMPLETED = "completed";
     public static String DBD_RECORD_DIAG_FAIL = "failure";
     public static String DBD_RECORD_DIAG_SUCC = "success";
+    //DOI-to-metadata query constants
+    // https://support.crossref.org/hc/en-us/articles/213566986
+    public static String QUERY_PID = "pid";
+    /** Parameter where put the DOI to query... */
+    public static String QUERY_DOI_FIELD = "id";
+    public static String QUERY_FORMAT_PARAM = "format";
+    /** UNIXREF Query Output Format 
+     * https://support.crossref.org/hc/en-us/articles/214936283-UNIXREF-query-output-format 
+     */
+    public static String CROSSREF_UNIXREF_FORMAT = "unixref";
     
     
     public CrossrefConnector()
@@ -209,6 +224,22 @@ implements DOIConnector
         }
         
         this.SUBMISSION_PATH = CROSSREF_SUBMISSION_PATH;
+    }
+
+    /**
+     * Set the path to register metadata on DataCite server. Used by spring
+     * dependency injection.
+     * @param CROSSREF_QUERY_PATH Path to register metadata, f.e. /mds.
+     */
+    @Required
+    public void setCROSSREF_QUERY_PATH(String CROSSREF_QUERY_PATH)
+    {
+        if (!CROSSREF_QUERY_PATH.startsWith("/"))
+        {
+            CROSSREF_QUERY_PATH = "/" + CROSSREF_QUERY_PATH;
+        }
+        
+        this.QUERY_PATH = CROSSREF_QUERY_PATH;
     }
     
     public void setDEPOSIT_PREFIX_FILENAME(String DEPOSIT_PREFIX_FNAME) {
@@ -287,7 +318,7 @@ implements DOIConnector
      * the name of the deposited file at "/deposit".
      */
     private String getDepositFileName(String doi) {
-        return DEPOSIT_PREFIX_FILENAME + "_" + doi.replace("/", "_") + "_" + PROCESSING_DATE  + XML_EXTENSION;
+        return DEPOSIT_PREFIX_FILENAME + "_" + doi.substring(DOI.SCHEME.length()).replace("/", "_") + "_" + PROCESSING_DATE  + XML_EXTENSION;
     }
     
     /**
@@ -326,12 +357,11 @@ implements DOIConnector
     }
     
     @Override
-    //TODO adaptar a Crossref
+    //TODO adaptar a Crossref (Falta completar una parte del código para que funcione cuando parámetro dso!=null)
     public boolean isDOIRegistered(Context context, DSpaceObject dso, String doi)
             throws DOIIdentifierException
     {
         DataCiteResponse response = sendDOIGetRequest(doi);
-        
         switch (response.getStatusCode())
         {
             // status code 200 means the doi is reserved and registered
@@ -340,57 +370,68 @@ implements DOIConnector
                 // Do we check if doi is reserved generally or for a specified dso?
                 if (null == dso)
                 {
-                    return true;
+                    try {
+                        Document queryResult = parseXMLContent(response.getContent());
+                        if(queryResult == null) {
+                            throw new DOIIdentifierException("Unable to obtain Crossref DOI-To-Query results ('/query') "
+                                    + "for DOI=" + doi + ". The response is empty...", DOIIdentifierException.INTERNAL_ERROR);
+                        } else {
+                            Element queryRoot = queryResult.getRootElement();
+                            Element errorTagLookup = getElementFromPath(queryRoot, "/doi_records/doi_record/crossref/error", "", queryRoot.getNamespaceURI());
+                            //If there is no <error> tag in the XML response, then there exists a records in Crossref for specified DOI...
+                            return (errorTagLookup == null)? true : false;
+                        }
+                    } catch (JDOMException e) {
+                        throw new DOIIdentifierException("Got a JDOMException while parsing "
+                                + "a response from the Crossref DOI-To-Query results ('/query') endpoint,"
+                                + "DOI=" + doi, e,
+                                DOIIdentifierException.BAD_ANSWER);
+                    }
                 }
                 
                 // DataCite returns the URL the DOI currently points to.
                 // To ensure that the DOI is registered for a specified dso it
                 // should be sufficient to compare the URL DataCite returns with
                 // the URL of the dso.
-                String doiUrl = response.getContent();
-                if (null == doiUrl)
-                {
-                    log.error("Received a status code 200 without a response content. DOI: {}.", doi);
-                    throw new DOIIdentifierException("Received a http status code 200 without a response content.",
-                            DOIIdentifierException.BAD_ANSWER);
-                }
                 
-                String dsoUrl = null;
-                try
-                {
-                    dsoUrl = HandleManager.resolveToURL(context, dso.getHandle());
-                }
-                catch (SQLException e)
-                {
-                    log.error("Error in database connection: " + e.getMessage());
-                    throw new RuntimeException(e);
-                }
-                
-                if (null == dsoUrl)
-                {
-                    // the handle of the dso was not found in our db?!
-                    log.error("The HandleManager was unable to find the handle "
-                            + "of a DSpaceObject in the database!?! "
-                            + "Type: {} ID: {}", dso.getTypeText(), dso.getID());
-                    throw new RuntimeException("The HandleManager was unable to "
-                            + "find the handle of a DSpaceObject in the database!");
-                }
-                
-                return (dsoUrl.equals(doiUrl));
+                //TODO adaptar esta parte del código para Crossref
+//                String doiUrl = response.getContent();
+//                if (null == doiUrl)
+//                {
+//                    log.error("Received a status code 200 without a response content. DOI: {}.", doi);
+//                    throw new DOIIdentifierException("Received a http status code 200 without a response content.",
+//                            DOIIdentifierException.BAD_ANSWER);
+//                }
+//                
+//                String dsoUrl = null;
+//                try
+//                {
+//                    dsoUrl = HandleManager.resolveToURL(context, dso.getHandle());
+//                }
+//                catch (SQLException e)
+//                {
+//                    log.error("Error in database connection: " + e.getMessage());
+//                    throw new RuntimeException(e);
+//                }
+//                
+//                if (null == dsoUrl)
+//                {
+//                    // the handle of the dso was not found in our db?!
+//                    log.error("The HandleManager was unable to find the handle "
+//                            + "of a DSpaceObject in the database!?! "
+//                            + "Type: {} ID: {}", dso.getTypeText(), dso.getID());
+//                    throw new RuntimeException("The HandleManager was unable to "
+//                            + "find the handle of a DSpaceObject in the database!");
+//                }
+//                
+//                return (dsoUrl.equals(doiUrl));
             }
-            // Status Code 204 "No Content" stands for a known DOI without URL.
-            // A DOI that is known but does not have any associated URL is
-            // reserved but not registered yet.
-            case (204) :
+            case (401) :
             {
-                // we know it is reserved, but we do not know for which object.
-                // won't add this to the cache.
-                return false;
-            }
-            // 404 "Not Found" means DOI is neither reserved nor registered.
-            case (404) :
-            {
-                return false;
+                log.info("We were anauthorized to query against the DOI registry agency.");
+                log.info("The response was: {}", response.getContent());
+                throw new DOIIdentifierException("Cannot authenticate at the DOI registry agency. "
+                        + "Please check if username and password are set correctly.",DOIIdentifierException.AUTHENTICATION_ERROR);
             }
             // Catch all other http status code in case we forgot one.
             default :
@@ -461,20 +502,23 @@ implements DOIConnector
             throws DOIIdentifierException
     {
         // check if the DOI is already registered online
-        //TODO SEDICI: revisar cómo fijarse si un DOI ya fue submiteado mediante la API Crossref... Fijarse
-        //      el endpoint https://test.crossref.org/servlet/query
-//        if (this.isDOIRegistered(context, doi))
-//        {
-//            // if it is registered for another object we should notify an admin
+        if (this.isDOIRegistered(context, doi))
+        {
+            //TODO este bloque de código se activará cuando se complete toda la funcionalidad del método isDOIRegistered(context, dso, doi)
+            // if it is registered for another object we should notify an admin
 //            if (!this.isDOIRegistered(context, dso, doi))
 //            {
 //                // DOI is reserved for another object
 //                log.warn("DOI {} is registered for another object already.", doi);
 //                throw new DOIIdentifierException(DOIIdentifierException.DOI_ALREADY_EXISTS);
 //            }
-//            // doi is registered for this object, we're done
-//            return;
-//        }
+            // doi is registered for this object, we're done
+            
+            //FIXME hay un error en el flujo de DSpace, ya que si retorno en este punto sin lanzar excepción, entonces me genera dos veces el metadato dc.identifier.uri con el DOI.
+            log.warn("DOI {} is already registered at Crossref. Will not be registered again.", doi);
+            throw new DOIIdentifierException("DOI " + doi +" is already registered at Crossref. "
+                    + "Will not be registered again.", DOIIdentifierException.DOI_ALREADY_EXISTS);
+        }
 
         initProcessingDate();
 
@@ -723,11 +767,20 @@ implements DOIConnector
     }
     
   //TODO adaptar a Crossref/fijarse si se sigue usando....
+    /**
+     * Check if specified DOI is already registered at Crossref.
+     * @param doi   the DOI to check if registered.
+     * @return
+     * @throws DOIIdentifierException
+     */
     protected DataCiteResponse sendDOIGetRequest(String doi)
             throws DOIIdentifierException
     {
-        //Fijarse de usar la XML API de Crossref, usando el parámetro
-        return sendGetRequest(doi, SUBMISSION_PATH, null);
+        List<NameValuePair> doiToQueryParams = new ArrayList<NameValuePair>();
+        doiToQueryParams.add(new BasicNameValuePair(QUERY_PID, this.getUsername() + ":" + this.getPassword()));
+        doiToQueryParams.add(new BasicNameValuePair(QUERY_DOI_FIELD, doi.substring(DOI.SCHEME.length())));
+        doiToQueryParams.add(new BasicNameValuePair(QUERY_FORMAT_PARAM, CROSSREF_UNIXREF_FORMAT));
+        return this.sendGetRequest(doi, QUERY_PATH, doiToQueryParams);
     }
   
   //TODO adaptar a Crossref/fijarse si se sigue usando....
@@ -1007,7 +1060,7 @@ implements DOIConnector
     protected String extractDOI(Element root){
         String xpath_expression = "//crossref:doi_data/crossref:doi";
         Element doiElement = getElementFromPath(root, xpath_expression, "crossref", root.getNamespaceURI());
-        return (null == doiElement) ? null : doiElement.getTextTrim();
+        return (null == doiElement || doiElement.getTextTrim().isEmpty()) ? null : doiElement.getTextTrim();
     }
 
     /**
