@@ -12,6 +12,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
+import org.dspace.content.WorkspaceItem;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.event.Consumer;
@@ -21,6 +22,8 @@ import org.dspace.identifier.IdentifierException;
 import org.dspace.identifier.IdentifierNotFoundException;
 import org.dspace.search.SearchConsumer;
 import org.dspace.utils.DSpace;
+import org.dspace.workflow.WorkflowItem;
+import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 
 /**
  *
@@ -77,6 +80,14 @@ public class DOIConsumer implements Consumer
         {
             log.warn("DOIConsumer cannot handles items without DOIs, skipping: "
                     + event.toString());
+            //When this exception happens means that no doi exists in DOI table. During a normal workflow/submission,
+            //the item is expected to has no DOI, because it is assigned once it is archived. To avoid the
+            //generation of innecesary logs when in submission/workflow process, then we must handle this exception properly.
+            if(WorkspaceItem.findByItem(ctx, (Item)dso) != null |
+                    XmlWorkflowItem.findByItem(ctx, (Item)dso) != null | WorkflowItem.findByItem(ctx, (Item)dso) != null) {
+                //Item is in workflow (traditional or XML configurable), it is so expected. Hence stop consumer execution...
+                return;
+            }
         }
         try
         {
