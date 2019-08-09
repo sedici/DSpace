@@ -69,6 +69,14 @@ public class DOIConsumer implements Consumer
         }
         Item item = (Item) dso;
         
+        //When an item comes from workflow/submission process (IS NOT ARCHIVED), then no doi exists in DOI table. This is
+        //because a DOI is assigned once an item is archived. A verification is added to avoid the generation
+        //of unnecessary logs after ARCHIVE process, caused by the absence of DOI before this process.
+        if(!item.isArchived()) {
+            //Item is not in archive (i.e. comes from submission/workflow), it is so expected. Hence stop consumer execution...
+            return;
+        }
+        
         DOIIdentifierProvider provider = new DSpace().getSingletonService(
                 DOIIdentifierProvider.class);
         
@@ -80,14 +88,6 @@ public class DOIConsumer implements Consumer
         {
             log.warn("DOIConsumer cannot handles items without DOIs, skipping: "
                     + event.toString());
-            //When this exception happens means that no doi exists in DOI table. During a normal workflow/submission,
-            //the item is expected to has no DOI, because it is assigned once it is archived. To avoid the
-            //generation of innecesary logs when in submission/workflow process, then we must handle this exception properly.
-            if(WorkspaceItem.findByItem(ctx, (Item)dso) != null |
-                    XmlWorkflowItem.findByItem(ctx, (Item)dso) != null | WorkflowItem.findByItem(ctx, (Item)dso) != null) {
-                //Item is in workflow (traditional or XML configurable), it is so expected. Hence stop consumer execution...
-                return;
-            }
         }
         try
         {
