@@ -128,8 +128,12 @@ implements DOIConnector
 
     protected String USERNAME;
     protected String PASSWORD;
+
+    /**
+     * Variable to keep the current action the connector is applying against CrossrefAPI.
+     */
+    private String actionSuffix;
     
-    private String PROCESSING_DATE;
 
     //CRossref PARAMETERS names & values
     public static String OPERATION_PARAM = "operation";
@@ -163,13 +167,17 @@ implements DOIConnector
      */
     public static String CROSSREF_UNIXREF_FORMAT = "unixref";
     
+    /** Constants to specify a REGISTRATION action against Crossref API. **/
+    public static String CROSSREF_REGISTER_ACTION = "registration";
+    /** Constants to specify an UPDATE action against Crossref API. **/
+    public static String CROSSREF_UPDATE_ACTION = "update";
     
     public CrossrefConnector()
     {
         this.xwalk = null;
         this.USERNAME = null;
         this.PASSWORD = null;
-        this.PROCESSING_DATE = null;
+        this.actionSuffix = null;
     }
 
     /**
@@ -318,17 +326,17 @@ implements DOIConnector
      * the name of the deposited file at "/deposit".
      */
     private String getDepositFileName(String doi) {
-        return DEPOSIT_PREFIX_FILENAME + "_" + doi.substring(DOI.SCHEME.length()).replace("/", "_") + "_" + PROCESSING_DATE  + XML_EXTENSION;
-    }
-    
-    /**
-     * Set the exact time for the process of this connector.
-     */
-    private void initProcessingDate() {
-        DateFormat df = new SimpleDateFormat("yy-MM-dd_HHmmss.SSS");
-        PROCESSING_DATE = df.format(new Date());
+        return DEPOSIT_PREFIX_FILENAME + "_" + doi.substring(DOI.SCHEME.length()).replace("/", "_") + "_" + actionSuffix  + XML_EXTENSION;
     }
 
+    private void setAction(String action) {
+        if(action != null && (action == CROSSREF_REGISTER_ACTION || action == CROSSREF_UPDATE_ACTION)) {
+            actionSuffix = action;
+        } else {
+            throw new RuntimeException("You must specify a valid CROSSREF ACTION ('"+ CROSSREF_REGISTER_ACTION +"' OR '"+ CROSSREF_UPDATE_ACTION  +"')!");
+        }
+    }
+    
     /**
      * In Crossref context, there is no exists the concept of reservation. So always return @true.
      */
@@ -527,7 +535,16 @@ implements DOIConnector
                     + "Will not be registered again.", DOIIdentifierException.DOI_ALREADY_EXISTS);
         }
 
-        initProcessingDate();
+        //Check if a DOI was sent for register in a previous time, by polling the Crossref submission queue... 
+        if (this.isAtSubmissionQueue(context, doi))
+        {
+            checkSubmissionProcess(doi);
+            //If no exception raise at this point, it means that file at submission queue was successfully processed.
+            return;
+        }
+        //There no exists submission made previosuly in time, so proceed with normal register submission process.
+
+        setAction(CROSSREF_REGISTER_ACTION);
 
         Element root = prepareDSOForDisseminate(dso, doi);
         
@@ -581,9 +598,7 @@ implements DOIConnector
             }
         }
         // Check at "submissionDownload" the result of metadata send to "/deposit" in the previous step
-        //FIXME (Ver ticket#5914) Por ahora, se elimina la etapa de revisión del envío, hasta encontrar una solución factible...
-        //checkSubmissionProcess(doi);
-        
+        checkSubmissionProcess(doi);
     }
 
     /**
@@ -674,7 +689,7 @@ implements DOIConnector
 
     /**
      * Check at "/submissionDownload" the result of metadata send to "/deposit" related to the "doi" parameter value.
-     * Raise an exception only if the submission was not processed correctly or another problem exists.
+     * Raise an exception ONLY if the submission was not processed correctly or another problem exists.
      * @param doi   the doi to check its submission state at Crossref.
      * @throws DOIIdentifierException if the submission for doi specified does not exists in Crossref, if the deposit
      *              was made with errors, and if the XML submitted was invalid.
@@ -746,12 +761,13 @@ implements DOIConnector
      * Get the status of a Deposit through "/deposit" endpoint. Further information at https://support.crossref.org/hc/en-us/articles/217515926.
      * @param doi
      * @return
-     * @throws DOIIdentifierException 
+     * @throws DOIIdentifierException if there was no success while retrieving the submissions results for a given DOI identifier.
      */
     protected DataCiteResponse pollResultsForSentMetadata(String doi) throws DOIIdentifierException {
         List<NameValuePair> submissionParams = new ArrayList<NameValuePair>();
+        String depositFilename = getDepositFileName(doi);
         submissionParams.add(new BasicNameValuePair(SBMDW_TYPE_PARAM, SBMDW_TYPE_RESULT));
-        submissionParams.add(new BasicNameValuePair(SBMDW_FNAME, this.getDepositFileName(doi)));
+        submissionParams.add(new BasicNameValuePair(SBMDW_FNAME, depositFilename));
         submissionParams.add(new BasicNameValuePair(SBMDW_USERNAME, this.getUsername()));
         submissionParams.add(new BasicNameValuePair(SBMDW_PASSWORD, this.getPassword()));
         DataCiteResponse submissionResp = this.sendGetRequest(doi, SUBMISSION_PATH, submissionParams);
@@ -762,12 +778,32 @@ implements DOIConnector
             default:
                 log.warn("While polling Crossref submission result for FILENAME {}, we got a http status code "
                         + "{} and the message \"{}\".", new String[]
-                        {getDepositFileName(doi), Integer.toString(submissionResp.getStatusCode()), submissionResp.getContent()});
+                        {depositFilename, Integer.toString(submissionResp.getStatusCode()), submissionResp.getContent()});
                 throw new DOIIdentifierException("The query to Crossref Subsmission endpoint (path='" + SCHEME + HOST + SUBMISSION_PATH +"') was not successful "
                         + "(status_code = " + submissionResp.getStatusCode() + "). Please have a look into DSpace logs.",
                         DOIIdentifierException.BAD_ANSWER);
         }
         return submissionResp;
+    }
+
+    /**
+     * Check if a certain DOI is waiting for registration at submission queue or it has been registered by Crossref...
+     * @param context
+     * @param doi   the DOI to check if is at submission queue.
+     * @return
+     * @throws DOIIdentifierException if submission queue response cannot be parsed or there was an unknown error while retrieving it.
+     */
+    private boolean isAtSubmissionQueue(Context context, String doi) throws DOIIdentifierException {
+        try {
+            return parseXMLContent(pollResultsForSentMetadata(doi).getContent()) != null;
+        } catch (JDOMException e) {
+            String depositFilename = getDepositFileName(doi);
+            log.warn("There got an error while parsing '/submissionDownload' response, while checking if a file is at submission queue, filename=" + depositFilename);
+            throw new DOIIdentifierException("Got a JDOMException while parsing "
+                    + "a response from the Crossref Submission results ('/submissionDownload') endpoint,"
+                    + "filename=" + depositFilename, e,
+                    DOIIdentifierException.BAD_ANSWER);
+        }
     }
 
     @Override
@@ -781,7 +817,16 @@ implements DOIConnector
             throw new DOIIdentifierException("Trying to update metadata for DOI=" + doi + 
                     ", that is not registered at Crossref!", DOIIdentifierException.DOI_DOES_NOT_EXIST);
         }
-        initProcessingDate();
+        //Check if a DOI was sent for update in a previous time, by polling the Crossref submission queue... 
+        if (this.isAtSubmissionQueue(context, doi))
+        {
+            checkSubmissionProcess(doi);
+            //If no exception raise at this point, it means that file at submission queue was successfully processed.
+            return;
+        }
+        //There no exists submission made previosuly in time, so proceed with normal update submission process.
+
+        setAction(CROSSREF_UPDATE_ACTION);
 
         Element root = prepareDSOForDisseminate(dso, doi);
         
@@ -939,15 +984,15 @@ implements DOIConnector
         File tmp = null;
         try
         {
-            String filename = this.getDepositFileName(doi);
-            tmp = File.createTempFile(filename.substring(0, filename.indexOf(XML_EXTENSION)), XML_EXTENSION);
+            String depositFilename = this.getDepositFileName(doi);
+            tmp = File.createTempFile(depositFilename.substring(0, depositFilename.indexOf(XML_EXTENSION)), XML_EXTENSION);
             xout.output(metadataRoot, new FileWriter(tmp));
             MultipartEntityBuilder builder = 
                     MultipartEntityBuilder.create().setMode(HttpMultipartMode.STRICT)
                         .addTextBody(OPERATION_PARAM, DOMD_UPLOAD)
                         .addTextBody(DOMD_LOGIN, this.getUsername())
                         .addTextBody(DOMD_PASSWD, this.getPassword())
-                        .addBinaryBody(DOMD_FNAME, tmp, ContentType.TEXT_XML, this.getDepositFileName(doi));
+                        .addBinaryBody(DOMD_FNAME, tmp, ContentType.TEXT_XML, depositFilename);
             HttpEntity entity = builder.build();
             httppost.setEntity(entity);
             
