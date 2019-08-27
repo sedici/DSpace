@@ -40,6 +40,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.DSpaceObject;
+import org.dspace.content.Item;
 import org.dspace.content.crosswalk.CrosswalkException;
 import org.dspace.content.crosswalk.DisseminationCrosswalk;
 import org.dspace.core.Context;
@@ -134,6 +135,11 @@ implements DOIConnector
      */
     private String actionSuffix;
     
+    /**
+     * OPTIONAL variable used to specify a time to concat to the crossref deposit filename. Recommended specially when make an metadata UPDATE.
+     */
+    private String timeSuffix;
+    
 
     //CRossref PARAMETERS names & values
     public static String OPERATION_PARAM = "operation";
@@ -178,6 +184,7 @@ implements DOIConnector
         this.USERNAME = null;
         this.PASSWORD = null;
         this.actionSuffix = null;
+        this.timeSuffix = null;
     }
 
     /**
@@ -255,6 +262,7 @@ implements DOIConnector
     }
     
     
+
     @Autowired
     @Required
     public void setConfigurationService(ConfigurationService configurationService)
@@ -326,8 +334,11 @@ implements DOIConnector
      * the name of the deposited file at "/deposit".
      */
     private String getDepositFileName(String doi) {
-        return DEPOSIT_PREFIX_FILENAME + "_" + doi.substring(DOI.SCHEME.length()).replace("/", "_") + "_" + actionSuffix  + XML_EXTENSION;
+        return DEPOSIT_PREFIX_FILENAME + "_" + doi.substring(DOI.SCHEME.length()).replace("/", "_") + "_" + actionSuffix  
+                + ((this.timeSuffix != null && !this.timeSuffix.isEmpty())? "_" + this.timeSuffix : "") + XML_EXTENSION;
     }
+    
+    
 
     private void setAction(String action) {
         if(action != null && (action == CROSSREF_REGISTER_ACTION || action == CROSSREF_UPDATE_ACTION)) {
@@ -336,7 +347,12 @@ implements DOIConnector
             throw new RuntimeException("You must specify a valid CROSSREF ACTION ('"+ CROSSREF_REGISTER_ACTION +"' OR '"+ CROSSREF_UPDATE_ACTION  +"')!");
         }
     }
-    
+
+    private void setTimeSuffix(Date time) {
+        DateFormat df = new SimpleDateFormat("yy-MM-dd_HHmmss.SSS");
+        this.timeSuffix = df.format(time);
+    }
+
     /**
      * In Crossref context, there is no exists the concept of reservation. So always return @true.
      */
@@ -384,7 +400,7 @@ implements DOIConnector
             {
                 Document queryResult = null;
                 try {
-                    queryResult = parseXMLContent(response.getContent());
+                    queryResult = CrossrefHelper.parseXMLContent(response.getContent());
                     if(queryResult == null) {
                         throw new DOIIdentifierException("Unable to obtain Crossref DOI-To-Query results ('/query') "
                                 + "for DOI=" + doi + ". The response is empty...", DOIIdentifierException.INTERNAL_ERROR);
@@ -399,7 +415,7 @@ implements DOIConnector
                 if (null == dso)
                 {
                             Element queryRoot = queryResult.getRootElement();
-                            Element errorTagLookup = getElementFromPath(queryRoot, "/doi_records/doi_record/crossref/error", "", queryRoot.getNamespaceURI());
+                            Element errorTagLookup = CrossrefHelper.getElementFromPath(queryRoot, "/doi_records/doi_record/crossref/error", "", queryRoot.getNamespaceURI());
                             //If there is no <error> tag in the XML response, then there exists a records in Crossref for specified DOI...
                             return (errorTagLookup == null)? true : false;
                 }
@@ -516,6 +532,7 @@ implements DOIConnector
     public void registerDOI(Context context, DSpaceObject dso, String doi)
             throws DOIIdentifierException
     {
+
         // check if the DOI is already registered online
         if (this.isDOIRegistered(context, doi))
         {
@@ -536,15 +553,16 @@ implements DOIConnector
         }
 
         //Check if a DOI was sent for register in a previous time, by polling the Crossref submission queue... 
+        this.setAction(CROSSREF_REGISTER_ACTION);
         if (this.isAtSubmissionQueue(context, doi))
         {
+            //FIXME (!!!) si en la linea de comandos se manda dos veces seguidas el register para un mismo item (ya sea por error o intencial), durante la primera se registra, durante la segunda trata de ver si ya esta registrado, pero como los endpoints de consulta Crossref todavia no fueron actualizados, entonces Crossref indica que todavia NO existe el DOI por el que preguntamos, entonces finaliza todo duplicando el metadato DOI (aunque no envia dos veces el submission file). 
             checkSubmissionProcess(doi);
+            //FIXME Habria que tirar una exception en este caso si el envio a "/submissionDownload" fue procesado con éxito y además el ítem YA POSEE un dx.doi asignado con el prefijo institucional...
             //If no exception raise at this point, it means that file at submission queue was successfully processed.
             return;
         }
         //There no exists submission made previosuly in time, so proceed with normal register submission process.
-
-        setAction(CROSSREF_REGISTER_ACTION);
 
         Element root = prepareDSOForDisseminate(dso, doi);
         
@@ -667,7 +685,7 @@ implements DOIConnector
      */
     private void checkCrossrefErrors(Element root, DSpaceObject dso) throws DOIIdentifierException {
         String xpath_expression = "//dspaceCrswalk:error";
-        List<Element> errorElements = getElementsFromPath(root, xpath_expression, "dspaceCrswalk",
+        List<Element> errorElements = CrossrefHelper.getElementsFromPath(root, xpath_expression, "dspaceCrswalk",
                 "http://www.dspace.org/xmlns/dspace/crosswalk");
         if (errorElements != null) {
             StringBuffer errors = new StringBuffer();
@@ -700,13 +718,13 @@ implements DOIConnector
         String depositFilename = getDepositFileName(doi);
         try {
             submissionResultResponse = pollResultsForSentMetadata(doi).getContent();
-            submissionResultDoc = parseXMLContent(submissionResultResponse);
+            submissionResultDoc = CrossrefHelper.parseXMLContent(submissionResultResponse);
             if(submissionResultDoc == null) {
                 throw new DOIIdentifierException("Unable to obtain Crossref Submission result ('/submissionDownload') "
                         + "for filename=" + depositFilename + ". The response is empty...", DOIIdentifierException.INTERNAL_ERROR);
             } else {
                 Element submissionRoot = submissionResultDoc.getRootElement();
-                Attribute doi_batch_status = getAttributeFromPath(submissionRoot, "/doi_batch_diagnostic/@status");
+                Attribute doi_batch_status = CrossrefHelper.getAttributeFromPath(submissionRoot, "/doi_batch_diagnostic/@status");
                 if(doi_batch_status != null && doi_batch_status.getValue().equalsIgnoreCase(DBD_STATUS_UNKNOWN)) {
                     log.warn("Crossref Submission for filename='{}' no exists at crossref submission queue.", depositFilename);
                     throw new DOIIdentifierException("Unable to obtain Crossref Submission result ('/submissionDownload'). "
@@ -714,10 +732,10 @@ implements DOIConnector
                 } else if(doi_batch_status != null && doi_batch_status.getValue().equalsIgnoreCase(DBD_STATUS_COMPLETED)) {
                     // Checking if DOI was processed successfully...
                     // More info at https://support.crossref.org/hc/en-us/articles/214337306-Interpreting-Submission-Logs#log1
-                    Element doi_batch_record_count = getElementFromPath(submissionRoot, "/doi_batch_diagnostic/batch_data/record_count");
-                    Element doi_batch_success_count = getElementFromPath(submissionRoot, "/doi_batch_diagnostic/batch_data/success_count");
-                    Element doi_batch_failure_count = getElementFromPath(submissionRoot, "/doi_batch_diagnostic/batch_data/failure_count");
-                    Element doi_batch_warning_count = getElementFromPath(submissionRoot, "/doi_batch_diagnostic/batch_data/warning_count");
+                    Element doi_batch_record_count = CrossrefHelper.getElementFromPath(submissionRoot, "/doi_batch_diagnostic/batch_data/record_count");
+                    Element doi_batch_success_count = CrossrefHelper.getElementFromPath(submissionRoot, "/doi_batch_diagnostic/batch_data/success_count");
+                    Element doi_batch_failure_count = CrossrefHelper.getElementFromPath(submissionRoot, "/doi_batch_diagnostic/batch_data/failure_count");
+                    Element doi_batch_warning_count = CrossrefHelper.getElementFromPath(submissionRoot, "/doi_batch_diagnostic/batch_data/warning_count");
                     if(doi_batch_record_count == null || doi_batch_success_count == null 
                             || doi_batch_failure_count == null || doi_batch_warning_count == null) {
                         throw new JDOMException("batch_data element at doi_batch_diagnostic has no the data structure required! Response was \n" + submissionResultResponse);
@@ -795,21 +813,29 @@ implements DOIConnector
      */
     private boolean isAtSubmissionQueue(Context context, String doi) throws DOIIdentifierException {
         try {
-            return parseXMLContent(pollResultsForSentMetadata(doi).getContent()) != null;
+            Document submissionResultDoc = CrossrefHelper.parseXMLContent(pollResultsForSentMetadata(doi).getContent());
+            if(submissionResultDoc != null) {
+                Element submissionRoot = submissionResultDoc.getRootElement();
+                Attribute doi_batch_status = CrossrefHelper.getAttributeFromPath(submissionRoot, "/doi_batch_diagnostic/@status");
+                if(doi_batch_status != null && !doi_batch_status.getValue().equalsIgnoreCase(DBD_STATUS_UNKNOWN)) {
+                    //Returns @true because the submission is at queue, regardless it was completed or not.
+                    return true;
+                }
+            }
+            return false;
         } catch (JDOMException e) {
             String depositFilename = getDepositFileName(doi);
             log.warn("There got an error while parsing '/submissionDownload' response, while checking if a file is at submission queue, filename=" + depositFilename);
             throw new DOIIdentifierException("Got a JDOMException while parsing "
                     + "a response from the Crossref Submission results ('/submissionDownload') endpoint,"
-                    + "filename=" + depositFilename, e,
-                    DOIIdentifierException.BAD_ANSWER);
+                    + "filename=" + depositFilename, e, DOIIdentifierException.BAD_ANSWER);
         }
     }
 
     @Override
     public void updateMetadata(Context context, DSpaceObject dso, String doi) 
             throws DOIIdentifierException
-    { 
+    {
         // check if doi is registered
         if (!this.isDOIRegistered(context, doi))
         {
@@ -818,15 +844,17 @@ implements DOIConnector
                     ", that is not registered at Crossref!", DOIIdentifierException.DOI_DOES_NOT_EXIST);
         }
         //Check if a DOI was sent for update in a previous time, by polling the Crossref submission queue... 
+        this.setAction(CROSSREF_UPDATE_ACTION);
+        Item item = (Item) dso;
+        this.setTimeSuffix(item.getLastModified());
         if (this.isAtSubmissionQueue(context, doi))
         {
+            //FIXME no puedo determinar si el update actual es distinto al último update enviado a Crossref... Sino quizas la solución a esto es no chequear por los submission de updates y reenviarlos siempre...
             checkSubmissionProcess(doi);
-            //If no exception raise at this point, it means that file at submission queue was successfully processed.
+            //If no exception raise at this point, it means that UPDATE file at submission queue was successfully processed.
             return;
         }
         //There no exists submission made previosuly in time, so proceed with normal update submission process.
-
-        setAction(CROSSREF_UPDATE_ACTION);
 
         Element root = prepareDSOForDisseminate(dso, doi);
         
@@ -1198,7 +1226,7 @@ implements DOIConnector
      */
     protected String extractDOI(Element root){
         String xpath_expression = "//crossref:doi_data/crossref:doi";
-        Element doiElement = getElementFromPath(root, xpath_expression, "crossref", root.getNamespaceURI());
+        Element doiElement = CrossrefHelper.getElementFromPath(root, xpath_expression, "crossref", root.getNamespaceURI());
         return (null == doiElement || doiElement.getTextTrim().isEmpty()) ? null : doiElement.getTextTrim();
     }
 
@@ -1217,7 +1245,7 @@ implements DOIConnector
         }
         //Get first child of <body> (considering that only one child exists at this moment), i.e., journal, dissertation, book, etc.
         String xpath_expression = "//crossref:doi_data/crossref:doi";
-        Element doiTag = getElementFromPath(root, xpath_expression, "crossref", root.getNamespaceURI());
+        Element doiTag = CrossrefHelper.getElementFromPath(root, xpath_expression, "crossref", root.getNamespaceURI());
         if(doiTag == null) {
             throw new DOIIdentifierException("Cannot add DOI for disseminated XML Crossref. Please check your XSL crosswalk.");
         }
@@ -1225,105 +1253,6 @@ implements DOIConnector
         return root;
     }
 
-    /**
-     * Please use the {@code getElementsFromPath} instead this, unless necessary.
-     * Get all nodes objects within XML data tied to the specified XPATH expression.
-     * @return a list of all nodes objects tied to XPATH or @null if the XPATH does not match.
-     */
-    private List<?> getNodesFromPath(Element root, String xpath_expression, String ns_prefix, String ns_uri) {
-        List<?> targetNodes = null;
-        XPath xpathDOI;
-        Document doc;
-        try {
-            xpathDOI = XPath.newInstance(xpath_expression);
-            xpathDOI.addNamespace(ns_prefix, ns_uri);
-            if(root.getDocument() != null) {
-                doc = root.getDocument();
-            } else {
-                doc = new Document(root);
-            }
-            targetNodes = xpathDOI.selectNodes(doc);
-        } catch (JDOMException e) {
-            log.error("Incorrect XPATH expression!! Please check it. (XPATH =" + xpath_expression  + ")",  e.getMessage());
-            //continue the normal code and return @null if this excepcion is raised...
-        }
-        return targetNodes;
-    }
-
-    /**
-     * Get an Element node object within XML data tied to the specified XPATH expression.
-     */
-    private List<Element> getElementsFromPath(Element root, String xpath_expression, String ns_prefix, String ns_uri) {
-        List<?> nodes = getNodesFromPath(root, xpath_expression, ns_prefix, ns_uri);
-        if (nodes == null || nodes.isEmpty()) {
-            return null;
-        }
-        List<Element> elements = new ArrayList<Element>();
-        for (Object node : nodes) {
-            elements.add((Element) node);
-        }
-        return elements;
-    }
-
-    /**
-     * Get an Element node object within XML data tied to the specified XPATH expression.
-     */
-    private Element getElementFromPath(Element root, String xpath_expression, String ns_prefix, String ns_uri) {
-        Element element = null;
-        List<?> nodes = getNodesFromPath(root, xpath_expression, ns_prefix, ns_uri);
-        if(nodes != null && !nodes.isEmpty()) {
-            element = (Element)(nodes.get(0));
-        }
-        return element;
-    }
-
-    /**
-     * Get an Attribute node object within XML data tied to the specified XPATH expression.
-     */
-    private Attribute getAttributeFromPath(Element root, String xpath_expression, String ns_prefix, String ns_uri) {
-        Attribute attribute = null;
-        List<?> nodes = getNodesFromPath(root, xpath_expression, ns_prefix, ns_uri);
-        if(nodes != null && !nodes.isEmpty()) {
-            attribute = (Attribute)(nodes.get(0));
-        }
-        return attribute;
-    }
-    
-    /**
-     * Get an Element within XML data tied to the specified XPATH expression. The namespace URI and prefix are considered empty.
-     * @return the Element node object tied to XPATH or @null if the XPATH does not match.
-     */
-    private Element getElementFromPath(Element root, String xpath_expression) {
-        return getElementFromPath(root, xpath_expression, "", "");
-    }
-    /**
-     * Get an Attribute within XML data tied to the specified XPATH expression. The namespace URI and prefix are considered empty.
-     * @return the Attribute node object tied to XPATH or @null if the XPATH does not match.
-     */
-    private Attribute getAttributeFromPath(Element root, String xpath_expression) {
-        return getAttributeFromPath(root, xpath_expression, "", "");
-    }
-    
-
-    /**
-     * Convert a target String in XML format to an JDom Documento object.
-     * @param XMLString     the String to convert
-     * @return a Document based on XMLString parameter content. Return null in case of empty or null for XMLString.
-     * @throws JDOMException     when cannot parse XMLString
-     */
-    private Document parseXMLContent(String XMLString) throws JDOMException {
-        if (XMLString == null){
-            return null;
-        }
-        try {
-            SAXBuilder builder = new SAXBuilder();
-            InputStream stream = new ByteArrayInputStream(XMLString.getBytes("UTF-8"));
-            return builder.build(stream);
-        } catch (IOException e) {
-            throw new RuntimeException("Got an IOException while reading from a string?!", e);
-        }
-    }
-    
     protected class DataCiteResponse
     {
         private final int statusCode;
