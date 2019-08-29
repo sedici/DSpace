@@ -54,16 +54,16 @@ import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.jdom.xpath.XPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+
+import ar.edu.unlp.sedici.dspace.identifier.doi.CrossrefHelper.Timer;
 
 /**
  *
@@ -117,6 +117,13 @@ implements DOIConnector
      * by spring dependency injection.
      */
     protected String CROSSWALK_NAME;
+
+    /** Indicate how many milliseconds the connector must wait polling the submission queue. **/
+    protected long submission_query_timeout;
+
+    /** Indicate interval time in milliseconds between every polling over submission queue. **/
+    protected long submission_query_interval;
+
     /** 
      * DisseminationCrosswalk to map local metadata into DataCite metadata.
      * The name of the crosswalk is set by spring dependency injection using
@@ -185,6 +192,8 @@ implements DOIConnector
         this.PASSWORD = null;
         this.actionSuffix = null;
         this.timeSuffix = null;
+        this.submission_query_timeout = 60000;
+        this.submission_query_interval = 1000;
     }
 
     /**
@@ -262,6 +271,17 @@ implements DOIConnector
     }
     
     
+    public void setSubmission_query_timeout(long submission_query_timeout) {
+        if(submission_query_timeout > 0) {
+            this.submission_query_timeout = submission_query_timeout;
+        }
+    }
+
+    public void setSubmission_query_interval(long submission_query_interval) {
+        if(submission_query_interval > 0) {
+            this.submission_query_interval = submission_query_interval;
+        }
+    }
 
     @Autowired
     @Required
@@ -554,14 +574,8 @@ implements DOIConnector
 
         //Check if a DOI was sent for register in a previous time, by polling the Crossref submission queue... 
         this.setAction(CROSSREF_REGISTER_ACTION);
-        if (this.isAtSubmissionQueue(context, doi))
+        if (!this.isAtSubmissionQueue(context, doi))
         {
-            //FIXME (!!!) si en la linea de comandos se manda dos veces seguidas el register para un mismo item (ya sea por error o intencial), durante la primera se registra, durante la segunda trata de ver si ya esta registrado, pero como los endpoints de consulta Crossref todavia no fueron actualizados, entonces Crossref indica que todavia NO existe el DOI por el que preguntamos, entonces finaliza todo duplicando el metadato DOI (aunque no envia dos veces el submission file). 
-            checkSubmissionProcess(doi);
-            //FIXME Habria que tirar una exception en este caso si el envio a "/submissionDownload" fue procesado con éxito y además el ítem YA POSEE un dx.doi asignado con el prefijo institucional...
-            //If no exception raise at this point, it means that file at submission queue was successfully processed.
-            return;
-        }
         //There no exists submission made previosuly in time, so proceed with normal register submission process.
 
         Element root = prepareDSOForDisseminate(dso, doi);
@@ -615,8 +629,37 @@ implements DOIConnector
                         DOIIdentifierException.BAD_ANSWER);
             }
         }
-        // Check at "submissionDownload" the result of metadata send to "/deposit" in the previous step
-        checkSubmissionProcess(doi);
+        //If recently metadata file was submitted to Crossref Submission queue, data is not available instantly, so wait a few milliseconds before polling it.
+        CrossrefHelper.makeDelay(5000); //wait 5 second
+        }
+        //Checking if submission file for metadata REGISTRATION was processed.
+        Timer timer = CrossrefHelper.createTimer(submission_query_timeout, submission_query_interval);
+        while(!timer.isTimedOut()) {
+            //FIXME (!!!) si en la linea de comandos se manda dos veces seguidas el register para un mismo item (ya sea por error o intencial), durante la primera se registra, durante la segunda trata de ver si ya esta registrado, pero como los endpoints de consulta Crossref todavia no fueron actualizados, entonces Crossref indica que todavia NO existe el DOI por el que preguntamos, entonces finaliza todo duplicando el metadato DOI (aunque no envia dos veces el submission file). 
+            checkSubmissionProcess(doi);
+            //FIXME Habria que tirar una exception en este caso si el envio a "/submissionDownload" fue procesado con éxito y además el ítem YA POSEE un dx.doi asignado con el prefijo institucional...
+            
+            //Check if file submitted at Crossref Submission Queue was COMPLETED.
+            if(isSubmissionWithStatus(context, doi, DBD_STATUS_COMPLETED)) {
+                //If submission was processed correctly, then stop polling the queue.
+                break;
+            }
+            try {
+                timer.delay();
+            } catch (InterruptedException e) {
+                throw new DOIIdentifierException("Internal error ocurrs when polling submission queue at Crossref for DOI=" + doi, DOIIdentifierException.INTERNAL_ERROR);
+            }
+        }
+        //Check if REGISTRATION file at submission queue was successfully processed, if not, must raise an exception reporting this.
+        if(!isSubmissionWithStatus(context, doi, DBD_STATUS_COMPLETED)) {
+            log.info("Temporarily suspend the REGISTRATION process for DOI filename=" + getDepositFileName(doi) +", its submission file was not processed yet.");
+            throw new DOIIdentifierException("Submission filename="+ getDepositFileName(doi) +" for REGISTRATION was not processed yet. Retry later.");
+        } else {
+            //Make a final check, in case the file was processed instantly at Crossref AFTER timeout happens.
+            checkSubmissionProcess(doi);
+            //If no exception raise at this point, it means that file at submission queue was successfully processed.
+            log.info("Metadata REGISTRATION for DOI filename=" + getDepositFileName(doi) +" was succesfully processed.");
+        }
     }
 
     /**
@@ -712,7 +755,7 @@ implements DOIConnector
      * @throws DOIIdentifierException if the submission for doi specified does not exists in Crossref, if the deposit
      *              was made with errors, and if the XML submitted was invalid.
      */
-    private void checkSubmissionProcess(String doi) throws DOIIdentifierException {
+    protected void checkSubmissionProcess(String doi) throws DOIIdentifierException {
         Document submissionResultDoc = null;
         String submissionResultResponse = null;
         String depositFilename = getDepositFileName(doi);
@@ -805,30 +848,51 @@ implements DOIConnector
     }
 
     /**
-     * Check if a certain DOI is waiting for registration at submission queue or it has been registered by Crossref...
+     * Check if a certain DOI is waiting for registration at submission queue with the specified status...
      * @param context
      * @param doi   the DOI to check if is at submission queue.
-     * @return
+     * @param status    is the status to check for the submission (i.e. it can be "unknown_submission", "completed", ...)
+     * @return  @true if submission at queue has the specified status. 
      * @throws DOIIdentifierException if submission queue response cannot be parsed or there was an unknown error while retrieving it.
      */
-    private boolean isAtSubmissionQueue(Context context, String doi) throws DOIIdentifierException {
+    protected boolean isSubmissionWithStatus(Context context, String doi, String status) throws DOIIdentifierException {
+        String depositFilename = getDepositFileName(doi);
         try {
             Document submissionResultDoc = CrossrefHelper.parseXMLContent(pollResultsForSentMetadata(doi).getContent());
-            if(submissionResultDoc != null) {
-                Element submissionRoot = submissionResultDoc.getRootElement();
-                Attribute doi_batch_status = CrossrefHelper.getAttributeFromPath(submissionRoot, "/doi_batch_diagnostic/@status");
-                if(doi_batch_status != null && !doi_batch_status.getValue().equalsIgnoreCase(DBD_STATUS_UNKNOWN)) {
-                    //Returns @true because the submission is at queue, regardless it was completed or not.
-                    return true;
-                }
+            if(submissionResultDoc == null) {
+                throw new JDOMException("Crossref \"/submissionDownload\" response is empty!");
             }
-            return false;
+            Element submissionRoot = submissionResultDoc.getRootElement();
+            Attribute doi_batch_status = CrossrefHelper.getAttributeFromPath(submissionRoot, "/doi_batch_diagnostic/@status");
+            if(doi_batch_status != null && !doi_batch_status.getValue().isEmpty()) {
+                return doi_batch_status.getValue().equalsIgnoreCase(status);
+            } else {
+                throw new DOIIdentifierException("Error when retrieving Crossref Submission results ('/submissionDownload'),"
+                        + " for filename=" + depositFilename + ". There was not found any \"status\" attribute at doi_batch_diagnostic "
+                                + "response element, it is required!", DOIIdentifierException.BAD_ANSWER);
+            }
         } catch (JDOMException e) {
-            String depositFilename = getDepositFileName(doi);
             log.warn("There got an error while parsing '/submissionDownload' response, while checking if a file is at submission queue, filename=" + depositFilename);
             throw new DOIIdentifierException("Got a JDOMException while parsing "
                     + "a response from the Crossref Submission results ('/submissionDownload') endpoint,"
                     + "filename=" + depositFilename, e, DOIIdentifierException.BAD_ANSWER);
+        }
+    }
+    
+    /**
+     * Check if a certain DOI is waiting for registration at submission queue. If the DOI was not deposited yet,
+     * the "/submissionDownload" endpoint must response with a &lt;doi_batch_diagnostic status="unknown_submission" ...&gt; element...
+     * @param context
+     * @param doi   the DOI to check if is at submission queue.
+     * @return  @true if submission exists at queue and its status is not "unknown_submission"
+     * @throws DOIIdentifierException if submission queue response cannot be parsed or there was an unknown error while retrieving it.
+     */
+    protected boolean isAtSubmissionQueue(Context context, String doi) throws DOIIdentifierException {
+        if (!isSubmissionWithStatus(context, doi, DBD_STATUS_UNKNOWN)) {
+            //Returns @true because the submission is at queue, regardless it was completed or not.
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -847,15 +911,9 @@ implements DOIConnector
         this.setAction(CROSSREF_UPDATE_ACTION);
         Item item = (Item) dso;
         this.setTimeSuffix(item.getLastModified());
-        if (this.isAtSubmissionQueue(context, doi))
+        if (!this.isAtSubmissionQueue(context, doi))
         {
-            //FIXME no puedo determinar si el update actual es distinto al último update enviado a Crossref... Sino quizas la solución a esto es no chequear por los submission de updates y reenviarlos siempre...
-            checkSubmissionProcess(doi);
-            //If no exception raise at this point, it means that UPDATE file at submission queue was successfully processed.
-            return;
-        }
         //There no exists submission made previosuly in time, so proceed with normal update submission process.
-
         Element root = prepareDSOForDisseminate(dso, doi);
         
         checkCrossrefErrors(root, dso);
@@ -903,6 +961,34 @@ implements DOIConnector
                         + "Crossref API. Please have a look into DSpace logs.",
                         DOIIdentifierException.BAD_ANSWER);
             }
+        }
+        //If recently metadata file was submitted to Crossref Submission queue, data is not available instantly, so wait a few milliseconds before polling it.
+        CrossrefHelper.makeDelay(5000); //wait 5 second
+        }
+        //Checking if submission file for metadata UPDATE was processed.
+        Timer timer = CrossrefHelper.createTimer(submission_query_timeout, submission_query_interval);
+        while(!timer.isTimedOut()) {
+            checkSubmissionProcess(doi);
+            //Check if file submitted at Crossref Submission Queue was COMPLETED.
+            if(isSubmissionWithStatus(context, doi, DBD_STATUS_COMPLETED)) {
+                //If submission was processed correctly, then stop polling the queue.
+                break;
+            }
+            try {
+                timer.delay();
+            } catch (InterruptedException e) {
+                throw new DOIIdentifierException("Internal error ocurrs when polling submission queue at Crossref for DOI=" + doi, DOIIdentifierException.INTERNAL_ERROR);
+            }
+        }
+        //Check if UPDATE file at submission queue was successfully processed, if not, must raise an exception reporting this.
+        if(!isSubmissionWithStatus(context, doi, DBD_STATUS_COMPLETED)) {
+            log.info("Temporarily suspend the UPDATE process for DOI filename=" + getDepositFileName(doi) +", its submission file was not processed yet.");
+            throw new DOIIdentifierException("Submission filename="+ getDepositFileName(doi) +" for UPDATE was not processed yet. Retry later.");
+        } else {
+            //Make a final check, in case the file was processed instantly at Crossref after timeout.
+            checkSubmissionProcess(doi);
+            //If no exception raise at this point, it means that file at submission queue was successfully processed.
+            log.info("Metadata UPDATE for DOI filename=" + getDepositFileName(doi) +" was succesfully processed.");
         }
     }
     

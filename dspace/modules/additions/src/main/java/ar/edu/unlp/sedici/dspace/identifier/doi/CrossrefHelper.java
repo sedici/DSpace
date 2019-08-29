@@ -4,7 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.jdom.Attribute;
 import org.jdom.Document;
@@ -115,6 +117,60 @@ public class CrossrefHelper {
             return builder.build(stream);
         } catch (IOException e) {
             throw new RuntimeException("Got an IOException while reading from a string?!", e);
+        }
+    }
+    
+    public static Timer createTimer(long millisTimeout, long millisDelay) {
+        CrossrefHelper helper = new CrossrefHelper();
+        Timer timer = helper.new Timer(millisTimeout, millisDelay);
+        return timer;
+    }
+    
+    public static void makeDelay(long milliseconds) {
+        try {
+            TimeUnit.MILLISECONDS.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            log.warn("Some error happens when sleeping "+ milliseconds +" milliseconds at CrossrefHelper...");
+        }
+    }
+    
+    protected class Timer{
+        long millisTimeout;
+        long millisDelay;
+        Calendar initialTime;
+        Calendar timeOut;
+        
+        protected Timer(long millisTimeout, long millisDelay){
+            this.millisTimeout = millisTimeout;
+            this.millisDelay = millisDelay;
+            this.initialTime = Calendar.getInstance();
+            this.timeOut = Calendar.getInstance();
+            this.timeOut.setTimeInMillis(initialTime.getTimeInMillis() + millisTimeout);
+        }
+        /**
+         * Check if the timeout is finish.
+         * @return true if timeout has been reach.
+         */
+        protected boolean isTimedOut() {
+            return (getRemainingTimeout() <= 0);
+        }
+        
+        /**
+         * Sleep the timer for a while, according on the delay in milliseconds configured.
+         * @throws InterruptedException 
+         */
+        protected void delay() throws InterruptedException{
+            long finalDelay = millisDelay;
+            long remainingTimeout = getRemainingTimeout();
+            if(remainingTimeout < finalDelay) {
+                finalDelay = remainingTimeout;
+            }
+            //sleep
+            TimeUnit.MILLISECONDS.sleep(finalDelay);
+        }
+        
+        long getRemainingTimeout() {
+            return timeOut.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
         }
     }
 }
