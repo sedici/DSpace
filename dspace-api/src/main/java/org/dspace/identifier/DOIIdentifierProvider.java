@@ -982,4 +982,50 @@ public class DOIIdentifierProvider
             throw e;
         }
     }
+    
+    public void validate(Context context, DSpaceObject dso, String identifier) throws DOIIdentifierException {
+        String doi = DOI.formatIdentifier(identifier);
+
+        // ensure DOI belongs to dso regarding our db
+        TableRow doiRow = null;
+        try
+        {
+            doiRow = DatabaseManager.findByUnique(context, "Doi", "doi", doi.substring(DOI.SCHEME.length()));
+        }
+        catch (SQLException sqle)
+        {
+            log.warn("SQLException while searching a DOI in our db.", sqle);
+            throw new RuntimeException("Unable to retrieve information about "+
+                    "a DOI out of database.", sqle);
+        }
+        if (null == doiRow)
+        {
+            log.error("Cannot validate metadata for DOI {}: unable to find it in "
+                    + "our db.", doi);
+            throw new DOIIdentifierException("Unable to find DOI.",
+                    DOIIdentifierException.DOI_DOES_NOT_EXIST);
+        }
+        if (doiRow.getIntColumn("resource_id") != dso.getID() ||
+                doiRow.getIntColumn("resource_type_id") != dso.getType())
+        {
+            log.error("Refuse to validate metadata of DOI {} with the metadata of "
+                    + " an object ({}/{}) the DOI is not dedicated to.",
+                    new String[] {doi, dso.getTypeText(), Integer.toString(dso.getID())});
+            throw new DOIIdentifierException("Cannot update DOI metadata: "
+                    + "DOI and DSpaceObject does not match!",
+                    DOIIdentifierException.MISMATCH);
+        }
+
+        if (DELETED == doiRow.getIntColumn("status") ||
+                TO_BE_DELETED == doiRow.getIntColumn("status"))
+        {
+            throw new DOIIdentifierException("You tried to validate the metadata"
+                    + "of a DOI that is marked as DELETED.",
+                    DOIIdentifierException.DOI_IS_DELETED);
+        }
+        
+        connector.validateMetadata(context, dso, doi);
+        
+        //TODO determine what to do if validation was not successful. 
+    }
 }

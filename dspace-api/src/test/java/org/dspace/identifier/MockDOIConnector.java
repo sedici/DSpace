@@ -150,6 +150,11 @@ implements org.dspace.identifier.doi.DOIConnector
         
         registered.put(doi, new Integer(dso.getID()));
     }
+    
+    @Override
+    public void validateMetadata(Context context, DSpaceObject dso, String doi) throws DOIIdentifierException {
+        //Do nothing...
+    }
 
     @Override
     @Mock

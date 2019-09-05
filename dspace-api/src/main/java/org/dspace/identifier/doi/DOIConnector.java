@@ -100,4 +100,17 @@ public interface DOIConnector {
      */
     public void updateMetadata(Context context, DSpaceObject dso, String doi)
             throws DOIIdentifierException;
+    /**
+     * Sends a request to the DOI registry to verify if a specific DOI metadata were sucessfully 
+     * registered/updated. This method has only sense if the verification is not made at 
+     * registration/update time at DOI registry.
+     * 
+     * @param context
+     * @param dso
+     * @param doi
+     * @return 
+     * @throws DOIIdentifierException
+     */
+    public void validateMetadata(Context context, DSpaceObject dso, String doi) throws DOIIdentifierException;
+    
 }

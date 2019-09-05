@@ -152,6 +152,7 @@ implements DOIConnector
     //Doi Batch Diagnostics Schema constants
     //https://support.crossref.org/hc/en-us/articles/214337306-Interpreting-Submission-Logs
     public static String DBD_STATUS_UNKNOWN = "unknown_submission";
+    public static String DBD_STATUS_QUEUED = "queued";
     public static String DBD_STATUS_COMPLETED = "completed";
     public static String DBD_RECORD_DIAG_FAIL = "failure";
     public static String DBD_RECORD_DIAG_SUCC = "success";
@@ -321,8 +322,8 @@ implements DOIConnector
      * the name of the deposited file at "/deposit".
      */
     private String getDepositFileName(String doi) {
-        return DEPOSIT_PREFIX_FILENAME + "_" + doi.substring(DOI.SCHEME.length()).replace("/", "_") + "_"
-                + ((this.timeSuffix != null && !this.timeSuffix.isEmpty())? "_" + this.timeSuffix : "") + XML_EXTENSION;
+        return DEPOSIT_PREFIX_FILENAME + "_" + doi.substring(DOI.SCHEME.length()).replace("/", "_") + XML_EXTENSION;
+                //+ ((this.timeSuffix != null && !this.timeSuffix.isEmpty())? "_" + this.timeSuffix : "") + XML_EXTENSION;
     }
     
     private void setTimeSuffix(Date time) {
@@ -527,9 +528,6 @@ implements DOIConnector
             throw new DOIIdentifierException("DOI " + doi +" is already registered at Crossref. "
                     + "Will not be registered again.", DOIIdentifierException.DOI_ALREADY_EXISTS);
         }
-
-        Item item = (Item) dso;
-        this.setTimeSuffix(item.getLastModified());
 
         Element root = prepareDSOForDisseminate(dso, doi);
         
@@ -829,13 +827,7 @@ implements DOIConnector
             throw new DOIIdentifierException("Trying to update metadata for DOI=" + doi + 
                     ", that is not registered at Crossref!", DOIIdentifierException.DOI_DOES_NOT_EXIST);
         }
-        //Check if a DOI was sent for update in a previous time, by polling the Crossref submission queue... 
-        Item item = (Item) dso;
-        this.setTimeSuffix(item.getLastModified());
         
-        if (!this.isAtSubmissionQueue(context, doi))
-        {
-        //There no exists submission made previosuly in time, so proceed with normal update submission process.
         Element root = prepareDSOForDisseminate(dso, doi);
         
         checkCrossrefErrors(root, dso);
@@ -886,6 +878,29 @@ implements DOIConnector
         }
     }
     
+
+    @Override
+    public void validateMetadata(Context context, DSpaceObject dso, String doi) throws DOIIdentifierException {
+        String metadataFilename = getDepositFileName(doi);
+        //Check if a DOI was sent in a previous time, by polling the Crossref submission queue... 
+        if(isAtSubmissionQueue(context, doi)) {
+            checkSubmissionProcess(doi);
+            //Check if REGISTRATION file at submission queue was successfully processed, if not, must raise an exception reporting this.
+            if(!isSubmissionWithStatus(context, doi, DBD_STATUS_COMPLETED)) {
+                log.info("The submission file with filename=" + getDepositFileName(doi) +", vinculated to DOI="+ doi +", was not processed yet.");
+                throw new DOIIdentifierException("Submission filename="+ metadataFilename +" for DOI="+ doi +" was not processed yet. Retry later.");
+            }
+            //If no exception raise at this point, it means that file at submission queue was successfully processed.
+            log.info("Metadata submission filename=" + metadataFilename +" for DOI="+ doi +" was succesfully processed.");
+            
+        } else {
+            log.error("\"Error when retrieving Crossref Submission results ('/submissionDownload'),\"\n" + 
+                    "                    + \" for filename=\" + filename + \". There was not found any submission metadata file with this name!");
+            throw new DOIIdentifierException("Error when retrieving Crossref Submission results ('/submissionDownload'),"
+                    + " for filename=" + metadataFilename + ". The file was not found at Crossref Submission Queue!");
+        }
+    }
+
     //TODO adaptar a Crossref/fijarse si se sigue usando....
     protected DataCiteResponse sendMetadataDeleteRequest(String doi)
             throws DOIIdentifierException

@@ -22,6 +22,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Logger;
+import org.apache.log4j.helpers.QuietWriter;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.core.ConfigurationManager;
@@ -113,7 +114,7 @@ public class DOIOrganiser {
         options.addOption("q", "quiet", false,
                 "Turn the command line output off.");
         
-        Option registerDoi = OptionBuilder.withArgName("DOI|ItemID|handle")
+        Option registerDoi = OptionBuilder.withArgName("DOI|ItemID|handle [-v|--validate]")
                 .withLongOpt("register-doi")
                 .hasArgs(1)
                 .withDescription("Register a specified identifier. "
@@ -132,7 +133,7 @@ public class DOIOrganiser {
 
         options.addOption(reserveDoi);
 
-        Option update = OptionBuilder.withArgName("DOI|ItemID|handle")
+        Option update = OptionBuilder.withArgName("DOI|ItemID|handle [-v|--validate]")
                 .hasArgs(1)
                 .withDescription("Update online an object for a given DOI identifier"
                 + " or ItemID or Handle. A DOI identifier or an ItemID or a Handle is needed.\n")
@@ -140,6 +141,13 @@ public class DOIOrganiser {
                 .create();
 
         options.addOption(update);
+        
+        Option validate = OptionBuilder.withLongOpt("validate")
+                .withDescription("Specify this option if you must/want validate the metadata "
+                        + "submitted to the DOI registry when using some of the following params: -r, --register-doi, -u, --update-doi.")
+                .create("v");
+        
+        options.addOption(validate);
         
         Option delete = OptionBuilder.withArgName("DOI identifier")
                 .withLongOpt("delete-doi")
@@ -236,6 +244,16 @@ public class DOIOrganiser {
                             doiRow.getIntColumn("resource_id"));
                     organiser.register(doiRow, dso);
                 }
+                if (line.hasOption("validate") || line .hasOption('v')) {
+                    while(it.hasNext()) {
+                        TableRow doiRow = it.next();
+                        DSpaceObject dso = DSpaceObject.find(
+                                context, 
+                                doiRow.getIntColumn("resource_type_id"), 
+                                doiRow.getIntColumn("resource_id"));
+                        organiser.validate(doiRow, dso);
+                    }
+                }
             } catch (SQLException ex) {
                 System.err.println("Error in database connection:" + ex.getMessage());
                 ex.printStackTrace(System.err);
@@ -264,6 +282,16 @@ public class DOIOrganiser {
                             doiRow.getIntColumn("resource_type_id"), 
                             doiRow.getIntColumn("resource_id"));
                     organiser.update(doiRow, dso);
+                }
+                if (line.hasOption("validate") || line .hasOption('v')) {
+                    while(it.hasNext()) {
+                        TableRow doiRow = it.next();
+                        DSpaceObject dso = DSpaceObject.find(
+                                context, 
+                                doiRow.getIntColumn("resource_type_id"), 
+                                doiRow.getIntColumn("resource_id"));
+                        organiser.validate(doiRow, dso);
+                    }
                 }
             } catch (SQLException ex) {
                 System.err.println("Error in database connection:" + ex.getMessage());
@@ -357,6 +385,21 @@ public class DOIOrganiser {
                         ex.printStackTrace(System.err);
                     }
                 }
+                if (line.hasOption("validate") || line .hasOption('v')) {
+                    for(String identifier: identifiersList) {
+                        try {
+                            TableRow doiRow = organiser.findTableRow(identifier.trim());
+                            DSpaceObject dso = DSpaceObject.find(
+                                        context, 
+                                        doiRow.getIntColumn("resource_type_id"), 
+                                        doiRow.getIntColumn("resource_id"));
+                            organiser.validate(doiRow, dso);
+                        } catch (Exception ex) {
+                            LOG.error(ex);
+                            ex.printStackTrace(System.err);
+                        }
+                    }
+                }
             }
         }
         
@@ -385,6 +428,21 @@ public class DOIOrganiser {
                     } catch (Exception ex) {
                         LOG.error(ex);
                         ex.printStackTrace(System.err);
+                    }
+                }
+                if (line.hasOption("validate") || line .hasOption('v')) {
+                    for(String identifier: identifiersList) {
+                        try {
+                            TableRow doiRow = organiser.findTableRow(identifier.trim());
+                            DSpaceObject dso = DSpaceObject.find(
+                                        context, 
+                                        doiRow.getIntColumn("resource_type_id"), 
+                                        doiRow.getIntColumn("resource_id"));
+                            organiser.validate(doiRow, dso);
+                        } catch (Exception ex) {
+                            LOG.error(ex);
+                            ex.printStackTrace(System.err);
+                        }
                     }
                 }
             }
@@ -781,6 +839,22 @@ public class DOIOrganiser {
                         + DOI.SCHEME + doiRow.getStringColumn("doi")
                         + " online. Take a look in log file.");
             }
+        }
+    }
+    
+    public void validate(TableRow doiRow, DSpaceObject dso) {
+        String identifier = doiRow.getStringColumn("doi");
+        try {
+            provider.validate(context, dso, identifier);
+            if(!quiet)
+            {
+                System.out.println("This identifier: " 
+                                 + DOI.SCHEME + doiRow.getStringColumn("doi") 
+                                 + " is successfully validated.");
+            }
+        } catch (DOIIdentifierException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
     

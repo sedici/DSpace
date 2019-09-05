@@ -1042,6 +1042,12 @@ implements DOIConnector
         return root.addContent(0, identifier);
     }
 
+    @Override
+    public void validateMetadata(Context context, DSpaceObject dso, String doi) throws DOIIdentifierException {
+        // TODO Auto-generated method stub
+        
+    }
+
     protected class DataCiteResponse
     {
         private final int statusCode;
@@ -1063,4 +1069,5 @@ implements DOIConnector
             return this.content;
         }
     }
+
 }
