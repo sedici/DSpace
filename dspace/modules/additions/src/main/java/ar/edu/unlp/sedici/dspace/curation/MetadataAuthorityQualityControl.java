@@ -9,6 +9,7 @@ import org.dspace.content.authority.MetadataAuthorityManager;
 import org.dspace.curate.AbstractCurationTask;
 import org.dspace.curate.Curator;
 
+import com.hp.hpl.jena.sparql.engine.http.QueryExceptionHTTP;
 import com.hp.hpl.jena.sparql.expr.ExprException;
 
 import java.io.IOException;
@@ -107,7 +108,7 @@ public class MetadataAuthorityQualityControl extends AbstractCurationTask {
 						&& isMetadataToCheck(mtFieldName)) {
 					try {
 						checkMetadataAuthority(reporter, mt, item);
-					} catch (ExprException e) {
+					} catch (ExprException | QueryExceptionHTTP e) {
 						report(reporter, mt, "ERROR", "An error ocurred processing metadata: ", e.getMessage());
 						e.printStackTrace();
 					}
