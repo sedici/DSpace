@@ -142,8 +142,9 @@ function doWorkflow()
     do{
         sendPageAndWait("handle/"+handle+"/xmlworkflow/getTask",{"workflowID":workflowItemId,"stepID":step.getId(),"actionID":action.getId()});
 
-        if (cocoon.request.get("submit_edit"))
-        {
+        if(action == null){
+            nullActionResponse();
+        }else if (cocoon.request.get("submit_edit")) {
             var contextPath = cocoon.request.getContextPath();
             cocoon.sendPage("xmlworkflow/finalize");
             cocoon.redirectTo(contextPath+"/handle/"+handle+"/workflow_edit_metadata?"+"workflowID=X"+workflowItemId+"&stepID="+step.getId()+"&actionID="+action.getId(), true);
@@ -156,14 +157,17 @@ function doWorkflow()
         }else{
             action = XmlWorkflowManager.doState(getDSContext(), getDSContext().getCurrentUser(), getHttpRequest(), workflowItemId, workflow, action);
             if(action == null){
-                var contextPath = cocoon.request.getContextPath();
-                cocoon.sendPage("xmlworkflow/finalize");
-                cocoon.redirectTo(contextPath+"/submissions",true);
-                //getDSContext().complete();
-                cocoon.exit();
+                nullActionResponse();
             }
         }
-
     }while(true);
 
+}
+
+function nullActionResponse(){
+    var contextPath = cocoon.request.getContextPath();
+    cocoon.sendPage("xmlworkflow/finalize");
+    cocoon.redirectTo(contextPath+"/submissions",true);
+    //getDSContext().complete();
+    cocoon.exit();
 }

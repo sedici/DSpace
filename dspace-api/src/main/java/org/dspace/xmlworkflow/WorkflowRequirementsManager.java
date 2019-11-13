@@ -78,8 +78,11 @@ public class WorkflowRequirementsManager {
         int totalUsers = InProgressUser.getNumberOfInProgressUsers(c, wfi.getID()) + InProgressUser.getNumberOfFinishedUsers(c, wfi.getID());
 
         //Then remove the current user from the inProgressUsers
-        InProgressUser.findByWorkflowItemAndEPerson(c, wfi.getID(), user.getID()).delete();
-        
+        InProgressUser inProgressUser = InProgressUser.findByWorkflowItemAndEPerson(c, wfi.getID(), user.getID());
+        if (inProgressUser != null) {
+            inProgressUser.delete();
+        }
+
         //Make sure the removed user has his custom rights removed
         XmlWorkflowManager.removeUserItemPolicies(c, wfi.getItem(), user);
         
