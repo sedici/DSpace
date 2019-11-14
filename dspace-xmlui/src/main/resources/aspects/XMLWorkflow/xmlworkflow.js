@@ -122,9 +122,7 @@ function doWorkflow()
     var xmlWorkflowItem = XmlWorkflowItem.find(getDSContext(), workflowItemId);
     if(xmlWorkflowItem == null) {
         FlashMessagesUtil.setErrorMessage(getHttpRequest().getSession(), "sedici.XMLWorkflow.workflowitem.notfound");
-        cocoon.sendPage("xmlworkflow/finalize");
-        cocoon.redirectTo(contextPath+"/submissions",true);
-        cocoon.exit();
+        redirectToSubmissions();
     }
 
     var coll = xmlWorkflowItem.getCollection();
@@ -143,7 +141,8 @@ function doWorkflow()
         sendPageAndWait("handle/"+handle+"/xmlworkflow/getTask",{"workflowID":workflowItemId,"stepID":step.getId(),"actionID":action.getId()});
 
         if(action == null){
-            nullActionResponse();
+            FlashMessagesUtil.setErrorMessage(getHttpRequest().getSession(), "sedici.XMLWorkflow.workflowitem.notfound");
+            redirectToSubmissions();
         }else if (cocoon.request.get("submit_edit")) {
             var contextPath = cocoon.request.getContextPath();
             cocoon.sendPage("xmlworkflow/finalize");
@@ -157,17 +156,16 @@ function doWorkflow()
         }else{
             action = XmlWorkflowManager.doState(getDSContext(), getDSContext().getCurrentUser(), getHttpRequest(), workflowItemId, workflow, action);
             if(action == null){
-                nullActionResponse();
+                redirectToSubmissions();
             }
         }
     }while(true);
 
 }
 
-function nullActionResponse(){
+function redirectToSubmissions(){
     var contextPath = cocoon.request.getContextPath();
     cocoon.sendPage("xmlworkflow/finalize");
     cocoon.redirectTo(contextPath+"/submissions",true);
-    //getDSContext().complete();
     cocoon.exit();
 }
