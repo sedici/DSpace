@@ -79,9 +79,11 @@ public class WorkflowRequirementsManager {
 
         //Then remove the current user from the inProgressUsers
         InProgressUser inProgressUser = InProgressUser.findByWorkflowItemAndEPerson(c, wfi.getID(), user.getID());
-        if (inProgressUser != null) {
-            inProgressUser.delete();
+        if (inProgressUser == null) {
+            // Trying to unclaim a task already unclaimed. Skipping
+            return;
         }
+        inProgressUser.delete();
 
         //Make sure the removed user has his custom rights removed
         XmlWorkflowManager.removeUserItemPolicies(c, wfi.getItem(), user);
