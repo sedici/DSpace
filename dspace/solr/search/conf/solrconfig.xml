@@ -899,7 +899,7 @@
 		   *,score
 		</str>
 		<str name="mm">
-        3&lt;-25% 5&lt;-40% 8&lt;5
+        3&lt;-25% 5&lt;-40% 8&lt;4
 		</str>
 		<int name="ps">100</int>
      </lst>
