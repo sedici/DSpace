@@ -1,0 +1,25 @@
+version: "3"
+volumes:
+  dspace_data: {}
+  dspace_postgres: {}
+  maven_repository: {}
+services:
+  db:
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+  volumes:
+      - dspace_postgres:/var/lib/postgresql/data
+  dspace:
+    environment:
+      POSTGRES_DB_NAME: "${POSTGRES_DB}"
+      POSTGRES_DB_USER: "${POSTGRES_USER}"
+      POSTGRES_DB_PASS: "${POSTGRES_PASSWORD}"
+      CATALINA_OPTS: "-Xmx1024m -Xms512m -XX:MaxPermSize=256m"
+      DSPACE_WEBAPPS: "jspui xmlui mirage2 rest oai rdf sword swordv2"
+    volumes:
+      - dspace_data:/dspace/
+      - maven_repository:/root/.m2/
+    ports:
+      - "9090:8080"
