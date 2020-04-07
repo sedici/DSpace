@@ -17,6 +17,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
@@ -26,6 +27,7 @@ import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.content.Collection;
+import org.dspace.content.Community;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.core.Constants;
@@ -380,6 +382,39 @@ public class Util {
             sourceVersion = constants.getProperty("version", "none");
         }
         return sourceVersion;
+    }
+    
+    /**
+     *Tries to find a config definition according to a matching handle based on a collection's handle
+     * or its parent communities's handle.
+     * 
+     * @param collection Collection to start the searching from
+     * @return The config map's content associated to the matched handle or null if it could not find any match
+     * @throws SQLException when an error occurs getting parent communities
+     */
+    public static String findDefinitionInMap(Collection collection, Map<String,String> configMap) throws SQLException
+    {
+    	if(collection == null)
+    		return null;
+    	
+    	// Tries the collection first
+    	if(configMap.containsKey(collection.getHandle()))
+    	{
+    		return configMap.get(collection.getHandle());
+    	}
+    	else
+    	{
+			// Search through the community hierarchy in ascending order
+    		Community[] communities = collection.getCommunities();
+
+    		for(int i = 0 ; i < communities.length ; i++)
+    		{
+    	    	if(configMap.containsKey(communities[i].getHandle()))
+    	    		return configMap.get(communities[i].getHandle());
+    		}
+    		
+    		return null;
+    	}
     }
 
     /**

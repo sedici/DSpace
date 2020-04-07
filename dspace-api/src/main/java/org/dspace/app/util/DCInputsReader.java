@@ -8,6 +8,7 @@
 package org.dspace.app.util;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,6 +22,7 @@ import javax.xml.parsers.FactoryConfigurationError;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.content.Collection;
+import org.dspace.content.Community;
 import org.dspace.content.MetadataSchemaEnum;
 import org.dspace.core.Utils;
 import org.dspace.services.factory.DSpaceServicesFactory;
@@ -183,7 +185,7 @@ public class DCInputsReader {
             config = new SubmissionConfigReader().getSubmissionConfigByName(name);
             String formName = config.getSubmissionName();
             if (formName == null) {
-                throw new DCInputsReaderException("No form designated as default");
+            	throw new DCInputsReaderException("No form designated as default");
             }
             List<DCInputSet> results = new ArrayList<DCInputSet>();
             for (int idx = 0; idx < config.getNumberOfSteps(); idx++) {
@@ -196,6 +198,57 @@ public class DCInputsReader {
         } catch (SubmissionConfigReaderException e) {
             throw new DCInputsReaderException("No form designated as default", e);
         }
+    }
+
+    public DCInputSet getInputs(Collection collection)
+                throws DCInputsReaderException
+    {
+        	String formName;
+    	try
+    	{
+    		formName = getFormNameForCollection(collection);
+    	}
+    	catch(Exception e)
+    	{
+    		throw new DCInputsReaderException("Couldn't get the form definition for collection id "+collection.getID(), e);
+    	}
+        if (formName == null)
+        {
+        	throw new DCInputsReaderException("No form designated as default");
+        }
+        return getInputsByFormName(formName);
+ 	}
+
+    /**
+     * Look for a form definition for a collection or its parents communities.
+     * @param whichForms2 
+     * 
+     * @return The form name that should be used or null if it could not find any match
+     * @throws SQLException when an error occurs getting parent communities
+     */
+    public String getFormNameForCollection(Collection collection) throws SQLException
+    {
+    	if (collection == null)
+    	{
+    		return whichForms.get(DEFAULT_COLLECTION);
+    	}
+    	// Tries the collection first
+    	if(whichForms.containsKey(collection.getHandle()))
+    	{
+    		return whichForms.get(collection.getHandle());
+    	}
+    	else
+    	{
+			// Search through the community hierarchy in ascending order
+    		Community[] communities = collection.getCommunities();
+
+    		for(int i = 0 ; i < communities.length ; i++)
+    		{
+    	    	if(whichForms.containsKey(communities[i].getHandle()))
+    	    		return whichForms.get(communities[i].getHandle());
+    		}
+    	}
+    	return whichForms.get(DEFAULT_COLLECTION);
     }
 
     /**
@@ -287,6 +340,45 @@ public class DCInputsReader {
         }
         if (!foundDefs) {
             throw new DCInputsReaderException("No form definition found");
+        }
+    }
+
+    /**
+     * Process the form-map section of the XML file.
+     * Each element looks like:
+     *   <name-map collection-handle="hdl" form-name="name" />
+     * Extract the collection handle and form name, put name in hashmap keyed
+     * by the collection handle.
+     */
+    private void processMap(Node e)
+        throws SAXException
+    {
+        NodeList nl = e.getChildNodes();
+        int len = nl.getLength();
+        for (int i = 0; i < len; i++)
+        {
+                Node nd = nl.item(i);
+                if (nd.getNodeName().equals("name-map"))
+                {
+               		// preserves the collection-handle attribute for backward compatibility
+                        String id = getAttribute(nd, "collection-handle");
+                        String handle = getAttribute(nd, "handle");
+                        String value = getAttribute(nd, "form-name");
+                        String content = getValue(nd);
+                        if (id == null && handle == null)
+                        {
+                                throw new SAXException("name-map element is missing handle attribute");
+                        }
+                        if (value == null)
+                        {
+                                throw new SAXException("name-map element is missing form-name attribute");
+                        }
+                        if (content != null && content.length() > 0)
+                        {
+                                throw new SAXException("name-map element has content, it should be empty.");
+                        }
+                        whichForms.put(handle != null ? handle : id, value);
+                }  // ignore any child node that isn't a "name-map"
         }
     }
 

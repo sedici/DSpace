@@ -65,7 +65,7 @@ public class StatisticsClient {
 
         options.addOption("m", "mark-spiders", false, "Update isBot Flag in Solr");
         options.addOption("f", "delete-spiders-by-flag", false, "Delete Spiders in Solr By isBot Flag");
-        options.addOption("i", "delete-spiders-by-ip", false, "Delete Spiders in Solr By IP Address");
+        options.addOption("i", "delete-spiders", false, "Delete Spiders in Solr By Multiple Criteria: IP Address, User Agent, and Domain (from Reverse DNS Lookup)");
         options.addOption("o", "optimize", false, "Run maintenance on the SOLR index");
         options.addOption("b", "reindex-bitstreams", false, "Reindex the bitstreams to ensure we have the bundle name");
         options.addOption("e", "export", false,
@@ -87,11 +87,11 @@ public class StatisticsClient {
         if (line.hasOption("u")) {
             StatisticsClient.updateSpiderFiles();
         } else if (line.hasOption('m')) {
-            solrLoggerService.markRobotsByIP();
+            solrLoggerService.markRobots();
         } else if (line.hasOption('f')) {
             solrLoggerService.deleteRobotsByIsBotFlag();
         } else if (line.hasOption('i')) {
-            solrLoggerService.deleteRobotsByIP();
+            solrLoggerService.deleteRobots();
         } else if (line.hasOption('o')) {
             solrLoggerService.optimizeSOLR();
         } else if (line.hasOption('b')) {

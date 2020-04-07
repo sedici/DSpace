@@ -1,0 +1,42 @@
+<document xmlns="http://di.tamu.edu/DRI/1.0/"
+xmlns:i18n="http://apache.org/cocoon/i18n/2.1" version="1.1">
+
+<meta>
+	<pageMeta>
+		<metadata element="title">SEDICI - ¿Cómo llegar</metadata>
+	</pageMeta>
+</meta>
+
+<body>
+<div>
+
+<head>Cómo llegar</head>
+
+<div id='pagina_estatica' class="pagina_comoLlegar">
+
+<div id="como_llegar">
+<h1>SEDICI - UNLP</h1>
+<p>
+	Calle 49 y 115 s/n 1er piso
+	<br/>
+	Edificio ex Liceo
+	<br/>
+	1900 La Plata, Buenos Aires
+	<br/>
+	Tel: (0221) 423-6696/6677 int. 141   
+</p>
+</div>
+<div id="gmaps">
+<iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com.ar/maps?ie=UTF8&amp;cid=8758148143025525123&amp;q=PrEBI+and+SeDiCI+UNLP&amp;gl=AR&amp;hl=es-419&amp;t=m&amp;ll=-34.907261,-57.942431&amp;spn=0.006159,0.00912&amp;z=16&amp;iwloc=A&amp;output=embed">Map</iframe>
+</div>
+<div id="mapa_detalle">
+<a href="static/resources/mapa_grande.png" target="_blank" title="Mapa de SEDICI"><img src="static/resources/mapa_grande.png" title="Mapa de SEDICI" alt="Mapa"/></a>
+</div>
+
+</div>
+
+</div>
+</body>
+
+</document>
+

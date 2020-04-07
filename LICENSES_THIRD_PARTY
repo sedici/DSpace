@@ -300,6 +300,7 @@ https://wiki.duraspace.org/display/DSPACE/Code+Contribution+Guidelines
         * Hamcrest All (org.hamcrest:hamcrest-all:1.3 - https://github.com/hamcrest/JavaHamcrest/hamcrest-all)
         * Hamcrest Core (org.hamcrest:hamcrest-all:1.3 - https://github.com/hamcrest/JavaHamcrest/hamcrest-all)
         * JBibTeX (org.jbibtex:jbibtex:1.0.10 - http://www.jbibtex.org)
+        * JAXB2 Basics - Runtime (org.jvnet.jaxb2_commons:jaxb2-basics-runtime:0.9.5 - https://github.com/highsource/jaxb2-basics/jaxb2-basics-runtime)
         * ASM Core (org.ow2.asm:asm:4.1 - http://asm.objectweb.org/asm/)
         * ASM Analysis (org.ow2.asm:asm-analysis:4.1 - http://asm.objectweb.org/asm-analysis/)
         * ASM Commons (org.ow2.asm:asm-commons:4.1 - http://asm.objectweb.org/asm-commons/)

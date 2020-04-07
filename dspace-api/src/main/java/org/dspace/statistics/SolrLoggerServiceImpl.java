@@ -701,6 +701,24 @@ public class SolrLoggerServiceImpl implements SolrLoggerService, InitializingBea
         }
     }
 
+    /**
+     * <p>Mark usage registries as robots according to the following criterias:
+     * <ul>
+     * <li> by registry's IP</li>
+     * <li> by registry's userAgent</li>
+     * <li> by registry's domain (reverse DNS Lookup).</li>
+     * </ul>
+     * </p>
+     */
+    @Override
+    public void markRobots() {
+        log.info("Marking robots by User Agent starting now...");
+        SolrLogger.markRobotsByUserAgent();
+        log.info("Marking robots by IP starting now...");
+        SolrLogger.markRobotsByIP();
+        log.info("Marking robots by Domain starting now...");
+        SolrLogger.markRobotsByDomain();
+    }
 
     @Override
     public void markRobotsByIP() {
@@ -780,6 +798,26 @@ public class SolrLoggerServiceImpl implements SolrLoggerService, InitializingBea
             deleteIP(ip);
         }
     }
+
+    /**
+     * Delete robots by multiple criteria: IP, User Agent, and Domain.
+     */
+    @Override
+    public void deleteRobots()
+    {
+        log.info("Delete robots by User Agent starting now...");
+        for(String agent : SpiderDetector.getSpiderAgents()) {
+            deleteBy("userAgent:/" + buildSolrRegex(agent) + "/");
+        }
+        log.info("Delete robots by IP starting now...");
+        for(String ip : SpiderDetector.getSpiderIpAddresses()){
+            deleteBy("ip:" + ip + "*");
+        }
+        log.info("Delete robots by Domain starting now...");
+        for(String domain : SpiderDetector.getSpiderDomains()) {
+            deleteBy("dns:/" + buildSolrRegex(domain) + "/");
+        }
+    }    
 
     @Override
     public void update(String query, String action,
@@ -1594,5 +1632,26 @@ public class SolrLoggerServiceImpl implements SolrLoggerService, InitializingBea
             log.error(e.getMessage(), e);
         }
         statisticYearCoresInit = true;
+    }
+
+    /**
+     * Process the pattern passed as parameter to remove leading and ending anchoring syntax (^ and $ symbols) if exists.
+     * By defaults add the ".*" expression at both sides of the regex.
+     * @param pattern
+     */
+    private static String buildSolrRegex(String pattern) {
+        if (pattern != null || pattern.length() > 0) {
+            if (pattern.startsWith("^")) {
+                pattern = StringUtils.right(pattern, pattern.length() - 1);
+            } else {
+                pattern = ".*" + pattern;
+            }
+            if (pattern.endsWith("$")) {
+                pattern = StringUtils.chop(pattern);
+            } else {
+                pattern = pattern + ".*";
+            }
+        }
+        return pattern;
     }
 }

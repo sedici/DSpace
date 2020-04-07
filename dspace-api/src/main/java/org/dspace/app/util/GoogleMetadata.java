@@ -42,6 +42,7 @@ import org.dspace.core.Context;
 import org.dspace.handle.factory.HandleServiceFactory;
 import org.jdom.Element;
 
+import ar.edu.unlp.sedici.util.SediciUtils;
 /**
  * Configuration and mapping for Google Scholar output metadata
  *
@@ -76,8 +77,13 @@ public class GoogleMetadata {
 
     protected final String AUTHORS = "citation_author";
 
-    protected final String DATE = "citation_date";
+    /* SEDICI-BEGIN */
 
+    public static final String DATE = "citation_publication_date";
+    
+    public static final String ONLINE_DATE ="citation_online_date";
+
+    /* SEDICI-END */
     protected final String VOLUME = "citation_volume";
 
     protected final String ISSUE = "citation_issue";
@@ -104,7 +110,9 @@ public class GoogleMetadata {
 
     protected final String KEYWORDS = "citation_keywords";
 
-    protected final String CONFERENCE = "citation_conference";
+    /* SEDICI-BEGIN */ 
+    public static final String CONFERENCE = "citation_conference_title";
+    /* SEDICI-END */
 
     protected final String DISSERTATION_ID = "identifiers.dissertation";
 
@@ -131,6 +139,9 @@ public class GoogleMetadata {
     protected final int ALL_FIELDS_IN_OPTION = 2;
 
     private static GoogleBitstreamComparator googleBitstreamComparator = null;
+
+    private static final ArrayList<String> priorityList = new ArrayList<String>(Arrays.asList(
+            "Adobe PDF", "Postscript", "Microsoft Word XML", "Microsoft Word", "RTF", "EPUB"));
 
     // Load configured fields from google-metadata.properties
     static {
@@ -580,6 +591,11 @@ public class GoogleMetadata {
         // DATE
         addSingleField(DATE);
 
+        /* SEDICI-BEGIN */
+        // ONLINE_DATE
+        addSingleField(ONLINE_DATE);
+        /* SEDICI-END */
+
         // ISSN
         addSingleField(ISSN);
 
@@ -886,27 +902,35 @@ public class GoogleMetadata {
      */
     protected String getPDFSimpleUrl(Item item) {
         try {
-            Bitstream bitstream = findLinkableFulltext(item);
-            if (bitstream != null) {
-                StringBuilder path = new StringBuilder();
-                path.append(ConfigurationManager.getProperty("dspace.ui.url"));
+	        Bitstream bitstream = findLinkableFulltext(item);
+	        if (bitstream != null) {
+		StringBuilder path = new StringBuilder();
+		path.append(ConfigurationManager.getProperty("dspace.url"));
+		String the_handle = item.getHandle();
+		if (the_handle == null) {
+			the_handle = "no-handle";
+			log.warn("Missing handle for item " + item.getID());
+			path.append("/retrieve/");
+			path.append(bitstream.getID());
+		} else {
+			path.append("/bitstream/handle/");
+			path.append(the_handle);
+		}
+		String bs_filename;
+		if (bitstream.getDescription() != null)
+			bs_filename = bitstream.getDescription();
+		else if (bitstream.getName() != null)
+			bs_filename = bitstream.getName();
+		else
+			bs_filename = the_handle + "-bitstream-" + bitstream.getSequenceID();
 
-                if (item.getHandle() != null) {
-                    path.append("/bitstream/");
-                    path.append(item.getHandle());
-                    path.append("/");
-                    path.append(bitstream.getSequenceID());
-                } else {
-                    path.append("/retrieve/");
-                    path.append(bitstream.getID());
-                }
-
-                path.append("/");
-                path.append(Util.encodeBitstreamName(bitstream.getName(), Constants.DEFAULT_ENCODING));
-                return path.toString();
-            }
-        } catch (UnsupportedEncodingException ex) {
-            log.debug(ex.getMessage());
+		path.append("/");
+		//path.append(Util.encodeBitstreamName(bitstream.getName(), Constants.DEFAULT_ENCODING));
+		path.append(SediciUtils.codificarURL(bs_filename));
+		path.append(".pdf?sequence=");
+		path.append(bitstream.getSequenceID());
+	        return path.toString();
+		}
         } catch (SQLException ex) {
             log.debug(ex.getMessage());
         }
@@ -967,7 +991,9 @@ public class GoogleMetadata {
         try {
             context = new Context();
             result = AuthorizeServiceFactory.getInstance().getAuthorizeService()
-                                            .authorizeActionBoolean(context, bitstream, Constants.READ, true);
+                                            .authorizeActionBoolean(context, bitstream, Constants.READ, true)
+                                            //SEDICI-Ticket#5688
+                                            && priorityList.contains(bitstream.getFormat().getShortDescription());
         } catch (SQLException e) {
             log.error(
                 "Cannot determine whether bitstream is public, assuming it isn't. bitstream_id=" + bitstream.getID(),

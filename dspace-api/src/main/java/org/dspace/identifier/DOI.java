@@ -34,7 +34,7 @@ public class DOI
     implements Identifier, ReloadableEntity<Integer> {
     public static final String SCHEME = "doi:";
 
-    public static final String RESOLVER = "http://dx.doi.org";
+    public static final String RESOLVER = "https://doi.org";
 
     @Id
     @Column(name = "doi_id")
@@ -90,11 +90,12 @@ public class DOI
     }
 
     /**
-     * returns the resource type of the DSpaceObject the DOI is or was assigned
-     * to. The resource type is set automatically when a DOI is assigned to a
-     * DSpaceObject, using {@link #setDSpaceObject(org.dspace.content.DSpaceObject) }.
-     *
-     * @return the integer constant of the DSO, see {@link org.dspace.core.Constants#Constants Constants}
+     * Recognize format of DOI and return it with leading doi-Scheme.
+     * @param identifier Identifier to format, following format are accepted:
+     *                   f.e. 10.123/456, doi:10.123/456, https://doi.org/10.123/456.
+     * @return Given Identifier with DOI-Scheme, f.e. doi:10.123/456.
+     * @throws IllegalArgumentException If identifier is empty or null.
+     * @throws DOIIdentifierException If DOI could not be recognized.
      */
     public Integer getResourceTypeId() {
         return this.resourceTypeId;

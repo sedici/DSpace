@@ -21,6 +21,8 @@ import org.apache.logging.log4j.Logger;
 import org.dspace.app.util.factory.UtilServiceFactory;
 import org.dspace.app.util.service.MetadataExposureService;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.ResourcePolicy;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Bundle;
 import org.dspace.content.Item;
@@ -36,6 +38,15 @@ import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.Utils;
 import org.dspace.xoai.data.DSpaceItem;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * @author Lyncode Development Team (dspace at lyncode dot com)
@@ -240,18 +251,50 @@ public class ItemUtils {
     public static Metadata retrieveMetadata(Context context, Item item) {
         Metadata metadata;
 
-        // read all metadata into Metadata Object
-        metadata = new Metadata();
-
-        List<MetadataValue> vals = itemService.getMetadata(item, Item.ANY, Item.ANY, Item.ANY, Item.ANY);
-        for (MetadataValue val : vals) {
-            MetadataField field = val.getMetadataField();
-            try {
-                // Don't expose fields that are hidden by configuration
-                if (metadataExposureService.isHidden(context, field.getMetadataSchema().getName(), field.getElement(),
-                        field.getQualifier())) {
-                    continue;
-                }
+                    if (name != null)
+                        bitstream.getField().add(
+                                createValue("name", name));
+                    if (oname != null)
+                        bitstream.getField().add(
+                                createValue("originalName", name));
+                    if (description != null)
+                        bitstream.getField().add(
+                                createValue("description", description));
+                    bitstream.getField().add(
+                            createValue("format", bit.getFormat()
+                                    .getMIMEType()));
+                    bitstream.getField().add(
+                            createValue("size", "" + bit.getSize()));
+                    bitstream.getField().add(createValue("url", url));
+                    bitstream.getField().add(
+                            createValue("checksum", cks));
+                    bitstream.getField().add(
+                            createValue("checksumAlgorithm", cka));
+                    bitstream.getField().add(
+                            createValue("sid", bit.getSequenceID()
+                                    + ""));
+                    List<ResourcePolicy> polices = AuthorizeManager.getPolicies(context, bit);
+                    String embargo = "forever";
+                    Date minDate = null;
+            		Date today = new Date();
+            		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    sdf.setTimeZone(TimeZone.getTimeZone("ZULU"));
+            		for (ResourcePolicy policy : polices){
+                    	if (policy.getGroup() == null || !(org.dspace.eperson.Group.ANONYMOUS_ID == policy.getGroup().getID())|| (policy.getEndDate() != null && policy.getEndDate().before(today))){
+                    		continue;
+                    	}
+                       	if (policy.getStartDate() == null || policy.getStartDate().before(today)){
+                       		embargo = null;
+                       		break;
+                       	}
+                       	else if (minDate == null || policy.getStartDate().before(minDate)){
+                        		minDate = policy.getStartDate();
+                       			embargo = sdf.format(policy.getStartDate());                        				
+                       	}
+                    };
+                    if (embargo != null)
+                        bitstream.getField().add(
+                                createValue("embargo", embargo));
 
                 Element schema = getElement(metadata.getElement(), field.getMetadataSchema().getName());
                 if (schema == null) {

@@ -77,6 +77,8 @@ import org.dspace.services.factory.DSpaceServicesFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ibm.icu.text.Normalizer;
+
 /**
  * SolrIndexer contains the methods that index Items and their metadata,
  * collections, communities, etc. It is meant to either be invoked from the
@@ -1130,7 +1132,8 @@ public class SolrServiceImpl implements SearchService, IndexingService {
             filterQuery.append(":");
             if ("equals".equals(operator) || "notequals".equals(operator)) {
                 //DO NOT ESCAPE RANGE QUERIES !
-                if (!value.matches("\\[.*TO.*\\]")) {
+                if(!value.matches("\\[.* TO .*\\]"))
+                {
                     value = ClientUtils.escapeQueryChars(value);
                     filterQuery.append(value);
                 } else {
@@ -1143,7 +1146,8 @@ public class SolrServiceImpl implements SearchService, IndexingService {
                 }
             } else {
                 //DO NOT ESCAPE RANGE QUERIES !
-                if (!value.matches("\\[.*TO.*\\]")) {
+                if(!value.matches("\\[.* TO .*\\]"))
+                {
                     value = ClientUtils.escapeQueryChars(value);
                     filterQuery.append("(").append(value).append(")");
                 } else {

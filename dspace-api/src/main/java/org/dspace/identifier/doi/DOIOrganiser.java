@@ -26,6 +26,7 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.factory.ContentServiceFactory;
@@ -113,13 +114,13 @@ public class DOIOrganiser {
                           "Turn the command line output off.");
 
         Option registerDoi = OptionBuilder.withArgName("DOI|ItemID|handle")
-                                          .withLongOpt("register-doi")
-                                          .hasArgs(1)
-                                          .withDescription("Register a specified identifier. "
-                                                               + "You can specify the identifier by ItemID, Handle or" +
-                                                               " DOI.")
-                                          .create();
-
+                .withLongOpt("register-doi")
+                .hasArgs(1)
+                .withDescription("Register a specified identifier. "
+                + "You can specify the identifier by ItemID, Handle or DOI,"
+                + " or a list of identifiers separated with coma.")
+                .create();
+        
         options.addOption(registerDoi);
 
         Option reserveDoi = OptionBuilder.withArgName("DOI|ItemID|handle")
@@ -291,45 +292,55 @@ public class DOIOrganiser {
                 }
             }
         }
-
-        if (line.hasOption("register-doi")) {
-            String identifier = line.getOptionValue("register-doi");
-
-            if (null == identifier) {
+        
+        if(line.hasOption("register-doi"))
+        {
+            String identifiers = line.getOptionValue("register-doi");
+            
+            if(null == identifiers)
+            {
                 helpformater.printHelp("\nDOI organiser\n", options);
-            } else {
-                try {
-                    DOI doiRow = organiser.resolveToDOI(identifier);
-                    organiser.register(doiRow);
-                } catch (SQLException ex) {
-                    LOG.error(ex);
-                } catch (IllegalArgumentException ex) {
-                    LOG.error(ex);
-                } catch (IllegalStateException ex) {
-                    LOG.error(ex);
-                } catch (IdentifierException ex) {
-                    LOG.error(ex);
+            }
+            else
+            {
+                String[] identifiersList = identifiers.split(",");
+                for (String identifier: identifiersList) {
+                    try {
+                        if (!line.hasOption('q')) {
+                            System.out.println("Registering identifier " + identifier);
+                        }
+                        DOI doiRow = organiser.resolveToDOI(identifier.trim());
+                        organiser.register(doiRow);
+                    } catch (Exception ex) {
+                        LOG.error(ex);
+                        ex.printStackTrace(System.err);
+                    }
                 }
             }
         }
-
-        if (line.hasOption("update-doi")) {
-            String identifier = line.getOptionValue("update-doi");
-
-            if (null == identifier) {
+        
+        if(line.hasOption("update-doi"))
+        {
+            String identifiers = line.getOptionValue("update-doi");
+            
+            if(null == identifiers)
+            {
                 helpformater.printHelp("\nDOI organiser\n", options);
-            } else {
-                try {
-                    DOI doiRow = organiser.resolveToDOI(identifier);
-                    organiser.update(doiRow);
-                } catch (SQLException ex) {
-                    LOG.error(ex);
-                } catch (IllegalArgumentException ex) {
-                    LOG.error(ex);
-                } catch (IllegalStateException ex) {
-                    LOG.error(ex);
-                } catch (IdentifierException ex) {
-                    LOG.error(ex);
+            }
+            else
+            {
+                String[] identifiersList = identifiers.split(",");
+                for (String identifier: identifiersList) {
+                    try {
+                        if (!line.hasOption('q')) {
+                            System.out.println("Registering identifier " + identifier);
+                        }
+                        DOI doiRow = organiser.resolveToDOI(identifier.trim());
+                        organiser.update(doiRow);
+                    } catch (Exception ex) {
+                        LOG.error(ex);
+                        ex.printStackTrace(System.err);
+                    }
                 }
             }
         }
@@ -411,32 +422,36 @@ public class DOIOrganiser {
             try {
                 sendAlertMail("Register", dso,
                               DOI.SCHEME + doiRow.getDoi(),
-                              doiIdentifierException.codeToString(doiIdentifierException
-                                                                      .getCode()));
-            } catch (IOException ioe) {
+                              ExceptionUtils.getStackTrace(doiIdentifierException));
+            }
+            catch (IOException ioe) 
+            {
                 LOG.error("Couldn't send mail", ioe);
             }
 
-            LOG.error("It wasn't possible to register this identifier : "
-                          + DOI.SCHEME + doiRow.getDoi()
-                          + " online. Exceptions code: "
-                          + doiIdentifierException
-                .codeToString(doiIdentifierException.getCode()), ex);
-
-            if (!quiet) {
-                System.err.println("It wasn't possible to register this identifier: "
-                                       + DOI.SCHEME + doiRow.getDoi());
-            }
-
-        } catch (IllegalArgumentException ex) {
+            LOG.error("It wasn't possible to register this identifier : " 
+                    + DOI.SCHEME + doiRow.getStringColumn("doi")
+                    + " online. Exceptions code: "
+                    + doiIdentifierException
+                        .codeToString(doiIdentifierException.getCode()), ex);
+            
+            System.err.println("It wasn't possible to register this identifier: "
+                             + DOI.SCHEME + doiRow.getDoi());
+            ex.printStackTrace(System.err);
+             
+        }
+        catch (IllegalArgumentException ex) 
+        {
             LOG.error("Database table DOI contains a DOI that is not valid: "
-                          + DOI.SCHEME + doiRow.getDoi() + "!", ex);
-
-            if (!quiet) {
-                System.err.println("It wasn't possible to register this identifier: "
-                                       + DOI.SCHEME + doiRow.getDoi());
+                    + DOI.SCHEME + doiRow.getStringColumn("doi") + "!", ex);
+            
+            if(!quiet)
+            {
+                System.err.println("It wasn't possible to register this identifier: " 
+                                 + DOI.SCHEME + doiRow.getStringColumn("doi"));
+                ex.printStackTrace(System.err);
             }
-
+            
             throw new IllegalStateException("Database table DOI contains a DOI "
                                                 + " that is not valid: "
                                                 + DOI.SCHEME + doiRow.getDoi() + "!", ex);
@@ -446,6 +461,7 @@ public class DOIOrganiser {
             if (!quiet) {
                 System.err.println("It wasn't possible to register this identifier: "
                                        + DOI.SCHEME + doiRow.getDoi());
+                ex.printStackTrace(System.err);
             }
             throw new RuntimeException("Error while trying to get data from database", ex);
         }
@@ -478,8 +494,7 @@ public class DOIOrganiser {
             try {
                 sendAlertMail("Reserve", dso,
                               DOI.SCHEME + doiRow.getDoi(),
-                              DOIIdentifierException.codeToString(
-                                  doiIdentifierException.getCode()));
+                              ExceptionUtils.getStackTrace(doiIdentifierException));
             } catch (IOException ioe) {
                 LOG.error("Couldn't send mail", ioe);
             }
@@ -541,9 +556,10 @@ public class DOIOrganiser {
             try {
                 sendAlertMail("Update", dso,
                               DOI.SCHEME + doiRow.getDoi(),
-                              doiIdentifierException.codeToString(doiIdentifierException
-                                                                      .getCode()));
-            } catch (IOException ioe) {
+                              ExceptionUtils.getStackTrace(doiIdentifierException));
+            } 
+            catch (IOException ioe) 
+            {
                 LOG.error("Couldn't send mail", ioe);
             }
 
@@ -553,10 +569,9 @@ public class DOIOrganiser {
                           + doiIdentifierException
                 .codeToString(doiIdentifierException.getCode()), ex);
 
-            if (!quiet) {
-                System.err.println("It wasn't possible to update this identifier: "
-                                       + DOI.SCHEME + doiRow.getDoi());
-            }
+            System.err.println("It wasn't possible to update this identifier: "
+            		+ DOI.SCHEME + doiRow.getDoi());
+            ex.printStackTrace(System.err);
 
         } catch (IllegalArgumentException ex) {
             LOG.error("Database table DOI contains a DOI that is not valid: "
@@ -565,6 +580,7 @@ public class DOIOrganiser {
             if (!quiet) {
                 System.err.println("It wasn't possible to update this identifier: "
                                        + DOI.SCHEME + doiRow.getDoi());
+                ex.printStackTrace(System.err);
             }
 
             throw new IllegalStateException("Database table DOI contains a DOI "

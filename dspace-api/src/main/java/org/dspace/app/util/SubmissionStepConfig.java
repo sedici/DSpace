@@ -7,10 +7,16 @@
  */
 package org.dspace.app.util;
 
-import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.dspace.authorize.AuthorizeManager;
+import org.dspace.content.Item;
+import org.dspace.core.Constants;
+import org.dspace.core.Context;
+
+import java.io.Serializable;
+import java.sql.SQLException;
 
 /**
  * Class representing configuration for a single step within an Item Submission
@@ -46,6 +52,17 @@ public class SubmissionStepConfig implements Serializable {
      * &lt;step-definitions&gt; section)
      */
     private String id = null;
+    
+    /**
+     * The scope where this step can be executed (i.e. a step can be executed 
+     * when current user has ADMIN permission over the item being processed...).
+     */
+    private String scope = null;
+    
+    /**
+     * Determine if the current scope expression must be denied or not.
+     */
+    private boolean denyScope = false;
 
     private boolean mandatory = true;
 
@@ -108,7 +125,15 @@ public class SubmissionStepConfig implements Serializable {
         heading = stepMap.get("heading");
         processingClassName = stepMap.get("processing-class");
         type = stepMap.get("type");
-        scope = stepMap.get("scope");
+        String tmpScope = stepMap.get("scope");
+        if (tmpScope != null && tmpScope.length() > 0) {
+        	tmpScope = tmpScope.trim();
+        	if(tmpScope.startsWith("!")) {
+        		denyScope = true;
+        		tmpScope = tmpScope.substring(1).trim();
+        	}
+        	scope = tmpScope;
+        }
         visibility = stepMap.get("scope.visibility");
         visibilityOutside = stepMap.get("scope.visibilityOutside");
     }
@@ -123,8 +148,24 @@ public class SubmissionStepConfig implements Serializable {
     public String getId() {
         return id;
     }
+    
+	/**
+	 * Get the scope of this step.
+	 * @return the scope
+	 */
+	public String getScope() {
+		return scope;
+	}
 
-    /**
+	/**
+	 * Returns true if the scope condition is denied (specified with the "!" symbol).
+	 * @return the denyScope
+	 */
+	public boolean isDenyScope() {
+		return denyScope;
+	}
+
+	/**
      * Get the heading for this step. This can either be a property from
      * Messages.properties, or the actual heading text. If this "heading"
      * contains a period(.) it is assumed to reference Messages.properties.

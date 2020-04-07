@@ -56,6 +56,13 @@ public class WorkspaceItem
     @JoinColumn(name = "item_id")
     private Item item;
 
+        item = Item.find(context, wiRow.getIntColumn("item_id"));
+        collection = Collection.find(context, wiRow
+                .getIntColumn("collection_id"));
+
+        // Cache ourselves
+        context.cache(this, row.getIntColumn("workspace_item_id"));
+    }
 
     /**
      * The collection the item is being submitted to

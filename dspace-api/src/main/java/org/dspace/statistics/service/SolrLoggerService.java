@@ -95,6 +95,8 @@ public interface SolrLoggerService {
                                                 List oldFieldVals, String field)
         throws IOException;
 
+    public void markRobots();
+
     public void markRobotsByIP();
 
     public void markRobotByUserAgent(String agent);
@@ -102,6 +104,8 @@ public interface SolrLoggerService {
     public void deleteRobotsByIsBotFlag();
 
     public void deleteIP(String ip);
+
+    public void deleteRobots();
 
     public void deleteRobotsByIP();
 

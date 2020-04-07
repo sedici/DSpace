@@ -163,7 +163,7 @@ public class IdentifierServiceImpl implements IdentifierService {
                     identifiers.add(result);
                 }
             } catch (IdentifierNotFoundException ex) {
-                log.info(service.getClass().getName() + " doesn't find an "
+                log.debug(service.getClass().getName() + " doesn't find an "
                              + "Identifier for " + contentServiceFactory.getDSpaceObjectService(dso)
                                                                         .getTypeText(dso) + ", "
                              + dso.getID().toString() + ".");

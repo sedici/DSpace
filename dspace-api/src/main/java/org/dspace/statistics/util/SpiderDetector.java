@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
+import org.dspace.core.ConfigurationManager;
 import org.dspace.statistics.factory.StatisticsServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,8 @@ public class SpiderDetector {
     //Service where all methods get delegated to, this is instantiated by a spring-bean defined in core-services.xml
     private static SpiderDetectorService spiderDetectorService = StatisticsServiceFactory.getInstance()
                                                                                          .getSpiderDetectorService();
+    /** Directory name where the spider pattern files by agents are located. */
+    public static String SPIDER_AGENTS_DIRNAME = "agents";
 
     /**
      * Default constructor
@@ -46,6 +49,63 @@ public class SpiderDetector {
 
         spiderDetectorService.loadSpiderIpAddresses();
         return spiderDetectorService.getTable().toSet();
+    }
+    
+    /**
+     * Get all patterns included in the files under the specified spider pattern directory (i.e. "agents", "domain", etc.).
+     * This path is relative to the ${dspace.dir}/config/spiders location.
+     * @param spiderPatternDirectory is the directory where the spider patterns files will be loaded.
+     * @return a list of patterns or an empty list if patterns cannot be loaded.
+     */
+    protected static Set<String> getSpiderFrom(String spiderPatternDirectory){
+        Set<String> spiderPatternsList = new HashSet<String>();
+        
+        if(spiderPatternDirectory == null || spiderPatternDirectory.isEmpty()) {
+            log.warn("The Spider directory \"{}\" passed as parameter is not valid!", spiderPatternDirectory);
+        } else {
+            try 
+            {
+                String filePath = ConfigurationManager.getProperty("dspace.dir");
+                File spiderDir = new File(filePath, "config/spiders/" + spiderPatternDirectory);
+                
+                if (spiderDir.exists() && spiderDir.isDirectory()) {
+                    for (File file : spiderDir.listFiles()) {
+                        if (file.isFile())
+                        {
+                            for (String agent : readPatterns(file)) 
+                            {
+                                spiderPatternsList.add(agent);
+                            }
+                        }
+                    }
+                } else {
+                    log.info("No spider file loaded from {} directory.", spiderDir.getPath());
+                }
+            }
+            catch (IOException e)
+            {
+                log.error("Error Loading Spiders: " + e.getMessage(), e);
+            }
+        }
+        return spiderPatternsList;
+    }
+    
+    /**
+     * Returns the patterns specified under the spiders directory by user agent.
+     * 
+     * @return a list of user agent patterns corresponding with spiders.
+     */
+    public static Set<String> getSpiderAgents() {
+        return getSpiderFrom(SpiderDetector.SPIDER_AGENTS_DIRNAME);
+    }
+    
+    /**
+     * Returns the patterns specified under the spiders directory by domain (Reverse DNS Lookup).
+     * 
+     * @return a list of domains patterns corresponding with spiders.
+     */
+    public static Set<String> getSpiderDomains() {
+        return getSpiderFrom(SpiderDetector.SPIDER_DOMAINS_DIRNAME);
     }
 
     /**

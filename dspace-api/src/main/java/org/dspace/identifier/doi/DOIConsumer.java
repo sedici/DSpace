@@ -15,9 +15,12 @@ import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.event.Consumer;
 import org.dspace.event.Event;
+import org.dspace.identifier.Autowired;
+import org.dspace.identifier.DOI;
 import org.dspace.identifier.DOIIdentifierProvider;
 import org.dspace.identifier.IdentifierException;
 import org.dspace.identifier.IdentifierNotFoundException;
+import org.dspace.identifier.service.DOIService;
 import org.dspace.utils.DSpace;
 import org.dspace.workflow.factory.WorkflowServiceFactory;
 
@@ -30,6 +33,9 @@ public class DOIConsumer implements Consumer {
      */
     private static Logger log = org.apache.logging.log4j.LogManager.getLogger(DOIConsumer.class);
 
+    @Autowired(required = true)
+    protected DOIService doiService;
+ 
     @Override
     public void initialize() throws Exception {
         // nothing to do
@@ -69,6 +75,14 @@ public class DOIConsumer implements Consumer {
             return;
         }
 
+        //When an item comes from workflow/submission process (IS NOT ARCHIVED), then no doi exists in DOI table. This is
+        //because a DOI is assigned once an item is archived. A verification is added to avoid the generation
+        //of unnecessary logs after ARCHIVE process, caused by the absence of DOI before this process.
+        if(!item.isArchived()) {
+            //Item is not in archive (i.e. comes from submission/workflow), it is so expected. Hence stop consumer execution...
+            return;
+        }
+
         DOIIdentifierProvider provider = new DSpace().getSingletonService(
             DOIIdentifierProvider.class);
 
@@ -84,6 +98,15 @@ public class DOIConsumer implements Consumer {
                           + event.toString());
             return;
         }
+        
+        DOI doiRow = doiService.findByDoi(ctx, doi.substring(DOI.SCHEME.length()));
+        if (doiRow != null && DOIIdentifierProvider.TO_BE_REGISTERED == doiRow.getStatus()) {
+            //TICKET#6122 :Avoiding to update DOI status of an item that is not registered yet at registration agency.
+            log.warn("DOIConsumer will not handle item (" + dso.getHandle() +") that is not registered yet, skipping: "
+                    + event.toString());
+            return;
+        }
+
         try {
             provider.updateMetadata(ctx, dso, doi);
         } catch (IllegalArgumentException ex) {

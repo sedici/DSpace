@@ -60,7 +60,12 @@ public class DOIIdentifierProvider
      * DSpace items.
      */
     private DOIConnector connector;
-
+    /**
+     * List containing values of sub-tipologies (sedici.subtype) used to determine for what items 
+     * the DOI provider must generate doi's. Configure this at "identifier-service" configuration file.
+     */
+    protected List<String> typeFilter;
+    
     static final String CFG_PREFIX = "identifier.doi.prefix";
     static final String CFG_NAMESPACE_SEPARATOR = "identifier.doi.namespaceseparator";
     static final char SLASH = '/';
@@ -131,6 +136,11 @@ public class DOIIdentifierProvider
     public void setDOIConnector(DOIConnector connector) {
         this.connector = connector;
     }
+    
+    @Required
+    public void setTypeFilter(List<String> typeFilterList) {
+        this.typeFilter = typeFilterList;
+    }
 
     /**
      * This identifier provider supports identifiers of type
@@ -168,7 +178,14 @@ public class DOIIdentifierProvider
 
     @Override
     public String register(Context context, DSpaceObject dso)
-        throws IdentifierException {
+            throws IdentifierException
+    {
+        // Solo registrar el item si cumple ciertas condiciones
+        if (!isEligibleDSO(dso)) {
+            log.info("Couldn't register doi for DSO with handle " + dso.getHandle()
+                    + ", the DSO does not meet the conditions that the repository imposes to have doi");
+            return null;
+        }
         String doi = mint(context, dso);
         // register tries to reserve doi if it's not already.
         // So we don't have to reserve it here.
@@ -176,9 +193,38 @@ public class DOIIdentifierProvider
         return doi;
     }
 
+    /**
+     * Determine if DSO is eligible for register at DOI connector registration agency. It is determined 
+     * based on the check of different filters conditions.
+     * @param dso
+     * @return false if the item does not apply any filters conditions. Else, return true.
+     */
+    public boolean isEligibleDSO(DSpaceObject dso) {
+        if(this.typeFilter != null && this.typeFilter.size() > 0) {
+            List<MetadataValue> metadataList = itemService.getMetadata((Item) dso, "sedici", "subtype", null, Item.ANY);
+	        for (String subtipology : typeFilter) {
+                for (MetadataValue mdt : metadataList) {
+                    if (mdt.getValue().equalsIgnoreCase(subtipology)) {
+                        return true;
+                    }
+                }
+            }
+	        //If no filter is triggered, then this item must not be approved for DOI generation.
+	        return false;
+	    }
+	    return true;
+    }
+
     @Override
     public void register(Context context, DSpaceObject dso, String identifier)
-        throws IdentifierException {
+            throws IdentifierException
+    {
+        // Solo registrar el item si cumple ciertas condiciones
+        if (!isEligibleDSO(dso)) {
+            log.info("Couldn't register doi for DSO with handle " + dso.getHandle()
+                    + ", the DSO does not meet the conditions that the repository imposes to have doi");
+            return;
+        }
         String doi = doiService.formatIdentifier(identifier);
         DOI doiRow = null;
 
@@ -279,6 +325,12 @@ public class DOIIdentifierProvider
             TO_BE_DELETED.equals(doiRow.getStatus())) {
             throw new DOIIdentifierException("You tried to register a DOI that "
                                                  + "is marked as DELETED.", DOIIdentifierException.DOI_IS_DELETED);
+        }
+
+        // In case register fails, status must not stay null
+        if (doiRow.getStatus() != null) {
+            doiRow.setStatus(TO_BE_REGISTERED);
+            doiService.update(context, doiRow);
         }
 
         // register DOI Online
@@ -724,10 +776,15 @@ public class DOIIdentifierProvider
                 doi = doiService.create(context);
             }
         } else {
+            // Agregado por sedici
+            if (dso.getHandle() == null) {
+                throw new IllegalStateException("Trying to assign a DOI "
+                        + "to an item without a handle!");
+            }
+
             // We need to generate a new DOI.
             doi = doiService.create(context);
-            doiIdentifier = this.getPrefix() + "/" + this.getNamespaceSeparator() +
-                doi.getID();
+            doiIdentifier = this.getPrefix() + "/" + dso.getHandle();
         }
 
         // prepare new doiRow

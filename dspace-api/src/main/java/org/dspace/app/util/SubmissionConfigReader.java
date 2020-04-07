@@ -203,9 +203,17 @@ public class SubmissionConfigReader {
      */
     public SubmissionConfig getSubmissionConfigByCollection(String collectionHandle) {
         // get the name of the submission process config for this collection
-        String submitName = collectionToSubmissionConfig
-            .get(collectionHandle);
-        if (submitName == null) {
+    	String submitName;
+    	try 
+    	{
+    		submitName = Util.findDefinitionInMap(collection, collectionToSubmissionConfig);
+    	} 
+    	catch(Exception e) 
+    	{
+    		throw new ServletException("Error getting submission process definition", e);
+    	}
+        if (submitName == null)
+        {
             submitName = collectionToSubmissionConfig
                 .get(DEFAULT_COLLECTION);
         }
@@ -339,13 +347,17 @@ public class SubmissionConfigReader {
         int len = nl.getLength();
         for (int i = 0; i < len; i++) {
             Node nd = nl.item(i);
-            if (nd.getNodeName().equals("name-map")) {
+            if (nd.getNodeName().equals("name-map"))
+            {
+            	// preserves the collection-handle attribute for backward compatibility
                 String id = getAttribute(nd, "collection-handle");
+                String handle = getAttribute(nd, "handle");
                 String value = getAttribute(nd, "submission-name");
                 String content = getValue(nd);
-                if (id == null) {
+                if (id == null && handle == null)
+                {
                     throw new SAXException(
-                        "name-map element is missing collection-handle attribute in 'item-submission.xml'");
+                            "name-map element is missing handle attribute in 'item-submission.xml'");
                 }
                 if (value == null) {
                     throw new SAXException(
@@ -355,7 +367,7 @@ public class SubmissionConfigReader {
                     throw new SAXException(
                         "name-map element has content in 'item-submission.xml', it should be empty.");
                 }
-                collectionToSubmissionConfig.put(id, value);
+                collectionToSubmissionConfig.put( handle != null ? handle : id , value);
             } // ignore any child node that isn't a "name-map"
         }
     }
@@ -481,6 +493,15 @@ public class SubmissionConfigReader {
                             stepInfo = processStepChildNodes(
                                 "submission-process", nStep);
                         }
+                        
+                        //Check if nStep has an "scope" attribute. If true, overwrite any "scope" attribute declared in the step-definitions section.
+                        String stepScope = getAttribute(nStep, "scope");
+                        if (stepScope != null && stepScope.length() > 0)
+                        {
+                            //If the "scope" attribute exists, then copy the stepInfo Map to avoid modifying the original declaration of the step in the step-definitions section.
+                            stepInfo = new HashMap<String,String>(stepInfo);
+                            stepInfo.put("scope", stepScope);
+                        }
 
                         steps.add(stepInfo);
 
@@ -536,6 +557,14 @@ public class SubmissionConfigReader {
         String stepID = getAttribute(nStep, "id");
         if (StringUtils.isNotBlank(stepID)) {
             stepInfo.put("id", stepID);
+        }
+        
+        //Check for SCOPE specifications. The values accepted for this attribute must be some of the constants declared in the Constants.actionText array definition.
+        //The scope can be negated using the "!" symbol.
+        String stepScope = getAttribute(nStep, "scope");
+        if (stepScope != null && stepScope.length() > 0)
+        {
+            stepInfo.put("scope", stepScope);
         }
 
         String mandatory = getAttribute(nStep, "mandatory");

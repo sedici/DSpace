@@ -106,8 +106,9 @@ public class SyndicationFeed {
         DSpaceServicesFactory.getInstance().getConfigurationService();
 
     // metadata field for Item title in entry:
-    protected String titleField =
-        configurationService.getProperty("webui.feed.item.title", defaultTitleField);
+    private static String titleField[] =
+        getDefaultedConfiguration("webui.feed.item.title", defaultTitleField).split("\\s*,\\s*");
+
 
     // metadata field for Item publication date in entry:
     protected String dateField =
@@ -118,8 +119,8 @@ public class SyndicationFeed {
         DSpaceServicesFactory.getInstance().getConfigurationService()
                              .getArrayProperty("webui.feed.item.description", defaultDescriptionFields);
 
-    protected String authorField =
-        configurationService.getProperty("webui.feed.item.author", defaultAuthorField);
+    private static String authorFields[] =
+        getDefaultedConfiguration("webui.feed.item.author", defaultAuthorField).split("\\s*,\\s*");
 
     // metadata field for Podcast external media source url
     protected String externalSourceField =
@@ -264,8 +265,8 @@ public class SyndicationFeed {
                 String entryURL = resolveURL(request, item);
                 entry.setLink(entryURL);
                 entry.setUri(entryURL);
-
-                String title = getOneDC(item, titleField);
+             
+                String title = getJoinedMetadata(item, titleField, ": ");
                 entry.setTitle(title == null ? localize(labels, MSG_UNTITLED) : title);
 
                 // "published" date -- should be dc.date.issued
@@ -311,15 +312,20 @@ public class SyndicationFeed {
                 }
 
                 // This gets the authors into an ATOM feed
-                List<MetadataValue> authors = itemService.getMetadataByMetadataString(item, authorField);
-                if (authors.size() > 0) {
-                    List<SyndPerson> creators = new ArrayList<SyndPerson>();
-                    for (MetadataValue author : authors) {
-                        SyndPerson sp = new SyndPersonImpl();
-                        sp.setName(author.getValue());
-                        creators.add(sp);
+                List<SyndPerson> atomCreators = new ArrayList<SyndPerson>();
+                for (String authorField : authorFields) {
+                    List<MetadataValue> authors = itemService.getMetadataByMetadataString(item, authorField);
+                    if (authors.size > 0)
+                    {
+                    	for (MetadataValue author : authors) {
+                            SyndPerson sp = new SyndPersonImpl();
+                            sp.setName(author.getValue());
+                            atomCreators.add(sp);
+                        }
                     }
-                    entry.setAuthors(creators);
+                }
+                if (atomCreators.size() > 0) {
+                    entry.setAuthors(atomCreators);
                 }
 
                 // only add DC module if any DC fields are configured
@@ -403,7 +409,7 @@ public class SyndicationFeed {
                     // Get iTunes specific fields: author, subtitle, summary, duration, keywords
                     EntryInformation itunes = new EntryInformationImpl();
 
-                    String author = getOneDC(item, authorField);
+                    String author = getOneDC(item, authorFields[0]);
                     if (author != null && author.length() > 0) {
                         itunes.setAuthor(author);                               // <itunes:author>
                     }
@@ -557,5 +563,33 @@ public class SyndicationFeed {
         List<MetadataValue> dcv = itemService.getMetadataByMetadataString(item, field);
         return (dcv.size() > 0) ? dcv.get(0).getValue() : null;
     }
+    
+    /* SEDICI-BEGIN */
+    private String getJoinedMetadata(Item item, String[] metadataFields, String separator)
+    {
+    	StringBuffer sb = new StringBuffer();
+    	boolean first = true;
+        for (String metadataField : metadataFields)
+        {
+        	Metadatum values[] = item.getMetadataByMetadataString(metadataField);
+            for (Metadatum v : values)
+            {
+            	if (v.value.isEmpty())
+            		continue;
+            	
+            	if (first)
+            	{
+              		first = false;
+              		sb.append(v.value);
+            	}
+              	else 
+              	{
+              		sb.append(separator).append(v.value);
+              	}
+            }
+        }
+		return sb.toString();
+    }
+    /* SEDICI-END */
 }
 

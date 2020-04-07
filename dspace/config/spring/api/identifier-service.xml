@@ -55,6 +55,16 @@
             ref="org.dspace.services.ConfigurationService" />
         <property name="DOIConnector"
             ref="org.dspace.identifier.doi.DOIConnector" />
+        <property name="typeFilter">
+            <!-- Define a list of sub-tipologies values (sedici.subtype) used as a filter
+            for determine if the current item must be generated a DOI. 
+            Set this list EMPTY if you dont want to specify any filter...-->
+            <list>
+                <value>Tesis de doctorado</value>
+                <value>Tesis de maestria</value>
+                <!--<value>Libro</value>-->
+            </list>
+        </property>
     </bean>
     -->
     <!--
@@ -76,8 +86,8 @@
          e.g. EZID is part of DataCite but provides their own APIs. The following
          DataCiteConnector won't work if EZID is your registration agency.
     -->
-    <!-- Uncomment this to use the DataCite API directly as DOIConnector.
-    <bean id="org.dspace.identifier.doi.DOIConnector"
+    <!-- Uncomment this to use the DataCite API directly as DOIConnector. -->
+    <!-- <bean id="org.dspace.identifier.doi.DOIConnector"
         class="org.dspace.identifier.doi.DataCiteConnector"
         scope="singleton">
         <property name='DATACITE_SCHEME' value='https'/>
@@ -130,5 +140,17 @@
 
     </bean>
     -->
+    
+    <bean id="org.dspace.identifier.doi.DOIConnector"
+        class="ar.edu.unlp.sedici.dspace.identifier.doi.CrossrefConnector"
+        scope="singleton">
+        <property name='DATACITE_SCHEME' value='https'/>
+        <property name='DATACITE_HOST' value='test.crossref.org'/>
+        <property name='CROSSREF_DEPOSIT_PATH' value='/servlet/deposit' />
+        <property name='CROSSREF_SUBMISSION_PATH' value='/servlet/submissionDownload' />
+        <property name='CROSSREF_QUERY_PATH' value='/servlet/query' />
+        <property name="DEPOSIT_PREFIX_FILENAME" value="sedici" />
+        <property name='disseminationCrosswalkName' value="Crossref" />
+    </bean>
 
 </beans>
