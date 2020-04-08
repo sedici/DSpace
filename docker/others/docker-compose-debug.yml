@@ -17,6 +17,6 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: "user@dspace.com"
       PGADMIN_DEFAULT_PASSWORD: "dspace"
-    restart: unless-stopped
+    restart: "no"
     ports:
       - "80:80"
