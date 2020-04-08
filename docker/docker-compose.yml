@@ -1,6 +1,4 @@
 version: "3"
-networks:
-  dspacenet:
 services:
   db:
     container_name: dspace_db_${PROJECT_NAME}
@@ -11,8 +9,6 @@ services:
       POSTGRES_PASSWORD: dspace
     volumes:
       - /var/lib/postgresql/data
-    networks:
-      dspacenet:
       
   dspace:
     container_name: dspace_${PROJECT_NAME}
@@ -31,8 +27,6 @@ services:
       POSTGRES_DB_NAME: "dspace_${PROJECT_NAME}"
       DSPACE_USER: dspace
       DSPACE_PASS: dspace
-    networks:
-      dspacenet:
     volumes:
       - ../:/dspace/
       - ~/.m2/:/dspace/.m2/
