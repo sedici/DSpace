@@ -1,4 +1,8 @@
-version: "3"
+version: "3.7"
+#networks:
+#  default:
+#    external:
+#      name: ${DOCKER_EXTERNAL_NETWORK_NAME}
 services:
   db:
     container_name: dspace_db_${PROJECT_NAME}
@@ -8,7 +12,7 @@ services:
       POSTGRES_USER: dspace
       POSTGRES_PASSWORD: dspace
     volumes:
-      - /var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
       
   dspace:
     container_name: dspace_${PROJECT_NAME}
@@ -31,6 +35,26 @@ services:
       - ../:/dspace/
       - ~/.m2/:/dspace/.m2/
     ports:
-      - "9090:8080"
+      - "8080:8080"
     depends_on: 
       - db
+  dspacesolr:
+    container_name: dspacesolr_${PROJECT_NAME}
+    image: dspace/dspace-solr
+    ports:
+    - published: 8983
+      target: 8983
+    stdin_open: true
+    tty: true
+    volumes:
+    - solr_authority:/opt/solr/server/solr/authority/data
+    - solr_oai:/opt/solr/server/solr/oai/data
+    - solr_search:/opt/solr/server/solr/search/data
+    - solr_statistics:/opt/solr/server/solr/statistics/data
+volumes:
+  assetstore:
+  pgdata:
+  solr_authority:
+  solr_oai:
+  solr_search:
+  solr_statistics:
