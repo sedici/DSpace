@@ -23,8 +23,6 @@ services:
     command: start
     environment:
       CATALINA_OPTS: "-Xmx1024m -Xms512m -XX:MaxPermSize=256m"
-      DSPACE_GIT_URL: "${DSPACE_GIT_URL}"
-      DSPACE_GIT_REVISION: "${DSPACE_GIT_REVISION}"
       DSPACE_WEBAPPS: "${DSPACE_WEBAPPS}" # posible values: "jspui xmlui  mirage2 rest oai rdf sword swordv2"
       DSPACE_ROOT_WEBAPP: "${DSPACE_ROOT_WEBAPP}"
       POSTGRES_DB_HOST: "dspace_db_${PROJECT_NAME}"
