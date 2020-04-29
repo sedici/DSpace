@@ -17,7 +17,7 @@ services:
       POSTGRES_DB_USER: "${POSTGRES_USER}"
       POSTGRES_DB_PASS: "${POSTGRES_PASSWORD}"
       CATALINA_OPTS: "-Xmx1024m -Xms512m -XX:MaxPermSize=256m"
-      DSPACE_WEBAPPS: "jspui xmlui mirage2 rest oai rdf sword swordv2"
+      DSPACE_WEBAPPS: "rest oai rdf sword swordv2"
     volumes:
       - dspace_data:/dspace/
       - maven_repository:/root/.m2/

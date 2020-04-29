@@ -7,14 +7,12 @@ LABEL maintainer "alira@sedici.unlp.edu.ar"
 ARG DEBIAN_FRONTEND=noninteractive
 
 # TODO revisar si estos ENVs de postgres tienen que estar en el dockerfile o no
-ENV POSTGRES_DB_HOST "dspace_db"
+ENV POSTGRES_DB_HOST "dspacedb"
 ENV POSTGRES_DB_PORT "5432"
 ENV POSTGRES_DB_NAME "dspace"
 ENV POSTGRES_DB_USER "dspace"
 ENV POSTGRES_DB_PASS "dspace"
 
-ENV DSPACE_GIT_URL=https://github.com/DSpace/DSpace
-ENV DSPACE_GIT_REVISION=master
 ENV DSPACE_WEBAPPS="api oai rest rdf server-webapp services sword swordv2"
 ENV DSPACE_ROOT_WEBAPP=""
 

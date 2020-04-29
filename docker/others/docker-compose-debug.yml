@@ -12,11 +12,10 @@ services:
       - "8001:8001"
       - "5005:5005"
   pgadmin4:
-    container_name: "pgadmin_${PROJECT_NAME}"
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: "user@dspace.com"
       PGADMIN_DEFAULT_PASSWORD: "dspace"
     restart: "no"
     ports:
-      - "80:80"
+      - "8280:80"
