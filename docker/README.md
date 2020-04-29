@@ -1,13 +1,19 @@
-1) 
+1) DSpace
+```
 git clone sedici/dspace
 cd dspace 
 make up
 make install
+```
+2) DSpace Angular
 
-2) git clone sedici/dspace-angular
+```
+git clone sedici/dspace-angular
 cd dspace-angular/docker
 make up
-
+```
 En caso de error:
-make logs
 
+```
+make logs
+```
