@@ -1,5 +1,7 @@
 version: "3.7"
-
+networks:
+  default:
+    name: ${DOCKER_EXTERNAL_NETWORK_NAME}
 services:
   dspacedb:
     image: postgres:9.5-alpine
@@ -8,8 +10,7 @@ services:
       POSTGRES_USER: dspace
       POSTGRES_PASSWORD: dspace
     volumes:
-      - pgdata:/var/lib/postgresql/data
-      
+      - /var/lib/postgresql/data 
   dspace:
     image: dspace:dspace_${COMPOSE_PROJECT_NAME}_latest
     build:
@@ -45,7 +46,6 @@ services:
     - solr_statistics:/opt/solr/server/solr/statistics/data
 volumes:
   assetstore:
-  pgdata:
   solr_authority:
   solr_oai:
   solr_search:

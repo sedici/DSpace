@@ -17,8 +17,8 @@ update:
 	docker-compose -f docker-compose.yml -f others/docker-compose-debug.yml up -d
 
 install:
-	docker-compose -f docker-compose.yml -f others/docker-compose-debug.yml run dspace install
-#	sudo chown -R $(id -u):$(id -g) ../install/*
+	docker-compose -f docker-compose.yml -f others/docker-compose-debug.yml run --rm dspace install
+#	sudo chown -R $(id -u):$(id -g) data/*
 
 install-angular:
 	docker-compose -f docker-compose.yml run dspace-angular install
