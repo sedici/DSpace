@@ -1,7 +1,7 @@
 version: "3.7"
-networks:
-  default:
-    name: ${DOCKER_EXTERNAL_NETWORK_NAME}
+#networks:
+#  default:
+#    name: ${DOCKER_EXTERNAL_NETWORK_NAME}
 services:
   dspacedb:
     image: postgres:9.5-alpine
