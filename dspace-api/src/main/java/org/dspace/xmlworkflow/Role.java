@@ -10,6 +10,7 @@ package org.dspace.xmlworkflow;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.dspace.content.Community;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
@@ -56,6 +57,7 @@ public class Role implements BeanNameAware {
     public enum Scope {
         REPOSITORY,
         COLLECTION,
+        COMMUNITY,
         ITEM
     }
 
@@ -98,6 +100,23 @@ public class Role implements BeanNameAware {
                 return assignees;
             }
             return new RoleMembers();
+        } else if (scope == Scope.COMMUNITY) {
+            /*
+             * This scope references to the first community with "admins" group.
+             */
+            Community communityWithAdmins = null;
+            for (Community pCommunity : wfi.getCollection().getCommunities()) {
+                if(pCommunity.getAdministrators() != null) {
+                    //Break at first community administrator group found...
+                    communityWithAdmins = pCommunity;
+                    break;
+                }
+            }
+            RoleMembers adminMembers = new RoleMembers();
+            if(communityWithAdmins != null){
+                adminMembers.addGroup(communityWithAdmins.getAdministrators());
+            }
+            return adminMembers;
         } else {
             List<WorkflowItemRole> roles = workflowItemRoleService.find(context, wfi, id);
             RoleMembers assignees = new RoleMembers();
