@@ -28,7 +28,7 @@ public class SeDiCISelectCollectionAction extends ProcessingAction {
     @Autowired(required = true)
     protected XmlWorkflowItemService xmlWorkflowItemService;
 
-    private static final String SELECT_COLLECTION = "select_collection";
+    private static final String SELECT_COLLECTION = "submit_select_collection";
 
     @Override
     public void activate(Context c, XmlWorkflowItem wf) throws SQLException, IOException, AuthorizeException, WorkflowException {

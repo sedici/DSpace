@@ -63,11 +63,12 @@
 
     <!-- Workflow para la coleccion de autoarchivo -->
     <bean name="autoarchive" class="org.dspace.xmlworkflow.state.Workflow">
-        <property name="firstStep" ref="CollectionLevelReview"/>
+        <property name="firstStep" ref="SeDiCILevelReviewAutoarchive_editstep"/>
         <property name="steps">
             <util:list>
                 <!-- PASO 1: Revisión a nivel de SeDiCI (aplicable a todos los ítems de todo el repositorio) -->
-                <ref bean="SeDiCILevelReviewAutoarchive"/>
+                <ref bean="SeDiCILevelReviewAutoarchive_editstep"/>
+                <ref bean="SeDiCILevelReviewAutoarchive_selectcollectionstep"/>
             </util:list>
         </property>
     </bean>
@@ -98,14 +99,29 @@
         </property>
     </bean>
 
-    <bean name="SeDiCILevelReviewAutoarchive" class="org.dspace.xmlworkflow.state.Step">
+    <bean name="SeDiCILevelReviewAutoarchive_editstep" class="org.dspace.xmlworkflow.state.Step">
         <property name="userSelectionMethod" ref="claimaction"/>
         <property name="role" ref="sediciAdminRole"/>
+        <property name="outcomes">
+            <util:map>
+                <entry key="#{ T(org.dspace.xmlworkflow.state.actions.ActionResult).OUTCOME_COMPLETE}"
+                       value-ref="SeDiCILevelReviewAutoarchive_selectcollectionstep"/>
+            </util:map>
+        </property>
         <property name="actions">
             <util:list>
                 <ref bean="editaction"/>
-                <ref bean="selectcollectionaction"/>
             </util:list>
+        </property>
+    </bean>
+
+    <bean name="SeDiCILevelReviewAutoarchive_selectcollectionstep" class="org.dspace.xmlworkflow.state.Step">
+        <property name="userSelectionMethod" ref="claimaction"/>
+        <property name="role" ref="sediciAdminRole" />
+        <property name="actions">
+            <list>
+                <ref bean="selectcollectionaction"/>
+            </list>
         </property>
     </bean>
 
