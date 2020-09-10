@@ -12,6 +12,9 @@
     <bean id="finaleditactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.FinalEditAction" scope="prototype"/>
     <bean id="singleuserreviewactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.SingleUserReviewAction" scope="prototype"/>
 
+    <bean id="selectcollectionactionAPI" class="ar.edu.unlp.sedici.dspace.xmlworkflow.state.actions.processingaction.SeDiCISelectCollectionAction" scope="prototype"/>
+    <bean id="acceptRoleOrNotAdminAPI" class="ar.edu.unlp.sedici.dspace.xmlworkflow.state.actions.processingaction.AcceptRoleOrNotAdmin" scope="prototype"/>
+
     <bean id="selectrevieweractionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.SelectReviewerAction" scope="prototype">
         <property name="role" ref="scoreassignedreviewer"/>
     </bean>
@@ -94,6 +97,18 @@
         <constructor-arg type="java.lang.String" value=""/>
         <property name="processingAction"  ref="assignoriginalsubmitteractionAPI"/>
         <property name="requiresUI" value="false"/>
+    </bean>
+
+    <bean id="acceptRoleOrNotAdmin" class="org.dspace.xmlworkflow.state.actions.UserSelectionActionConfig" scope="prototype">
+        <constructor-arg type="java.lang.String" value="acceptRoleOrNotAdmin"/>
+        <property name="processingAction" ref="acceptRoleOrNotAdminAPI"/>
+        <property name="requiresUI" value="true"/>
+    </bean>
+
+    <bean id="selectcollectionaction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
+        <constructor-arg type="java.lang.String" value="selectcollectionaction"/>
+        <property name="processingAction" ref="selectcollectionactionAPI"/>
+        <property name="requiresUI" value="true"/>
     </bean>
 
 </beans>
