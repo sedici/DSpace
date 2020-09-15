@@ -524,6 +524,20 @@
 					<visibility-on-group>Bibliotecarios</visibility-on-group>
 				</field>
 
+				<!-- Clasificación FORD por áreas de investigación y desarrollo -->
+				<field>
+					<dc-schema>sedici</dc-schema>
+					<dc-element>subject</dc-element>
+					<dc-qualifier>ford</dc-qualifier>
+					<repeatable>true</repeatable>
+					<label>Clasificación FORD (*)</label>
+					<input-type>onebox</input-type>
+					<hint>Clasificación del documento por áreas de investigación y desarrollo (FORD por su sigla en inglés)</hint>
+					<required-on-group>Bibliotecarios</required-on-group>
+					<visibility-on-group>Bibliotecarios</visibility-on-group>
+					<type-bind>Conjunto de datos</type-bind>
+				</field>
+
 				<!-- Materia (de la lista de encabezamiento de LoC) -->
 				<!-- Se inhabilita temporalmente ya que no se habilitó el vocabulario contralado para este campo. -->
 <!-- 				<field> -->
