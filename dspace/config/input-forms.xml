@@ -382,7 +382,7 @@
 					<repeatable>true</repeatable>
 					<label>Alcance temporal	</label>
 					<input-type>onebox</input-type>
-					<hint>Si el conjunto de datos es sobre un período de tiempo específico se debe indicar en este campo. Si es posible, se debe indicar el comienzo y el fin del intervalo de tiempo, de la siguiente manera: "start='DD/MM/AAAA'; end='DD/MM/AAAA';"</hint>
+					<hint>Si el conjunto de datos es sobre un período de tiempo específico se debe indicar en este campo. Si es posible, se debe indicar el comienzo y el fin del intervalo de tiempo, de la siguiente manera: "AñoComienzo-AñoFin" (por ejemplo, 1900-1978)</hint>
 					<type-bind>Conjunto de datos</type-bind>
 				</field>
 
