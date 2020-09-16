@@ -359,6 +359,18 @@
 		<qualifier>sherpa</qualifier>
 		<scope_note>Contiene la descripción de la licencia del journal según Sherpa</scope_note>
 	</dc-type>
+	<dc-type>
+		<schema>dc</schema>
+		<element>coverage</element>
+		<qualifier>spatial</qualifier>
+		<scope_note>Se utiliza en el caso que un conjunto de datos sea sobre una región geográfica específica</scope_note>
+	</dc-type>
+	<dc-type>
+		<schema>dc</schema>
+		<element>coverage</element>
+		<qualifier>temporal</qualifier>
+		<scope_note>Se utiliza en el caso que un conjunto de datos sea sobre un período de tiempo específico</scope_note>
+	</dc-type>
 
 
 </dspace-dc-types>
