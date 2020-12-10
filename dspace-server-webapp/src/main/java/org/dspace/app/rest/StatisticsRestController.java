@@ -8,6 +8,7 @@
 package org.dspace.app.rest;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.dspace.app.rest.converter.ConverterService;
@@ -17,6 +18,7 @@ import org.dspace.app.rest.model.StatisticsSupportRest;
 import org.dspace.app.rest.model.hateoas.SearchEventResource;
 import org.dspace.app.rest.model.hateoas.StatisticsSupportResource;
 import org.dspace.app.rest.model.hateoas.ViewEventResource;
+import org.dspace.app.rest.repository.PersonStatisticsRestRepository;
 import org.dspace.app.rest.repository.SearchEventRestRepository;
 import org.dspace.app.rest.repository.StatisticsRestRepository;
 import org.dspace.app.rest.repository.ViewEventRestRepository;
@@ -57,6 +59,9 @@ public class StatisticsRestController implements InitializingBean {
     @Autowired
     private SearchEventRestRepository searchEventRestRepository;
 
+    @Autowired
+    private PersonStatisticsRestRepository personStatisticsRestRepository;
+
     @Override
     public void afterPropertiesSet() throws Exception {
         discoverableEndpointsService
@@ -74,6 +79,11 @@ public class StatisticsRestController implements InitializingBean {
     public PagedModel<ViewEventResource> getViewEvent(@PathVariable(name = "uuid") UUID uuid) throws Exception {
         throw new RepositoryMethodNotImplementedException("No implementation found; Method not allowed!", "");
     }
+
+	@RequestMapping(method = RequestMethod.GET, value = "/persons/{uuid}")
+	public List<String> getPersonEvent(@PathVariable(name = "uuid") UUID uuid) throws Exception {
+		return personStatisticsRestRepository.getStatisticsFor(uuid);
+	}
 
     @RequestMapping(method = RequestMethod.GET, value = "/searchevents/{uuid}")
     public PagedModel<SearchEventResource> getSearchEvent(@PathVariable(name = "uuid") UUID uuid) throws Exception {
