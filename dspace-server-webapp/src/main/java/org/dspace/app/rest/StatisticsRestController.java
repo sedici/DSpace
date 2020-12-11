@@ -8,6 +8,7 @@
 package org.dspace.app.rest;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -80,10 +81,21 @@ public class StatisticsRestController implements InitializingBean {
         throw new RepositoryMethodNotImplementedException("No implementation found; Method not allowed!", "");
     }
 
-	@RequestMapping(method = RequestMethod.GET, value = "/persons/{uuid}")
-	public List<String> getPersonEvent(@PathVariable(name = "uuid") UUID uuid) throws Exception {
-		return personStatisticsRestRepository.getStatisticsFor(uuid);
+	@RequestMapping(method = RequestMethod.GET, value = "/persons/{uuid}/coauthors")
+	public HashMap<String, List<HashMap<String, String>>> getPersonCoauthorsNet(@PathVariable(name = "uuid") UUID uuid) throws Exception {
+		return personStatisticsRestRepository.getCoauthorsNetworkStatisticsFor(uuid);
 	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/persons/{uuid}/publicationstype")
+	public List<HashMap<String, String>> getPersonPubsPerType(@PathVariable(name = "uuid") UUID uuid) throws Exception {
+		return personStatisticsRestRepository.getPublicationsPerTypeStatisticsFor(uuid);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/persons/{uuid}/publicationstime")
+	public List<HashMap<String, Integer>> getPersonPubsPerTime(@PathVariable(name = "uuid") UUID uuid) throws Exception {
+		return personStatisticsRestRepository.getPublicationsPerTimeStatisticsFor(uuid);
+	}
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/searchevents/{uuid}")
     public PagedModel<SearchEventResource> getSearchEvent(@PathVariable(name = "uuid") UUID uuid) throws Exception {

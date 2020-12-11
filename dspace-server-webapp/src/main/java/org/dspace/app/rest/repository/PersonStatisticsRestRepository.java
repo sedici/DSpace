@@ -8,6 +8,7 @@
 package org.dspace.app.rest.repository;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,14 +27,35 @@ public class PersonStatisticsRestRepository extends AbstractDSpaceRestRepository
 	@Autowired(required = true)
 	private ItemService itemService;
 
-	public List<String> getStatisticsFor(UUID uuid) throws AuthorizeException, SQLException {
-		Context context = obtainContext();
-		PersonStatisticsProvider personStatisticsProvider = new PersonStatisticsProvider();
+	private Item getItem(Context context, UUID uuid, PersonStatisticsProvider personStatisticsProvider)
+			throws SQLException {
 		Item item = itemService.find(context, uuid);
 		if (item == null || !personStatisticsProvider.isPerson(item)) {
-			throw new UnprocessableEntityException("The given targetId does not resolve to a DSpaceObject: " + uuid);
+			throw new UnprocessableEntityException("The given targetId does not resolve to a Person entity: " + uuid);
 		}
-
-		return personStatisticsProvider.getPersonCoauthors(context, item);
+		return item;
 	}
+
+	public HashMap<String, List<HashMap<String, String>>> getCoauthorsNetworkStatisticsFor(UUID uuid)
+			throws AuthorizeException, SQLException {
+		Context context = obtainContext();
+		PersonStatisticsProvider personStatisticsProvider = new PersonStatisticsProvider();
+		Item item = getItem(context, uuid, personStatisticsProvider);
+		return personStatisticsProvider.getPersonCoauthorsNetwork(context, item);
+	}
+
+	public List<HashMap<String, String>> getPublicationsPerTypeStatisticsFor(UUID uuid) throws SQLException {
+		Context context = obtainContext();
+		PersonStatisticsProvider personStatisticsProvider = new PersonStatisticsProvider();
+		Item item = getItem(context, uuid, personStatisticsProvider);
+		return personStatisticsProvider.getPersonPublicationsPerType(context, item);
+	}
+
+	public List<HashMap<String, Integer>> getPublicationsPerTimeStatisticsFor(UUID uuid) throws SQLException {
+		Context context = obtainContext();
+		PersonStatisticsProvider personStatisticsProvider = new PersonStatisticsProvider();
+		Item item = getItem(context, uuid, personStatisticsProvider);
+		return personStatisticsProvider.getPersonPublicationsPerTime(context, item);
+	}
+
 }
