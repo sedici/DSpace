@@ -51,7 +51,7 @@ public class PersonStatisticsRestRepository extends AbstractDSpaceRestRepository
 		return personStatisticsProvider.getPersonPublicationsPerType(context, item);
 	}
 
-	public List<HashMap<String, Integer>> getPublicationsPerTimeStatisticsFor(UUID uuid) throws SQLException {
+	public List<HashMap<String, String>> getPublicationsPerTimeStatisticsFor(UUID uuid) throws SQLException {
 		Context context = obtainContext();
 		PersonStatisticsProvider personStatisticsProvider = new PersonStatisticsProvider();
 		Item item = getItem(context, uuid, personStatisticsProvider);

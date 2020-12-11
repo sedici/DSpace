@@ -92,7 +92,7 @@ public class StatisticsRestController implements InitializingBean {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/persons/{uuid}/publicationstime")
-	public List<HashMap<String, Integer>> getPersonPubsPerTime(@PathVariable(name = "uuid") UUID uuid) throws Exception {
+	public List<HashMap<String, String>> getPersonPubsPerTime(@PathVariable(name = "uuid") UUID uuid) throws Exception {
 		return personStatisticsRestRepository.getPublicationsPerTimeStatisticsFor(uuid);
 	}
 

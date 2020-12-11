@@ -12,13 +12,14 @@ import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.core.Context;
+import org.dspace.services.ConfigurationService;
+import org.dspace.services.factory.DSpaceServicesFactory;
 
 public class PersonStatisticsProvider {
 
 	private ItemService itemService = ContentServiceFactory.getInstance().getItemService();
 
-	private String[] coauthorsMetNames = new String[] { "dc.contributor.author", "dc.creator", "dc.contributor",
-			"sedici.creator.*" };
+	private ConfigurationService confService = DSpaceServicesFactory.getInstance().getConfigurationService();
 
 	public boolean isPerson(Item item) {
 		List<MetadataValue> itemTypes = itemService.getMetadata(item, "relationship", "type", Item.ANY, Item.ANY,
@@ -31,6 +32,7 @@ public class PersonStatisticsProvider {
 
 	public HashMap<String, List<HashMap<String, String>>> getPersonCoauthorsNetwork(Context context, Item person)
 			throws SQLException {
+		String[] coauthorsMetNames = confService.getArrayProperty("person.statistics.coauthors-metadata");
 		HashMap<String, List<HashMap<String, String>>> coauthorsNetwork = new HashMap<String, List<HashMap<String, String>>>();
 		coauthorsNetwork.put("nodes", new ArrayList<HashMap<String, String>>());
 		coauthorsNetwork.put("links", new ArrayList<HashMap<String, String>>());
@@ -42,22 +44,34 @@ public class PersonStatisticsProvider {
 			Item publication = itemService.find(context, pubID);
 			for (String metName : coauthorsMetNames) {
 				List<MetadataValue> pubsAuthors = itemService.getMetadataByMetadataString(publication, metName);
-				Set<String> processedCoauthors = new HashSet<String>();
-				for (MetadataValue authorMeta : pubsAuthors) {
-					coauthors.add(authorMeta.getValue());
-					processedCoauthors.add(authorMeta.getValue());
-					for (MetadataValue relatedAuthorMeta : pubsAuthors) {
-						if (!processedCoauthors.contains(relatedAuthorMeta.getValue())) {
-							List<HashMap<String, String>> links = coauthorsNetwork.get("links");
-							HashMap<String, String> relations = new HashMap<String, String>();
-							relations.put("source", authorMeta.getValue());
-							relations.put("target", relatedAuthorMeta.getValue());
-							links.add(relations);
-						}
-					}
+				setPublicationCoauthorsRelation(coauthorsNetwork, coauthors, pubsAuthors);
+			}
+		}
+		setCoauthorNodes(coauthorsNetwork, coauthors);
+		return coauthorsNetwork;
+
+	}
+
+	private void setPublicationCoauthorsRelation(HashMap<String, List<HashMap<String, String>>> coauthorsNetwork,
+			Set<String> coauthors, List<MetadataValue> pubsAuthors) {
+		Set<String> processedCoauthors = new HashSet<String>();
+		for (MetadataValue authorMeta : pubsAuthors) {
+			coauthors.add(authorMeta.getValue());
+			processedCoauthors.add(authorMeta.getValue());
+			for (MetadataValue relatedAuthorMeta : pubsAuthors) {
+				if (!processedCoauthors.contains(relatedAuthorMeta.getValue())) {
+					List<HashMap<String, String>> links = coauthorsNetwork.get("links");
+					HashMap<String, String> relations = new HashMap<String, String>();
+					relations.put("source", authorMeta.getValue());
+					relations.put("target", relatedAuthorMeta.getValue());
+					links.add(relations);
 				}
 			}
 		}
+	}
+
+	private void setCoauthorNodes(HashMap<String, List<HashMap<String, String>>> coauthorsNetwork,
+			Set<String> coauthors) {
 		for (String authorName : coauthors) {
 			List<HashMap<String, String>> nodes = coauthorsNetwork.get("nodes");
 			HashMap<String, String> authors = new HashMap<String, String>();
@@ -65,61 +79,50 @@ public class PersonStatisticsProvider {
 			authors.put("name", authorName);
 			nodes.add(authors);
 		}
-		return coauthorsNetwork;
-
 	}
 
-	public List<HashMap<String, Integer>> getPersonPublicationsPerTime(Context context, Item person)
+	public List<HashMap<String, String>> getPersonPublicationsPerTime(Context context, Item person)
 			throws SQLException {
-		HashMap<String, Integer> pubsPerTime = new HashMap<String, Integer>();
-		List<MetadataValue> pubsMetadata = itemService.getMetadata(person, "relation", "isPublicationOfAuthor",
-				Item.ANY, Item.ANY);
-		for (MetadataValue pubMetadata : pubsMetadata) {
-			UUID pubID = UUID.fromString(pubMetadata.getValue());
-			Item publication = itemService.find(context, pubID);
-			List<MetadataValue> pubsTimesMeta = itemService.getMetadata(publication, "dc", "date", "issued", Item.ANY);
-			if (!pubsTimesMeta.isEmpty()) {
-				String pubTime = pubsTimesMeta.get(0).getValue().split("-", 2)[0];
-				Integer currentValue = pubsPerTime.putIfAbsent(pubTime, 1);
-				if (currentValue != null) {
-					pubsPerTime.put(pubTime, currentValue + 1);
-				}
-			}
-		}
-		List<HashMap<String, Integer>> pubsPerTimeList = new ArrayList<HashMap<String, Integer>>();
-		for (String pubTime : pubsPerTime.keySet()) {
-			HashMap<String, Integer> timeHash = new HashMap<String, Integer>();
-			timeHash.put("year", Integer.parseInt(pubTime));
-			timeHash.put("value", pubsPerTime.get(pubTime));
-			pubsPerTimeList.add(timeHash);
-		}
-		return pubsPerTimeList;
+		String timeMetadata = confService.getProperty("person.statistics.pubtime-metadata");
+		HashMap<String, Integer> pubsPerTime = getPubsPerMetadataCount(context, person, timeMetadata);
+		return createPubsPerMetadataList(pubsPerTime);
 	}
 
 	public List<HashMap<String, String>> getPersonPublicationsPerType(Context context, Item person)
 			throws SQLException {
-		HashMap<String, Integer> pubsPerType = new HashMap<String, Integer>();
+		String typeMetadata = confService.getProperty("person.statistics.pubtype-metadata");
+		HashMap<String, Integer> pubsPerType = getPubsPerMetadataCount(context, person, typeMetadata);
+		return createPubsPerMetadataList(pubsPerType);
+	}
+
+	private HashMap<String, Integer> getPubsPerMetadataCount(Context context, Item person, String metadata)
+			throws SQLException {
+		HashMap<String, Integer> pubsPerMetadata = new HashMap<String, Integer>();
 		List<MetadataValue> pubsMetadata = itemService.getMetadata(person, "relation", "isPublicationOfAuthor",
 				Item.ANY, Item.ANY);
 		for (MetadataValue pubMetadata : pubsMetadata) {
 			UUID pubID = UUID.fromString(pubMetadata.getValue());
 			Item publication = itemService.find(context, pubID);
-			List<MetadataValue> pubsTypesMeta = itemService.getMetadata(publication, "dc", "type", null, Item.ANY);
-			if (!pubsTypesMeta.isEmpty()) {
-				String pubType = pubsTypesMeta.get(0).getValue();
-				Integer currentValue = pubsPerType.putIfAbsent(pubType, 1);
+			List<MetadataValue> pubsMeta = itemService.getMetadataByMetadataString(publication, metadata);
+			if (!pubsMeta.isEmpty()) {
+				String pubMetaValue = pubsMeta.get(0).getValue().split("-", 2)[0];
+				Integer currentValue = pubsPerMetadata.putIfAbsent(pubMetaValue, 1);
 				if (currentValue != null) {
-					pubsPerType.put(pubType, currentValue + 1);
+					pubsPerMetadata.put(pubMetaValue, currentValue + 1);
 				}
 			}
 		}
-		List<HashMap<String, String>> pubsPerTypeList = new ArrayList<HashMap<String, String>>();
-		for (String pubTime : pubsPerType.keySet()) {
-			HashMap<String, String> typeHash = new HashMap<String, String>();
-			typeHash.put("name", pubTime);
-			typeHash.put("value", pubsPerType.get(pubTime).toString());
-			pubsPerTypeList.add(typeHash);
+		return pubsPerMetadata;
+	}
+
+	private List<HashMap<String, String>> createPubsPerMetadataList(HashMap<String, Integer> pubsPerMetadata) {
+		List<HashMap<String, String>> pubsPerMetadataList = new ArrayList<HashMap<String, String>>();
+		for (String pubMetadataValue : pubsPerMetadata.keySet()) {
+			HashMap<String, String> metadataValueHash = new HashMap<String, String>();
+			metadataValueHash.put("name", pubMetadataValue);
+			metadataValueHash.put("value", pubsPerMetadata.get(pubMetadataValue).toString());
+			pubsPerMetadataList.add(metadataValueHash);
 		}
-		return pubsPerTypeList;
+		return pubsPerMetadataList;
 	}
 }
