@@ -8,14 +8,13 @@
 package org.dspace.app.rest;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 import org.dspace.app.rest.converter.ConverterService;
 import org.dspace.app.rest.exception.RepositoryMethodNotImplementedException;
 import org.dspace.app.rest.model.RestAddressableModel;
 import org.dspace.app.rest.model.StatisticsSupportRest;
+import org.dspace.app.rest.model.hateoas.PersonStatisticsResource;
 import org.dspace.app.rest.model.hateoas.SearchEventResource;
 import org.dspace.app.rest.model.hateoas.StatisticsSupportResource;
 import org.dspace.app.rest.model.hateoas.ViewEventResource;
@@ -82,20 +81,25 @@ public class StatisticsRestController implements InitializingBean {
     }
 
 	@RequestMapping(method = RequestMethod.GET, value = "/persons/{uuid}/coauthors")
-	public HashMap<String, List<HashMap<String, String>>> getPersonCoauthorsNet(@PathVariable(name = "uuid") UUID uuid) throws Exception {
-		return personStatisticsRestRepository.getCoauthorsNetworkStatisticsFor(uuid);
+	public ResponseEntity<RepresentationModel<?>> getPersonCoauthorsNet(@PathVariable(name = "uuid") UUID uuid)
+			throws Exception {
+		PersonStatisticsResource result = personStatisticsRestRepository.getCoauthorsNetworkStatisticsFor(uuid);
+		return ControllerUtils.toResponseEntity(HttpStatus.OK, new HttpHeaders(), result);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/persons/{uuid}/publicationstype")
-	public List<HashMap<String, String>> getPersonPubsPerType(@PathVariable(name = "uuid") UUID uuid) throws Exception {
-		return personStatisticsRestRepository.getPublicationsPerTypeStatisticsFor(uuid);
+	public ResponseEntity<RepresentationModel<?>> getPersonPubsPerType(@PathVariable(name = "uuid") UUID uuid)
+			throws Exception {
+		PersonStatisticsResource result = personStatisticsRestRepository.getPublicationsPerTypeStatisticsFor(uuid);
+		return ControllerUtils.toResponseEntity(HttpStatus.OK, new HttpHeaders(), result);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/persons/{uuid}/publicationstime")
-	public List<HashMap<String, String>> getPersonPubsPerTime(@PathVariable(name = "uuid") UUID uuid) throws Exception {
-		return personStatisticsRestRepository.getPublicationsPerTimeStatisticsFor(uuid);
+	public ResponseEntity<RepresentationModel<?>> getPersonPubsPerTime(@PathVariable(name = "uuid") UUID uuid)
+			throws Exception {
+		PersonStatisticsResource result = personStatisticsRestRepository.getPublicationsPerTimeStatisticsFor(uuid);
+		return ControllerUtils.toResponseEntity(HttpStatus.OK, new HttpHeaders(), result);
 	}
-
 
     @RequestMapping(method = RequestMethod.GET, value = "/searchevents/{uuid}")
     public PagedModel<SearchEventResource> getSearchEvent(@PathVariable(name = "uuid") UUID uuid) throws Exception {
