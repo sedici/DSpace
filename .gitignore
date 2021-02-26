@@ -21,7 +21,7 @@ tags
 overlays/
 
 ## Ignore project files created by NetBeans
-nbproject/private/
+nbproject/
 build/
 nbbuild/
 dist/
