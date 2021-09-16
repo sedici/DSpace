@@ -249,6 +249,7 @@
 					<dc-schema>sedici</dc-schema>
 					<dc-element>creator</dc-element>
 					<dc-qualifier>corporate</dc-qualifier>
+					<repeatable>true</repeatable>
 					<label>Autor Institucional</label>
 					<input-type>onebox</input-type>
 					<hint>Institución,empresa u organización creadora del recurso</hint>
