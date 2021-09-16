@@ -934,10 +934,20 @@
 					<label>Editorial</label>
 					<input-type>onebox</input-type>
 					<hint>Editorial encargada de la publicación de la obra</hint>
-					<type-bind>Tesis,Libro,Publicacion seriada</type-bind>
+					<type-bind>Tesis,Publicacion seriada</type-bind>
 					<visibility-on-group>Bibliotecarios</visibility-on-group>
 				</field>
-				
+				<!-- Editorial obligatorio para libros -->
+				<field>
+					<dc-schema>dc</dc-schema>
+					<dc-element>publisher</dc-element>
+					<label>Editorial (*)</label>
+					<input-type>onebox</input-type>
+					<hint>Editorial encargada de la publicación de la obra</hint>
+					<type-bind>Libro</type-bind>
+					<required-on-group>Bibliotecarios</required-on-group>
+					<visibility-on-group>Bibliotecarios</visibility-on-group>
+				</field>
 				<!-- Produccion -->
 				<field>
 					<dc-schema>dc</dc-schema>
