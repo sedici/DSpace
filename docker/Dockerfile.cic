@@ -1,5 +1,5 @@
 # NAME:     arieljlira/dspace
-FROM tomcat:8.5-jdk11
+FROM tomcat:9-jdk11
 
 LABEL maintainer "alira@sedici.unlp.edu.ar"
 

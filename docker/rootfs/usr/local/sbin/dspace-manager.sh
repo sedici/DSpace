@@ -77,17 +77,13 @@ truncate_all (){
 rebuild_installer(){
 
 	init_config $SOURCE_CFG_FILENAME
-#	print_info "Packaging dspace with MAVEN_OPTS='$MAVEN_OPTS'. "
 	print_info "Packaging dspace. "
 	print_info "Please be patient, it may take several minutes. "
 
 	sudo --login -u $DSPACE_USER <<EOF
 	cd $DSPACE_SOURCE
-	
-	#source ~/.bashrc
-
-	#mvn package $MAVEN_OPTS
-	mvn package
+	# See more https://stackoverflow.com/questions/19861520/maven-warning-unable-to-autodetect-javac-path-using-javac-from-the-environ/19861567#19861567
+	JAVA_HOME=$JAVA_HOME mvn package
 
 EOF
 

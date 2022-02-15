@@ -4,7 +4,7 @@ version: "3.7"
 #    name: ${DOCKER_EXTERNAL_NETWORK_NAME}
 services:
   dspacedb:
-    image: postgres:9.5-alpine
+    image: postgres:11-alpine
     environment:
       POSTGRES_DB: "dspace"
       POSTGRES_USER: dspace
@@ -19,12 +19,12 @@ services:
     command: start
     environment:
       CATALINA_OPTS: "-Xmx1024m -Xms512m -XX:MaxPermSize=256m"
-      DSPACE_WEBAPPS: "${DSPACE_WEBAPPS}" # posible values: "jspui xmlui  mirage2 rest oai rdf sword swordv2"
-      DSPACE_WEBAPPS: "${DSPACE_WEBAPPS}" # posible values: "mirage2 rest oai rdf sword swordv2"
+      DSPACE_WEBAPPS: "${DSPACE_WEBAPPS}" # posible values: "server oai rdf sword swordv2"
       DSPACE_ROOT_WEBAPP: "${DSPACE_ROOT_WEBAPP}"
       POSTGRES_DB_HOST: "dspacedb"
       POSTGRES_DB_NAME: "dspace"
       DSPACE_USER: dspace
+      DSPACE_BASE: "/dspace"
     volumes:
       - ../:/dspace/
       - ~/.m2/:/dspace/.m2/
@@ -33,7 +33,7 @@ services:
     depends_on:
       - dspacedb
   dspacesolr:
-    image: solr:8.8
+    image: solr:8.11-slim
     ports:
     - published: 8983
       target: 8983
