@@ -69,9 +69,8 @@ public class XmlWorkflowManager {
         removeUserItemPolicies(context, myitem, myitem.getSubmitter());
         grantSubmitterReadPolicies(context, myitem);
 
-    	// Decides if the alert email should be sent 
-    	if(!shouldSendAlert(context, wfi, null))
-    		noEMail.put(myitem.getID(), Boolean.TRUE);
+    	// Alert email should not be sent
+		noEMail.put(myitem.getID(), Boolean.TRUE);
         
     	context.turnOffAuthorisationSystem();
         Step firstStep = wf.getFirstStep();
