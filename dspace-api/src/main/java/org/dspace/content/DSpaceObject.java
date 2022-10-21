@@ -1356,6 +1356,8 @@ public abstract class DSpaceObject
 
     protected String[] getMDValueByLegacyField(String field){
         switch (field) {
+            case "entidad_origen":
+                return new String[]{"mods", "originInfo", "place"};
             case "introductory_text":
                 return new String[]{MetadataSchema.DC_SCHEMA, "description", null};
             case "short_description":

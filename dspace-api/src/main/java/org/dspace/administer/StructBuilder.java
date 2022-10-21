@@ -144,6 +144,7 @@ public class StructBuilder
         communityMap.put("sidebar", "side_bar_text");
         
         collectionMap.put("name", "name");
+        collectionMap.put("entidad_origen", "entidad_origen");
         collectionMap.put("description", "short_description");
         collectionMap.put("intro", "introductory_text");
         collectionMap.put("copyright", "copyright_text");
@@ -530,6 +531,13 @@ public class StructBuilder
             nameElement.setText(collection.getMetadata("name"));
             element.addContent(nameElement);
             
+            if (collection.getMetadata("entidad_origen") != null)
+            {
+                Element entidadOrigenElement = new Element("entidadorigen");
+                entidadOrigenElement.setText(collection.getMetadata("entidad_origen"));
+                element.addContent(entidadOrigenElement);
+            }
+
             if (collection.getMetadata("short_description") != null)
             {
                 Element descriptionElement = new Element("description");

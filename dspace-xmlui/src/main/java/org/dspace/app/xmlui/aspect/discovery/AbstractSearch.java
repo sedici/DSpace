@@ -496,6 +496,7 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
      */
     protected void renderCollection(Collection collection, DiscoverResult.DSpaceObjectHighlightResult highlightedResults, org.dspace.app.xmlui.wing.element.List collectionMetadata) throws WingException {
 
+        String entidad_origen = collection.getMetadata("entidad_origen");
         String description = collection.getMetadata("introductory_text");
         String description_abstract = collection.getMetadata("short_description");
         String description_table = collection.getMetadata("side_bar_text");
@@ -505,6 +506,10 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
         String rights_license = collection.getMetadata("license");
         String title = collection.getMetadata("name");
 
+        if(StringUtils.isNotBlank(entidad_origen))
+        {
+            addMetadataField(highlightedResults, "mods.originInfo.place", collectionMetadata.addList(collection.getHandle() + ":mods.originInfo.place"), entidad_origen);
+        }
         if(StringUtils.isNotBlank(description))
         {
             addMetadataField(highlightedResults, "dc.description", collectionMetadata.addList(collection.getHandle() + ":dc.description"), description);

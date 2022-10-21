@@ -49,6 +49,7 @@ public class EditCollectionMetadataForm extends AbstractDSpaceTransformer
     private static final Message T_main_head = message("xmlui.administrative.collection.EditCollectionMetadataForm.main_head");
 
     private static final Message T_label_name = message("xmlui.administrative.collection.EditCollectionMetadataForm.label_name");
+    private static final Message T_label_entidad_origen= message("xmlui.administrative.collection.EditCollectionMetadataForm.label_name", "Entidad origen");
     private static final Message T_label_short_description = message("xmlui.administrative.collection.EditCollectionMetadataForm.label_short_description");
     private static final Message T_label_introductory_text = message("xmlui.administrative.collection.EditCollectionMetadataForm.label_introductory_text");
     private static final Message T_label_copyright_text = message("xmlui.administrative.collection.EditCollectionMetadataForm.label_copyright_text");
@@ -114,7 +115,13 @@ public class EditCollectionMetadataForm extends AbstractDSpaceTransformer
 	    Text name = metadataList.addItem().addText("name");
 	    name.setSize(40);
 	    name.setValue(thisCollection.getMetadata("name"));
-	    
+
+	    // collection entidad de origen
+	    metadataList.addLabel(T_label_entidad_origen);
+	    Text entidad_origen = metadataList.addItem().addText("entidad_origen");
+	    entidad_origen.setValue(thisCollection.getMetadata("entidad_origen"));
+	    entidad_origen.setSize(100);
+
 	    // short description
 	    metadataList.addLabel(T_label_short_description);
 	    Text short_description = metadataList.addItem().addText("short_description");

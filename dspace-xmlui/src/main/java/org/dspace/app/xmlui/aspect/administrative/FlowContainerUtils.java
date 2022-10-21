@@ -82,6 +82,7 @@ public class FlowContainerUtils
 		
 		// Get the metadata
 		String name = request.getParameter("name");
+		String entidadOrigen = request.getParameter("entidad_origen");
 		String shortDescription = request.getParameter("short_description");
 		String introductoryText = request.getParameter("introductory_text");
 		String copyrightText = request.getParameter("copyright_text");
@@ -96,6 +97,10 @@ public class FlowContainerUtils
         }
 
 		// If empty, make it null.
+		if (entidadOrigen != null && entidadOrigen.length() == 0)
+        {
+			entidadOrigen = null;
+        }
 		if (shortDescription != null && shortDescription.length() == 0)
         {
             shortDescription = null;
@@ -123,6 +128,7 @@ public class FlowContainerUtils
 		
 		// Save the metadata
 		collection.setMetadata("name", name);
+		collection.setMetadata("entidad_origen", entidadOrigen);
 		collection.setMetadata("short_description", shortDescription);
 		collection.setMetadata("introductory_text", introductoryText);
 		collection.setMetadata("copyright_text", copyrightText);
@@ -746,6 +752,7 @@ public class FlowContainerUtils
 		
 		// Get the metadata
 		String name = request.getParameter("name");
+		String entidadOrigen = request.getParameter("entidad_origen");
 		String shortDescription = request.getParameter("short_description");
 		String introductoryText = request.getParameter("introductory_text");
 		String copyrightText = request.getParameter("copyright_text");
@@ -760,6 +767,10 @@ public class FlowContainerUtils
         }
 
 		// If empty, make it null.
+		if (entidadOrigen != null && entidadOrigen.length() == 0)
+        {
+			entidadOrigen = null;
+        }
 		if (shortDescription != null && shortDescription.length() == 0)
         {
             shortDescription = null;
@@ -787,6 +798,7 @@ public class FlowContainerUtils
 		
 		// Save the metadata
 		newCollection.setMetadata("name", name);
+		newCollection.setMetadata("entidad_origen", entidadOrigen);
 		newCollection.setMetadata("short_description", shortDescription);
 		newCollection.setMetadata("introductory_text", introductoryText);
 		newCollection.setMetadata("copyright_text", copyrightText);

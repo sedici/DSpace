@@ -537,6 +537,7 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
     {
         List<Metadatum> metadata = new ArrayList<Metadatum>();
 
+        String entidad_origen = collection.getMetadata("entidad_origen");
         String description = collection.getMetadata("introductory_text");
         String description_abstract = collection
                 .getMetadata("short_description");
@@ -547,6 +548,18 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
         String rights = collection.getMetadata("copyright_text");
         String rights_license = collection.getMetadata("license");
         String title = collection.getMetadata("name");
+
+        if (entidad_origen != null)
+        {
+            Metadatum met_entidad_origen = createDCValue("entidad_origen", null, entidad_origen);
+            met_entidad_origen.schema = "mods";
+            metadata.add(met_entidad_origen);
+        }
+
+        if (description != null)
+        {
+            metadata.add(createDCValue("description", null, description));
+        }
 
         if (description != null)
         {

@@ -82,6 +82,7 @@ public class Collection extends DSpaceObject
     private Group admins;
 
     // Keys for accessing Collection metadata
+    public static final String ENTIDAD_ORIGEN = "entidad_origen";
     public static final String COPYRIGHT_TEXT = "copyright_text";
     public static final String INTRODUCTORY_TEXT = "introductory_text";
     public static final String SHORT_DESCRIPTION = "short_description";

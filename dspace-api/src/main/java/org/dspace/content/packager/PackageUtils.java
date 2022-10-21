@@ -62,6 +62,7 @@ public class PackageUtils
     {
         // getMetadata()  ->  DC element.term
         "name",                    "dc.title",
+        "entidad_origen",          "mods.originInfo.place",
         "introductory_text",       "dc.description",
         "short_description",       "dc.description.abstract",
         "side_bar_text",           "dc.description.tableofcontents",

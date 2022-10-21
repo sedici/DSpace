@@ -836,6 +836,7 @@ public class SolrServiceImpl implements SearchService, IndexingService {
 
 
         // and populate it
+        String entidad_origen = collection.getMetadata("entidad_origen");
         String description = collection.getMetadata("introductory_text");
         String description_abstract = collection.getMetadata("short_description");
         String description_table = collection.getMetadata("side_bar_text");
@@ -852,6 +853,7 @@ public class SolrServiceImpl implements SearchService, IndexingService {
         addContainerMetadataField(doc, highlightedMetadataFields, toIgnoreMetadataFields, "dc.rights", rights);
         addContainerMetadataField(doc, highlightedMetadataFields, toIgnoreMetadataFields, "dc.rights.license", rights_license);
         addContainerMetadataField(doc, highlightedMetadataFields, toIgnoreMetadataFields, "dc.title", title);
+        addContainerMetadataField(doc, highlightedMetadataFields, toIgnoreMetadataFields, "mods.originInfo.place", entidad_origen);
 
 
         //Do any additional indexing, depends on the plugins

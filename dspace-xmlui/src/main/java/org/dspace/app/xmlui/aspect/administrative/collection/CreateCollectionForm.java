@@ -37,6 +37,7 @@ public class CreateCollectionForm extends AbstractDSpaceTransformer
 	private static final Message T_main_head = message("xmlui.administrative.collection.CreateCollectionForm.main_head");
 	
 	private static final Message T_label_name = message("xmlui.administrative.collection.EditCollectionMetadataForm.label_name");
+	private static final Message T_label_entidad_origen= message("xmlui.administrative.collection.EditCollectionMetadataForm.label_entidad_origen");
 	private static final Message T_label_short_description = message("xmlui.administrative.collection.EditCollectionMetadataForm.label_short_description");
 	private static final Message T_label_introductory_text = message("xmlui.administrative.collection.EditCollectionMetadataForm.label_introductory_text");
 	private static final Message T_label_copyright_text = message("xmlui.administrative.collection.EditCollectionMetadataForm.label_copyright_text");
@@ -74,6 +75,11 @@ public class CreateCollectionForm extends AbstractDSpaceTransformer
 	    Text name = metadataList.addItem().addText("name");
         name.setAutofocus("autofocus");
 	    name.setSize(40);
+
+	    // collection entidad de origen
+	    metadataList.addLabel(T_label_entidad_origen);
+	    Text entidad_origen = metadataList.addItem().addText("entidad_origen");
+	    name.setSize(100);
 	    
 	    // short description
 	    metadataList.addLabel(T_label_short_description);

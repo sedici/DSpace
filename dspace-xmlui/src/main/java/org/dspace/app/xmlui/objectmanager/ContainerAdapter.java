@@ -255,6 +255,7 @@ public class ContainerAdapter extends AbstractAdapter
             {
                 Collection collection = (Collection) dso;
                 
+                String entidad_origen = collection.getMetadata("entidad_origen");
                 String description = collection.getMetadata("introductory_text");
                 String description_abstract = collection.getMetadata("short_description");
                 String description_table = collection.getMetadata("side_bar_text");
@@ -264,6 +265,7 @@ public class ContainerAdapter extends AbstractAdapter
                 String rights_license = collection.getMetadata("license");
                 String title = collection.getMetadata("name");
                 
+                createField("mods","originInfo","place",null,entidad_origen);
                 createField("dc","description",null,null,description);
                 createField("dc","description","abstract",null,description_abstract);
                 createField("dc","description","tableofcontents",null,description_table);

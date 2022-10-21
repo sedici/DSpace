@@ -334,7 +334,7 @@ public class XSLTDisseminationCrosswalk
             if (dso.getType() == Constants.COLLECTION)
             {
                 Collection collection = (Collection) dso;
-
+                String entidad_origen = collection.getMetadata("entidad_origen");
                 String description = collection.getMetadata("introductory_text");
                 String description_abstract = collection.getMetadata("short_description");
                 String description_table = collection.getMetadata("side_bar_text");
@@ -352,6 +352,8 @@ public class XSLTDisseminationCrosswalk
                 dim.addContent(createField("dc","rights",null,null,rights));
                 dim.addContent(createField("dc","rights","license",null,rights_license));
                 dim.addContent(createField("dc","title",null,null,title));
+                dim.addContent(createField("mods","originInfo","place",null,entidad_origen));
+
             }
             else if (dso.getType() == Constants.COMMUNITY)
             {
