@@ -40,6 +40,7 @@ public class CreateCommunityForm extends AbstractDSpaceTransformer
 	private static final Message T_main_head_top = message("xmlui.administrative.community.CreateCommunityForm.main_head_top");
 
 	private static final Message T_label_name = message("xmlui.administrative.community.EditCommunityMetadataForm.label_name");
+	private static final Message T_label_entidad_origen= message("xmlui.administrative.community.EditCommunityMetadataForm.label_entidad_origen");
 	private static final Message T_label_short_description = message("xmlui.administrative.community.EditCommunityMetadataForm.label_short_description");
 	private static final Message T_label_introductory_text = message("xmlui.administrative.community.EditCommunityMetadataForm.label_introductory_text");
 	private static final Message T_label_copyright_text = message("xmlui.administrative.community.EditCommunityMetadataForm.label_copyright_text");
@@ -84,7 +85,12 @@ public class CreateCommunityForm extends AbstractDSpaceTransformer
 	    Text name = metadataList.addItem().addText("name");
 	    name.setSize(40);
         name.setAutofocus("autofocus");
-	    
+
+	    // collection entidad de origen
+	    metadataList.addLabel(T_label_entidad_origen);
+	    Text entidad_origen = metadataList.addItem().addText("entidad_origen");
+	    name.setSize(100);
+
 	    // short description
 	    metadataList.addLabel(T_label_short_description);
 	    Text short_description = metadataList.addItem().addText("short_description");

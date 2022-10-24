@@ -49,7 +49,7 @@ public class EditCollectionMetadataForm extends AbstractDSpaceTransformer
     private static final Message T_main_head = message("xmlui.administrative.collection.EditCollectionMetadataForm.main_head");
 
     private static final Message T_label_name = message("xmlui.administrative.collection.EditCollectionMetadataForm.label_name");
-    private static final Message T_label_entidad_origen= message("xmlui.administrative.collection.EditCollectionMetadataForm.label_name", "Entidad origen");
+    private static final Message T_label_entidad_origen= message("xmlui.administrative.collection.EditCollectionMetadataForm.label_entidad_origen");
     private static final Message T_label_short_description = message("xmlui.administrative.collection.EditCollectionMetadataForm.label_short_description");
     private static final Message T_label_introductory_text = message("xmlui.administrative.collection.EditCollectionMetadataForm.label_introductory_text");
     private static final Message T_label_copyright_text = message("xmlui.administrative.collection.EditCollectionMetadataForm.label_copyright_text");

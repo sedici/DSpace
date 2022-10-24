@@ -143,11 +143,23 @@
 
     <!-- Generate the info about the community from the metadata section -->
     <xsl:template match="dim:dim" mode="communityDetailView-DIM">
-        <xsl:if test="string-length(dim:field[@element='description'][not(@qualifier)])&gt;0">
+        <xsl:if test="string-length(dim:field[@element='description'][not(@qualifier)])&gt;0 or string-length(dim:field[@mdschema='mods'][@element='originInfo'][@qualifier='place'])&gt;0">
             <div class="intro-text">
-            	<xsl:call-template name="parseCommunityCollectionMetadata">
-            		<xsl:with-param name="node" select="dim:field[@element='description'][not(@qualifier)]/node()"/>
-            	</xsl:call-template>
+                <xsl:if test="string-length(dim:field[@mdschema='mods'][@element='originInfo'][@qualifier='place'])&gt;0">
+                    <div>
+                        <span class="label">
+                            <i18n:text>xmlui.administrative.community.EditCommunityMetadataForm.label_entidad_origen</i18n:text>:
+                        </span>
+                        <span class="value">
+                            <xsl:copy-of select="dim:field[@mdschema='mods'][@element='originInfo'][@qualifier='place']/node()" />
+                        </span>
+                    </div>
+                </xsl:if>
+                <xsl:if test="string-length(dim:field[@element='description'][not(@qualifier)])&gt;0">
+                    <xsl:call-template name="parseCommunityCollectionMetadata">
+                        <xsl:with-param name="node" select="dim:field[@element='description'][not(@qualifier)]/node()"/>
+                    </xsl:call-template>
+                </xsl:if>
             </div>
         </xsl:if>
 

@@ -293,14 +293,16 @@ public class ContainerAdapter extends AbstractAdapter
             else if (dso.getType() == Constants.COMMUNITY) 
             {
                 Community community = (Community) dso;
-                
+
+                String entidad_origen = community.getMetadata("entidad_origen");
                 String description = community.getMetadata("introductory_text");
                 String description_abstract = community.getMetadata("short_description");
                 String description_table = community.getMetadata("side_bar_text");
                 String identifier_uri = "http://hdl.handle.net/" + community.getHandle();
                 String rights = community.getMetadata("copyright_text");
                 String title = community.getMetadata("name");
-                
+
+                createField("mods","originInfo","place",null,entidad_origen);
                 createField("dc","description",null,null,description);
                 createField("dc","description","abstract",null,description_abstract);
                 createField("dc","description","tableofcontents",null,description_table);

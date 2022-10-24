@@ -138,6 +138,7 @@ public class StructBuilder
         
         // load the mappings into the member variable hashmaps
         communityMap.put("name", "name");
+        communityMap.put("entidad_origen", "entidad_origen");
         communityMap.put("description", "short_description");
         communityMap.put("intro", "introductory_text");
         communityMap.put("copyright", "copyright_text");
@@ -437,6 +438,13 @@ public class StructBuilder
             nameElement.setText(community.getMetadata("name"));
             element.addContent(nameElement);
             
+            if (community.getMetadata("entidad_origen") != null)
+            {
+                Element entidadOrigenElement = new Element("entidadorigen");
+                entidadOrigenElement.setText(community.getMetadata("entidad_origen"));
+                element.addContent(entidadOrigenElement);
+            }
+
             if (community.getMetadata("short_description") != null)
             {
                 Element descriptionElement = new Element("description");

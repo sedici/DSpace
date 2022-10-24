@@ -239,6 +239,7 @@ public class DSpaceValidity implements SourceValidity
 
             validityKey.append("Community:");
             validityKey.append(community.getHandle());
+            validityKey.append(community.getMetadata("entidad_origen"));
             validityKey.append(community.getMetadata("introductory_text"));
             validityKey.append(community.getMetadata("short_description"));
             validityKey.append(community.getMetadata("side_bar_text"));

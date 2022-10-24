@@ -1991,6 +1991,7 @@ Para asignar un item a esta colección, cerciórese de estar en la colección co
 <message key="xmlui.administrative.community.EditCommunityMetadataForm.main_head">Editar metadatos de la comunidad {0}</message>
 <message key="xmlui.administrative.community.EditCommunityMetadataForm.edit_authorizations">Editar privilegios</message>
 <message key="xmlui.administrative.community.EditCommunityMetadataForm.label_name">Nombre</message>
+<message key="xmlui.administrative.community.EditCommunityMetadataForm.label_entidad_origen">Entidad de origen</message>
 <message key="xmlui.administrative.community.EditCommunityMetadataForm.label_short_description">Descripción breve</message>
 <message key="xmlui.administrative.community.EditCommunityMetadataForm.label_introductory_text">Texto introductorio (HTML)</message>
 <message key="xmlui.administrative.community.EditCommunityMetadataForm.label_copyright_text">Texto de copyright (HTML)</message>

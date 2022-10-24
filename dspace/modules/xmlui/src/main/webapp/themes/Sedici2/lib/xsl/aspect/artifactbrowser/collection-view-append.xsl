@@ -133,7 +133,7 @@
        
     <!-- Generate the info about the collection from the metadata section -->
     <xsl:template match="dim:dim" mode="collectionDetailView-DIM">
-        <xsl:if test="string-length(dim:field[@element='description'][not(@qualifier)])&gt;0">
+        <xsl:if test="string-length(dim:field[@element='description'][not(@qualifier)])&gt;0 or string-length(dim:field[@mdschema='mods'][@element='originInfo'][@qualifier='place'])&gt;0">
             <div class="intro-text">
                 <xsl:if test="string-length(dim:field[@mdschema='mods'][@element='originInfo'][@qualifier='place'])&gt;0">
                     <div>
@@ -145,9 +145,11 @@
                         </span>
                     </div>
                 </xsl:if>
-                <xsl:call-template name="parseCommunityCollectionMetadata">
-            		<xsl:with-param name="node" select="dim:field[@element='description'][not(@qualifier)]/node()"/>
-            	</xsl:call-template>
+                <xsl:if test="string-length(dim:field[@element='description'][not(@qualifier)])&gt;0">
+                    <xsl:call-template name="parseCommunityCollectionMetadata">
+                        <xsl:with-param name="node" select="dim:field[@element='description'][not(@qualifier)]/node()"/>
+                    </xsl:call-template>
+                </xsl:if>
             </div>
         </xsl:if>
 

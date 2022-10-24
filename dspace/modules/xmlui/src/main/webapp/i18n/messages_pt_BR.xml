@@ -1816,6 +1816,7 @@
 	<message key="xmlui.administrative.community.EditCommunityMetadataForm.main_head">Edição de metadado para a comunidade {0}</message>
 	<message key="xmlui.administrative.community.EditCommunityMetadataForm.edit_authorizations">Edição de políticas de autorização</message>
 	<message key="xmlui.administrative.community.EditCommunityMetadataForm.label_name">Nome</message>
+	<message key="xmlui.administrative.community.EditCommunityMetadataForm.label_entidad_origen">Instituição de origem</message>
 	<message key="xmlui.administrative.community.EditCommunityMetadataForm.label_short_description">Pequena descrição</message>
 	<message key="xmlui.administrative.community.EditCommunityMetadataForm.label_introductory_text">Texto introdutório (HTML)</message>
 	<message key="xmlui.administrative.community.EditCommunityMetadataForm.label_copyright_text">Texto sobre os direitos autorais (HTML)</message>

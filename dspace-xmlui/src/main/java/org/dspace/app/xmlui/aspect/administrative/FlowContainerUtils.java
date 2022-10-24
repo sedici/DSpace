@@ -864,6 +864,7 @@ public class FlowContainerUtils
         }
 		
 		String name = request.getParameter("name");
+		String entidadOrigen = request.getParameter("entidad_origen");
 		String shortDescription = request.getParameter("short_description");
 		String introductoryText = request.getParameter("introductory_text");
 		String copyrightText = request.getParameter("copyright_text");
@@ -876,6 +877,10 @@ public class FlowContainerUtils
         }
 
 		// If empty, make it null.
+		if (entidadOrigen != null && entidadOrigen.length() == 0)
+        {
+			entidadOrigen = null;
+        }
 		if (shortDescription != null && shortDescription.length() == 0)
         {
             shortDescription = null;
@@ -894,6 +899,7 @@ public class FlowContainerUtils
         }
 		
 		newCommunity.setMetadata("name", name);
+		newCommunity.setMetadata("entidad_origen", entidadOrigen);
 		newCommunity.setMetadata("short_description", shortDescription);
 		newCommunity.setMetadata("introductory_text", introductoryText);
 		newCommunity.setMetadata("copyright_text", copyrightText);
@@ -943,6 +949,7 @@ public class FlowContainerUtils
 		Community community = Community.find(context, communityID);
 		
 		String name = request.getParameter("name");
+		String entidadOrigen = request.getParameter("entidad_origen");
 		String shortDescription = request.getParameter("short_description");
 		String introductoryText = request.getParameter("introductory_text");
 		String copyrightText = request.getParameter("copyright_text");
@@ -955,6 +962,10 @@ public class FlowContainerUtils
         }
 
 		// If empty, make it null.
+		if (entidadOrigen != null && entidadOrigen.length() == 0)
+        {
+			entidadOrigen = null;
+        }
 		if (shortDescription != null && shortDescription.length() == 0)
         {
             shortDescription = null;
@@ -974,6 +985,7 @@ public class FlowContainerUtils
 		
 		// Save the data
 		community.setMetadata("name", name);
+		community.setMetadata("entidad_origen", entidadOrigen);
 		community.setMetadata("short_description", shortDescription);
         community.setMetadata("introductory_text", introductoryText);
         community.setMetadata("copyright_text", copyrightText);

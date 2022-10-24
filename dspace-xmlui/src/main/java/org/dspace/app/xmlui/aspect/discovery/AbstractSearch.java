@@ -552,6 +552,7 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
      */
 
     protected void renderCommunity(Community community, DiscoverResult.DSpaceObjectHighlightResult highlightedResults, org.dspace.app.xmlui.wing.element.List communityMetadata) throws WingException {
+        String entidad_origen = community.getMetadata("entidad_origen");
         String description = community.getMetadata("introductory_text");
         String description_abstract = community.getMetadata("short_description");
         String description_table = community.getMetadata("side_bar_text");
@@ -559,6 +560,10 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
         String rights = community.getMetadata("copyright_text");
         String title = community.getMetadata("name");
 
+        if(StringUtils.isNotBlank(entidad_origen))
+        {
+            addMetadataField(highlightedResults, "mods.originInfo.place", communityMetadata.addList(community.getHandle() + ":mods.originInfo.place"), entidad_origen);
+        }
         if(StringUtils.isNotBlank(description))
         {
             addMetadataField(highlightedResults, "dc.description", communityMetadata.addList(community.getHandle() + ":dc.description"), description);

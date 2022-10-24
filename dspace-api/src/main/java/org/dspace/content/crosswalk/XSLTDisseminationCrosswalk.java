@@ -358,7 +358,7 @@ public class XSLTDisseminationCrosswalk
             else if (dso.getType() == Constants.COMMUNITY)
             {
                 Community community = (Community) dso;
-
+                String entidad_origen = community.getMetadata("entidad_origen");
                 String description = community.getMetadata("introductory_text");
                 String description_abstract = community.getMetadata("short_description");
                 String description_table = community.getMetadata("side_bar_text");
@@ -372,6 +372,7 @@ public class XSLTDisseminationCrosswalk
                 dim.addContent(createField("dc","identifier","uri",null,identifier_uri));
                 dim.addContent(createField("dc","rights",null,null,rights));
                 dim.addContent(createField("dc","title",null,null,title));
+                dim.addContent(createField("mods","originInfo","place",null,entidad_origen));
             }
             else if (dso.getType() == Constants.SITE)
             {
