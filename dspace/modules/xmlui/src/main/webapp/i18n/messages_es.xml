@@ -1852,6 +1852,7 @@ Para asignar un item a esta colección, cerciórese de estar en la colección co
 <message key="xmlui.administrative.collection.EditCollectionMetadataForm.trail">Metadatos</message>
 <message key="xmlui.administrative.collection.EditCollectionMetadataForm.main_head">Editar colección: {0}</message>
 <message key="xmlui.administrative.collection.EditCollectionMetadataForm.label_name">Nombre</message>
+<message key="xmlui.administrative.collection.EditCollectionMetadataForm.label_entidad_origen">Entidad de origen</message>
 <message key="xmlui.administrative.collection.EditCollectionMetadataForm.label_short_description">Descripción breve:</message>
 <message key="xmlui.administrative.collection.EditCollectionMetadataForm.label_introductory_text">Texto introductorio (HTML)</message>
 <message key="xmlui.administrative.collection.EditCollectionMetadataForm.label_copyright_text">Texto de copyright (texto plano)</message>

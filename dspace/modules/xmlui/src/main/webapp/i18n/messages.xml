@@ -1852,6 +1852,7 @@
 	<message key="xmlui.administrative.collection.EditCollectionMetadataForm.trail">Metadata</message>
 	<message key="xmlui.administrative.collection.EditCollectionMetadataForm.main_head">Edit Collection: {0}</message>
 	<message key="xmlui.administrative.collection.EditCollectionMetadataForm.label_name">Name</message>
+	<message key="xmlui.administrative.collection.EditCollectionMetadataForm.label_entidad_origen">Belonging institution</message>
 	<message key="xmlui.administrative.collection.EditCollectionMetadataForm.label_short_description">Short Description</message>
 	<message key="xmlui.administrative.collection.EditCollectionMetadataForm.label_introductory_text">Introductory text (HTML)</message>
 	<message key="xmlui.administrative.collection.EditCollectionMetadataForm.label_copyright_text">Copyright text (HTML)</message>

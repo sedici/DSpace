@@ -135,6 +135,16 @@
     <xsl:template match="dim:dim" mode="collectionDetailView-DIM">
         <xsl:if test="string-length(dim:field[@element='description'][not(@qualifier)])&gt;0">
             <div class="intro-text">
+                <xsl:if test="string-length(dim:field[@mdschema='mods'][@element='originInfo'][@qualifier='place'])&gt;0">
+                    <div>
+                        <span class="label">
+                            <i18n:text>xmlui.administrative.collection.EditCollectionMetadataForm.label_entidad_origen</i18n:text>:
+                        </span>
+                        <span class="value">
+                            <xsl:copy-of select="dim:field[@mdschema='mods'][@element='originInfo'][@qualifier='place']/node()" />
+                        </span>
+                    </div>
+                </xsl:if>
                 <xsl:call-template name="parseCommunityCollectionMetadata">
             		<xsl:with-param name="node" select="dim:field[@element='description'][not(@qualifier)]/node()"/>
             	</xsl:call-template>
