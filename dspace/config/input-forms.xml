@@ -938,15 +938,6 @@
 					<visibility-on-group>Bibliotecarios</visibility-on-group>
 				</field>
 
-				<!-- Nro de Reporte - REPORTE -->
-				<field>
-					<dc-schema>sedici</dc-schema>
-					<dc-element>report</dc-element>
-					<label>Nro de reporte</label>
-					<input-type>onebox</input-type>
-					<hint>Número del reporte</hint>
-					<type-bind>Reporte</type-bind>
-				</field>
 
 				<!-- Editorial -->
 				<field>
