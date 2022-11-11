@@ -1,0 +1,24 @@
+# This is a basic workflow that is manually triggered
+
+name: Testing deploy
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  push:
+    branches:
+      - sedici_master
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  deploy:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Runs a single command using the runners shell
+    - name: Exec jenkins trigger
+      env: # Or as an environment variable
+        jenkins_build_trigger_url: ${{ secrets.jenkins_build_trigger_url }}
+        jenkins_user_name: ${{ secrets.jenkins_user_name }}
+        jenkins_user_token: ${{ secrets.jenkins_user_token }}
+      run: wget --auth-no-challenge --user="$jenkins_user_name" --password="$jenkins_user_token" "$jenkins_build_trigger_url"
