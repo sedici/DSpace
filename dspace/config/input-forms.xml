@@ -970,6 +970,7 @@
 					<hint>Nombre de la entidad y/o sitio web desde donde se obtuvo la información del registro</hint>
 					<visibility-on-group>Bibliotecarios</visibility-on-group>
 					<type-bind>!Objeto Fisico</type-bind>
+					prueba
 				</field>
 				-->
 				<!-- Se relaciona con -->
