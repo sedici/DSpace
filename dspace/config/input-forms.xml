@@ -960,6 +960,7 @@
 				</field>
 				
 				<!-- Entidad fuente -->
+				<!--
 				<field>
 					<dc-schema>mods</dc-schema>
 					<dc-element>recordInfo</dc-element>
@@ -970,7 +971,7 @@
 					<visibility-on-group>Bibliotecarios</visibility-on-group>
 					<type-bind>!Objeto Fisico</type-bind>
 				</field>
-
+				-->
 				<!-- Se relaciona con -->
 				<field>
 					<dc-schema>sedici</dc-schema>
