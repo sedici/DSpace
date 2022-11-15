@@ -1345,6 +1345,10 @@
 				<displayed-value>Boletín</displayed-value>
 				<stored-value>Boletin</stored-value>
 			</pair>
+			<pair>
+				<displayed-value>Publicación seriada</displayed-value>
+				<stored-value>Publicacion seriada</stored-value>
+			</pair>
 		</value-pairs>
 		
 		<value-pairs value-pairs-name="common_subtypes_conjunto_de_datos" dc-term="type">
