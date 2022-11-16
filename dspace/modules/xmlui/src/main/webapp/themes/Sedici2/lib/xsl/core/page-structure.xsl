@@ -645,9 +645,11 @@ placeholders for header images -->
 						var itemType = document.getElementsByName("DC.type")[0].content;
 						var itemSubtype = document.getElementsByName("DC.type")[1].content;
 						var itemDateIssued = (document.getElementsByName("DCTERMS.issued")[0])? document.getElementsByName("DCTERMS.issued")[0].content : document.getElementsByName("DCTERMS.created")[0].content.substring(0,10);
+						var itemParentCollection = document.getElementById("ds-trail").querySelectorAll('.ds-trail-link:last-child')[0].firstElementChild.getAttribute('href').split('/handle/').pop();
 						ga('set', 'dimension3', itemType);
 						ga('set', 'dimension5', itemSubtype);
 						ga('set', 'dimension6', itemDateIssued);
+						ga('set', 'dimension7', itemParentCollection);
 					</xsl:text>
 					</xsl:if>
 				</xsl:if><xsl:text>
