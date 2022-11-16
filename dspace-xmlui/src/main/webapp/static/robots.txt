@@ -145,3 +145,6 @@ Disallow: /
 # http://www.webreaper.net/
 User-agent: WebReaper
 Disallow: /
+
+User-agent: DataForSeoBot
+Crawl-delay: 50
