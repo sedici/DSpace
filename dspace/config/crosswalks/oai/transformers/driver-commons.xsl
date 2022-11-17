@@ -191,7 +191,7 @@
 			<xsl:when test="$subtype='Contribucion a revista'">
 				info:eu-repo/semantics/contributionToPeriodical
 			</xsl:when>
-			<xsl:when test="$subtype='Reporte'">
+			<xsl:when test="$subtype='Reporte tecnico'">
 				info:eu-repo/semantics/report
 			</xsl:when>
 			<xsl:when test="$subtype='patente'">
@@ -230,7 +230,7 @@
 			<xsl:when test="$subtype='Convenio'">
 				info:eu-repo/semantics/annotation
 			</xsl:when>
-			<xsl:when test="$subtype='Informe'">
+			<xsl:when test="$subtype='Informe de proyecto'">
 				info:eu-repo/semantics/annotation
 			</xsl:when>
 			<xsl:when test="$subtype='Imagen fija'">
@@ -283,7 +283,7 @@
 			<xsl:when test="$subtype='Convenio'">
 				info:eu-repo/semantics/publishedVersion
 			</xsl:when>
-			<xsl:when test="$subtype='Informe'">
+			<xsl:when test="$subtype='Informe de proyecto'">
 				info:eu-repo/semantics/publishedVersion
 			</xsl:when>
 			<xsl:when test="$subtype='Revision'">
@@ -292,7 +292,7 @@
 			<xsl:when test="$subtype='Contribucion a revista'">
 				info:eu-repo/semantics/publishedVersion
 			</xsl:when>
-			<xsl:when test="$subtype='Reporte'">
+			<xsl:when test="$subtype='Reporte tecnico'">
 				info:eu-repo/semantics/publishedVersion
 			</xsl:when>
 			<xsl:when test="$subtype='patente'">

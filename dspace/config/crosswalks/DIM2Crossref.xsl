@@ -62,7 +62,7 @@
 						<xsl:call-template name="setDataset" />
 					</xsl:when>
 
-					<xsl:when test="$type='Reporte'">
+					<xsl:when test="$type='Reporte tecnico'">
 						<xsl:call-template name="setReport" />
 					</xsl:when>
 
