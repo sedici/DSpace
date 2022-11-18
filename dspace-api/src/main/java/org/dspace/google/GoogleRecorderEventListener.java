@@ -136,11 +136,12 @@ public class GoogleRecorderEventListener extends AbstractUsageEventListener {
                remote address. ordering in spec is vague, we'll just take the last
                not equal to the proxy
             */
+            xfip = xfip.trim();
             if (!StringUtils.equals(remoteIp, xfip) && StringUtils.isNotBlank(xfip)
                     //if we have trusted proxies, we'll assume that they are not the client IP
                     && (trustedProxies == null || !isRequestFromTrustedProxy(xfip))) {
 
-                ip = xfip.trim();
+                ip = xfip;
             }
         }
 
