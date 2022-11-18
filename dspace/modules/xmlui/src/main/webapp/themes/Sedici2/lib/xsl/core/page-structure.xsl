@@ -649,8 +649,12 @@ placeholders for header images -->
 						ga('set', 'dimension3', itemType);
 						ga('set', 'dimension5', itemSubtype);
 						ga('set', 'dimension6', itemDateIssued);
-						ga('set', 'dimension7', itemParentCollection);
-					</xsl:text>
+						</xsl:text>
+						<xsl:variable name="dsoParentHandle">
+							<xsl:value-of select="substring-after(/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='focus'][@qualifier='container']/text(), 'hdl:')"/>
+						</xsl:variable><xsl:text>
+						ga('set', 'dimension7', '</xsl:text><xsl:value-of select="$dsoParentHandle"/><xsl:text>');
+						</xsl:text>
 					</xsl:if>
 				</xsl:if><xsl:text>
 				ga('send', 'pageview');
