@@ -652,6 +652,41 @@
 			</div>
 		</xsl:if>
 
+
+		<div id="usage-stats">
+			<script type="text/javascript">
+				(function(w, d, s, o, p, f, js, fjs) {
+				w[o] = w[o] || function() {
+						(w[o][p] = w[o][p] || {});
+						Object.assign(w[o][p], arguments[0] || {});
+					};
+					js = d.createElement(s), fjs = d.getElementsByTagName(s)[0];
+					js.id = o;
+					js.src = f;
+					js.async = 1;
+					fjs.parentNode.insertBefore(js, fjs);
+				}(window, document, 'script', 'lrw', 'parameters', 'https://cdn.jsdelivr.net/gh/lareferencia/lrw@1.1.2/dist/lrw.js'));
+				lrw({
+					widget_div_id: 'usage-stats',
+					identifier_prefix: 'oai:sedici.unlp.edu.ar:10915/',
+					identifier_regex: '\/handle\/[0-9\.]+\/([0-9]+)\/?', // build the identifier from the url
+					event_labels: {
+						'view': 'Vistas',
+						'download': 'Descargas',
+						'outlink': 'Enlaces'
+					},
+					scope_labels: {
+						'L': 'LA Referencia',
+						'N': 'SNRD',
+						'R': 'SEDICI'
+					},
+					country: 'AR',
+					national_source: 'SITEID::59',
+					repository_source: 'OPENDOAR::1329'
+				});
+			</script>
+		</div>
+
 		<!-- relation.ispartof row -->
 		
         <xsl:call-template name="render-normal-field">
