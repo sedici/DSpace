@@ -33,3 +33,6 @@ META-INF/
 
 ##Omito los datos relativos a la configuración local de dspace
 install/
+
+# Omito las credenciales de google api
+client_secrets.json

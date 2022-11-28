@@ -24,7 +24,18 @@
    <properties>
        <!-- This is the path to the root [dspace-src] directory. -->
        <root.basedir>${basedir}/../../..</root.basedir>
+       <project.youtube.version>v3-rev24-1.13.2-beta</project.youtube.version>
+       <project.http.version>1.13.1-beta</project.http.version>
+       <project.oauth.version>1.13.1-beta</project.oauth.version>
+       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
    </properties>
+
+   <repositories>
+     <repository>
+       <id>google-api-services</id>
+       <url>http://google-api-client-libraries.appspot.com/mavenrepo</url>
+     </repository>
+   </repositories>
 
    <profiles>
       <profile>
@@ -96,7 +107,21 @@
             </exclusion>
          </exclusions>
       </dependency>
-      
+      <dependency>
+         <groupId>com.google.apis</groupId>
+         <artifactId>google-api-services-youtube</artifactId>
+         <version>${project.youtube.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>com.google.http-client</groupId>
+         <artifactId>google-http-client-jackson2</artifactId>
+         <version>${project.http.version}</version>
+      </dependency>
+      <dependency>
+	     <groupId>com.google.oauth-client</groupId>
+         <artifactId>google-oauth-client-jetty</artifactId>
+         <version>${project.oauth.version}</version>
+      </dependency>
    </dependencies>
 
 </project>
