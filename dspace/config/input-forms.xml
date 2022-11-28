@@ -1402,10 +1402,10 @@
                 <stored-value>Proyecto de investigacion</stored-value>
             </pair>
         </value-pairs>
-
+		
 		<value-pairs value-pairs-name="common_subtypes_reporte" dc-term="type">
 		    <pair>
-                <displayed-value>Reporte tecnico</displayed-value>
+                <displayed-value>Reporte técnico</displayed-value>
                 <stored-value>Reporte tecnico</stored-value>
             </pair>
             <pair>
