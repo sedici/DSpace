@@ -148,6 +148,9 @@
 				<xsl:call-template name="buildUserBox"/>
 			</xsl:if>
 			
+            <!-- Carga del widget de La Referencia-->
+            <xsl:call-template name="buildLRStatisticsBox"/>
+
 			<!-- Controles para las busquedas -->
 			<xsl:if test="/dri:document/dri:body/dri:div/dri:div[@id='aspect.discovery.SimpleSearch.div.search-results' and @itemsTotal]">
 				<xsl:apply-templates select="dri:body/dri:div[@n='search']/dri:div/dri:div/dri:div/dri:list[@n='sort-options']"/>
@@ -508,6 +511,46 @@ placeholders for header images -->
         <xsl:value-of select="/dri:document/dri:meta/dri:userMeta/dri:metadata[@element='identifier' and @qualifier='firstName']"/>
         <xsl:text> </xsl:text>
         <xsl:value-of select="/dri:document/dri:meta/dri:userMeta/dri:metadata[@element='identifier' and @qualifier='lastName']"/>
+    </xsl:template>
+
+    <xsl:template name="buildLRStatisticsBox">
+        <div id="ds-LRstatistics-box" class="statisticsbox">
+            <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='focus'][@qualifier='containerType']/text() = 'type:item'">
+                <div id="usage-stats" class="usagestats">
+                    <script type="text/javascript">
+                        (function(w, d, s, o, p, f, js, fjs) {
+                        w[o] = w[o] || function() {
+                                (w[o][p] = w[o][p] || {});
+                                Object.assign(w[o][p], arguments[0] || {});
+                            };
+                            js = d.createElement(s), fjs = d.getElementsByTagName(s)[0];
+                            js.id = o;
+                            js.src = f;
+                            js.async = 1;
+                            fjs.parentNode.insertBefore(js, fjs);
+                        }(window, document, 'script', 'lrw', 'parameters', 'https://cdn.jsdelivr.net/gh/lareferencia/lrw@1.1.2/dist/lrw.js'));
+                        lrw({
+                            widget_div_id: 'usage-stats',
+                            identifier_prefix: 'oai:sedici.unlp.edu.ar:10915/',
+                            identifier_regex: '\/handle\/[0-9\.]+\/([0-9]+)\/?', // build the identifier from the url
+                            event_labels: {
+                                'view': 'Vistas',
+                                'download': 'Descargas',
+                                'outlink': 'Enlaces'
+                            },
+                            scope_labels: {
+                                'L': 'LA Referencia',
+                                'N': 'SNRD',
+                                'R': 'SEDICI'
+                            },
+                            country: 'AR',
+                            national_source: 'SITEID::59',
+                            repository_source: 'OPENDOAR::1329'
+                        });
+                    </script>
+                </div>
+            </xsl:if>
+        </div>
     </xsl:template>
 
     <xsl:template name="addJavascript">

@@ -144,6 +144,7 @@
    		<div id="ds-right-section">
 			<xsl:call-template name="buildUserBox"/>
 			<xsl:call-template name="buildCommunitiesBox"/>
+			<xsl:call-template name="buildLRStatisticsBox"/>
 		</div>
    </xsl:template>
     
