@@ -1398,18 +1398,17 @@
                 <stored-value>Proyecto de investigacion</stored-value>
             </pair>
         </value-pairs>
-		
-		<value-pairs value-pairs-name="common_subtypes_reporte" dc-term="type">
-		    <pair>
-                <displayed-value>Reporte técnico</displayed-value>
+
+        <value-pairs value-pairs-name="common_subtypes_reporte" dc-term="type">
+            <pair>
+                <displayed-value>Reporte tecnico</displayed-value>
                 <stored-value>Reporte tecnico</stored-value>
             </pair>
             <pair>
                 <displayed-value>Informe de proyecto</displayed-value>
                 <stored-value>Informe de proyecto</stored-value>
             </pair>
-		</value-pairs>
-
+        </value-pairs>
 
 		<!-- default language order: (from dspace 1.2.1) "en_US", "en", "es", "de", 
 			"fr", "it", "ja", "zh", "other", "" -->
