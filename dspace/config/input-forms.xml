@@ -205,6 +205,17 @@
 					<type-bind>Proyecto</type-bind>
 				</field>
 
+				<field>
+					<dc-schema>sedici</dc-schema>
+					<dc-element>subtype</dc-element>
+					<label>Especifique el tipo de Reporte (*)</label>
+					<input-type value-pairs-name="common_subtypes_reporte">dropdown</input-type>
+					<hint>Seleccione el tipo de reporte que desea cargar</hint>
+					<required-on-group>Bibliotecarios</required-on-group>
+					<visibility-on-group>Bibliotecarios</visibility-on-group>
+					<type-bind>Reporte</type-bind>
+				</field>
+
 				<!-- /////////////////// FIN DE LOS TYPES Y SUBTYPES /////////////////// -->
 
 
@@ -912,6 +923,7 @@
 					<visibility-on-group>Bibliotecarios</visibility-on-group>
 				</field>
 
+
 				<!-- Editorial -->
 				<field>
 					<dc-schema>dc</dc-schema>
@@ -1116,6 +1128,10 @@
 				<displayed-value>Proyecto</displayed-value>
 				<stored-value>Proyecto</stored-value>
 			</pair>
+			<pair>
+				<displayed-value>Reporte</displayed-value>
+				<stored-value>Reporte</stored-value>
+			</pair>
 		</value-pairs>
 		
 		<value-pairs value-pairs-name="common_subtypes_articulo" dc-term="type">
@@ -1281,10 +1297,6 @@
 				<displayed-value>Convenio</displayed-value>
 				<stored-value>Convenio</stored-value>
 			</pair>
-			<pair>
-				<displayed-value>Informe</displayed-value>
-				<stored-value>Informe</stored-value>
-			</pair>
 		</value-pairs>
 
 		<value-pairs value-pairs-name="common_subtypes_imagen_fija" dc-term="type">
@@ -1377,6 +1389,16 @@
             </pair>
         </value-pairs>
 
+        <value-pairs value-pairs-name="common_subtypes_reporte" dc-term="type">
+            <pair>
+                <displayed-value>Reporte técnico</displayed-value>
+                <stored-value>Reporte tecnico</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Informe de proyecto</displayed-value>
+                <stored-value>Informe de proyecto</stored-value>
+            </pair>
+        </value-pairs>
 
 		<!-- default language order: (from dspace 1.2.1) "en_US", "en", "es", "de", 
 			"fr", "it", "ja", "zh", "other", "" -->

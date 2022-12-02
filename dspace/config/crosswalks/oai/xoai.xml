@@ -496,7 +496,7 @@
 					<string>Comunicacion</string>
 					<string>Revision</string>
 					<string>Contribuciones a revistas</string>
-					<string>Reporte</string>
+					<string>Reporte tecnico</string>
 					<string>Patente</string>
 					<string>Tesis de doctorado</string>
 					<string>Tesis de maestria</string>
@@ -525,7 +525,7 @@
 					<string>Convenio</string>
 					<string>Proyecto de extension</string>
 					<string>Proyecto de investigacion</string>
-					<string>Informe</string>
+					<string>Informe de proyecto</string>
                 </list>
             </Configuration>
         </CustomCondition>
@@ -592,7 +592,7 @@
                     <string>Articulo</string>
     				<string>Documento de trabajo</string>
 	    			<string>Revision</string>
-		    		<string>Reporte</string>
+		    		<string>Reporte tecnico</string>
 			    	<string>Patente</string>
 				    <string>Tesis de doctorado</string>
     				<string>Tesis de maestria</string>
