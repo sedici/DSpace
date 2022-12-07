@@ -62,10 +62,6 @@
 						<xsl:call-template name="setDataset" />
 					</xsl:when>
 
-					<xsl:when test="$type='Reporte tecnico'">
-						<xsl:call-template name="setReport" />
-					</xsl:when>
-
 					<!-- <xsl:when test="$type='Objeto de conferencia'">
 						<xsl:call-template name="setObjetoDeConferencia" />
 					</xsl:when> -->
