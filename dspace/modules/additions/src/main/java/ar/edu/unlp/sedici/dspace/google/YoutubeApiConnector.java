@@ -108,7 +108,7 @@ public class YoutubeApiConnector {
 			Credential credential = authorize(scopes);
 			// YouTube object used to make all API requests.
 			youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
-					.setApplicationName("dspace-youtubr-api-test").build();
+					.setApplicationName("DSpace SEDICI").build();
 
 			// Add extra information to the video before uploading.
 			Video videoObjectDefiningMetadata = new Video();
@@ -152,7 +152,11 @@ public class YoutubeApiConnector {
 			 * successfully uploaded. 2. Metadata we want associated with the uploaded
 			 * video. 3. Video file itself.
 			 */
-			YouTube.Videos.Insert videoInsert = youtube.videos().insert("snippet,statistics,status",
+			List<String> list = new ArrayList<String>();
+			list.add("snippet");
+			list.add("statistics");
+			list.add("status");
+			YouTube.Videos.Insert videoInsert = youtube.videos().insert(list,
 					videoObjectDefiningMetadata, mediaContent);
 
 			// Set the upload type and add event listener.
