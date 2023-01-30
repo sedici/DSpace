@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,101 +36,18 @@ public class VideoUpload {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		File videoFile = getVideoFromUser();
-		// We get the user selected local video file to upload.
-		System.out.println("You chose " + videoFile + " to upload.");
-		Video returnedVideo = new YoutubeApiConnector().uploadVideo(videoFile);
+		File videoFile = new File("/home/rafael/Escritorio/Youtube 2/SilenceWench.mp4");
+		String tittle = "Titulo";
+		String description = "Probando descripcion";
+		List<String> tags = new ArrayList<String>();
+		tags.add("Hola");
+		tags.add("Prueba");
+		String returnedVideoId = new YoutubeAdapter().uploadVideo(videoFile,tittle,description,tags);
 		// Print out returned results.
 		System.out.println("\n================== Returned Video ==================\n");
-		System.out.println("  - Id: " + returnedVideo.getId());
-		System.out.println("  - Title: " + returnedVideo.getSnippet().getTitle());
-		System.out.println("  - Tags: " + returnedVideo.getSnippet().getTags());
-		System.out.println("  - Privacy Status: " + returnedVideo.getStatus().getPrivacyStatus());
-		System.out.println("  - Video Count: " + returnedVideo.getStatistics().getViewCount());
+		System.out.println("  - Id: " + returnedVideoId);
 
 	}
 
-	/**
-	 * Gets the user selected local video file to upload.
-	 */
-	private static File getVideoFromUser() throws IOException {
-		File[] listOfVideoFiles = getLocalVideoFiles();
-		return getUserChoice(listOfVideoFiles);
-	}
-
-	/**
-	 * Gets an array of videos in the current directory.
-	 */
-	private static File[] getLocalVideoFiles() throws IOException {
-
-		File currentDirectory = new File(".");
-		System.out.println("Video files from " + currentDirectory.getAbsolutePath() + ":");
-
-		// Filters out video files. This list of video extensions is not comprehensive.
-		FilenameFilter videoFilter = new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				String lowercaseName = name.toLowerCase();
-				if (lowercaseName.endsWith(".webm") || lowercaseName.endsWith(".flv") || lowercaseName.endsWith(".f4v")
-						|| lowercaseName.endsWith(".mov") || lowercaseName.endsWith(".mp4")) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		};
-		return currentDirectory.listFiles(videoFilter);
-	}
-
-	/**
-	 * Outputs video file options to the user, records user selection, and returns
-	 * the video (File object).
-	 *
-	 * @param videoFiles Array of video File objects
-	 */
-	private static File getUserChoice(File videoFiles[]) throws IOException {
-
-		if (videoFiles.length < 1) {
-			throw new IllegalArgumentException("No video files in this directory.");
-		}
-
-		for (int i = 0; i < videoFiles.length; i++) {
-			System.out.println(" " + i + " = " + videoFiles[i].getName());
-		}
-
-		BufferedReader bReader = new BufferedReader(new InputStreamReader(System.in));
-		String inputChoice;
-
-		do {
-			System.out.print("Choose the number of the video file you want to upload: ");
-			inputChoice = bReader.readLine();
-		} while (!isValidIntegerSelection(inputChoice, videoFiles.length));
-
-		return videoFiles[Integer.parseInt(inputChoice)];
-	}
-
-	/**
-	 * Checks if string contains a valid, positive integer that is less than max.
-	 * Please note, I am not testing the upper limit of an integer (2,147,483,647).
-	 * I just go up to 999,999,999.
-	 *
-	 * @param input String to test.
-	 * @param max   Integer must be less then this Maximum number.
-	 */
-	public static boolean isValidIntegerSelection(String input, int max) {
-		if (input.length() > 9)
-			return false;
-
-		boolean validNumber = false;
-		// Only accepts positive numbers of up to 9 numbers.
-		Pattern intsOnly = Pattern.compile("^\\d{1,9}$");
-		Matcher makeMatch = intsOnly.matcher(input);
-
-		if (makeMatch.find()) {
-			int number = Integer.parseInt(makeMatch.group());
-			if ((number >= 0) && (number < max)) {
-				validNumber = true;
-			}
-		}
-		return validNumber;
-	}
+	
 }

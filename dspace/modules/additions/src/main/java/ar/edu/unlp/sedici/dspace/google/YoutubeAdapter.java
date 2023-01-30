@@ -43,7 +43,7 @@ import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.model.VideoStatus;
 import com.google.common.collect.Lists;
 
-public class YoutubeApiConnector {
+public class YoutubeAdapter {
 
 	/** Global instance of the HTTP transport. */
 	private final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -99,7 +99,7 @@ public class YoutubeApiConnector {
 	 *
 	 * @param args video file.
 	 */
-	public Video uploadVideo(File videoFile) {
+	public String uploadVideo(File videoFile, String tittle, String description, List<String> tags) {
 		// Scope required to upload to YouTube.
 		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.upload");
 
@@ -131,13 +131,10 @@ public class YoutubeApiConnector {
 			 * remove this from your project and use your own standard names.
 			 */
 			Calendar cal = Calendar.getInstance();
-			snippet.setTitle("Test Upload via Java on " + cal.getTime());
-			snippet.setDescription(
-					"Video uploaded via YouTube Data API V3 using the Java library " + "on " + cal.getTime());
+			snippet.setTitle(tittle);
+			snippet.setDescription(description);
 
 			// Set your keywords.
-			List<String> tags = new ArrayList<String>();
-			tags.add("test");
 			snippet.setTags(tags);
 
 			// Set completed snippet to the video object.
@@ -194,11 +191,13 @@ public class YoutubeApiConnector {
 			uploader.setProgressListener(progressListener);
 
 			// Execute upload.
-			return videoInsert.execute();
+			Video returnedVideo = videoInsert.execute();
+			return returnedVideo.getId();
 		} catch (GoogleJsonResponseException e) {
 			System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
 					+ e.getDetails().getMessage());
 			e.printStackTrace();
+			//guardar en un log
 		} catch (IOException e) {
 			System.err.println("IOException: " + e.getMessage());
 			e.printStackTrace();
