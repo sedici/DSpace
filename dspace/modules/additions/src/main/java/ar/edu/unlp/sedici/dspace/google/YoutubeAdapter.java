@@ -39,6 +39,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.model.VideoStatus;
 import com.google.common.collect.Lists;
@@ -67,7 +68,7 @@ public class YoutubeAdapter {
 	private Credential authorize(List<String> scopes) throws Exception {
 
 		// Load client secrets.
-		Reader reader = new InputStreamReader(YoutubeApiConnector.class.getResourceAsStream("./client_secrets.json"));
+		Reader reader = new InputStreamReader(YoutubeAdapter.class.getResourceAsStream("./client_secrets.json"));
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, reader);
 
 		// Checks that the defaults have been replaced (Default = "Enter X here").
@@ -206,6 +207,73 @@ public class YoutubeAdapter {
 			t.printStackTrace();
 		}
 		return null;
+	}
+	
+	public String updateMetadata(String videoId, String tittle, String description, List<String> tags) {
+		
+		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
+
+	    try {
+	      // Authorization.
+	      Credential credential = authorize(scopes);
+
+	      // YouTube object used to make all API requests.
+	      youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).
+	    		  setApplicationName("DSpace SEDICI").build();
+	      
+	      List<String> parts = new ArrayList<String>();
+	      parts.add("snippet");
+	      List<String> lvideoId = new ArrayList<String>();
+	      lvideoId.add(videoId);
+
+	      // Create the video list request
+	      
+	      YouTube.Videos.List listVideosRequest = youtube.videos().list(parts).setId(lvideoId);
+
+	      // Request is executed and video list response is returned
+	      VideoListResponse listResponse = listVideosRequest.execute();
+
+	      List<Video> videoList = listResponse.getItems();
+	      if (videoList.isEmpty()) {
+	        System.out.println("Can't find a video with video id: " + videoId);
+	        return null;
+	      }
+
+	      // Since a unique video id is given, it will only return 1 video.
+	      Video video = videoList.get(0);
+	      VideoSnippet snippet = video.getSnippet();
+	      
+	      //Cambios en los metadatos del video
+	      snippet.setTitle(tittle);
+	      snippet.setDescription(description);
+	      snippet.setTags(tags);
+
+	      // Create the video update request
+	      
+	      YouTube.Videos.Update updateVideosRequest = youtube.videos().update(parts, video);
+
+	      // Request is executed and updated video is returned
+	      Video videoResponse = updateVideosRequest.execute();
+
+	      // Print out returned results.
+	      System.out.println("\n================== Returned Video ==================\n");
+	      System.out.println("  - Title: " + videoResponse.getSnippet().getTitle());
+	      System.out.println("  - Tags: " + videoResponse.getSnippet().getTags());
+	      return videoResponse.getId();
+
+	    } catch (GoogleJsonResponseException e) {
+	      System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
+	          + e.getDetails().getMessage());
+	      e.printStackTrace();
+	    } catch (IOException e) {
+	      System.err.println("IOException: " + e.getMessage());
+	      e.printStackTrace();
+	    } catch (Throwable t) {
+	      System.err.println("Throwable: " + t.getMessage());
+	      t.printStackTrace();
+	    }
+	    return null;
+	 
 	}
 
 }
