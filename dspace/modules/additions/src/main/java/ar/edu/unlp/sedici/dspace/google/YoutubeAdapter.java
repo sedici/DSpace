@@ -23,6 +23,9 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import org.apache.log4j.Logger;
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
@@ -45,6 +48,8 @@ import com.google.api.services.youtube.model.VideoStatus;
 import com.google.common.collect.Lists;
 
 public class YoutubeAdapter {
+	
+	static final Logger logger = Logger.getLogger(VideoUpload.class);
 
 	/** Global instance of the HTTP transport. */
 	private final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -172,6 +177,7 @@ public class YoutubeAdapter {
 					switch (uploader.getUploadState()) {
 					case INITIATION_STARTED:
 						System.out.println("Initiation Started");
+						logger.info("Initiation Started");
 						break;
 					case INITIATION_COMPLETE:
 						System.out.println("Initiation Completed");
@@ -182,6 +188,7 @@ public class YoutubeAdapter {
 						break;
 					case MEDIA_COMPLETE:
 						System.out.println("Upload Completed!");
+						logger.info("Upload Completed!");
 						break;
 					case NOT_STARTED:
 						System.out.println("Upload Not Started!");
@@ -193,17 +200,21 @@ public class YoutubeAdapter {
 
 			// Execute upload.
 			Video returnedVideo = videoInsert.execute();
+			logger.info("Video upload executed -  new video Id: " + returnedVideo.getId());
 			return returnedVideo.getId();
 		} catch (GoogleJsonResponseException e) {
 			System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
 					+ e.getDetails().getMessage());
 			e.printStackTrace();
-			//guardar en un log
+			logger.warn("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
+					+ e.getDetails().getMessage());
 		} catch (IOException e) {
 			System.err.println("IOException: " + e.getMessage());
+			logger.warn("IOException: " + e.getMessage());
 			e.printStackTrace();
 		} catch (Throwable t) {
 			System.err.println("Throwable: " + t.getMessage());
+			logger.warn("Throwable: " + t.getMessage());
 			t.printStackTrace();
 		}
 		return null;
@@ -236,6 +247,7 @@ public class YoutubeAdapter {
 	      List<Video> videoList = listResponse.getItems();
 	      if (videoList.isEmpty()) {
 	        System.out.println("Can't find a video with video id: " + videoId);
+	        logger.warn("Can't find a video with video id: " + videoId);
 	        return null;
 	      }
 
@@ -254,21 +266,24 @@ public class YoutubeAdapter {
 
 	      // Request is executed and updated video is returned
 	      Video videoResponse = updateVideosRequest.execute();
+	      logger.warn("Video " + videoResponse.getId()+ " was updated");
 
 	      // Print out returned results.
-	      System.out.println("\n================== Returned Video ==================\n");
-	      System.out.println("  - Title: " + videoResponse.getSnippet().getTitle());
-	      System.out.println("  - Tags: " + videoResponse.getSnippet().getTags());
+	      
 	      return videoResponse.getId();
 
 	    } catch (GoogleJsonResponseException e) {
+	      logger.warn("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
+	          + e.getDetails().getMessage());
 	      System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
 	          + e.getDetails().getMessage());
 	      e.printStackTrace();
 	    } catch (IOException e) {
+	      logger.warn("IOException: " + e.getMessage());
 	      System.err.println("IOException: " + e.getMessage());
 	      e.printStackTrace();
 	    } catch (Throwable t) {
+	      logger.warn("Throwable: " + t.getMessage());
 	      System.err.println("Throwable: " + t.getMessage());
 	      t.printStackTrace();
 	    }
