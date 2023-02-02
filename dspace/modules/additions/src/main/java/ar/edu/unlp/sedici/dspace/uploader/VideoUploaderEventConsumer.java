@@ -4,7 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.dspace.content.Bitstream;
+import org.dspace.content.Bundle;
 import org.dspace.content.DSpaceObject;
+import org.dspace.content.Item;
+import org.dspace.content.BitstreamFormat;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import ar.edu.unlp.sedici.dspace.uploader.ContentUploaderService;
@@ -18,6 +22,10 @@ public class VideoUploaderEventConsumer implements Consumer {
      * log4j logger
      */
     private static Logger log = Logger.getLogger(VideoUploaderEventConsumer.class);
+
+	private final String MPEG_MIME_TYPE = "video/mpeg";
+	private final String QUICKTIME_MIME_TYPE = "video/quicktime";
+	private final String MP4_MIME_TYPE = "video/mp4";
 
     // collect Items, Collections, Communities that need indexing
     private Set<DSpaceObject> objectsToUpdate = null;
@@ -36,68 +44,30 @@ public class VideoUploaderEventConsumer implements Consumer {
 
 	@Override
 	public void consume(Context ctx, Event event) throws Exception {
-        if (objectsToUpdate == null) {
-            objectsToUpdate = new HashSet<DSpaceObject>();
-        }
-        
         int st = event.getSubjectType();
         if (!(st == Constants.ITEM || st == Constants.BUNDLE)) {
             log.warn("VideoUploaderConsumer should not have been given this kind of Subject in an event, skipping: " + event.toString());
             return;
         }
+               
+        Item item = (Item) event.getSubject(ctx);
         
-        DSpaceObject subject = event.getSubject(ctx);
-
-        DSpaceObject object = event.getObject(ctx);
-
+        Bundle[] bundles = item.getBundles("ORIGINAL");
         
-
-		
+        Bitstream[] bitstreams = bundles[0].getBitstreams();
+        BitstreamFormat bitstreamFormat;
+        String mimeType;
+        for (Bitstream bitstream : bitstreams) {
+        	mimeType = bitstream.getFormat().getMIMEType();
+        	if (mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE)) {
+        		uploader.uploadContent(ctx, item, bitstream);
+        	}
+        }
 	}
 
 	@Override
 	public void end(Context ctx) throws Exception {
-        if (objectsToUpdate != null && handlesToDelete != null) {
 
-            // update the changed Items not deleted because they were on create list
-            for (DSpaceObject iu : objectsToUpdate) {
-                /* we let all types through here and 
-                 * allow the search DSIndexer to make 
-                 * decisions on indexing and/or removal
-                 */
-                String hdl = iu.getHandle();
-                if (hdl != null && !handlesToDelete.contains(hdl)) {
-                    try {
-                        uploader.uploadContent(ctx, iu);
-                        log.debug("Indexed "
-                                + Constants.typeText[iu.getType()]
-                                + ", id=" + String.valueOf(iu.getID())
-                                + ", handle=" + hdl);
-                    }
-                    catch (Exception e) {
-                        log.error("Failed while indexing object: ", e);
-                    }
-                }
-            }
-
-            for (String hdl : handlesToDelete) {
-                try {
-                    uploader.removeContent(ctx, hdl);
-                    if (log.isDebugEnabled())
-                    {
-                        log.debug("UN-Indexed Item, handle=" + hdl);
-                    }
-                }
-                catch (Exception e) {
-                    log.error("Failed while UN-indexing object: " + hdl, e);
-                }
-
-            }
-
-        }
-
-        // "free" the resources
-        objectsToUpdate = null;
 	}
 
 	@Override
