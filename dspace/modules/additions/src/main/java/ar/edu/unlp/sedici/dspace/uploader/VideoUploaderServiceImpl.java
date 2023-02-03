@@ -1,6 +1,7 @@
 package ar.edu.unlp.sedici.dspace.uploader;
 
 import java.sql.SQLException;
+import java.lang.Throwable;
 
 import org.apache.log4j.Logger;
 import org.dspace.content.Bitstream;
@@ -16,13 +17,8 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	private static final Logger log = Logger.getLogger(VideoUploaderServiceImpl.class);
 
 	@Override
-	public void uploadContent(Context context, Item item, Bitstream bitstream) throws SQLException {
+	public void uploadContent(Item item) throws Throwable {
         String handle = item.getHandle();
-
-        if (handle == null)
-        {
-            handle = HandleManager.findHandle(context, item);
-        }
 
 		log.info("Upload de " + handle + " a YouTube");
 		
