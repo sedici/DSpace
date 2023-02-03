@@ -1,13 +1,9 @@
 package ar.edu.unlp.sedici.dspace.uploader;
 
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Bundle;
-import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
-import org.dspace.content.BitstreamFormat;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.event.Consumer;
@@ -25,12 +21,6 @@ public class VideoUploaderEventConsumer implements Consumer {
 	private final String MPEG_MIME_TYPE = "video/mpeg";
 	private final String QUICKTIME_MIME_TYPE = "video/quicktime";
 	private final String MP4_MIME_TYPE = "video/mp4";
-
-    // collect Items, Collections, Communities that need indexing
-    private Set<DSpaceObject> objectsToUpdate = null;
-
-    // handles to delete since IDs are not useful by now.
-    private Set<String> handlesToDelete = null;
 
     DSpace dspace = new DSpace();
 
@@ -54,7 +44,6 @@ public class VideoUploaderEventConsumer implements Consumer {
         Bundle[] bundles = item.getBundles("ORIGINAL");
         
         Bitstream[] bitstreams = bundles[0].getBitstreams();
-        BitstreamFormat bitstreamFormat;
         String mimeType;
         for (Bitstream bitstream : bitstreams) {
         	mimeType = bitstream.getFormat().getMIMEType();
@@ -72,7 +61,6 @@ public class VideoUploaderEventConsumer implements Consumer {
 
 	@Override
 	public void finish(Context ctx) throws Exception {
-		// TODO Auto-generated method stub
 		
 	}
 
