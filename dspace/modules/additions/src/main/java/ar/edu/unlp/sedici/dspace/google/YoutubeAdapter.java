@@ -49,7 +49,7 @@ import com.google.common.collect.Lists;
 
 public class YoutubeAdapter {
 	
-	static final Logger logger = Logger.getLogger(VideoUpload.class);
+	static final Logger logger = Logger.getLogger(YoutubeAdapter.class);
 
 	/** Global instance of the HTTP transport. */
 	private final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -266,7 +266,7 @@ public class YoutubeAdapter {
 
 	      // Request is executed and updated video is returned
 	      Video videoResponse = updateVideosRequest.execute();
-	      logger.warn("Video " + videoResponse.getId()+ " was updated");
+	      logger.info("Video " + videoResponse.getId()+ " was updated");
 
 	      // Print out returned results.
 	      
@@ -289,6 +289,49 @@ public class YoutubeAdapter {
 	    }
 	    return null;
 	 
+	}
+	
+	public String deleteVideo(String videoId) {
+		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.force-ssl");
+		scopes.add("https://www.googleapis.com/auth/youtube");
+	    try {
+	      // Authorization.
+	      Credential credential = authorize(scopes);
+
+	      // YouTube object used to make all API requests.
+	      youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).
+	    		  setApplicationName("DSpace SEDICI").build();
+	      
+	      List<String> lvideoId = new ArrayList<String>();
+	      lvideoId.add(videoId);
+
+	      // Create the video list request
+	      YouTube.Videos.Delete deleteRequest = youtube.videos().delete(videoId);
+	      deleteRequest.setAccessToken(credential.getAccessToken());
+	      System.out.println(deleteRequest.getOauthToken());
+	      deleteRequest.execute();
+	      logger.info("The video "+videoId+" was eliminated");
+
+	      // Print out returned results.
+	      
+	      return videoId;
+
+	    } catch (GoogleJsonResponseException e) {
+	      logger.warn("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
+	          + e.getDetails().getMessage());
+	      System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
+	          + e.getDetails().getMessage());
+	      e.printStackTrace();
+	    } catch (IOException e) {
+	      logger.warn("IOException: " + e.getMessage());
+	      System.err.println("IOException: " + e.getMessage());
+	      e.printStackTrace();
+	    } catch (Throwable t) {
+	      logger.warn("Throwable: " + t.getMessage());
+	      System.err.println("Throwable: " + t.getMessage());
+	      t.printStackTrace();
+	    }
+	    return null;
 	}
 
 }
