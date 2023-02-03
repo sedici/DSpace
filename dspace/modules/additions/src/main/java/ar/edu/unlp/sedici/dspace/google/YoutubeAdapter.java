@@ -107,7 +107,7 @@ public class YoutubeAdapter {
 	 */
 	public String uploadVideo(File videoFile, String tittle, String description, List<String> tags) {
 		// Scope required to upload to YouTube.
-		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.upload");
+		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
 
 		try {
 			// Authorization.
