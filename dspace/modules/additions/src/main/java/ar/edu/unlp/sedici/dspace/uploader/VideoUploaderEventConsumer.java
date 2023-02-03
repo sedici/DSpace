@@ -15,6 +15,7 @@ import ar.edu.unlp.sedici.dspace.uploader.ContentUploaderService;
 import org.dspace.event.Consumer;
 import org.dspace.event.Event;
 import org.dspace.utils.DSpace;
+import org.dspace.curate.Curator;
 
 public class VideoUploaderEventConsumer implements Consumer {
 	
@@ -60,7 +61,8 @@ public class VideoUploaderEventConsumer implements Consumer {
         for (Bitstream bitstream : bitstreams) {
         	mimeType = bitstream.getFormat().getMIMEType();
         	if (mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE)) {
-        		uploader.uploadContent(ctx, item, bitstream);
+                Curator curator = new Curator();
+        		curator.addTask("VideoUploaderTask").queue(ctx, "videos", item.getHandle());
         	}
         }
 	}
