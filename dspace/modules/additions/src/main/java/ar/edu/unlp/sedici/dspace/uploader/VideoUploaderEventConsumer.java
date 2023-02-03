@@ -1,6 +1,5 @@
 package ar.edu.unlp.sedici.dspace.uploader;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -11,7 +10,6 @@ import org.dspace.content.Item;
 import org.dspace.content.BitstreamFormat;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
-import ar.edu.unlp.sedici.dspace.uploader.ContentUploaderService;
 import org.dspace.event.Consumer;
 import org.dspace.event.Event;
 import org.dspace.utils.DSpace;
