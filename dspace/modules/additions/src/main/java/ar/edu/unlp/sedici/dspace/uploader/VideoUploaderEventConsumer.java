@@ -49,7 +49,7 @@ public class VideoUploaderEventConsumer implements Consumer {
         	mimeType = bitstream.getFormat().getMIMEType();
         	if (mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE)) {
                 Curator curator = new Curator();
-        		curator.addTask("VideoUploaderTask").queue(ctx, "videos", item.getHandle());
+        		curator.addTask("VideoUploaderTask").queue(ctx, item.getHandle(),"upload");
         	}
         }
 	}
