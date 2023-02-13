@@ -15,6 +15,7 @@
 package ar.edu.unlp.sedici.dspace.google;
 
 import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -32,6 +34,7 @@ import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
@@ -73,31 +76,9 @@ public class YoutubeAdapter {
 	private Credential authorize(List<String> scopes) throws Exception {
 
 		// Load client secrets.
-		Reader reader = new InputStreamReader(YoutubeAdapter.class.getResourceAsStream("./client_secrets.json"));
-		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, reader);
-
-		// Checks that the defaults have been replaced (Default = "Enter X here").
-		if (clientSecrets.getDetails().getClientId().startsWith("Enter")
-				|| clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
-			System.out.println(
-					"Enter Client ID and Secret from https://console.developers.google.com/project/_/apiui/credential"
-							+ "into dspace/src/main/resources/client_secrets.json");
-			System.exit(1);
-		}
-
-		// Set up file credential store.
-		FileCredentialStore credentialStore = new FileCredentialStore(
-				new File(System.getProperty("user.home"), ".credentials/youtube-api-uploadvideo.json"), JSON_FACTORY);
-
-		// Set up authorization code flow.
-		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
-				clientSecrets, scopes).setCredentialStore(credentialStore).build();
-
-		// Build the local server and bind it to port 9000
-		LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(9000).build();
-
-		// Authorize.
-		return new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
+		InputStream targetStream = new FileInputStream(new File(RUTA_DE_JSON));
+        GoogleCredential google = GoogleCredential.fromStream(targetStream).createScoped(scopes);
+		return google;
 	}
 
 	/**
@@ -105,7 +86,7 @@ public class YoutubeAdapter {
 	 *
 	 * @param args video file.
 	 */
-	public String uploadVideo(File videoFile, String tittle, String description, List<String> tags) {
+	public String uploadVideo(InputStream videoFile, String tittle, String description, List<String> tags) {
 		// Scope required to upload to YouTube.
 		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
 
@@ -147,8 +128,8 @@ public class YoutubeAdapter {
 			videoObjectDefiningMetadata.setSnippet(snippet);
 
 			InputStreamContent mediaContent = new InputStreamContent(VIDEO_FILE_FORMAT,
-					new BufferedInputStream(new FileInputStream(videoFile)));
-			mediaContent.setLength(videoFile.length());
+					new BufferedInputStream(videoFile));
+			//mediaContent.setLength(videoFile.length());
 
 			/*
 			 * The upload command includes: 1. Information we want returned after file is
