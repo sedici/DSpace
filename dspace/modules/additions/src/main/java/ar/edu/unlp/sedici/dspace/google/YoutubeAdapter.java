@@ -15,6 +15,7 @@
 package ar.edu.unlp.sedici.dspace.google;
 
 import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -129,7 +130,8 @@ public class YoutubeAdapter {
 
 			InputStreamContent mediaContent = new InputStreamContent(VIDEO_FILE_FORMAT,
 					new BufferedInputStream(videoFile));
-			//mediaContent.setLength(videoFile.length());
+			Long len = InputStreamToFile(videoFile);
+			mediaContent.setLength(len);
 
 			/*
 			 * The upload command includes: 1. Information we want returned after file is
@@ -313,6 +315,30 @@ public class YoutubeAdapter {
 	      t.printStackTrace();
 	    }
 	    return null;
+	}
+	
+	public Long InputStreamToFile(InputStream videoFile) {
+		try {
+        InputStream inputStream = videoFile;
+		FileOutputStream fileOutputStream = new FileOutputStream("./aux");
+		byte[] buffer = new byte[1024];
+		int bytesRead;
+		while ((bytesRead = inputStream.read(buffer)) != -1) {
+		    fileOutputStream.write(buffer, 0, bytesRead);
+		}
+		inputStream.close();
+		fileOutputStream.close();
+		File aux = new File("./aux");
+		return aux.length();
+		}
+	
+		catch (Throwable t) {
+		      logger.warn("Throwable: " + t.getMessage());
+		      System.err.println("Throwable: " + t.getMessage());
+		      t.printStackTrace();
+		    }
+		
+		return (long) 0;
 	}
 
 }
