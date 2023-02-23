@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
@@ -33,12 +34,19 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
+import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
+import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
+import com.google.api.client.auth.oauth2.AuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleRefreshTokenRequest;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
+import com.google.api.client.auth.oauth2.TokenResponse;
+import com.google.api.client.auth.oauth2.AuthorizationCodeTokenRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -50,6 +58,9 @@ import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.model.VideoStatus;
 import com.google.common.collect.Lists;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.auth.http.HttpCredentialsAdapter;
+import com.google.auth.oauth2.GoogleCredentials;
 
 public class YoutubeAdapter {
 	
@@ -77,9 +88,31 @@ public class YoutubeAdapter {
 	private Credential authorize(List<String> scopes) throws Exception {
 
 		// Load client secrets.
-		InputStream targetStream = new FileInputStream(new File(RUTA_DE_JSON));
-        GoogleCredential google = GoogleCredential.fromStream(targetStream).createScoped(scopes);
-		return google;
+		Reader reader = new InputStreamReader(new FileInputStream(new File("./client_secrets.json")));
+		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, reader);
+
+		// Checks that the defaults have been replaced (Default = "Enter X here").
+		if (clientSecrets.getDetails().getClientId().startsWith("Enter")
+				|| clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
+			System.out.println(
+					"Enter Client ID and Secret from https://console.developers.google.com/project/_/apiui/credential"
+							+ "into dspace/src/main/resources/client_secrets.json");
+			System.exit(1);
+		}
+
+		// Set up file credential store.
+		FileCredentialStore credentialStore = new FileCredentialStore(
+				new File(System.getProperty("user.home"), ".credentials/youtube-api-uploadvideo.json"), JSON_FACTORY);
+
+		// Set up authorization code flow.
+		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
+				clientSecrets, scopes).setCredentialStore(credentialStore).setAccessType("offline").build();
+
+		// Build the local server and bind it to port 9000
+		LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(9000).build();
+
+		// Authorize.
+		return new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
 	}
 
 	/**
@@ -93,7 +126,15 @@ public class YoutubeAdapter {
 
 		try {
 			// Authorization.
+			
 			Credential credential = authorize(scopes);
+			Reader reader = new InputStreamReader(new FileInputStream(new File("./client_secrets.json")));
+			/*GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, reader);
+			GoogleTokenResponse responseToken = new GoogleRefreshTokenRequest(HTTP_TRANSPORT, JSON_FACTORY,credential.getRefreshToken(),"436187528156-m85phgkeinuh0lt395q4p9dut4ghtksr.apps.googleusercontent.com","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").execute();
+			System.out.println(responseToken);
+			No parece necesario esto pero lo dejo por ahora para futuras pruebas*/
+			
+			//HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(credential);
 			// YouTube object used to make all API requests.
 			youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
 					.setApplicationName("DSpace SEDICI").build();
@@ -130,8 +171,6 @@ public class YoutubeAdapter {
 
 			InputStreamContent mediaContent = new InputStreamContent(VIDEO_FILE_FORMAT,
 					new BufferedInputStream(videoFile));
-			Long len = InputStreamToFile(videoFile);
-			mediaContent.setLength(len);
 
 			/*
 			 * The upload command includes: 1. Information we want returned after file is
@@ -153,41 +192,40 @@ public class YoutubeAdapter {
 			 * content is uploaded in a single request. False (default) = resumable media
 			 * upload protocol to upload in data chunks.
 			 */
-			uploader.setDirectUploadEnabled(false);
+			uploader.setDirectUploadEnabled(true);
 
-			MediaHttpUploaderProgressListener progressListener = new MediaHttpUploaderProgressListener() {
-				public void progressChanged(MediaHttpUploader uploader) throws IOException {
-					switch (uploader.getUploadState()) {
-					case INITIATION_STARTED:
-						System.out.println("Initiation Started");
-						logger.info("Initiation Started");
-						break;
-					case INITIATION_COMPLETE:
-						System.out.println("Initiation Completed");
-						break;
-					case MEDIA_IN_PROGRESS:
-						System.out.println("Upload in progress");
-						System.out.println("Upload percentage: " + uploader.getProgress());
-						break;
-					case MEDIA_COMPLETE:
-						System.out.println("Upload Completed!");
-						logger.info("Upload Completed!");
-						break;
-					case NOT_STARTED:
-						System.out.println("Upload Not Started!");
-						break;
-					}
-				}
-			};
-			uploader.setProgressListener(progressListener);
+			//MediaHttpUploaderProgressListener progressListener = new MediaHttpUploaderProgressListener() {
+			//	public void progressChanged(MediaHttpUploader uploader) throws IOException {
+			//		switch (uploader.getUploadState()) {
+			//		case INITIATION_STARTED:
+						//			System.out.println("Initiation Started");
+			//			logger.info("Initiation Started");
+			//		break;
+			//	case INITIATION_COMPLETE:
+			//		System.out.println("Initiation Completed");
+			//		break;
+			//	case MEDIA_IN_PROGRESS:
+			//		System.out.println("Upload in progress");
+			//		System.out.println("Upload percentage: " + uploader.getProgress());
+			//		break;
+			//	case MEDIA_COMPLETE:
+			//		System.out.println("Upload Completed!");
+			//		logger.info("Upload Completed!");
+			//		break;
+			//	case NOT_STARTED:
+			//		System.out.println("Upload Not Started!");
+			//		break;
+			//	}
+			//}
+			//};
+			//uploader.setProgressListener(progressListener);
 
 			// Execute upload.
 			Video returnedVideo = videoInsert.execute();
 			logger.info("Video upload executed -  new video Id: " + returnedVideo.getId());
 			return returnedVideo.getId();
 		} catch (GoogleJsonResponseException e) {
-			System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
-					+ e.getDetails().getMessage());
+			System.err.println("GoogleJsonResponseException: "+ e.getMessage());
 			e.printStackTrace();
 			logger.warn("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
 					+ e.getDetails().getMessage());
@@ -209,10 +247,11 @@ public class YoutubeAdapter {
 
 	    try {
 	      // Authorization.
-	      Credential credential = authorize(scopes);
+	    	Credential credential = authorize(scopes);
+			//HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(credential);
 
 	      // YouTube object used to make all API requests.
-	      youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).
+	      youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY,credential).
 	    		  setApplicationName("DSpace SEDICI").build();
 	      
 	      List<String> parts = new ArrayList<String>();
@@ -279,7 +318,8 @@ public class YoutubeAdapter {
 		scopes.add("https://www.googleapis.com/auth/youtube");
 	    try {
 	      // Authorization.
-	      Credential credential = authorize(scopes);
+	    	Credential credential = authorize(scopes);
+			//HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(credential);
 
 	      // YouTube object used to make all API requests.
 	      youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).
@@ -290,7 +330,7 @@ public class YoutubeAdapter {
 
 	      // Create the video list request
 	      YouTube.Videos.Delete deleteRequest = youtube.videos().delete(videoId);
-	      deleteRequest.setAccessToken(credential.getAccessToken());
+	      //deleteRequest.setAccessToken(credential.getAccessToken());
 	      System.out.println(deleteRequest.getOauthToken());
 	      deleteRequest.execute();
 	      logger.info("The video "+videoId+" was eliminated");
