@@ -15,18 +15,16 @@
 package ar.edu.unlp.sedici.dspace.google;
 
 import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
@@ -34,19 +32,11 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
-import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
-import com.google.api.client.auth.oauth2.AuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleRefreshTokenRequest;
-import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
-import com.google.api.client.auth.oauth2.TokenResponse;
-import com.google.api.client.auth.oauth2.AuthorizationCodeTokenRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -58,9 +48,6 @@ import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.model.VideoStatus;
 import com.google.common.collect.Lists;
-import com.google.api.client.http.HttpRequestInitializer;
-import com.google.auth.http.HttpCredentialsAdapter;
-import com.google.auth.oauth2.GoogleCredentials;
 
 public class YoutubeAdapter {
 	
@@ -130,7 +117,7 @@ public class YoutubeAdapter {
 			Credential credential = authorize(scopes);
 			Reader reader = new InputStreamReader(new FileInputStream(new File("./client_secrets.json")));
 			/*GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, reader);
-			GoogleTokenResponse responseToken = new GoogleRefreshTokenRequest(HTTP_TRANSPORT, JSON_FACTORY,credential.getRefreshToken(),"436187528156-m85phgkeinuh0lt395q4p9dut4ghtksr.apps.googleusercontent.com","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").execute();
+			GoogleTokenResponse responseToken = new GoogleRefreshTokenRequest(HTTP_TRANSPORT, JSON_FACTORY,credential.getRefreshToken(),"","").execute();
 			System.out.println(responseToken);
 			No parece necesario esto pero lo dejo por ahora para futuras pruebas*/
 			
@@ -194,31 +181,27 @@ public class YoutubeAdapter {
 			 */
 			uploader.setDirectUploadEnabled(true);
 
-			//MediaHttpUploaderProgressListener progressListener = new MediaHttpUploaderProgressListener() {
-			//	public void progressChanged(MediaHttpUploader uploader) throws IOException {
-			//		switch (uploader.getUploadState()) {
-			//		case INITIATION_STARTED:
-						//			System.out.println("Initiation Started");
-			//			logger.info("Initiation Started");
-			//		break;
-			//	case INITIATION_COMPLETE:
-			//		System.out.println("Initiation Completed");
-			//		break;
-			//	case MEDIA_IN_PROGRESS:
-			//		System.out.println("Upload in progress");
-			//		System.out.println("Upload percentage: " + uploader.getProgress());
-			//		break;
-			//	case MEDIA_COMPLETE:
-			//		System.out.println("Upload Completed!");
-			//		logger.info("Upload Completed!");
-			//		break;
-			//	case NOT_STARTED:
-			//		System.out.println("Upload Not Started!");
-			//		break;
-			//	}
-			//}
-			//};
-			//uploader.setProgressListener(progressListener);
+			MediaHttpUploaderProgressListener progressListener = new MediaHttpUploaderProgressListener() {
+			public void progressChanged(MediaHttpUploader uploader) throws IOException {
+				switch (uploader.getUploadState()) {
+					case INITIATION_STARTED:
+								System.out.println("Initiation Started");
+						logger.info("Initiation Started");
+					break;
+				case INITIATION_COMPLETE:
+					System.out.println("Initiation Completed");
+					break;
+				case MEDIA_COMPLETE:
+					System.out.println("Upload Completed!");
+					logger.info("Upload Completed!");
+					break;
+				case NOT_STARTED:
+					System.out.println("Upload Not Started!");
+					break;
+				}
+			}
+			};
+			uploader.setProgressListener(progressListener);
 
 			// Execute upload.
 			Video returnedVideo = videoInsert.execute();
