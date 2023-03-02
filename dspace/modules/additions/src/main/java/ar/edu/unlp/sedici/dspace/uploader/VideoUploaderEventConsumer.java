@@ -1,5 +1,13 @@
 package ar.edu.unlp.sedici.dspace.uploader;
 
+import static org.dspace.event.Event.ADD;
+import static org.dspace.event.Event.CREATE;
+import static org.dspace.event.Event.DELETE;
+import static org.dspace.event.Event.INSTALL;
+import static org.dspace.event.Event.MODIFY;
+import static org.dspace.event.Event.MODIFY_METADATA;
+import static org.dspace.event.Event.REMOVE;
+
 import org.apache.log4j.Logger;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Bundle;
@@ -33,25 +41,36 @@ public class VideoUploaderEventConsumer implements Consumer {
 
 	@Override
 	public void consume(Context ctx, Event event) throws Exception {
+		int evType = event.getEventType();
         int st = event.getSubjectType();
-        if (!(st == Constants.ITEM || st == Constants.BUNDLE)) {
+        if (!(st == Constants.ITEM || st == Constants.BUNDLE || st == Constants.COLLECTION )) {
             log.warn("VideoUploaderConsumer should not have been given this kind of Subject in an event, skipping: " + event.toString());
             return;
         }
-               
-        Item item = (Item) event.getSubject(ctx);
-        
-        Bundle[] bundles = item.getBundles("ORIGINAL");
-        
-        Bitstream[] bitstreams = bundles[0].getBitstreams();
-        String mimeType;
-        for (Bitstream bitstream : bitstreams) {
-        	mimeType = bitstream.getFormat().getMIMEType();
-        	if (mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE)) {
-                Curator curator = new Curator();
-        		curator.addTask("VideoUploaderTask").queue(ctx, item.getHandle(),"upload");
-        	}
-        }
+            
+		log.info(event.toString());
+		switch (evType){
+			case ADD:
+				if(st==Constants.COLLECTION){
+					Item item = (Item) event.getObject(ctx);
+					
+					System.out.println(evType);
+					Bundle[] bundles = item.getBundles("ORIGINAL");
+					
+					Bitstream[] bitstreams = bundles[0].getBitstreams();
+					String mimeType;
+					for (Bitstream bitstream : bitstreams) {
+						mimeType = bitstream.getFormat().getMIMEType();
+
+						if (mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE)) {
+							Curator curator = new Curator();
+							curator.addTask("VideoUploaderTask").queue(ctx, item.getHandle(),"upload");
+						}
+					}
+				}
+			}
+			//case MODIFY_METADATA:
+		//}
 	}
 
 	@Override
