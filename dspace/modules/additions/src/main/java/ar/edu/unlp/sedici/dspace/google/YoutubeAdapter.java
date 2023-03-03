@@ -96,7 +96,7 @@ public class YoutubeAdapter {
 				clientSecrets, scopes).setCredentialStore(credentialStore).setAccessType("offline").build();
 
 		// Build the local server and bind it to port 9000
-		LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(9080).build();
+		LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(9080).setHost("testing.sedici.unlp.edu.ar").build();
 
 		// Authorize.
 		return new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
