@@ -70,7 +70,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         			String videoID = new YoutubeAdapter().uploadVideo(bitstream.retrieve(), title, description, tags);
             		log.info("Se subio el video con id "+videoID);
             		String schema = "sedici";
-            		String element = "indentifier";
+            		String element = "identifier";
             		String qualifier = "youtubeId";
             		String lang = null;
             		bitstream.addMetadata(schema,element,qualifier,lang,videoID);
