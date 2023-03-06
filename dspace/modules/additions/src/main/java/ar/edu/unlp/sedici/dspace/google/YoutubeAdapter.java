@@ -75,7 +75,7 @@ public class YoutubeAdapter {
 	private Credential authorize(List<String> scopes) throws Exception {
 
 		// Load client secrets.
-		Reader reader = new InputStreamReader(new FileInputStream(new File("./client_secrets.json")));
+		Reader reader = new InputStreamReader(new FileInputStream(new File("../config/client_secrets.json")));
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, reader);
 
 		// Checks that the defaults have been replaced (Default = "Enter X here").
@@ -179,7 +179,7 @@ public class YoutubeAdapter {
 			 * content is uploaded in a single request. False (default) = resumable media
 			 * upload protocol to upload in data chunks.
 			 */
-			uploader.setDirectUploadEnabled(true);
+			uploader.setDirectUploadEnabled(false);
 
 			MediaHttpUploaderProgressListener progressListener = new MediaHttpUploaderProgressListener() {
 			public void progressChanged(MediaHttpUploader uploader) throws IOException {

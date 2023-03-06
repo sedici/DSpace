@@ -34,31 +34,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         log.info("Upload del item " + handle +" a YouTube");
         String title= item.getMetadata("dc.title");//Falta determinar que hacer is hay muchos videos, como se construye el titulo
         System.out.println(title);
-        String description = item.getMetadata("dc.title")+"\n";//falta derterminar que mas se agrega a la descripcion
-        List<Metadatum> creators = item.getMetadata("sedici","creator","person",Item.ANY,Item.ANY);
-        Integer auxNumerico = 1;
-        if (creators.size() > 1) {
-        	description = description+"Creadores: "+creators.get(0).value;
-        	while(auxNumerico<creators.size()) {
-        		description = description+"; "+creators.get(auxNumerico).value;
-        		auxNumerico = auxNumerico + 1;
-        	}
-        	description= description+"\n";
-        }else {
-        	description = description+"Creador: "+creators.get(0).value+"\n";
-        }
-        description = description+"Fecha de publicación: "+item.getMetadata("dc.date.available")+"\n";
-        description = description+"Enlace de la fuente: "+item.getMetadata("dc.identifier.uri")+"\n";
-        List<Metadatum> subjects = item.getMetadata("dc","subject",Item.ANY,Item.ANY,Item.ANY);
-        description = description+"Palabras clave: ";
-        auxNumerico = 0;
-        while (auxNumerico<(subjects.size()-1)) {
-        	description = description+subjects.get(auxNumerico).value+", ";
-        	auxNumerico = auxNumerico +1;
-        }
-        description = description+subjects.get(auxNumerico).value+"\n";
-        description = description+"Resumen: "+Jsoup.parse(item.getMetadata("dc.description.abstract")).text()+"\n";
-        description = description+"Licencia de uso: "+item.getMetadata("sedici.rights.license")+"\n";
+        String description = this.buildDescription(item);
         System.out.println(description);
         List<String> tags = new ArrayList<String>();
         tags.add("prueba");//Definir que poner en los tags
@@ -94,6 +70,35 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	public void modifyContent(Context context, String hdl) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private String buildDescription(Item item) {
+	    	String description = item.getMetadata("dc.title")+"\n";//falta derterminar que mas se agrega a la descripcion
+	        List<Metadatum> creators = item.getMetadata("sedici","creator","person",Item.ANY,Item.ANY);
+	        Integer auxNumerico = 1;
+	        if (creators.size() > 1) {
+	        	description = description+"Creadores: "+creators.get(0).value;
+	        	while(auxNumerico<creators.size()) {
+	        		description = description+"; "+creators.get(auxNumerico).value;
+	        		auxNumerico = auxNumerico + 1;
+	        	}
+	        	description= description+"\n";
+	        }else {
+	        	description = description+"Creador: "+creators.get(0).value+"\n";
+	        }
+	        description = description+"Fecha de publicación: "+item.getMetadata("dc.date.available")+"\n";
+	        description = description+"Enlace de la fuente: "+item.getMetadata("dc.identifier.uri")+"\n";
+	        List<Metadatum> subjects = item.getMetadata("dc","subject",Item.ANY,Item.ANY,Item.ANY);
+	        description = description+"Palabras clave: ";
+	        auxNumerico = 0;
+	        while (auxNumerico<(subjects.size()-1)) {
+	        	description = description+subjects.get(auxNumerico).value+", ";
+	        	auxNumerico = auxNumerico +1;
+	        }
+	        description = description+subjects.get(auxNumerico).value+"\n";
+	        description = description+"Resumen: "+Jsoup.parse(item.getMetadata("dc.description.abstract")).text()+"\n";
+	        description = description+"Licencia de uso: "+item.getMetadata("sedici.rights.license")+"\n";
+	        return description;
 	}
 
 }
