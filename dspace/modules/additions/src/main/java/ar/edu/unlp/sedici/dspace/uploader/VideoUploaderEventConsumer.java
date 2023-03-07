@@ -51,25 +51,54 @@ public class VideoUploaderEventConsumer implements Consumer {
 		log.info(event.toString());
 		switch (evType){
 			case ADD:
+				
+				
 				if(st==Constants.COLLECTION){
-					Item item = (Item) event.getObject(ctx);
 					
+					Item item = (Item) event.getObject(ctx);
 					System.out.println(evType);
 					Bundle[] bundles = item.getBundles("ORIGINAL");
 					
 					Bitstream[] bitstreams = bundles[0].getBitstreams();
-					String mimeType;
-					for (Bitstream bitstream : bitstreams) {
-						mimeType = bitstream.getFormat().getMIMEType();
+					
 
-						if (mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE)) {
-							Curator curator = new Curator();
-							curator.addTask("VideoUploaderTask").queue(ctx, item.getHandle(),"upload");
+					if(item.getHandle() != null){
+						String mimeType;
+						for (Bitstream bitstream : bitstreams) {
+							mimeType = bitstream.getFormat().getMIMEType();
+							if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))) {
+								Curator curator = new Curator();
+								curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"upload");
+								break;
+							}
+	
+						}
+					}
+
+				}else{
+					if(st==Constants.BUNDLE && ((Bundle) event.getSubject(ctx)).getName().equals("ORIGINAL")){
+						Bundle bundle = (Bundle) event.getSubject(ctx);
+						Item[] items = bundle.getItems();
+						
+						String hdl = items[0].getHandle();
+						Bitstream[] bitstreams = bundle.getBitstreams();
+					
+						if(hdl != null){
+							String mimeType;
+							for (Bitstream bitstream : bitstreams) {
+								mimeType = bitstream.getFormat().getMIMEType();
+								if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata("sedici.identifier.youtubeId") == null)) {
+									Curator curator = new Curator();
+									curator.addTask("VideoUploaderTask").queue(ctx, hdl,"upload");
+									break;
+								}
+							}
 						}
 					}
 				}
-			}
 			//case MODIFY_METADATA:
+			}
+			
 		//}
 	}
 
