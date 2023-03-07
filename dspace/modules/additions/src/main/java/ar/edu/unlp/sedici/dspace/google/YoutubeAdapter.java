@@ -43,7 +43,9 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.YouTube.VideoCategories;
 import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoCategory;
 import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.model.VideoStatus;
@@ -115,8 +117,8 @@ public class YoutubeAdapter {
 			// Authorization.
 			
 			Credential credential = authorize(scopes);
-			Reader reader = new InputStreamReader(new FileInputStream(new File("./client_secrets.json")));
-			/*GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, reader);
+			/*Reader reader = new InputStreamReader(new FileInputStream(new File("./client_secrets.json")));
+			GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, reader);
 			GoogleTokenResponse responseToken = new GoogleRefreshTokenRequest(HTTP_TRANSPORT, JSON_FACTORY,credential.getRefreshToken(),"","").execute();
 			System.out.println(responseToken);
 			No parece necesario esto pero lo dejo por ahora para futuras pruebas*/
@@ -125,7 +127,9 @@ public class YoutubeAdapter {
 			// YouTube object used to make all API requests.
 			youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
 					.setApplicationName("DSpace SEDICI").build();
-
+			
+			List<String> categories = new ArrayList<String>();
+			categories.add("snippet");
 			// Add extra information to the video before uploading.
 			Video videoObjectDefiningMetadata = new Video();
 
@@ -137,7 +141,7 @@ public class YoutubeAdapter {
 			VideoStatus status = new VideoStatus();
 			status.setPrivacyStatus("public");
 			videoObjectDefiningMetadata.setStatus(status);
-
+			
 			// We set a majority of the metadata with the VideoSnippet object.
 			VideoSnippet snippet = new VideoSnippet();
 
@@ -149,6 +153,7 @@ public class YoutubeAdapter {
 			Calendar cal = Calendar.getInstance();
 			snippet.setTitle(tittle);
 			snippet.setDescription(description);
+			snippet.setCategoryId(this.getEducationId());
 
 			// Set your keywords.
 			snippet.setTags(tags);
@@ -185,7 +190,7 @@ public class YoutubeAdapter {
 			public void progressChanged(MediaHttpUploader uploader) throws IOException {
 				switch (uploader.getUploadState()) {
 					case INITIATION_STARTED:
-								System.out.println("Initiation Started");
+						System.out.println("Initiation Started");
 						logger.info("Initiation Started");
 					break;
 				case INITIATION_COMPLETE:
@@ -340,28 +345,68 @@ public class YoutubeAdapter {
 	    return null;
 	}
 	
-	public Long InputStreamToFile(InputStream videoFile) {
-		try {
-        InputStream inputStream = videoFile;
-		FileOutputStream fileOutputStream = new FileOutputStream("./aux");
-		byte[] buffer = new byte[1024];
-		int bytesRead;
-		while ((bytesRead = inputStream.read(buffer)) != -1) {
-		    fileOutputStream.write(buffer, 0, bytesRead);
-		}
-		inputStream.close();
-		fileOutputStream.close();
-		File aux = new File("./aux");
-		return aux.length();
-		}
-	
-		catch (Throwable t) {
+	public Boolean verifyMetadata(String videoId, String tittle, String description, List<String> tags) {
+		Boolean change = false;
+		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
+
+	    try {
+	      // Authorization.
+	    	Credential credential = authorize(scopes);
+			//HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(credential);
+
+	      // YouTube object used to make all API requests.
+	      youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY,credential).
+	    		  setApplicationName("DSpace SEDICI").build();
+	      
+	      List<String> parts = new ArrayList<String>();
+	      parts.add("snippet");
+	      parts.add("status");
+	      List<String> videos = new ArrayList<String>();
+	      videos.add(videoId);
+	      Video video = youtube.videos().list(parts).setId(videos).execute().getItems().get(0);
+	      if ((description != video.getSnippet().getDescription())|(tittle != video.getSnippet().getTitle())| (tags != video.getSnippet().getTags())) {
+	    	  change = true;
+	      }
+	    } catch (GoogleJsonResponseException e) {
+		      logger.warn("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
+		          + e.getDetails().getMessage());
+		      System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
+		          + e.getDetails().getMessage());
+		      e.printStackTrace();
+		    } catch (IOException e) {
+		      logger.warn("IOException: " + e.getMessage());
+		      System.err.println("IOException: " + e.getMessage());
+		      e.printStackTrace();
+		    } catch (Throwable t) {
 		      logger.warn("Throwable: " + t.getMessage());
 		      System.err.println("Throwable: " + t.getMessage());
 		      t.printStackTrace();
 		    }
-		
-		return (long) 0;
+		return change;
 	}
+	
+	private String getEducationId() {
+		List<String> categories = new ArrayList<String>();
+	    categories.add("snippet");
+	    String cId = null;
+	    try {
+	    	List<VideoCategory> list = youtube.videoCategories().list(categories).setRegionCode("ar").execute().getItems();
+			int aux = 0;
+			while ((aux < list.size()&(cId== null))) {
+				if (list.get(aux).getSnippet().getTitle().equals("Education")) {
+					cId = list.get(aux).getId();
+				}
+				aux++;
+			}
+			System.out.println(aux);
+	    } catch (IOException e) {
+		      logger.warn("IOException: " + e.getMessage());
+		      System.err.println("IOException: " + e.getMessage());
+		      e.printStackTrace();
+		    }
+	    System.out.println(cId);
+		return cId;
+	}
+	
 
 }

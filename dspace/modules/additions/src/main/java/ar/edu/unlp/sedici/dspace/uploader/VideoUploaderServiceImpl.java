@@ -42,7 +42,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         for (Bitstream bitstream : bitstreams) {
         	String mimeType = bitstream.getFormat().getMIMEType();
         	if (mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE)) {
-        		if (bitstream.getMetadata("sedici.video.videoId") == null) {
+        		if (bitstream.getMetadata("sedici.identifier.youtubeId") == null) {
         			String videoID = new YoutubeAdapter().uploadVideo(bitstream.retrieve(), title, description, tags);
             		log.info("Se subio el video con id "+videoID);
             		String schema = "sedici";
