@@ -39,11 +39,25 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         List<String> tags = new ArrayList<String>();
         tags.add("prueba");//Definir que poner en los tags
         Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
+
+		int cantV=0;
+		for (Bitstream bitstream : bitstreams) {
+			String mimeType = bitstream.getFormat().getMIMEType();
+        	if (mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE)) {
+				cantV++;
+			}
+		}
+		int cantV2=0;
+
         for (Bitstream bitstream : bitstreams) {
         	String mimeType = bitstream.getFormat().getMIMEType();
         	if (mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE)) {
+				cantV2++;
         		if (bitstream.getMetadata("sedici.identifier.youtubeId") == null) {
-        			String videoID = new YoutubeAdapter().uploadVideo(bitstream.retrieve(), title, description, tags);
+        			if(cantV > 1 ){
+						title = title + "-Parte " + cantV2;
+					}
+					String videoID = new YoutubeAdapter().uploadVideo(bitstream.retrieve(), title, description, tags);
             		log.info("Se subio el video con id "+videoID);
             		String schema = "sedici";
             		String element = "identifier";
@@ -51,6 +65,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
             		String lang = null;
             		bitstream.addMetadata(schema,element,qualifier,lang,videoID);
             		bitstream.updateMetadata();
+					title= item.getMetadata("dc.title");
         		}else {
         			log.warn("El video con id "+bitstream.getID()+" ya se encuentra replicado en youtube con el id "+bitstream.getMetadata("sedici.video.videoId"));
         		}
