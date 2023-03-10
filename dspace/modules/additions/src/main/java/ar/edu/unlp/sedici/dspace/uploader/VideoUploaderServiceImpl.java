@@ -1,20 +1,13 @@
 package ar.edu.unlp.sedici.dspace.uploader;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.File;
 import java.lang.Throwable;
-import org.apache.commons.io.*;
 
 import org.apache.log4j.Logger;
 import org.dspace.content.Bitstream;
-import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.content.Metadatum;
-import org.dspace.core.Context;
-import org.dspace.curate.Curator;
-import org.dspace.handle.HandleManager;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
 import ar.edu.unlp.sedici.dspace.google.YoutubeAdapter;
@@ -76,13 +69,13 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	}
 
 	@Override
-	public void removeContent(Context context, String hdl) {
+	public void removeContent(Item item) throws Throwable {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void modifyContent(Context context, String hdl) {
+	public void modifyContent(Item item) throws Throwable {
 		// TODO Auto-generated method stub
 		
 	}

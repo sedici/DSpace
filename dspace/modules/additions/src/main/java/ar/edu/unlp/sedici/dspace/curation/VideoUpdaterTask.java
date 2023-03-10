@@ -10,7 +10,7 @@ import org.dspace.curate.Curator;
 
 import ar.edu.unlp.sedici.dspace.uploader.VideoUploaderServiceImpl;
 
-public class VideoUploaderTask extends AbstractCurationTask {
+public class VideoUpdaterTask extends AbstractCurationTask {
 
 	private int status;
 	@Override
@@ -21,7 +21,7 @@ public class VideoUploaderTask extends AbstractCurationTask {
 		
 		try {
 			VideoUploaderServiceImpl vuploader= new VideoUploaderServiceImpl();
-			vuploader.uploadContent(item);
+			vuploader.modifyContent(item);
 			status = Curator.CURATE_SUCCESS;
 		}
 		catch(Throwable t) {

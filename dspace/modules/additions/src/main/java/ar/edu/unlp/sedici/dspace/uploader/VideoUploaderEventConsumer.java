@@ -96,7 +96,22 @@ public class VideoUploaderEventConsumer implements Consumer {
 						}
 					}
 				}
-			//case MODIFY_METADATA:
+			case MODIFY_METADATA:
+				if(st==Constants.ITEM){
+					Item item = (Item) event.getSubject(ctx);
+					Bundle[] bundles = item.getBundles("ORIGINAL");
+					Bitstream[] bitstreams = bundles[0].getBitstreams();
+					String mimeType;
+					for (Bitstream bitstream : bitstreams) {
+						mimeType = bitstream.getFormat().getMIMEType();
+						if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))) {
+							Curator curator = new Curator();
+							curator.addTask("VideoUpdaterTask").queue(ctx,item.getHandle(),"upload");
+							break;
+						}
+					}
+				}
+				
 			}
 			
 		//}

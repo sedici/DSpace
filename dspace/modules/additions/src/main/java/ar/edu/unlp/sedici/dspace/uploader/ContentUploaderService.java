@@ -11,8 +11,8 @@ import org.dspace.core.Context;
 public interface ContentUploaderService {
 
     void uploadContent(Item item) throws Throwable;   
-    void removeContent(Context context, String hdl);
-    void modifyContent(Context context, String hdl);
+    void removeContent(Item item) throws Throwable;  
+    void modifyContent(Item item) throws Throwable;  
 	
 }
 
