@@ -97,27 +97,29 @@ public class VideoUploaderEventConsumer implements Consumer {
 					}
 				}
 			case MODIFY_METADATA:
-				if( (event.getDetail().contains("dc.title")) || (event.getDetail().contains("dc.description.abstract"))
-					|| (event.getDetail().contains("sedici.creator.person")) || (event.getDetail().contains("sedici.subtype"))
-					|| (event.getDetail().contains("dc.date.available")) || (event.getDetail().contains("dc.identifier.uri")) 
-					|| (event.getDetail().contains("sedici.rights.license")) || (event.getDetail().contains("dc.subject")) ){ 
-					if(st==Constants.ITEM){
-						Item item = (Item) event.getSubject(ctx);
-						Bundle[] bundles = item.getBundles("ORIGINAL");
-						Bitstream[] bitstreams = bundles[0].getBitstreams();
-						String mimeType;
-						for (Bitstream bitstream : bitstreams) {
-							mimeType = bitstream.getFormat().getMIMEType();
-							if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))) {
-								
-								Curator curator = new Curator();
-								curator.addTask("VideoUpdaterTask").queue(ctx,item.getHandle(),"update");
-								break;
+				if(((Item) event.getSubject(ctx)).getHandle() != null){
+					if( (event.getDetail().contains("dc.title")) || (event.getDetail().contains("dc.description.abstract"))
+						|| (event.getDetail().contains("sedici.creator.person")) || (event.getDetail().contains("sedici.subtype"))
+						|| (event.getDetail().contains("dc.date.available")) || (event.getDetail().contains("dc.identifier.uri")) 
+						|| (event.getDetail().contains("sedici.rights.license")) || (event.getDetail().contains("dc.subject")) ){ 
+						if(st==Constants.ITEM){
+							Item item = (Item) event.getSubject(ctx);
+							Bundle[] bundles = item.getBundles("ORIGINAL");
+							Bitstream[] bitstreams = bundles[0].getBitstreams();
+							String mimeType;
+							for (Bitstream bitstream : bitstreams) {
+								mimeType = bitstream.getFormat().getMIMEType();
+								if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))) {
+									
+									Curator curator = new Curator();
+									curator.addTask("VideoUpdaterTask").queue(ctx,item.getHandle(),"update");
+									break;
+								}
 							}
 						}
 					}
 				}
-				
+
 			}
 			
 		//}
