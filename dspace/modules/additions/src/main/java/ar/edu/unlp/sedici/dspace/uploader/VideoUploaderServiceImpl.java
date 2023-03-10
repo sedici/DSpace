@@ -97,7 +97,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         	String mimeType = bitstream.getFormat().getMIMEType();
         	if (mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE)) {
 				cantV2++;
-        		if (bitstream.getMetadata("sedici.identifier.youtubeId") == null) {
+        		if (bitstream.getMetadata("sedici.identifier.youtubeId") != null) {
         			if(cantV > 1 ){
 						title = title + "-Parte " + cantV2;
 					}
