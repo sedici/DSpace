@@ -398,13 +398,21 @@ public class YoutubeAdapter {
 				}
 				aux++;
 			}
-			System.out.println(aux);
-	    } catch (IOException e) {
+	    } catch (GoogleJsonResponseException e) {
+		      logger.warn("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
+		          + e.getDetails().getMessage());
+		      System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
+		          + e.getDetails().getMessage());
+		      e.printStackTrace();
+		    } catch (IOException e) {
 		      logger.warn("IOException: " + e.getMessage());
 		      System.err.println("IOException: " + e.getMessage());
 		      e.printStackTrace();
+		    } catch (Throwable t) {
+		      logger.warn("Throwable: " + t.getMessage());
+		      System.err.println("Throwable: " + t.getMessage());
+		      t.printStackTrace();
 		    }
-	    System.out.println(cId);
 		return cId;
 	}
 	

@@ -25,10 +25,8 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	public void uploadContent(Item item) throws Throwable {
         String handle = item.getHandle();
         log.info("Upload del item " + handle +" a YouTube");
-        String title= item.getMetadata("dc.title");//Falta determinar que hacer is hay muchos videos, como se construye el titulo
-        System.out.println(title);
+        String title= Jsoup.parse(item.getMetadata("dc.title")).text();
         String description = this.buildDescription(item);
-        System.out.println(description);
         List<String> tags = new ArrayList<String>();
         tags.add("prueba");//Definir que poner en los tags
         Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
@@ -58,7 +56,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
             		String lang = null;
             		bitstream.addMetadata(schema,element,qualifier,lang,videoID);
             		bitstream.updateMetadata();
-					title= item.getMetadata("dc.title");
+					title= Jsoup.parse(item.getMetadata("dc.title")).text();
         		}else {
         			log.warn("El video con id "+bitstream.getID()+" ya se encuentra replicado en youtube con el id "+bitstream.getMetadata("sedici.video.videoId"));
         		}
@@ -76,12 +74,44 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 
 	@Override
 	public void modifyContent(Item item) throws Throwable {
-		// TODO Auto-generated method stub
+		String handle = item.getHandle();
+        log.info("Update del item " + handle +" a YouTube");
+        String title= Jsoup.parse(item.getMetadata("dc.title")).text();//Falta determinar que hacer is hay muchos videos, como se construye el titulo
+        System.out.println(title);
+        String description = this.buildDescription(item);
+        System.out.println(description);
+        List<String> tags = new ArrayList<String>();
+        tags.add("prueba");//Definir que poner en los tags
+        Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
+
+		int cantV=0;
+		for (Bitstream bitstream : bitstreams) {
+			String mimeType = bitstream.getFormat().getMIMEType();
+        	if (mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE)) {
+				cantV++;
+			}
+		}
+		int cantV2=0;
+
+        for (Bitstream bitstream : bitstreams) {
+        	String mimeType = bitstream.getFormat().getMIMEType();
+        	if (mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE)) {
+				cantV2++;
+        		if (bitstream.getMetadata("sedici.identifier.youtubeId") == null) {
+        			if(cantV > 1 ){
+						title = title + "-Parte " + cantV2;
+					}
+					String videoID = new YoutubeAdapter().updateMetadata(bitstream.getMetadata("sedici.identifier.youtubeId"), title, description, tags);
+            		log.info("Se actualizo el video con id "+videoID);
+					title= Jsoup.parse(item.getMetadata("dc.title")).text();
+        		}
+        	}
+        }
 		
 	}
 	
 	private String buildDescription(Item item) {
-	    	String description = item.getMetadata("dc.title")+"\n";//falta derterminar que mas se agrega a la descripcion
+	    	String description = Jsoup.parse(item.getMetadata("dc.title")).text()+"\n";//falta derterminar que mas se agrega a la descripcion
 	        List<Metadatum> creators = item.getMetadata("sedici","creator","person",Item.ANY,Item.ANY);
 	        Integer auxNumerico = 1;
 	        if (creators.size() > 1) {
@@ -94,6 +124,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	        }else {
 	        	description = description+"Creador: "+creators.get(0).value+"\n";
 	        }
+	        description = description+"Tipo: "+item.getMetadata("sedici.subtype")+"\n";
 	        description = description+"Fecha de publicación: "+item.getMetadata("dc.date.available")+"\n";
 	        description = description+"Enlace de la fuente: "+item.getMetadata("dc.identifier.uri")+"\n";
 	        List<Metadatum> subjects = item.getMetadata("dc","subject",Item.ANY,Item.ANY,Item.ANY);
