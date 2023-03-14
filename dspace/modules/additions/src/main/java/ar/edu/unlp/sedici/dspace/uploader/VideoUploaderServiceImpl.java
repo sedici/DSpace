@@ -127,14 +127,17 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	        description = description+"Tipo: "+item.getMetadata("sedici.subtype")+"\n";
 	        description = description+"Fecha de publicación: "+item.getMetadata("dc.date.available")+"\n";
 	        description = description+"Enlace de la fuente: "+item.getMetadata("dc.identifier.uri")+"\n";
-	        List<Metadatum> subjects = item.getMetadata("dc","subject",Item.ANY,Item.ANY,Item.ANY);
-	        description = description+"Palabras clave: ";
-	        auxNumerico = 0;
-	        while (auxNumerico<(subjects.size()-1)) {
-	        	description = description+subjects.get(auxNumerico).value+", ";
-	        	auxNumerico = auxNumerico +1;
-	        }
-	        description = description+subjects.get(auxNumerico).value+"\n";
+	        //Se obtienen las keywords
+			List<Metadatum> subjects = item.getMetadata("dc","subject",Item.ANY,Item.ANY,Item.ANY);
+			if (subjects.size() > 0){
+				description = description+"Palabras clave: ";
+				auxNumerico = 0;
+				while (auxNumerico<(subjects.size()-1)) {
+					description = description+subjects.get(auxNumerico).value+", ";
+					auxNumerico = auxNumerico +1;
+				}
+				description = description+subjects.get(auxNumerico).value+"\n";
+			}
 	        description = description+"Resumen: "+Jsoup.parse(item.getMetadata("dc.description.abstract")).text()+"\n";
 	        description = description+"Licencia de uso: "+item.getMetadata("sedici.rights.license")+"\n";
 	        return description;
