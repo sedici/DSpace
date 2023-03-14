@@ -138,8 +138,10 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 				}
 				description = description+subjects.get(auxNumerico).value+"\n";
 			}
-	        description = description+"Resumen: "+Jsoup.parse(item.getMetadata("dc.description.abstract")).text()+"\n";
-	        description = description+"Licencia de uso: "+item.getMetadata("sedici.rights.license")+"\n";
+			if(item.getMetadata("dc.description.abstract") !=  null){
+	        	description = description+"Resumen: "+Jsoup.parse(item.getMetadata("dc.description.abstract")).text()+"\n";
+			}
+			description = description+"Licencia de uso: "+item.getMetadata("sedici.rights.license")+"\n";
 	        return description;
 	}
 
