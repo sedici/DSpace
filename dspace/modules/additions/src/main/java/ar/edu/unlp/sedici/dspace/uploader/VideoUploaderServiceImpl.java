@@ -2,10 +2,13 @@ package ar.edu.unlp.sedici.dspace.uploader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.lang.Throwable;
 
 import org.apache.log4j.Logger;
 import org.dspace.content.Bitstream;
+import org.dspace.content.Bundle;
 import org.dspace.content.Item;
 import org.dspace.content.Metadatum;
 import org.jsoup.Jsoup;
@@ -29,6 +32,11 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         String description = this.buildDescription(item);
         List<String> tags = new ArrayList<String>();
         tags.add("prueba");//Definir que poner en los tags
+        Bundle youtubeBundle;
+        if (item.getBundles("YOUTUBE").length==0) {
+        	System.out.println(item.createBundle("YOUTUBE").getID());
+        }
+        youtubeBundle = item.getBundles("YOUTUBE")[0];
         Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
 
 		int cantV=0;
@@ -44,19 +52,25 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         	String mimeType = bitstream.getFormat().getMIMEType();
         	if (mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE)) {
 				cantV2++;
-        		if (bitstream.getMetadata("sedici.identifier.youtubeId") == null) {
+				List<Metadatum> replicationId = bitstream.getMetadata("sedici","identifier","youtubeId",Item.ANY,Item.ANY);
+        		if (replicationId.size() == 0) {
         			if(cantV > 1 ){
 						title = title + "-Parte " + cantV2;
 					}
 					String videoID = new YoutubeAdapter().uploadVideo(bitstream.retrieve(), title, description, tags);
-            		log.info("Se subio el video con id "+videoID);
-            		String schema = "sedici";
-            		String element = "identifier";
-            		String qualifier = "youtubeId";
-            		String lang = null;
-            		bitstream.addMetadata(schema,element,qualifier,lang,videoID);
-            		bitstream.updateMetadata();
-					title= Jsoup.parse(item.getMetadata("dc.title")).text();
+					if(videoID != null) {
+	            		log.info("Se subio el video con id "+videoID);
+	            		String schema = "sedici";
+	            		String element = "identifier";
+	            		String qualifier = "youtubeId";
+	            		String lang = null;
+            			bitstream.addMetadata(schema,element,qualifier,lang,videoID);
+                		bitstream.updateMetadata();
+            		}
+//					title= Jsoup.parse(item.getMetadata("dc.title")).text();
+//					String initialString = bitstream.getID()+" "+videoID;
+//				    InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
+//					youtubeBundle.createBitstream(targetStream);
         		}else {
         			log.warn("El video con id "+bitstream.getID()+" ya se encuentra replicado en youtube con el id "+bitstream.getMetadata("sedici.video.videoId"));
         		}
@@ -68,7 +82,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 
 	@Override
 	public void removeContent(Item item) throws Throwable {
-		// TODO Auto-generated method stub
+		Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
 		
 	}
 
