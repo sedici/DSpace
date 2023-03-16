@@ -66,11 +66,10 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	            		String lang = null;
             			bitstream.addMetadata(schema,element,qualifier,lang,videoID);
                 		bitstream.updateMetadata();
+                		String initialString = bitstream.getID()+";"+videoID;
+    				    InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
+    					youtubeBundle.createBitstream(targetStream).setName("Mapa bitstream - youtube");;
             		}
-//					title= Jsoup.parse(item.getMetadata("dc.title")).text();
-//					String initialString = bitstream.getID()+" "+videoID;
-//				    InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
-//					youtubeBundle.createBitstream(targetStream);
         		}else {
         			log.warn("El video con id "+bitstream.getID()+" ya se encuentra replicado en youtube con el id "+bitstream.getMetadata("sedici.video.videoId"));
         		}
@@ -83,6 +82,20 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	@Override
 	public void removeContent(Item item) throws Throwable {
 		Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
+		Bitstream[] mapsYoutube = item.getBundles("YOUTUBE")[0].getBitstreams();
+		for (Bitstream map : mapsYoutube) {
+			String[] mapeo = map.retrieve().toString().split(";");
+			Boolean existe = false;
+			for (Bitstream bitstream : bitstreams) {
+				if(mapeo[0].equals(bitstream.getID())) {
+					existe = true;
+				}
+			}
+			if (!existe) {
+				String videoId = new YoutubeAdapter().deleteVideo(mapeo[1]);
+			}
+        	
+		}
 		
 	}
 
