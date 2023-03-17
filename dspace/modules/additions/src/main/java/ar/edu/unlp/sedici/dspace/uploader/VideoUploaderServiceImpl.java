@@ -81,20 +81,30 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 
 	@Override
 	public void removeContent(Item item) throws Throwable {
-		Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
 		Bitstream[] mapsYoutube = item.getBundles("YOUTUBE")[0].getBitstreams();
-		for (Bitstream map : mapsYoutube) {
-			String[] mapeo = map.retrieve().toString().split(";");
-			Boolean existe = false;
-			for (Bitstream bitstream : bitstreams) {
-				if(mapeo[0].equals(bitstream.getID())) {
-					existe = true;
+		if(item.getBundles("ORIGINAL").length>0) {
+			Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
+			for (Bitstream map : mapsYoutube) {
+				String[] mapeo = map.retrieve().toString().split(";");
+				Boolean existe = false;
+				for (Bitstream bitstream : bitstreams) {
+					if(mapeo[0].equals(bitstream.getID())) {
+						existe = true;
+					}
 				}
+				if (!existe) {
+					String videoId = new YoutubeAdapter().deleteVideo(mapeo[1]);
+					item.getBundles("YOUTUBE")[0].removeBitstream(map);
+				}
+	        	
 			}
-			if (!existe) {
+		}else {
+			for (Bitstream map : mapsYoutube) {
+				String[] mapeo = map.retrieve().toString().split(";");
 				String videoId = new YoutubeAdapter().deleteVideo(mapeo[1]);
+				item.getBundles("YOUTUBE")[0].removeBitstream(map);
 			}
-        	
+	        	
 		}
 		
 	}
