@@ -2,9 +2,14 @@ package ar.edu.unlp.sedici.dspace.uploader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.Throwable;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.log4j.Logger;
 import org.dspace.content.Bitstream;
@@ -82,17 +87,30 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	@Override
 	public void removeContent(Item item) throws Throwable {
 		Bitstream[] mapsYoutube = item.getBundles("YOUTUBE")[0].getBitstreams();
+		System.out.println(item.getBundles("ORIGINAL").length);
 		if(item.getBundles("ORIGINAL").length>0) {
 			Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
 			for (Bitstream map : mapsYoutube) {
-				String[] mapeo = map.retrieve().toString().split(";");
+				StringBuilder textBuilder = new StringBuilder();
+				try (Reader reader = new BufferedReader(new InputStreamReader
+					      (map.retrieve(), Charset.forName(StandardCharsets.UTF_8.name())))) {
+					        int c = 0;
+					        while ((c = reader.read()) != -1) {
+					            textBuilder.append((char) c);
+					        }
+					    }
+				String[] mapeo = textBuilder.toString().split(";");
+				System.out.println(textBuilder.toString());
 				Boolean existe = false;
 				for (Bitstream bitstream : bitstreams) {
-					if(mapeo[0].equals(bitstream.getID())) {
+					System.out.println(mapeo[0]+" "+bitstream.getID());
+					
+					if(mapeo[0] == Integer.toString(bitstream.getID())) {
+						System.out.println("Aca");
 						existe = true;
 					}
 				}
-				if (!existe) {
+				if (existe == false) {
 					String videoId = new YoutubeAdapter().deleteVideo(mapeo[1]);
 					item.getBundles("YOUTUBE")[0].removeBitstream(map);
 				}
@@ -100,7 +118,15 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 			}
 		}else {
 			for (Bitstream map : mapsYoutube) {
-				String[] mapeo = map.retrieve().toString().split(";");
+				StringBuilder textBuilder = new StringBuilder();
+				try (Reader reader = new BufferedReader(new InputStreamReader
+					      (map.retrieve(), Charset.forName(StandardCharsets.UTF_8.name())))) {
+					        int c = 0;
+					        while ((c = reader.read()) != -1) {
+					            textBuilder.append((char) c);
+					        }
+					    }
+				String[] mapeo = textBuilder.toString().split(";");
 				String videoId = new YoutubeAdapter().deleteVideo(mapeo[1]);
 				item.getBundles("YOUTUBE")[0].removeBitstream(map);
 			}

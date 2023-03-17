@@ -91,7 +91,7 @@ public class YoutubeAdapter {
 
 		// Set up file credential store.
 		FileCredentialStore credentialStore = new FileCredentialStore(
-				new File(System.getProperty("user.home"), ".credentials/youtube-api-uploadvideo.json"), JSON_FACTORY);
+				new File("../config/youtube-api-uploadvideo.json"), JSON_FACTORY);
 
 		// Set up authorization code flow.
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
@@ -302,8 +302,7 @@ public class YoutubeAdapter {
 	}
 	
 	public String deleteVideo(String videoId) {
-		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.force-ssl");
-		scopes.add("https://www.googleapis.com/auth/youtube");
+		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
 	    try {
 	      // Authorization.
 	    	Credential credential = authorize(scopes);
