@@ -17,6 +17,9 @@ import org.dspace.core.Context;
 import org.dspace.event.Consumer;
 import org.dspace.event.Event;
 import org.dspace.utils.DSpace;
+
+import com.google.api.services.youtube.YouTube;
+
 import org.dspace.curate.Curator;
 
 public class VideoUploaderEventConsumer implements Consumer {
@@ -118,6 +121,25 @@ public class VideoUploaderEventConsumer implements Consumer {
 							}
 						}
 					}
+				}
+				
+			case REMOVE:
+				if(st==Constants.BUNDLE ){
+					Bundle bundle = (Bundle) event.getSubject(ctx);
+					if(bundle != null) {
+						Item item = (Item) bundle.getParentObject(); 
+						if(item.getBundles("YOUTUBE").length > 0){
+							Curator curator = new Curator();
+							curator.addTask("VideoDeleteTask").queue(ctx,item.getHandle(),"delete");
+						} 
+					}
+				}
+				if (st==Constants.ITEM) {
+					Item item = (Item) event.getSubject(ctx);
+					if(item.getBundles("YOUTUBE").length > 0){
+						Curator curator = new Curator();
+						curator.addTask("VideoDeleteTask").queue(ctx,item.getHandle(),"delete");
+					} 
 				}
 
 			}
