@@ -25,6 +25,8 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
@@ -50,6 +52,8 @@ import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.model.VideoStatus;
 import com.google.common.collect.Lists;
+
+import org.dspace.content.Metadatum;
 
 public class YoutubeAdapter {
 	
@@ -98,7 +102,7 @@ public class YoutubeAdapter {
 				clientSecrets, scopes).setCredentialStore(credentialStore).setAccessType("offline").build();
 
 		// Build the local server and bind it to port 9000
-		LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(9080).setHost("testing.sedici.unlp.edu.ar").build();
+		LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(9080).build();
 
 		// Authorize.
 		return new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
@@ -109,7 +113,7 @@ public class YoutubeAdapter {
 	 *
 	 * @param args video file.
 	 */
-	public String uploadVideo(InputStream videoFile, String tittle, String description, List<String> tags) {
+	public String uploadVideo(InputStream videoFile, String tittle, Map <String, Object> metadata, List<String> tags) {
 		// Scope required to upload to YouTube.
 		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
 
@@ -144,15 +148,12 @@ public class YoutubeAdapter {
 			
 			// We set a majority of the metadata with the VideoSnippet object.
 			VideoSnippet snippet = new VideoSnippet();
-
-			/*
-			 * The Calendar instance is used to create a unique name and description for
-			 * test purposes, so you can see multiple files being uploaded. You will want to
-			 * remove this from your project and use your own standard names.
-			 */
-			Calendar cal = Calendar.getInstance();
+			
 			snippet.setTitle(tittle);
+			
+			String description = buildDescription(metadata);
 			snippet.setDescription(description);
+			
 			snippet.setCategoryId(this.getEducationId());
 
 			// Set your keywords.
@@ -229,7 +230,7 @@ public class YoutubeAdapter {
 		return null;
 	}
 	
-	public String updateMetadata(String videoId, String tittle, String description, List<String> tags) {
+	public String updateMetadata(String videoId, String tittle, Map<String,Object> metadata, List<String> tags) {
 		
 		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
 
@@ -266,8 +267,12 @@ public class YoutubeAdapter {
 	      VideoSnippet snippet = video.getSnippet();
 	      
 	      //Cambios en los metadatos del video
+	      
 	      snippet.setTitle(tittle);
+	      
+	      String description = buildDescription(metadata);
 	      snippet.setDescription(description);
+	      
 	      snippet.setTags(tags);
 
 	      // Create the video update request
@@ -413,6 +418,46 @@ public class YoutubeAdapter {
 		      t.printStackTrace();
 		    }
 		return cId;
+	}
+	
+	private String buildDescription(Map<String,Object> metadata) {
+		
+	    String description = (String) metadata.get("title") + "\n";
+	    
+	    //Se obtienen los creadores
+	    List<Metadatum> creators = (List<Metadatum>) metadata.get("creators");
+	    Integer auxNumerico = 1;
+	    if (creators.size() > 1) {
+	        description = description+"Creadores: "+creators.get(0).value;
+	        while(auxNumerico<creators.size()) {
+	            description = description+"; "+creators.get(auxNumerico).value;
+	            auxNumerico = auxNumerico + 1;
+	        }
+	        description= description+"\n";
+	    }else {
+	        description = description+"Creador: "+creators.get(0).value+"\n";
+	    }
+	    
+	    description = description+"Tipo: "+metadata.get("subtype")+"\n";
+	    description = description+"Fecha de publicación: "+metadata.get("dateAvailable")+"\n";
+	    description = description+"Enlace de la fuente: "+metadata.get("iUri")+"\n";
+	    
+	    //Se obtienen las keywords
+	    List<Metadatum> subjects = (List<Metadatum>) metadata.get("subjects");
+	    if (subjects.size() > 0){
+	        description = description+"Palabras clave: ";
+	        auxNumerico = 0;
+	        while (auxNumerico<(subjects.size()-1)) {
+	            description = description+subjects.get(auxNumerico).value+", ";
+	            auxNumerico = auxNumerico +1;
+	        }
+	        description = description+subjects.get(auxNumerico).value+"\n";
+	    }
+	    if(metadata.containsKey("abstract")){
+	        description = description+"Resumen: " + metadata.get("abstract")+"\n";
+	    }
+	    description = description+"Licencia de uso: "+metadata.get("license")+"\n";
+	    return description;
 	}
 	
 
