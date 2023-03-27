@@ -2,6 +2,8 @@ package ar.edu.unlp.sedici.dspace.uploader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -36,12 +38,19 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 
 	@Override
 	public void uploadContent(Item item) throws Throwable {
+		
         String handle = item.getHandle();
         log.info("Upload del item " + handle +" a YouTube");
         String title= Jsoup.parse(item.getMetadata("dc.title")).text();
-        String description = this.buildDescription(item);
+        
+        Map<String, Object> metadata;
+        metadata= this.buildMetadata(item);
+        
         List<String> tags = new ArrayList<String>();
-        tags.add("prueba");//Definir que poner en los tags
+        tags.add("prueba");
+        
+        //Definir que poner en los tags
+        
         Bundle youtubeBundle;
         if (item.getBundles("YOUTUBE").length==0) {
         	System.out.println(item.createBundle("YOUTUBE").getID());
@@ -68,7 +77,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 						title = title + "-Parte " + cantV2;
 					}
         			try {
-						String videoID = new YoutubeAdapter().uploadVideo(bitstream.retrieve(), title, description, tags);
+						String videoID = new YoutubeAdapter().uploadVideo(bitstream.retrieve(), title, metadata, tags);
 						if(videoID != null) {
 		            		log.info("Se subio el video con id "+videoID);
 		            		String schema = "sedici";
@@ -129,7 +138,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 				for (Bitstream bitstream : bitstreams) {
 					System.out.println(mapeo[0]+" "+bitstream.getID());
 					
-					if(mapeo[0] == Integer.toString(bitstream.getID())) {
+					if(mapeo[0].equals(Integer.toString(bitstream.getID())) ) {
 						System.out.println("Aca");
 						existe = true;
 					}
@@ -165,8 +174,9 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         log.info("Update del item " + handle +" a YouTube");
         String title= Jsoup.parse(item.getMetadata("dc.title")).text();//Falta determinar que hacer is hay muchos videos, como se construye el titulo
         System.out.println(title);
-        String description = this.buildDescription(item);
-        System.out.println(description);
+        Map<String, Object> metadata;
+        metadata = this.buildMetadata(item);
+        
         List<String> tags = new ArrayList<String>();
         tags.add("prueba");//Definir que poner en los tags
         Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
@@ -188,7 +198,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         			if(cantV > 1 ){
 						title = title + "-Parte " + cantV2;
 					}
-					String videoID = new YoutubeAdapter().updateMetadata(bitstream.getMetadata("sedici.identifier.youtubeId"), title, description, tags);
+					String videoID = new YoutubeAdapter().updateMetadata(bitstream.getMetadata("sedici.identifier.youtubeId"), title, metadata, tags);
             		log.info("Se actualizo el video con id "+videoID);
 					title= Jsoup.parse(item.getMetadata("dc.title")).text();
         		}
@@ -197,39 +207,24 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 		
 	}
 	
-	private String buildDescription(Item item) {
-	    	String description = Jsoup.parse(item.getMetadata("dc.title")).text()+"\n";//falta derterminar que mas se agrega a la descripcion
-	        List<Metadatum> creators = item.getMetadata("sedici","creator","person",Item.ANY,Item.ANY);
-	        Integer auxNumerico = 1;
-	        if (creators.size() > 1) {
-	        	description = description+"Creadores: "+creators.get(0).value;
-	        	while(auxNumerico<creators.size()) {
-	        		description = description+"; "+creators.get(auxNumerico).value;
-	        		auxNumerico = auxNumerico + 1;
-	        	}
-	        	description= description+"\n";
-	        }else {
-	        	description = description+"Creador: "+creators.get(0).value+"\n";
-	        }
-	        description = description+"Tipo: "+item.getMetadata("sedici.subtype")+"\n";
-	        description = description+"Fecha de publicación: "+item.getMetadata("dc.date.available")+"\n";
-	        description = description+"Enlace de la fuente: "+item.getMetadata("dc.identifier.uri")+"\n";
-	        //Se obtienen las keywords
-			List<Metadatum> subjects = item.getMetadata("dc","subject",Item.ANY,Item.ANY,Item.ANY);
-			if (subjects.size() > 0){
-				description = description+"Palabras clave: ";
-				auxNumerico = 0;
-				while (auxNumerico<(subjects.size()-1)) {
-					description = description+subjects.get(auxNumerico).value+", ";
-					auxNumerico = auxNumerico +1;
-				}
-				description = description+subjects.get(auxNumerico).value+"\n";
-			}
+	private Map<String,Object> buildMetadata(Item item) {
+		
+			//falta derterminar si hay mas metadatos que agregar
+		
+		 	Map<String, Object> metadata = new HashMap<String, Object>();
+		 	
+		 	metadata.put("title", Jsoup.parse(item.getMetadata("dc.title")).text());
+	        metadata.put("creators", item.getMetadata("sedici","creator","person",Item.ANY,Item.ANY));
+	        metadata.put("subtype", item.getMetadata("sedici.subtype"));
+	        metadata.put("dateAvailable", item.getMetadata("dc.date.available"));
+	        metadata.put("iUri", item.getMetadata("dc.identifier.uri"));
+	        metadata.put("subjects", item.getMetadata("dc","subject",Item.ANY,Item.ANY,Item.ANY));
 			if(item.getMetadata("dc.description.abstract") !=  null){
-	        	description = description+"Resumen: "+Jsoup.parse(item.getMetadata("dc.description.abstract")).text()+"\n";
+				metadata.put("abstract", Jsoup.parse(item.getMetadata("dc.description.abstract")).text());
+	
 			}
-			description = description+"Licencia de uso: "+item.getMetadata("sedici.rights.license")+"\n";
-	        return description;
+			   metadata.put("license", item.getMetadata("sedici.rights.license"));
+	        return metadata;
 	}
 
 }
