@@ -16,9 +16,14 @@ import org.dspace.content.Bitstream;
 import org.dspace.content.Bundle;
 import org.dspace.content.Item;
 import org.dspace.content.Metadatum;
+import org.dspace.core.Context;
+import org.dspace.curate.Curator;
+import org.dspace.eperson.EPerson;
+import org.dspace.utils.DSpace;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
 import ar.edu.unlp.sedici.dspace.google.YoutubeAdapter;
+import ar.edu.unlp.sedici.util.MailReporter;
 
 @Service
 public class VideoUploaderServiceImpl implements ContentUploaderService{
@@ -62,19 +67,38 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         			if(cantV > 1 ){
 						title = title + "-Parte " + cantV2;
 					}
-					String videoID = new YoutubeAdapter().uploadVideo(bitstream.retrieve(), title, description, tags);
-					if(videoID != null) {
-	            		log.info("Se subio el video con id "+videoID);
-	            		String schema = "sedici";
-	            		String element = "identifier";
-	            		String qualifier = "youtubeId";
-	            		String lang = null;
-            			bitstream.addMetadata(schema,element,qualifier,lang,videoID);
-                		bitstream.updateMetadata();
-                		String initialString = bitstream.getID()+";"+videoID;
-    				    InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
-    					youtubeBundle.createBitstream(targetStream).setName("Mapa bitstream - youtube");;
-            		}
+        			try {
+						String videoID = new YoutubeAdapter().uploadVideo(bitstream.retrieve(), title, description, tags);
+						if(videoID != null) {
+		            		log.info("Se subio el video con id "+videoID);
+		            		String schema = "sedici";
+		            		String element = "identifier";
+		            		String qualifier = "youtubeId";
+		            		String lang = null;
+	            			bitstream.addMetadata(schema,element,qualifier,lang,videoID);
+	                		bitstream.updateMetadata();
+	                		String initialString = bitstream.getID()+";"+videoID;
+	    				    InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
+	    					youtubeBundle.createBitstream(targetStream).setName("Mapa bitstream - youtube");
+	    					youtubeBundle.update();
+	            	}
+        			}catch(UploadExeption e){
+        				//log.error(e.getMessage()); Se loggea en el adapter
+        				if(e.getResumable()) {
+        					Curator curator = new Curator();
+        					Context ctx = new Context();
+        					ctx.turnOffAuthorisationSystem();
+        			        ctx.setCurrentUser(EPerson.findByEmail(ctx, "test@test.com"));//Crear y usar el usuario info+video@sedici.unlp.edu.ar
+							curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"youtube");
+							ctx.complete();
+        				}
+        				if(e.getNotice()) {
+        					System.err.println("Problema que debe ser notificado en el item con handle "+item.getHandle());
+        					System.err.println(e.getMessage());
+        					e.printStackTrace();
+        				}
+        			}
+					
         		}else {
         			log.warn("El video con id "+bitstream.getID()+" ya se encuentra replicado en youtube con el id "+bitstream.getMetadata("sedici.video.videoId"));
         		}

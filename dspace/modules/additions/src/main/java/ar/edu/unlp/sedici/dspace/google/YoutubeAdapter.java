@@ -27,6 +27,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -50,6 +51,8 @@ import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.model.VideoStatus;
 import com.google.common.collect.Lists;
+
+import ar.edu.unlp.sedici.dspace.uploader.UploadExeption;
 
 public class YoutubeAdapter {
 	
@@ -213,23 +216,51 @@ public class YoutubeAdapter {
 			logger.info("Video upload executed -  new video Id: " + returnedVideo.getId());
 			return returnedVideo.getId();
 		} catch (GoogleJsonResponseException e) {
-			System.err.println("GoogleJsonResponseException: "+ e.getMessage());
-			e.printStackTrace();
-			logger.warn("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
-					+ e.getDetails().getMessage());
+			logger.error("GoogleJsonResponseException: "+ e.getMessage());
+			JSONObject jsonObject = new JSONObject(e.getDetails());
+		    String reason = jsonObject.getJSONArray("errors").getJSONObject(0).getString("reason");
+			switch (e.getStatusCode()) {
+			case 400:{
+					if((reason.equals("invalidCategoryId"))|
+					   (reason.equals("invalidDescription"))|
+					   (reason.equals("invalidFilename"))|
+					   (reason.equals("invalidRecordingDetails"))|
+					   (reason.equals("invalidTags"))|
+					   (reason.equals("invalidTitle"))|
+					   (reason.equals("invalidVideoMetadata"))|
+					   (reason.equals("mediaBodyRequired"))) {
+							throw new UploadExeption("Youtube format problem: "+reason+ " - Titulo "+tittle).notice();
+					}else{
+						throw new UploadExeption(e.getStatusMessage()).notice().resumable();
+					}
+				}
+			case 403:{
+					if(reason == "quotaExeded") {
+						throw new UploadExeption("The daily quota of Youtube has exeded").notice().resumable();
+					}
+				}
+			case 500:{
+				throw new UploadExeption(e.getStatusMessage()).resumable();
+				}
+			case 503:{
+				throw new UploadExeption(e.getStatusMessage()).resumable();
+				}
+			default:{
+				throw new UploadExeption(e.getStatusMessage()).resumable().notice();
+				}
+			}
 		} catch (IOException e) {
-			System.err.println("IOException: " + e.getMessage());
-			logger.warn("IOException: " + e.getMessage());
-			e.printStackTrace();
+			//System.err.println("IOException: " + e.getMessage());
+			logger.error("IOException: " + e.getMessage());
+			throw new UploadExeption(e.getMessage()).resumable();
 		} catch (Throwable t) {
-			System.err.println("Throwable: " + t.getMessage());
-			logger.warn("Throwable: " + t.getMessage());
-			t.printStackTrace();
+			//System.err.println("Throwable: " + t.getMessage());
+			logger.error("Throwable: " + t.getMessage());
+			throw new UploadExeption(t.getMessage()).resumable();
 		}
-		return null;
 	}
 	
-	public String updateMetadata(String videoId, String tittle, String description, List<String> tags) {
+	public String updateMetadata(String videoId, String tittle, String description, List<String> tags) throws UploadExeption{
 		
 		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
 
@@ -283,25 +314,51 @@ public class YoutubeAdapter {
 	      return videoResponse.getId();
 
 	    } catch (GoogleJsonResponseException e) {
-	      logger.warn("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
-	          + e.getDetails().getMessage());
-	      System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
-	          + e.getDetails().getMessage());
-	      e.printStackTrace();
-	    } catch (IOException e) {
-	      logger.warn("IOException: " + e.getMessage());
-	      System.err.println("IOException: " + e.getMessage());
-	      e.printStackTrace();
-	    } catch (Throwable t) {
-	      logger.warn("Throwable: " + t.getMessage());
-	      System.err.println("Throwable: " + t.getMessage());
-	      t.printStackTrace();
-	    }
-	    return null;
-	 
+			logger.error("GoogleJsonResponseException: "+ e.getMessage());
+			JSONObject jsonObject = new JSONObject(e.getDetails());
+		    String reason = jsonObject.getJSONArray("errors").getJSONObject(0).getString("reason");
+			switch (e.getStatusCode()) {
+			case 400:{
+					if((reason.equals("invalidCategoryId"))|
+					   (reason.equals("invalidDescription"))|
+					   (reason.equals("invalidFilename"))|
+					   (reason.equals("invalidRecordingDetails"))|
+					   (reason.equals("invalidTags"))|
+					   (reason.equals("invalidTitle"))|
+					   (reason.equals("invalidVideoMetadata"))|
+					   (reason.equals("mediaBodyRequired"))) {
+							throw new UploadExeption("Youtube format problem: "+reason+ " - Titulo "+tittle).notice();
+					}else{
+						throw new UploadExeption(e.getStatusMessage()).notice().resumable();
+					}
+				}
+			case 403:{
+					if(reason == "quotaExeded") {
+						throw new UploadExeption("The daily quota of Youtube has exeded").notice().resumable();
+					}
+				}
+			case 500:{
+				throw new UploadExeption(e.getStatusMessage()).resumable();
+				}
+			case 503:{
+				throw new UploadExeption(e.getStatusMessage()).resumable();
+				}
+			default:{
+				throw new UploadExeption(e.getStatusMessage()).resumable().notice();
+				}
+			}
+		} catch (IOException e) {
+			//System.err.println("IOException: " + e.getMessage());
+			logger.error("IOException: " + e.getMessage());
+			throw new UploadExeption(e.getMessage()).resumable();
+		} catch (Throwable t) {
+			//System.err.println("Throwable: " + t.getMessage());
+			logger.error("Throwable: " + t.getMessage());
+			throw new UploadExeption(t.getMessage()).resumable();
+		}	 
 	}
 	
-	public String deleteVideo(String videoId) {
+	public String deleteVideo(String videoId) throws UploadExeption{
 		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
 	    try {
 	      // Authorization.
@@ -327,21 +384,48 @@ public class YoutubeAdapter {
 	      return videoId;
 
 	    } catch (GoogleJsonResponseException e) {
-	      logger.warn("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
-	          + e.getDetails().getMessage());
-	      System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
-	          + e.getDetails().getMessage());
-	      e.printStackTrace();
-	    } catch (IOException e) {
-	      logger.warn("IOException: " + e.getMessage());
-	      System.err.println("IOException: " + e.getMessage());
-	      e.printStackTrace();
-	    } catch (Throwable t) {
-	      logger.warn("Throwable: " + t.getMessage());
-	      System.err.println("Throwable: " + t.getMessage());
-	      t.printStackTrace();
-	    }
-	    return null;
+			logger.error("GoogleJsonResponseException: "+ e.getMessage());
+			JSONObject jsonObject = new JSONObject(e.getDetails());
+		    String reason = jsonObject.getJSONArray("errors").getJSONObject(0).getString("reason");
+			switch (e.getStatusCode()) {
+			case 400:{
+					if((reason.equals("invalidCategoryId"))|
+					   (reason.equals("invalidDescription"))|
+					   (reason.equals("invalidFilename"))|
+					   (reason.equals("invalidRecordingDetails"))|
+					   (reason.equals("invalidTags"))|
+					   (reason.equals("invalidTitle"))|
+					   (reason.equals("invalidVideoMetadata"))|
+					   (reason.equals("mediaBodyRequired"))) {
+							throw new UploadExeption("").notice();
+					}else{
+						throw new UploadExeption(e.getStatusMessage()).notice().resumable();
+					}
+				}
+			case 403:{
+					if(reason == "quotaExeded") {
+						throw new UploadExeption("The daily quota of Youtube has exeded").notice().resumable();
+					}
+				}
+			case 500:{
+				throw new UploadExeption(e.getStatusMessage()).resumable();
+				}
+			case 503:{
+				throw new UploadExeption(e.getStatusMessage()).resumable();
+				}
+			default:{
+				throw new UploadExeption(e.getStatusMessage()).resumable().notice();
+				}
+			}
+		} catch (IOException e) {
+			//System.err.println("IOException: " + e.getMessage());
+			logger.error("IOException: " + e.getMessage());
+			throw new UploadExeption(e.getMessage()).resumable();
+		} catch (Throwable t) {
+			//System.err.println("Throwable: " + t.getMessage());
+			logger.error("Throwable: " + t.getMessage());
+			throw new UploadExeption(t.getMessage()).resumable();
+		}
 	}
 	
 	public Boolean verifyMetadata(String videoId, String tittle, String description, List<String> tags) {
