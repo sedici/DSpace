@@ -105,7 +105,7 @@ public class YoutubeAdapter {
 				clientSecrets, scopes).setCredentialStore(credentialStore).setAccessType("offline").build();
 
 		// Build the local server and bind it to port 9000
-		LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(9080).build();
+		LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(9080).setHost("testing.sedici.unlp.edu.ar").build();
 
 		// Authorize.
 		return new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
@@ -116,7 +116,7 @@ public class YoutubeAdapter {
 	 *
 	 * @param args video file.
 	 */
-	public String uploadVideo(InputStream videoFile, String tittle, Map <String, Object> metadata, List<String> tags) {
+	public String uploadVideo(InputStream videoFile, String tittle, Map <String, Object> metadata, List<String> tags) throws UploadExeption {
 		// Scope required to upload to YouTube.
 		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
 
