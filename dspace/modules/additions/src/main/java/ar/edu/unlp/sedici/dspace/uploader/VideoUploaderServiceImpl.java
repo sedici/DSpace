@@ -144,8 +144,25 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 					}
 				}
 				if (existe == false) {
-					String videoId = new YoutubeAdapter().deleteVideo(mapeo[1]);
-					item.getBundles("YOUTUBE")[0].removeBitstream(map);
+					try {
+						String videoId = new YoutubeAdapter().deleteVideo(mapeo[1]);
+						item.getBundles("YOUTUBE")[0].removeBitstream(map);
+					}catch(UploadExeption e){
+        				//log.error(e.getMessage()); Se loggea en el adapter
+        				if(e.getResumable()) {
+        					Curator curator = new Curator();
+        					Context ctx = new Context();
+        					ctx.turnOffAuthorisationSystem();
+        			        ctx.setCurrentUser(EPerson.findByEmail(ctx, "test@test.com"));//Crear y usar el usuario info+video@sedici.unlp.edu.ar
+							curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"youtube");
+							ctx.complete();
+        				}
+        				if(e.getNotice()) {
+        					System.err.println("Problema que debe ser notificado en el item con handle "+item.getHandle());
+        					System.err.println(e.getMessage());
+        					e.printStackTrace();
+        				}
+        			}
 				}
 	        	
 			}
@@ -198,9 +215,25 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         			if(cantV > 1 ){
 						title = title + "-Parte " + cantV2;
 					}
-					String videoID = new YoutubeAdapter().updateMetadata(bitstream.getMetadata("sedici.identifier.youtubeId"), title, metadata, tags);
-            		log.info("Se actualizo el video con id "+videoID);
-					title= Jsoup.parse(item.getMetadata("dc.title")).text();
+        			try {
+        				String videoID = new YoutubeAdapter().updateMetadata(bitstream.getMetadata("sedici.identifier.youtubeId"), title, metadata, tags);
+                		log.info("Se actualizo el video con id "+videoID);
+        			}catch(UploadExeption e){
+        				//log.error(e.getMessage()); Se loggea en el adapter
+        				if(e.getResumable()) {
+        					Curator curator = new Curator();
+        					Context ctx = new Context();
+        					ctx.turnOffAuthorisationSystem();
+        			        ctx.setCurrentUser(EPerson.findByEmail(ctx, "test@test.com"));//Crear y usar el usuario info+video@sedici.unlp.edu.ar
+							curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"youtube");
+							ctx.complete();
+        				}
+        				if(e.getNotice()) {
+        					System.err.println("Problema que debe ser notificado en el item con handle "+item.getHandle());
+        					System.err.println(e.getMessage());
+        					e.printStackTrace();
+        				}
+        			}
         		}
         	}
         }
