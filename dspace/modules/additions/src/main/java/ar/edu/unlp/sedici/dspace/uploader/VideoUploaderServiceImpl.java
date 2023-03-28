@@ -47,7 +47,9 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         metadata= this.buildMetadata(item);
         
         List<String> tags = new ArrayList<String>();
-        tags.add("prueba");
+        tags.add("SEDICI");
+        tags.add("UNLP");
+        tags.add("SEDICI Videos");
         
         //Definir que poner en los tags
         
@@ -93,7 +95,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	            	}
         			}catch(UploadExeption e){
         				//log.error(e.getMessage()); Se loggea en el adapter
-        				if(e.getResumable()) {
+        				if(e.isResumable()) {
         					Curator curator = new Curator();
         					Context ctx = new Context();
         					ctx.turnOffAuthorisationSystem();
@@ -101,11 +103,10 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 							curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"youtube");
 							ctx.complete();
         				}
-        				if(e.getNotice()) {
-        					System.err.println("Problema que debe ser notificado en el item con handle "+item.getHandle());
-        					System.err.println(e.getMessage());
-        					e.printStackTrace();
-        				}
+        				System.err.println("Problema que debe ser notificado en el item con handle "+item.getHandle());
+        				System.err.println(e.getMessage());
+        				e.printStackTrace();
+        				
         			}
 					
         		}else {
@@ -149,7 +150,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 						item.getBundles("YOUTUBE")[0].removeBitstream(map);
 					}catch(UploadExeption e){
         				//log.error(e.getMessage()); Se loggea en el adapter
-        				if(e.getResumable()) {
+        				if(e.isResumable()) {
         					Curator curator = new Curator();
         					Context ctx = new Context();
         					ctx.turnOffAuthorisationSystem();
@@ -157,11 +158,10 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 							curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"youtube");
 							ctx.complete();
         				}
-        				if(e.getNotice()) {
-        					System.err.println("Problema que debe ser notificado en el item con handle "+item.getHandle());
-        					System.err.println(e.getMessage());
-        					e.printStackTrace();
-        				}
+        				//se asume que todo error se debe avisar
+        				System.err.println("Service: "+e.getMessage());
+        				e.printStackTrace();
+        				
         			}
 				}
 	        	
@@ -220,7 +220,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
                 		log.info("Se actualizo el video con id "+videoID);
         			}catch(UploadExeption e){
         				//log.error(e.getMessage()); Se loggea en el adapter
-        				if(e.getResumable()) {
+        				if(e.isResumable()) {
         					Curator curator = new Curator();
         					Context ctx = new Context();
         					ctx.turnOffAuthorisationSystem();
@@ -228,11 +228,11 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 							curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"youtube");
 							ctx.complete();
         				}
-        				if(e.getNotice()) {
-        					System.err.println("Problema que debe ser notificado en el item con handle "+item.getHandle());
-        					System.err.println(e.getMessage());
-        					e.printStackTrace();
-        				}
+        		
+        				System.err.println("Problema que debe ser notificado en el item con handle "+item.getHandle());
+        				System.err.println(e.getMessage());
+        				e.printStackTrace();
+        				
         			}
         		}
         	}

@@ -5,35 +5,20 @@ import java.io.IOException;
 public class UploadExeption extends IOException {
 
 	private Boolean resumable = false;
-	private Boolean notice = false;
 
-    public UploadExeption(String message) {
+    public UploadExeption(String message, Boolean resumable) {
         super(message);
+        this.resumable = resumable;
     }
 
-    public UploadExeption(Throwable t) {
-        super(t);
-    }
-
-    public UploadExeption(String message, Throwable t) {
+    public UploadExeption(String message,Boolean resumable, Throwable t) {
         super(message, t);
+        this.resumable = resumable;
     }
     
-    public UploadExeption resumable() {
-    	resumable = true;
-    	return this;
+    public Boolean isResumable() {
+    	return resumable;
     }
-    
-    public UploadExeption notice() {
-    	notice = true;
-    	return this;
-    }
-    
-	public Boolean getResumable() {
-		return resumable;
-	}
 
-	public Boolean getNotice() {
-		return notice;
-	}
+
 }
