@@ -55,7 +55,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         
         Bundle youtubeBundle;
         if (item.getBundles("YOUTUBE").length==0) {
-        	System.out.println(item.createBundle("YOUTUBE").getID());
+        	item.createBundle("YOUTUBE");
         }
         youtubeBundle = item.getBundles("YOUTUBE")[0];
         Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
@@ -103,7 +103,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 							curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"youtube");
 							ctx.complete();
         				}
-        				System.err.println("Problema que debe ser notificado en el item con handle "+item.getHandle());
+        				System.err.println("Problema en el item con handle "+item.getHandle());
         				System.err.println(e.getMessage());
         				e.printStackTrace();
         				
@@ -134,13 +134,10 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 					        }
 					    }
 				String[] mapeo = textBuilder.toString().split(";");
-				System.out.println(textBuilder.toString());
 				Boolean existe = false;
 				for (Bitstream bitstream : bitstreams) {
-					System.out.println(mapeo[0]+" "+bitstream.getID());
 					
 					if(mapeo[0].equals(Integer.toString(bitstream.getID())) ) {
-						System.out.println("Aca");
 						existe = true;
 					}
 				}
@@ -159,7 +156,8 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 							ctx.complete();
         				}
         				//se asume que todo error se debe avisar
-        				System.err.println("Service: "+e.getMessage());
+        				System.err.println("Problema en el item con handle "+item.getHandle());
+        				System.err.println(e.getMessage());
         				e.printStackTrace();
         				
         			}
@@ -190,7 +188,6 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 		String handle = item.getHandle();
         log.info("Update del item " + handle +" a YouTube");
         String title= Jsoup.parse(item.getMetadata("dc.title")).text();//Falta determinar que hacer is hay muchos videos, como se construye el titulo
-        System.out.println(title);
         Map<String, Object> metadata;
         metadata = this.buildMetadata(item);
         
@@ -229,7 +226,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 							ctx.complete();
         				}
         		
-        				System.err.println("Problema que debe ser notificado en el item con handle "+item.getHandle());
+        				System.err.println("Problema en el item con handle "+item.getHandle());
         				System.err.println(e.getMessage());
         				e.printStackTrace();
         				

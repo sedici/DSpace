@@ -289,7 +289,6 @@ public class YoutubeAdapter {
 
 	      List<Video> videoList = listResponse.getItems();
 	      if (videoList.isEmpty()) {
-	        System.out.println("Can't find a video with video id: " + videoId);
 	        logger.warn("Can't find a video with video id: " + videoId);
 	        return null;
 	      }
@@ -381,7 +380,6 @@ public class YoutubeAdapter {
 	      // Create the video list request
 	      YouTube.Videos.Delete deleteRequest = youtube.videos().delete(videoId);
 	      //deleteRequest.setAccessToken(credential.getAccessToken());
-	      System.out.println(deleteRequest.getOauthToken());
 	      deleteRequest.execute();
 	      logger.info("The video "+videoId+" was eliminated");
 	      

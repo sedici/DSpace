@@ -59,7 +59,6 @@ public class VideoUploaderEventConsumer implements Consumer {
 				if(st==Constants.COLLECTION){
 					
 					Item item = (Item) event.getObject(ctx);
-					System.out.println(evType);
 					Bundle[] bundles = item.getBundles("ORIGINAL");
 					
 					Bitstream[] bitstreams = bundles[0].getBitstreams();
@@ -86,14 +85,19 @@ public class VideoUploaderEventConsumer implements Consumer {
 						String hdl = items[0].getHandle();
 						Bitstream[] bitstreams = bundle.getBitstreams();
 					
+						//Se comprueba que este publicado en dspace.
 						if(hdl != null){
-							String mimeType;
-							for (Bitstream bitstream : bitstreams) {
-								mimeType = bitstream.getFormat().getMIMEType();
-								if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata("sedici.identifier.youtubeId") == null)) {
-									Curator curator = new Curator();
-									curator.addTask("VideoUploaderTask").queue(ctx, hdl,"upload");
-									break;
+							//Se comprueba si el item original todavia no fue subido a youtube ya que en ese caso no habria que encolar.
+							if(items[0].getBundles("YOUTUBE").length != 0){
+								String mimeType;
+								for (Bitstream bitstream : bitstreams) {
+									mimeType = bitstream.getFormat().getMIMEType();
+									//Se comprueba que el bitstream sea un video y que no este subido en youtube para asi subirlo. 
+									if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata("sedici.identifier.youtubeId") == null)) {
+										Curator curator = new Curator();
+										curator.addTask("VideoUploaderTask").queue(ctx, hdl,"upload");
+										break;
+									}
 								}
 							}
 						}
@@ -101,6 +105,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 				}
 			case MODIFY_METADATA:
 				if(((Item) event.getSubject(ctx)).getHandle() != null){
+					//Se comprueba que se modifique un metadato relacionado con los videos, sirve solo en el caso de las importaciones.
 					if( (event.getDetail().contains("dc.title")) || (event.getDetail().contains("dc.description.abstract"))
 						|| (event.getDetail().contains("sedici.creator.person")) || (event.getDetail().contains("sedici.subtype"))
 						|| (event.getDetail().contains("dc.date.available")) || (event.getDetail().contains("dc.identifier.uri")) 
@@ -112,7 +117,8 @@ public class VideoUploaderEventConsumer implements Consumer {
 							String mimeType;
 							for (Bitstream bitstream : bitstreams) {
 								mimeType = bitstream.getFormat().getMIMEType();
-								if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))) {
+								//Se comprueba que el bitstream sea un video y que este publicado en youtube.
+								if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata("sedici.identifier.youtubeId") != null)) {
 									
 									Curator curator = new Curator();
 									curator.addTask("VideoUpdaterTask").queue(ctx,item.getHandle(),"update");
@@ -126,6 +132,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 			case REMOVE:
 				if(st==Constants.BUNDLE ){
 					Bundle bundle = (Bundle) event.getSubject(ctx);
+					//Se comprueba que se el caso factible ya que si se borra el ultimo bitstream de un bundle este se elimina automaticamente
 					if(bundle != null) {
 						Item item = (Item) bundle.getParentObject(); 
 						if(item.getBundles("YOUTUBE").length > 0){
