@@ -46,13 +46,13 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         Map<String, Object> metadata;
         metadata= this.buildMetadata(item);
         
+		//Definir que poner en los tags, en una version final
         List<String> tags = new ArrayList<String>();
         tags.add("SEDICI");
         tags.add("UNLP");
         tags.add("SEDICI Videos");
         
-        //Definir que poner en los tags
-        
+		//Se crea u obtiene el bundle YOUTUBE donde se guardaran los bitsreams usados para el borrado  
         Bundle youtubeBundle;
         if (item.getBundles("YOUTUBE").length==0) {
         	item.createBundle("YOUTUBE");
@@ -60,6 +60,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         youtubeBundle = item.getBundles("YOUTUBE")[0];
         Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
 
+		//Cuenta la cantidad de videos en un item para poder diferenciar los titulos de los videos que pertenecen a un mismo item
 		int cantV=0;
 		for (Bitstream bitstream : bitstreams) {
 			String mimeType = bitstream.getFormat().getMIMEType();
@@ -76,7 +77,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 				List<Metadatum> replicationId = bitstream.getMetadata("sedici","identifier","youtubeId",Item.ANY,Item.ANY);
         		if (replicationId.size() == 0) {
         			if(cantV > 1 ){
-						title = title + "-Parte " + cantV2;
+						title = title + "- Parte " + cantV2;
 					}
         			try {
 						String videoID = new YoutubeAdapter().uploadVideo(bitstream.retrieve(), title, metadata, tags);
@@ -92,6 +93,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	    				    InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
 	    					youtubeBundle.createBitstream(targetStream).setName("Mapa bitstream - youtube");
 	    					youtubeBundle.update();
+							title = "";
 	            	}
         			}catch(UploadExeption e){
         				//log.error(e.getMessage()); Se loggea en el adapter
@@ -103,6 +105,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 							curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"youtube");
 							ctx.complete();
         				}
+						//Por ahora se asume que todo error se debe avisar
         				System.err.println("Problema en el item con handle "+item.getHandle());
         				System.err.println(e.getMessage());
         				e.printStackTrace();
@@ -125,6 +128,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 		if(item.getBundles("ORIGINAL").length>0) {
 			Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
 			for (Bitstream map : mapsYoutube) {
+				//Transformar el archivo en el bundle YOUTUBE a un string
 				StringBuilder textBuilder = new StringBuilder();
 				try (Reader reader = new BufferedReader(new InputStreamReader
 					      (map.retrieve(), Charset.forName(StandardCharsets.UTF_8.name())))) {
@@ -136,11 +140,12 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 				String[] mapeo = textBuilder.toString().split(";");
 				Boolean existe = false;
 				for (Bitstream bitstream : bitstreams) {
-					
+					//Compara todos los bitstreams_id para saber si existe el bitstream todavia en el item
 					if(mapeo[0].equals(Integer.toString(bitstream.getID())) ) {
 						existe = true;
 					}
 				}
+				// En caso de que no exista se borra el video con id coreespondiente a el bitstream que no existe mas
 				if (existe == false) {
 					try {
 						String videoId = new YoutubeAdapter().deleteVideo(mapeo[1]);
@@ -165,6 +170,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	        	
 			}
 		}else {
+			//Este caso existe ya que si se borra el ultimo video de ORIGINAL, se borra el bundle entero, por lo tanto se borra todo lo que exista en YOUTUBE
 			for (Bitstream map : mapsYoutube) {
 				StringBuilder textBuilder = new StringBuilder();
 				try (Reader reader = new BufferedReader(new InputStreamReader
@@ -187,7 +193,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	public void modifyContent(Item item) throws Throwable {
 		String handle = item.getHandle();
         log.info("Update del item " + handle +" a YouTube");
-        String title= Jsoup.parse(item.getMetadata("dc.title")).text();//Falta determinar que hacer is hay muchos videos, como se construye el titulo
+        String title= Jsoup.parse(item.getMetadata("dc.title")).text();
         Map<String, Object> metadata;
         metadata = this.buildMetadata(item);
         
@@ -215,6 +221,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         			try {
         				String videoID = new YoutubeAdapter().updateMetadata(bitstream.getMetadata("sedici.identifier.youtubeId"), title, metadata, tags);
                 		log.info("Se actualizo el video con id "+videoID);
+						title="";
         			}catch(UploadExeption e){
         				//log.error(e.getMessage()); Se loggea en el adapter
         				if(e.isResumable()) {

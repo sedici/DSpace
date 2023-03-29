@@ -154,10 +154,10 @@ public class YoutubeAdapter {
 			VideoSnippet snippet = new VideoSnippet();
 			
 			snippet.setTitle(tittle);
-			
 			String description = buildDescription(metadata);
 			snippet.setDescription(description);
-			
+
+			// Set the category of your video (allways Education)
 			snippet.setCategoryId(this.getEducationId());
 
 			// Set your keywords.
@@ -195,18 +195,18 @@ public class YoutubeAdapter {
 			public void progressChanged(MediaHttpUploader uploader) throws IOException {
 				switch (uploader.getUploadState()) {
 					case INITIATION_STARTED:
-						System.out.println("Initiation Started");
+						//System.out.println("Initiation Started");
 						logger.info("Initiation Started");
 					break;
 				case INITIATION_COMPLETE:
-					System.out.println("Initiation Completed");
+					//System.out.println("Initiation Completed");
 					break;
 				case MEDIA_COMPLETE:
-					System.out.println("Upload Completed!");
+					//System.out.println("Upload Completed!");
 					logger.info("Upload Completed!");
 					break;
 				case NOT_STARTED:
-					System.out.println("Upload Not Started!");
+					//System.out.println("Upload Not Started!");
 					break;
 				}
 			}
@@ -223,6 +223,8 @@ public class YoutubeAdapter {
 		    String reason = jsonObject.getJSONArray("errors").getJSONObject(0).getString("reason");
 			switch (e.getStatusCode()) {
 			case 400:{
+					//Manejo de los casos en los que el problema este en el dato y por lo tanto no sea reasumible. 
+					//No maneja el caso de que el video este roto ya que youtube se da cuenta en la compilacion del video, no en la subida.
 					if((reason.equals("invalidCategoryId"))|
 					   (reason.equals("invalidDescription"))|
 					   (reason.equals("invalidFilename"))|
@@ -241,16 +243,15 @@ public class YoutubeAdapter {
 						throw new UploadExeption("The daily quota of Youtube has exeded",true,e);
 					}
 				}
-			case 500:{
-				throw new UploadExeption(e.getStatusMessage(),true,e);
-				}
-			case 503:{
-				throw new UploadExeption(e.getStatusMessage(),true,e);
-				}
 			default:{
 				throw new UploadExeption(e.getStatusMessage(),true,e);
 				}
 			}
+		} catch (TokenResponseException e) {
+			//System.err.println("IOException: " + e.getMessage());
+			//falta trabajar un poco el mensaje para hacer mas expresivo los errores de youtube, por ejemplo que se tiene que cambiar las credenciales ;(
+			logger.error("TokenResponseException: " + e.getMessage());
+			throw new UploadExeption(e.getMessage(),true,e);
 		} catch (IOException e) {
 			//System.err.println("IOException: " + e.getMessage());
 			logger.error("IOException: " + e.getMessage());
@@ -342,16 +343,15 @@ public class YoutubeAdapter {
 						throw new UploadExeption("The daily quota of Youtube has exeded",true,e);
 					}
 				}
-			case 500:{
-				throw new UploadExeption(e.getStatusMessage(),true,e);
-				}
-			case 503:{
-				throw new UploadExeption(e.getStatusMessage(),true,e);
-				}
 			default:{
 				throw new UploadExeption(e.getStatusMessage(),true,e);
 				}
 			}
+		} catch (TokenResponseException e) {
+			//System.err.println("IOException: " + e.getMessage());
+			//falta trabajar un poco el mensaje para hacer mas expresivo los errores de youtube ;(
+			logger.error("TokenResponseException: " + e.getMessage());
+			throw new UploadExeption(e.getMessage(),true,e);
 		} catch (IOException e) {
 			//System.err.println("IOException: " + e.getMessage());
 			logger.error("IOException: " + e.getMessage());
@@ -408,18 +408,17 @@ public class YoutubeAdapter {
 					if(reason == "quotaExeded") {
 						throw new UploadExeption("The daily quota of Youtube has exeded",true,e);
 					}
-				}
-			case 500:{
-				throw new UploadExeption(e.getStatusMessage(),true,e);
-				}
-			case 503:{
-				throw new UploadExeption(e.getStatusMessage(),true,e);
-				}
+			}
 			default:{
 				throw new UploadExeption(e.getStatusMessage(),true,e);
 				}
 			}
-		} catch (IOException e) {
+		}catch (TokenResponseException e) {
+			//System.err.println("IOException: " + e.getMessage());
+			//falta trabajar un poco el mensaje para hacer mas expresivo los errores de youtube ;(
+			logger.error("TokenResponseException: " + e.getMessage());
+			throw new UploadExeption(e.getMessage(),true,e);
+		}catch (IOException e) {
 			//System.err.println("IOException: " + e.getMessage());
 			logger.error("IOException: " + e.getMessage());
 			throw new UploadExeption(e.getMessage(),true,e);
@@ -468,18 +467,13 @@ public class YoutubeAdapter {
 						throw new UploadExeption("The daily quota of Youtube has exeded",true,e);
 					}
 				}
-			case 500:{
-				throw new UploadExeption(e.getStatusMessage(),true,e);
-				}
-			case 503:{
-				throw new UploadExeption(e.getStatusMessage(),true,e);
-				}
 			default:{
 				throw new UploadExeption(e.getStatusMessage(),true,e);
 				}
 			}
 		} catch (TokenResponseException e) {
 			//System.err.println("IOException: " + e.getMessage());
+			//falta trabajar un poco el mensaje para hacer mas expresivo los errores de youtube ;(
 			logger.error("TokenResponseException: " + e.getMessage());
 			throw new UploadExeption(e.getMessage(),true,e);
 		} catch (IOException e) {
