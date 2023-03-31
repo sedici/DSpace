@@ -491,39 +491,41 @@ public class YoutubeAdapter {
 		
 	    String description = (String) metadata.get("title") + "\n";
 	    //usar string buffer
+	    StringBuffer desc = new StringBuffer(description);
 	    //Se obtienen los creadores
 	    List<Metadatum> creators = (List<Metadatum>) metadata.get("creators");
-	    Integer auxNumerico = 1;
+	    Integer auxN = 1;
 	    if (creators.size() > 1) {
-	        description = description+"Creadores: "+creators.get(0).value;
-	        while(auxNumerico<creators.size()) {
-	            description = description+"; "+creators.get(auxNumerico).value;
-	            auxNumerico = auxNumerico + 1;
+	        desc.append("Creadores: "+creators.get(0).value);
+	        while(auxN<creators.size()) {
+	            desc.append("; "+creators.get(auxN).value);
+	            auxN = auxN + 1;
 	        }
-	        description= description+"\n";
+	        desc.append("\n");
 	    }else {
-	        description = description+"Creador: "+creators.get(0).value+"\n";
+	        desc.append("Creador: "+creators.get(0).value+"\n");
 	    }
 	    
-	    description = description+"Tipo: "+metadata.get("subtype")+"\n";
-	    description = description+"Fecha de publicación: "+metadata.get("dateAvailable")+"\n";
-	    description = description+"Enlace de la fuente: "+metadata.get("iUri")+"\n";
+	    desc.append("Tipo: "+metadata.get("subtype")+"\n");
+	    desc.append("Fecha de publicación: "+metadata.get("dateAvailable")+"\n");
+	    desc.append("Enlace de la fuente: "+metadata.get("iUri")+"\n");
 	    
 	    //Se obtienen las keywords
 	    List<Metadatum> subjects = (List<Metadatum>) metadata.get("subjects");
 	    if (subjects.size() > 0){
-	        description = description+"Palabras clave: ";
-	        auxNumerico = 0;
-	        while (auxNumerico<(subjects.size()-1)) {
-	            description = description+subjects.get(auxNumerico).value+", ";
-	            auxNumerico = auxNumerico +1;
+	        desc.append("Palabras clave: ");
+	        auxN = 0;
+	        while (auxN<(subjects.size()-1)) {
+	            desc.append(subjects.get(auxN).value+", ");
+	            auxN = auxN +1;
 	        }
-	        description = description+subjects.get(auxNumerico).value+"\n";
+	        desc.append(subjects.get(auxN).value+"\n");
 	    }
 	    if(metadata.containsKey("abstract")){
-	        description = description+"Resumen: " + metadata.get("abstract")+"\n";
+	        desc.append("Resumen: " + metadata.get("abstract")+"\n");
 	    }
-	    description = description+"Licencia de uso: "+metadata.get("license")+"\n";
+	    desc.append("Licencia de uso: "+metadata.get("license")+"\n");
+	    description = desc.toString();
 	    return description;
 	}
 	
