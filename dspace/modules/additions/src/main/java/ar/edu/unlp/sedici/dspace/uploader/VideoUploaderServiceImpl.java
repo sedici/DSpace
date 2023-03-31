@@ -93,7 +93,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	    				    InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
 	    					youtubeBundle.createBitstream(targetStream).setName("Mapa bitstream - youtube");
 	    					youtubeBundle.update();
-							title = "";
+							title = Jsoup.parse(item.getMetadata("dc.title")).text();
 	            	}
         			}catch(UploadExeption e){
         				//log.error(e.getMessage()); Se loggea en el adapter
@@ -123,69 +123,70 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 
 	@Override
 	public void removeContent(Item item) throws Throwable {
-		Bitstream[] mapsYoutube = item.getBundles("YOUTUBE")[0].getBitstreams();
-		System.out.println(item.getBundles("ORIGINAL").length);
-		if(item.getBundles("ORIGINAL").length>0) {
-			Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
-			for (Bitstream map : mapsYoutube) {
-				//Transformar el archivo en el bundle YOUTUBE a un string
-				StringBuilder textBuilder = new StringBuilder();
-				try (Reader reader = new BufferedReader(new InputStreamReader
-					      (map.retrieve(), Charset.forName(StandardCharsets.UTF_8.name())))) {
-					        int c = 0;
-					        while ((c = reader.read()) != -1) {
-					            textBuilder.append((char) c);
-					        }
-					    }
-				String[] mapeo = textBuilder.toString().split(";");
-				Boolean existe = false;
-				for (Bitstream bitstream : bitstreams) {
-					//Compara todos los bitstreams_id para saber si existe el bitstream todavia en el item
-					if(mapeo[0].equals(Integer.toString(bitstream.getID())) ) {
-						existe = true;
+		if(item.getBundles("YOUTUBE").length != 0) {
+			Bitstream[] mapsYoutube = item.getBundles("YOUTUBE")[0].getBitstreams();
+			if(item.getBundles("ORIGINAL").length>0) {
+				Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
+				for (Bitstream map : mapsYoutube) {
+					//Transformar el archivo en el bundle YOUTUBE a un string
+					StringBuilder textBuilder = new StringBuilder();
+					try (Reader reader = new BufferedReader(new InputStreamReader
+						      (map.retrieve(), Charset.forName(StandardCharsets.UTF_8.name())))) {
+						        int c = 0;
+						        while ((c = reader.read()) != -1) {
+						            textBuilder.append((char) c);
+						        }
+						    }
+					String[] mapeo = textBuilder.toString().split(";");
+					Boolean existe = false;
+					for (Bitstream bitstream : bitstreams) {
+						//Compara todos los bitstreams_id para saber si existe el bitstream todavia en el item
+						if(mapeo[0].equals(Integer.toString(bitstream.getID())) ) {
+							existe = true;
+						}
 					}
+					// En caso de que no exista se borra el video con id coreespondiente a el bitstream que no existe mas
+					if (existe == false) {
+						try {
+							String videoId = new YoutubeAdapter().deleteVideo(mapeo[1]);
+							item.getBundles("YOUTUBE")[0].removeBitstream(map);
+						}catch(UploadExeption e){
+	        				//log.error(e.getMessage()); Se loggea en el adapter
+	        				if(e.isResumable()) {
+	        					Curator curator = new Curator();
+	        					Context ctx = new Context();
+	        					ctx.turnOffAuthorisationSystem();
+	        			        ctx.setCurrentUser(EPerson.findByEmail(ctx, "test@test.com"));//Crear y usar el usuario info+video@sedici.unlp.edu.ar
+								curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"youtube");
+								ctx.complete();
+	        				}
+	        				//se asume que todo error se debe avisar
+	        				System.err.println("Problema en el item con handle "+item.getHandle());
+	        				System.err.println(e.getMessage());
+	        				e.printStackTrace();
+	        				
+	        			}
+					}
+		        	
 				}
-				// En caso de que no exista se borra el video con id coreespondiente a el bitstream que no existe mas
-				if (existe == false) {
-					try {
-						String videoId = new YoutubeAdapter().deleteVideo(mapeo[1]);
-						item.getBundles("YOUTUBE")[0].removeBitstream(map);
-					}catch(UploadExeption e){
-        				//log.error(e.getMessage()); Se loggea en el adapter
-        				if(e.isResumable()) {
-        					Curator curator = new Curator();
-        					Context ctx = new Context();
-        					ctx.turnOffAuthorisationSystem();
-        			        ctx.setCurrentUser(EPerson.findByEmail(ctx, "test@test.com"));//Crear y usar el usuario info+video@sedici.unlp.edu.ar
-							curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"youtube");
-							ctx.complete();
-        				}
-        				//se asume que todo error se debe avisar
-        				System.err.println("Problema en el item con handle "+item.getHandle());
-        				System.err.println(e.getMessage());
-        				e.printStackTrace();
-        				
-        			}
+			}else {
+				//Este caso existe ya que si se borra el ultimo video de ORIGINAL, se borra el bundle entero, por lo tanto se borra todo lo que exista en YOUTUBE
+				for (Bitstream map : mapsYoutube) {
+					StringBuilder textBuilder = new StringBuilder();
+					try (Reader reader = new BufferedReader(new InputStreamReader
+						      (map.retrieve(), Charset.forName(StandardCharsets.UTF_8.name())))) {
+						        int c = 0;
+						        while ((c = reader.read()) != -1) {
+						            textBuilder.append((char) c);
+						        }
+						    }
+					String[] mapeo = textBuilder.toString().split(";");
+					String videoId = new YoutubeAdapter().deleteVideo(mapeo[1]);
+					item.getBundles("YOUTUBE")[0].removeBitstream(map);
 				}
-	        	
+		        	
 			}
-		}else {
-			//Este caso existe ya que si se borra el ultimo video de ORIGINAL, se borra el bundle entero, por lo tanto se borra todo lo que exista en YOUTUBE
-			for (Bitstream map : mapsYoutube) {
-				StringBuilder textBuilder = new StringBuilder();
-				try (Reader reader = new BufferedReader(new InputStreamReader
-					      (map.retrieve(), Charset.forName(StandardCharsets.UTF_8.name())))) {
-					        int c = 0;
-					        while ((c = reader.read()) != -1) {
-					            textBuilder.append((char) c);
-					        }
-					    }
-				String[] mapeo = textBuilder.toString().split(";");
-				String videoId = new YoutubeAdapter().deleteVideo(mapeo[1]);
-				item.getBundles("YOUTUBE")[0].removeBitstream(map);
-			}
-	        	
-		}
+		}	
 		
 	}
 
