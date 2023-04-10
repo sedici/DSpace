@@ -21,11 +21,9 @@ import org.dspace.content.Metadatum;
 import org.dspace.core.Context;
 import org.dspace.curate.Curator;
 import org.dspace.eperson.EPerson;
-import org.dspace.utils.DSpace;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
 import ar.edu.unlp.sedici.dspace.google.YoutubeAdapter;
-import ar.edu.unlp.sedici.util.MailReporter;
 
 @Service
 public class VideoUploaderServiceImpl implements ContentUploaderService{
@@ -80,7 +78,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 						title = title + "- Parte " + cantV2;
 					}
         			try {
-						String videoID = new YoutubeAdapter().uploadVideo(bitstream.retrieve(), title, metadata, tags);
+						String videoID = new YoutubeAdapter().uploadVideo(bitstream.retrieve(), title, metadata, tags);		
 						if(videoID != null) {
 		            		log.info("Se subio el video con id "+videoID);
 		            		String schema = "sedici";
@@ -89,7 +87,8 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 		            		String lang = null;
 	            			bitstream.addMetadata(schema,element,qualifier,lang,videoID);
 	                		bitstream.updateMetadata();
-	                		String initialString = bitstream.getID()+";"+videoID;
+	                		item.updateLastModified();
+							String initialString = bitstream.getID()+";"+videoID;
 	    				    InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
 	    					youtubeBundle.createBitstream(targetStream).setName("Mapa bitstream - youtube");
 	    					youtubeBundle.update();
