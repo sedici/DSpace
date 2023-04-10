@@ -1023,13 +1023,27 @@
 
 				<!-- Filiacion de un dataset -->
 				<field>
-					<dc-schema>sedici</dc-schema>
+					<dc-schema>dc</dc-schema>
 					<dc-element>description</dc-element>
 					<dc-qualifier>filiation</dc-qualifier>
+					<repeatable>true</repeatable>
 					<label>Filiacion de dataset</label>
 					<input-type>textarea</input-type>
 					<hint>Filiacion de dataset</hint>
 					<type-bind>Conjunto de datos</type-bind>
+					<required-on-group>Bibliotecarios</required-on-group>
+					<visibility-on-group>Bibliotecarios</visibility-on-group>
+				</field>
+				<!-- Filiacion de un dataset -->
+				<field>
+					<dc-schema>dc</dc-schema>
+					<dc-element>description</dc-element>
+					<dc-qualifier>filiation</dc-qualifier>
+					<repeatable>true</repeatable>
+					<label>Filiacion de dataset</label>
+					<input-type>textarea</input-type>
+					<hint>Filiacion de dataset</hint>
+					<type-bind>!Conjunto de datos</type-bind>
 					<visibility-on-group>Bibliotecarios</visibility-on-group>
 				</field>
 

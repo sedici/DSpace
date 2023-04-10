@@ -159,6 +159,11 @@
 			<xsl:for-each select="doc:metadata/doc:element[@name='sedici']/doc:element[@name='description']/doc:element[@name='note']/doc:element/doc:field[@name='value']">
 				<dc:description><xsl:value-of select="." /></dc:description>
 			</xsl:for-each>
+			<!--dc.description.filiation = description -->
+			<xsl:for-each select="doc:metadata/doc:element[@name='dc']/doc:element[@name='description']/doc:element[@name='filiation']/doc:element/doc:field[@name='value']">
+				<dc:description><xsl:value-of select="." /></dc:description>
+			</xsl:for-each>
+
 			
 			<!--sedici.description.fulltext -->
 			<!--No lo pongo -->
@@ -249,10 +254,10 @@
 				<dc:format><xsl:value-of select="." /></dc:format>
 			</xsl:for-each>
 
+			
 <!--  Comento los mapeos a dc relation desde mods y desde sedici.relation porque son incorrectos de acuerdo a SNRD -->
 			<!-- mods.location=dc.relation -->
 <!-- 			<xsl:for-each select="doc:metadata/doc:element[@name='mods']/doc:element[@name='location']/doc:element/doc:field[@name='value']"> -->
-<!-- 				<dc:relation> -->
 <!-- 					<xsl:value-of select="." /> -->
 <!-- 				</dc:relation> -->
 <!-- 			</xsl:for-each> -->
