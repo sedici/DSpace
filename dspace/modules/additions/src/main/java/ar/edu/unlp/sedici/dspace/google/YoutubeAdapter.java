@@ -435,12 +435,12 @@ public class YoutubeAdapter {
 	    String cId = null;
 	    try {
 	    	List<VideoCategory> list = youtube.videoCategories().list(categories).setRegionCode("ar").execute().getItems();
-			int aux = 0;
-			while ((aux < list.size()&(cId== null))) {
-				if (list.get(aux).getSnippet().getTitle().equals("Education")) {
-					cId = list.get(aux).getId();
+			int contadorLista = 0;
+			while ((contadorLista < list.size()&(cId== null))) {
+				if (list.get(contadorLista).getSnippet().getTitle().equals("Education")) {
+					cId = list.get(contadorLista).getId();
 				}
-				aux++;
+				contadorLista++;
 			}
 			return cId;
 	    } catch (GoogleJsonResponseException e) {
@@ -494,12 +494,12 @@ public class YoutubeAdapter {
 	    StringBuffer desc = new StringBuffer(description);
 	    //Se obtienen los creadores
 	    List<Metadatum> creators = (List<Metadatum>) metadata.get("creators");
-	    Integer auxN = 1;
+	    Integer cantCreadores = 1;
 	    if (creators.size() > 1) {
 	        desc.append("Creadores: "+creators.get(0).value);
-	        while(auxN<creators.size()) {
-	            desc.append("; "+creators.get(auxN).value);
-	            auxN = auxN + 1;
+	        while(cantCreadores<creators.size()) {
+	            desc.append("; "+creators.get(cantCreadores).value);
+	            cantCreadores = cantCreadores + 1;
 	        }
 	        desc.append("\n");
 	    }else {
@@ -514,12 +514,12 @@ public class YoutubeAdapter {
 	    List<Metadatum> subjects = (List<Metadatum>) metadata.get("subjects");
 	    if (subjects.size() > 0){
 	        desc.append("Palabras clave: ");
-	        auxN = 0;
-	        while (auxN<(subjects.size()-1)) {
-	            desc.append(subjects.get(auxN).value+", ");
-	            auxN = auxN +1;
+	        cantCreadores = 0;
+	        while (cantCreadores<(subjects.size()-1)) {
+	            desc.append(subjects.get(cantCreadores).value+", ");
+	            cantCreadores = cantCreadores +1;
 	        }
-	        desc.append(subjects.get(auxN).value+"\n");
+	        desc.append(subjects.get(cantCreadores).value+"\n");
 	    }
 	    if(metadata.containsKey("abstract")){
 	        desc.append("Resumen: " + metadata.get("abstract")+"\n");
