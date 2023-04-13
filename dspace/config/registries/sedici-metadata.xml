@@ -360,4 +360,12 @@
 		<scope_note>Contiene la descripción de la licencia del journal según Sherpa</scope_note>
 	</dc-type>
 
+	<dc-type>
+                <schema>dc</schema>
+                <element>description</element>
+                <qualifier>filiation</qualifier>
+                <scope_note>Contiene la filiación del dataset</scope_note>
+        </dc-type>
+
+	
 </dspace-dc-types>
