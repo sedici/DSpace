@@ -1,5 +1,5 @@
 User-agent: *
-Crawl-delay: 3
+Crawl-delay: 8
 Allow: /
 Disallow: /themes
 Disallow: /discover
