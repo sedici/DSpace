@@ -70,7 +70,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 							mimeType = bitstream.getFormat().getMIMEType();
 							if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))) {
 								Curator curator = new Curator();
-								curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"upload");
+								curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"youtube");
 								break;
 							}
 	
@@ -95,7 +95,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 									//Se comprueba que el bitstream sea un video y que no este subido en youtube para asi subirlo. 
 									if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata("sedici.identifier.youtubeId") == null)) {
 										Curator curator = new Curator();
-										curator.addTask("VideoUploaderTask").queue(ctx, hdl,"upload");
+										curator.addTask("VideoUploaderTask").queue(ctx, hdl,"youtube");
 										break;
 									}
 								}
@@ -121,7 +121,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 								if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata("sedici.identifier.youtubeId") != null)) {
 									
 									Curator curator = new Curator();
-									curator.addTask("VideoUpdaterTask").queue(ctx,item.getHandle(),"update");
+									curator.addTask("VideoUpdaterTask").queue(ctx,item.getHandle(),"youtube");
 									break;
 								}
 							}
@@ -137,7 +137,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 						Item item = (Item) bundle.getParentObject(); 
 						if(item.getBundles("YOUTUBE").length > 0){
 							Curator curator = new Curator();
-							curator.addTask("VideoDeleteTask").queue(ctx,item.getHandle(),"delete");
+							curator.addTask("VideoDeleteTask").queue(ctx,item.getHandle(),"youtube");
 						} 
 					}
 				}
@@ -145,7 +145,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 					Item item = (Item) event.getSubject(ctx);
 					if(item.getBundles("YOUTUBE").length > 0){
 						Curator curator = new Curator();
-						curator.addTask("VideoDeleteTask").queue(ctx,item.getHandle(),"delete");
+						curator.addTask("VideoDeleteTask").queue(ctx,item.getHandle(),"youtube");
 					} 
 				}
 
