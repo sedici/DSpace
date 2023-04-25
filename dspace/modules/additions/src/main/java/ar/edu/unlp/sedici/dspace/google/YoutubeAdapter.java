@@ -119,7 +119,7 @@ public class YoutubeAdapter {
 	 */
 	public String uploadVideo(InputStream videoFile, String tittle, Map <String, Object> metadata, List<String> tags) throws UploadExeption {
 		// Scope required to upload to YouTube.
-		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
+		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.force-ssl");
 
 		try {
 			// Authorization.
@@ -265,7 +265,7 @@ public class YoutubeAdapter {
 	
 	public String updateMetadata(String videoId, String tittle, Map<String,Object> metadata, List<String> tags) throws UploadExeption{
 		
-		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
+		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.force-ssl");
 
 	    try {
 	      // Authorization.
@@ -364,7 +364,7 @@ public class YoutubeAdapter {
 	}
 	
 	public String deleteVideo(String videoId) throws UploadExeption{
-		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
+		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.force-ssl");
 	    try {
 	      // Authorization.
 	    	Credential credential = authorize(scopes);
