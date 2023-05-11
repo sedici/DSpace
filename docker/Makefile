@@ -10,7 +10,7 @@ up:
 
 up-testing:
 	@echo "Starting up containers for $(COMPOSE_PROJECT_NAME)..."
-	docker-compose -f docker-compose.yml up
+	docker-compose -f docker-compose.yml up -d
 
 update:
 	@echo "Stopping containers for $(COMPOSE_PROJECT_NAME)..."
