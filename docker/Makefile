@@ -8,6 +8,10 @@ up:
 	@echo "Starting up containers for $(COMPOSE_PROJECT_NAME)..."
 	docker-compose -f docker-compose.yml -f others/docker-compose-debug.yml up -d
 
+up-testing:
+	@echo "Starting up containers for $(COMPOSE_PROJECT_NAME)..."
+	docker-compose -f docker-compose.yml up
+
 update:
 	@echo "Stopping containers for $(COMPOSE_PROJECT_NAME)..."
 	@docker-compose -f docker-compose.yml -f others/docker-compose-debug.yml stop
