@@ -45,6 +45,7 @@ init_config() {
 	set_dspace_property "db.username" "${POSTGRES_DB_USER}" $cfg_file
 	set_dspace_property "db.password" "${POSTGRES_DB_PASS}" $cfg_file
 	set_dspace_property "dspace.dir" "${DSPACE_DIR}" $cfg_file
+	set_dspace_property "solr.server" "http://dspacesolr:8983/solr" $cfg_file
 	
 	#this allows truncating the database
 	set_dspace_property "db.cleanDisabled" "false" $cfg_file
