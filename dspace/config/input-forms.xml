@@ -1326,14 +1326,18 @@
 		</value-pairs>
 
 		<value-pairs value-pairs-name="common_subtypes_imagen_fija" dc-term="type">
-            <pair>
-                <displayed-value>- Seleccione un Subtipo -</displayed-value>
-                <stored-value></stored-value>
-            </pair>
-            <pair>
-				<displayed-value>Imagen fija</displayed-value>
-				<stored-value>Imagen fija</stored-value>
-			</pair>
+                    <pair>
+			<displayed-value>- Seleccione un Subtipo -</displayed-value>
+			<stored-value></stored-value>
+		    </pair>
+		    <pair>
+		        <displayed-value>Imagen fija</displayed-value>
+			<stored-value>Imagen fija</stored-value>
+                    </pair>
+		    <pair>
+		        <displayed-value>Plano</displayed-value>
+			<stored-value>Plano</stored-value>
+                    </pair>
 		</value-pairs>
 
 		<value-pairs value-pairs-name="common_subtypes_imagen_movimiento" dc-term="type">
