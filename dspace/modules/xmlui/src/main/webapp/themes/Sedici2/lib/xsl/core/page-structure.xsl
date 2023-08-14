@@ -528,7 +528,7 @@ placeholders for header images -->
                             js.src = f;
                             js.async = 1;
                             fjs.parentNode.insertBefore(js, fjs);
-                        }(window, document, 'script', 'lrw', 'parameters', 'https://cdn.jsdelivr.net/gh/lareferencia/lrw@1.1.2/dist/lrw.js'));
+                        }(window, document, 'script', 'lrw', 'parameters', 'https://cdn.jsdelivr.net/gh/lareferencia/lrw@1.1.5/dist/lrw.js'));
                         lrw({
                             widget_div_id: 'usage-stats',
                             identifier_prefix: 'oai:sedici.unlp.edu.ar:10915/',
