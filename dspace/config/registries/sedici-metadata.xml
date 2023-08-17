@@ -318,6 +318,12 @@
 	</dc-type>
 	<dc-type>
 		<schema>sedici</schema>
+		<element>identifier</element>
+		<qualifier>youtubeId</qualifier>
+		<scope_note>Id de video replicado en Youtube</scope_note>
+	</dc-type>
+	<dc-type>
+		<schema>sedici</schema>
 		<element>relation</element>
 		<qualifier>isRelatedWith</qualifier>
 		<scope_note>Contiene el link a un documento que está relacionado con este recurso</scope_note>
