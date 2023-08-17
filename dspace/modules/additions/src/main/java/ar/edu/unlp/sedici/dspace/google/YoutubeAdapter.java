@@ -26,12 +26,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
+import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.auth.oauth2.TokenResponseException;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
@@ -104,12 +107,33 @@ public class YoutubeAdapter {
 		// Set up authorization code flow.
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
 				clientSecrets, scopes).setCredentialStore(credentialStore).setAccessType("offline").build();
-
-		// Build the local server and bind it to port 9000
-		LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(9080).setHost("testing.sedici.unlp.edu.ar").build();
+		
+		Credential credential = flow.loadCredential(clientSecrets.getDetails().getClientId());
+	    if (credential != null
+	          && (credential.getRefreshToken() != null
+	              || credential.getExpiresInSeconds() == null
+	              || credential.getExpiresInSeconds() > 60)) {
+	        return credential;
+	    }
+	      // open in browser
+	    String redirectUri = "https://sedici.unlp.edu.ar/Algo";
+	    AuthorizationCodeRequestUrl authorizationUrl =
+	        flow.newAuthorizationUrl().setRedirectUri(redirectUri);
+	    //onAuthorization(authorizationUrl); Puede que no sea necesario
+	    // receive authorization code and exchange it for an access token
+	    System.out.println(authorizationUrl.build());
+	    System.out.print("Please enter code: ");
+        String code = new Scanner(System.in).nextLine();
+	    TokenResponse response = flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
+	    // store credential and return it
+	    return flow.createAndStoreCredential(response, clientSecrets.getDetails().getClientId());
+	    
+	    // Build the local server and bind it to port 9000
+	    //LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(9080).setHost("localhost").build();
 
 		// Authorize.
-		return new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
+		//return new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
+		
 	}
 
 	/**
