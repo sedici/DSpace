@@ -1009,6 +1009,19 @@
 					<type-bind>Objeto de aprendizaje</type-bind>
 				</field>
 
+				<!-- Catedras -->
+				<field>
+					<dc-schema>sedici</dc-schema>
+					<dc-element>description</dc-element>
+					<dc-qualifier>catedra</dc-qualifier>
+					<repeatable>true</repeatable>
+					<label>Catedras responsables</label>
+					<input-type>textarea</input-type>
+					<hint>Nombre de la catedra</hint>
+					<visibility-on-group>Bibliotecarios</visibility-on-group>
+					<type-bind>Objeto de aprendizaje</type-bind>
+				</field>
+
 			</page>
 
 		</form>
@@ -1242,6 +1255,10 @@
 			<pair>
 				<displayed-value>Objeto de aprendizaje</displayed-value>
 				<stored-value>Objeto de aprendizaje</stored-value>
+			</pair>
+			<pair>
+				<displayed-value>Video de catedras</displayed-value>
+				<stored-value>Video de catedras</stored-value>
 			</pair>
 		</value-pairs>
 

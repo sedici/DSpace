@@ -324,6 +324,12 @@
 	</dc-type>
 	<dc-type>
 		<schema>sedici</schema>
+		<element>description</element>
+		<qualifier>catedra</qualifier>
+		<scope_note>Nombre de catedra a la que pertenece el recurso</scope_note>
+	</dc-type>
+	<dc-type>
+		<schema>sedici</schema>
 		<element>relation</element>
 		<qualifier>isRelatedWith</qualifier>
 		<scope_note>Contiene el link a un documento que está relacionado con este recurso</scope_note>
