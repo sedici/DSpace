@@ -80,3 +80,9 @@ DSPACE=/var/dspace/install
 
 #Limpieza de la cache de cocoon cada 8 horas a partir de las 7am
 30 */8 * * * dspace curl --silent --output /dev/null --show-error --fail --data "cache-clearance" http://sedici.unlp.edu.ar/clear-cache
+
+#Cron para ejecutar tareas relacionadas con youtube, se ejecuta de lunes a viernes, de 8 a 18 cada una hora
+#0 8-18 * * 1-5 dspace $DSPACE/bin/dspace curate -q youtube > /dev/null
+
+#Cron identica a de arriba pero para probar en testing
+0 8-18 * * 1-5 root docker exec -it sedici sh -c "cd /dspace/install/bin && ./dspace curate -q youtube"> /dev/null
