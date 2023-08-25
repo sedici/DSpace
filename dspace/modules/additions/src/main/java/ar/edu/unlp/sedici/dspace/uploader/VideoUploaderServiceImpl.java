@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -18,6 +20,7 @@ import org.dspace.content.Bitstream;
 import org.dspace.content.Bundle;
 import org.dspace.content.Item;
 import org.dspace.content.Metadatum;
+import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 import org.dspace.curate.Curator;
 import org.dspace.eperson.EPerson;
@@ -100,7 +103,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         					Curator curator = new Curator();
         					Context ctx = new Context();
         					ctx.turnOffAuthorisationSystem();
-        			        ctx.setCurrentUser(EPerson.findByEmail(ctx, "test@test.com"));//Crear y usar el usuario info+video@sedici.unlp.edu.ar
+        			        ctx.setCurrentUser(EPerson.findByEmail(ctx, ConfigurationManager.getProperty("youtube.upload","youtube.upload.user")));//Crear y usar el usuario info+video@sedici.unlp.edu.ar
 							curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"youtube");
 							ctx.complete();
         				}
@@ -113,8 +116,8 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 					
         		}else {
         			log.warn("El video con id "+bitstream.getID()+" ya se encuentra replicado en youtube con el id "+bitstream.getMetadata("sedici.video.videoId"));
-        		}
-        		
+        		}        		
+
         	}
         }
 		
@@ -155,7 +158,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	        					Curator curator = new Curator();
 	        					Context ctx = new Context();
 	        					ctx.turnOffAuthorisationSystem();
-	        			        ctx.setCurrentUser(EPerson.findByEmail(ctx, "test@test.com"));//Crear y usar el usuario info+video@sedici.unlp.edu.ar
+	        			        ctx.setCurrentUser(EPerson.findByEmail(ctx, ConfigurationManager.getProperty("youtube.upload","youtube.upload.user")));//Crear y usar el usuario info+video@sedici.unlp.edu.ar
 								curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"youtube");
 								ctx.complete();
 	        				}
@@ -228,7 +231,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         					Curator curator = new Curator();
         					Context ctx = new Context();
         					ctx.turnOffAuthorisationSystem();
-        			        ctx.setCurrentUser(EPerson.findByEmail(ctx, "test@test.com"));//Crear y usar el usuario info+video@sedici.unlp.edu.ar
+        			        ctx.setCurrentUser(EPerson.findByEmail(ctx, ConfigurationManager.getProperty("youtube.upload","youtube.upload.user")));//Crear y usar el usuario info+video@sedici.unlp.edu.ar
 							curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"youtube");
 							ctx.complete();
         				}

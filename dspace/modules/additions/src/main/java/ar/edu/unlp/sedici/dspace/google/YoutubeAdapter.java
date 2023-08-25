@@ -61,6 +61,8 @@ import com.google.common.collect.Lists;
 import ar.edu.unlp.sedici.dspace.uploader.UploadExeption;
 
 import org.dspace.content.Metadatum;
+import org.dspace.core.ConfigurationManager;
+
 
 public class YoutubeAdapter {
 	
@@ -88,7 +90,7 @@ public class YoutubeAdapter {
 	private Credential authorize(List<String> scopes) throws Exception {
 
 		// Load client secrets.
-		Reader reader = new InputStreamReader(new FileInputStream(new File("../config/client_secrets.json")));
+		Reader reader = new InputStreamReader(new FileInputStream(new File(ConfigurationManager.getProperty("youtube.upload","youtube.upload.secrets"))));
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, reader);
 
 		// Checks that the defaults have been replaced (Default = "Enter X here").
@@ -102,7 +104,7 @@ public class YoutubeAdapter {
 
 		// Set up file credential store.
 		FileCredentialStore credentialStore = new FileCredentialStore(
-				new File("../config/youtube-api-uploadvideo.json"), JSON_FACTORY);
+				new File(ConfigurationManager.getProperty("youtube.upload","youtube.upload.refresh")), JSON_FACTORY);
 
 		// Set up authorization code flow.
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
@@ -116,7 +118,7 @@ public class YoutubeAdapter {
 	        return credential;
 	    }
 	      // open in browser
-	    String redirectUri = "https://sedici.unlp.edu.ar/Algo";
+	    String redirectUri = ConfigurationManager.getProperty("youtube.upload.redirect_uri");
 	    AuthorizationCodeRequestUrl authorizationUrl =
 	        flow.newAuthorizationUrl().setRedirectUri(redirectUri);
 	    //onAuthorization(authorizationUrl); Puede que no sea necesario
@@ -144,10 +146,8 @@ public class YoutubeAdapter {
 	public String uploadVideo(InputStream videoFile, String tittle, Map <String, Object> metadata, List<String> tags) throws UploadExeption {
 		// Scope required to upload to YouTube.
 		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.force-ssl");
-
 		try {
 			// Authorization.
-			
 			Credential credential = authorize(scopes);
 			/*Reader reader = new InputStreamReader(new FileInputStream(new File("./client_secrets.json")));
 			GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, reader);
@@ -293,7 +293,7 @@ public class YoutubeAdapter {
 
 	    try {
 	      // Authorization.
-	    	Credential credential = authorize(scopes);
+	      Credential credential = authorize(scopes);
 			//HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(credential);
 
 	      // YouTube object used to make all API requests.
