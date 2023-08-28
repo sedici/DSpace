@@ -27,6 +27,7 @@ import org.dspace.eperson.EPerson;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
 import ar.edu.unlp.sedici.dspace.google.YoutubeAdapter;
+import ar.edu.unlp.sedici.util.MailReporter;
 
 @Service
 public class VideoUploaderServiceImpl implements ContentUploaderService{
@@ -108,6 +109,11 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 							ctx.complete();
         				}
 						//Por ahora se asume que todo error se debe avisar
+        				if(!e.isResumable()) {
+        					MailReporter.reportUnknownException("Ocurrio un error no reasumible en el upload del item "+item.getHandle(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
+        				}else {
+        					MailReporter.reportUnknownException(e.getMessage(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
+        				}
         				System.err.println("Problema en el item con handle "+item.getHandle());
         				System.err.println(e.getMessage());
         				e.printStackTrace();
@@ -162,7 +168,11 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 								curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"youtube");
 								ctx.complete();
 	        				}
-	        				//se asume que todo error se debe avisar
+	        				if(!e.isResumable()) {
+	        					MailReporter.reportUnknownException("Ocurrio un error no reasumible en el delete del bitstream con id en youtube "+mapeo[1]+" en el item con handle "+item.getHandle(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
+	        				}else {
+	        					MailReporter.reportUnknownException(e.getMessage(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
+	        				}
 	        				System.err.println("Problema en el item con handle "+item.getHandle());
 	        				System.err.println(e.getMessage());
 	        				e.printStackTrace();
@@ -235,7 +245,11 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 							curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),"youtube");
 							ctx.complete();
         				}
-        		
+        				if(!e.isResumable()) {
+        					MailReporter.reportUnknownException("Ocurrio un error no reasumible en el update del item "+item.getHandle(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
+        				}else {
+        					MailReporter.reportUnknownException(e.getMessage(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
+        				}
         				System.err.println("Problema en el item con handle "+item.getHandle());
         				System.err.println(e.getMessage());
         				e.printStackTrace();
