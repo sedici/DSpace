@@ -2,6 +2,7 @@ package ar.edu.unlp.sedici.dspace.uploader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.BufferedReader;
@@ -48,11 +49,8 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         Map<String, Object> metadata;
         metadata= this.buildMetadata(item);
         
-		//Definir que poner en los tags, en una version final
-        List<String> tags = new ArrayList<String>();
-        tags.add("SEDICI");
-        tags.add("UNLP");
-        tags.add("SEDICI Videos");
+        List<String> tags = this.buildTags(item);
+
         
 		//Se crea u obtiene el bundle YOUTUBE donde se guardaran los bitsreams usados para el borrado  
         Bundle youtubeBundle;
@@ -208,8 +206,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         Map<String, Object> metadata;
         metadata = this.buildMetadata(item);
         
-        List<String> tags = new ArrayList<String>();
-        tags.add("prueba");//Definir que poner en los tags
+        List<String> tags = this.buildTags(item);
         Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
 
 		int cantV=0;
@@ -277,5 +274,31 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 			   metadata.put("license", item.getMetadata("sedici.rights.license"));
 	        return metadata;
 	}
+	
 
+	private List<String> buildTags(Item item){
+		List<String> tags = new ArrayList<String>();
+        tags.add("UNLP");
+        
+        ListIterator<Metadatum> palabras = item.getMetadata("dc","subject",Item.ANY,Item.ANY,Item.ANY).listIterator();
+	    while (palabras.hasNext()) {
+	        tags.add(palabras.next().value);
+	    }
+
+	    ListIterator<Metadatum> origen = item.getMetadata("mods","originInfo","place",Item.ANY,Item.ANY).listIterator();
+	    while (origen.hasNext()) {
+	        tags.add(origen.next().value);
+	    }
+
+	    ListIterator<Metadatum> materias = item.getMetadata("sedici","subject","materias",Item.ANY,Item.ANY).listIterator();
+	    while (materias.hasNext()) {
+	        tags.add(materias.next().value);
+	    }
+
+	    ListIterator<Metadatum> catedras = item.getMetadata("sedici","description","catedra",Item.ANY,Item.ANY).listIterator();
+	    while (catedras.hasNext()) {
+	        tags.add(catedras.next().value);
+	    }
+	    return tags;
+	}
 }
