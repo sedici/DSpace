@@ -93,15 +93,6 @@ public class YoutubeAdapter {
 		Reader reader = new InputStreamReader(new FileInputStream(new File(ConfigurationManager.getProperty("youtube.upload","youtube.upload.secrets"))));
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, reader);
 
-		// Checks that the defaults have been replaced (Default = "Enter X here").
-		if (clientSecrets.getDetails().getClientId().startsWith("Enter")
-				|| clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
-			System.out.println(
-					"Enter Client ID and Secret from https://console.developers.google.com/project/_/apiui/credential"
-							+ "into dspace/src/main/resources/client_secrets.json");
-			System.exit(1);
-		}
-
 		// Set up file credential store.
 		FileCredentialStore credentialStore = new FileCredentialStore(
 				new File(ConfigurationManager.getProperty("youtube.upload","youtube.upload.refresh")), JSON_FACTORY);
@@ -117,24 +108,20 @@ public class YoutubeAdapter {
 	              || credential.getExpiresInSeconds() > 60)) {
 	        return credential;
 	    }
-	      // open in browser
+		
+	    // open in browser
 	    String redirectUri = ConfigurationManager.getProperty("youtube.upload.redirect_uri");
 	    AuthorizationCodeRequestUrl authorizationUrl =
 	        flow.newAuthorizationUrl().setRedirectUri(redirectUri);
-	    //onAuthorization(authorizationUrl); Puede que no sea necesario
+
 	    // receive authorization code and exchange it for an access token
 	    System.out.println(authorizationUrl.build());
 	    System.out.print("Please enter code: ");
         String code = new Scanner(System.in).nextLine();
 	    TokenResponse response = flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
+
 	    // store credential and return it
 	    return flow.createAndStoreCredential(response, clientSecrets.getDetails().getClientId());
-	    
-	    // Build the local server and bind it to port 9000
-	    //LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(9080).setHost("localhost").build();
-
-		// Authorize.
-		//return new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
 		
 	}
 
@@ -149,13 +136,7 @@ public class YoutubeAdapter {
 		try {
 			// Authorization.
 			Credential credential = authorize(scopes);
-			/*Reader reader = new InputStreamReader(new FileInputStream(new File("./client_secrets.json")));
-			GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, reader);
-			GoogleTokenResponse responseToken = new GoogleRefreshTokenRequest(HTTP_TRANSPORT, JSON_FACTORY,credential.getRefreshToken(),"","").execute();
-			System.out.println(responseToken);
-			No parece necesario esto pero lo dejo por ahora para futuras pruebas*/
-			
-			//HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(credential);
+
 			// YouTube object used to make all API requests.
 			youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
 					.setApplicationName("DSpace SEDICI").build();
@@ -294,7 +275,6 @@ public class YoutubeAdapter {
 	    try {
 	      // Authorization.
 	      Credential credential = authorize(scopes);
-			//HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(credential);
 
 	      // YouTube object used to make all API requests.
 	      youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY,credential).
@@ -306,7 +286,6 @@ public class YoutubeAdapter {
 	      lvideoId.add(videoId);
 
 	      // Create the video list request
-	      
 	      YouTube.Videos.List listVideosRequest = youtube.videos().list(parts).setId(lvideoId);
 
 	      // Request is executed and video list response is returned
@@ -392,7 +371,6 @@ public class YoutubeAdapter {
 	    try {
 	      // Authorization.
 	    	Credential credential = authorize(scopes);
-			//HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(credential);
 
 	      // YouTube object used to make all API requests.
 	      youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).
