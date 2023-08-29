@@ -111,12 +111,11 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 						//Por ahora se asume que todo error se debe avisar
         				if(!e.isResumable()) {
         					MailReporter.reportUnknownException("Ocurrio un error no reasumible en el upload del item "+item.getHandle(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
+        				}else if (e.getMessage().equals("The daily quota of Youtube has exeded")){
+        					MailReporter.reportUnknownException("Error de cuota de Youtube exedida en la subida del item con handle "+item.getHandle(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
         				}else {
-        					MailReporter.reportUnknownException(e.getMessage(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
+        					MailReporter.reportUnknownException("Exepcion no manejada en el upload de un video a Youtube con handle "+item.getHandle(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
         				}
-        				System.err.println("Problema en el item con handle "+item.getHandle());
-        				System.err.println(e.getMessage());
-        				e.printStackTrace();
         				
         			}
 					
@@ -170,12 +169,11 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	        				}
 	        				if(!e.isResumable()) {
 	        					MailReporter.reportUnknownException("Ocurrio un error no reasumible en el delete del bitstream con id en youtube "+mapeo[1]+" en el item con handle "+item.getHandle(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
+	        				}else if (e.getMessage().equals("The daily quota of Youtube has exeded")){
+	        					MailReporter.reportUnknownException("Error de cuota de Youtube exedida en la eliminacion de Youtube del item con handle "+item.getHandle(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
 	        				}else {
-	        					MailReporter.reportUnknownException(e.getMessage(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
+	        					MailReporter.reportUnknownException("Exepcion no manejada en el delete de un video en Youtube con handle "+item.getHandle(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
 	        				}
-	        				System.err.println("Problema en el item con handle "+item.getHandle());
-	        				System.err.println(e.getMessage());
-	        				e.printStackTrace();
 	        				
 	        			}
 					}
@@ -247,12 +245,11 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         				}
         				if(!e.isResumable()) {
         					MailReporter.reportUnknownException("Ocurrio un error no reasumible en el update del item "+item.getHandle(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
+        				}else if (e.getMessage().equals("The daily quota of Youtube has exeded")){
+        					MailReporter.reportUnknownException("Error de cuota de Youtube exedida en update del item con handle "+item.getHandle(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
         				}else {
-        					MailReporter.reportUnknownException(e.getMessage(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
+        					MailReporter.reportUnknownException("Exepcion no manejada en el update de un video en Youtube con handle "+item.getHandle(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
         				}
-        				System.err.println("Problema en el item con handle "+item.getHandle());
-        				System.err.println(e.getMessage());
-        				e.printStackTrace();
         				
         			}
         		}
