@@ -62,8 +62,9 @@ import ar.edu.unlp.sedici.dspace.uploader.UploadExeption;
 
 import org.dspace.content.Metadatum;
 import org.dspace.core.ConfigurationManager;
+import org.springframework.stereotype.Service;
 
-
+@Service
 public class YoutubeAdapter {
 	
 	static final Logger logger = Logger.getLogger(YoutubeAdapter.class);
