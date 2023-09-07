@@ -6,6 +6,7 @@ import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.curate.AbstractCurationTask;
 import org.dspace.curate.Curator;
+import org.dspace.utils.DSpace;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import ar.edu.unlp.sedici.dspace.uploader.VideoUploaderServiceImpl;
@@ -20,11 +21,9 @@ public class VideoDeleteTask extends AbstractCurationTask {
 		Item item = (Item) dso;
 		
 		try {
-			AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
-			applicationContext.scan("ar.edu.unlp.sedici.dspace.uploader");
-
-			VideoUploaderServiceImpl vuploader = applicationContext.getBean(VideoUploaderServiceImpl.class);
+			VideoUploaderServiceImpl vuploader = new DSpace().getSingletonService(VideoUploaderServiceImpl.class);
 			//VideoUploaderServiceImpl vuploader= new VideoUploaderServiceImpl();
+			
 			vuploader.removeContent(item);
 			status = Curator.CURATE_SUCCESS;
 		}

@@ -67,6 +67,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class YoutubeAdapter {
 	
+	public YoutubeAdapter() {
+		super();
+	}
+
 	static final Logger logger = Logger.getLogger(YoutubeAdapter.class);
 
 	/** Global instance of the HTTP transport. */
@@ -82,13 +86,15 @@ public class YoutubeAdapter {
 	 * Global instance of the format used for the video being uploaded (MIME type).
 	 */
 	private String VIDEO_FILE_FORMAT = "video/*";
+	
+	private Credential CREDENTIAL;
 
 	/**
 	 * Authorizes the installed application to access user's protected data.
 	 *
 	 * @param scopes list of scopes needed to run youtube upload.
 	 */
-	private Credential authorize(List<String> scopes) throws Exception {
+	private void authorize(List<String> scopes) throws Exception {
 
 		// Load client secrets.
 		Reader reader = new InputStreamReader(new FileInputStream(new File(ConfigurationManager.getProperty("youtube.upload","youtube.upload.secrets"))));
@@ -102,12 +108,12 @@ public class YoutubeAdapter {
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
 				clientSecrets, scopes).setCredentialStore(credentialStore).setAccessType("offline").build();
 		
-		Credential credential = flow.loadCredential(clientSecrets.getDetails().getClientId());
-	    if (credential != null
-	          && (credential.getRefreshToken() != null
-	              || credential.getExpiresInSeconds() == null
-	              || credential.getExpiresInSeconds() > 60)) {
-	        return credential;
+		this.CREDENTIAL = flow.loadCredential(clientSecrets.getDetails().getClientId());
+	    if (CREDENTIAL != null
+	          && (CREDENTIAL.getRefreshToken() != null
+	              || CREDENTIAL.getExpiresInSeconds() == null
+	              || CREDENTIAL.getExpiresInSeconds() > 60)) {
+	        return;
 	    }
 		
 	    // open in browser
@@ -122,7 +128,7 @@ public class YoutubeAdapter {
 	    TokenResponse response = flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
 
 	    // store credential and return it
-	    return flow.createAndStoreCredential(response, clientSecrets.getDetails().getClientId());
+	    CREDENTIAL = flow.createAndStoreCredential(response, clientSecrets.getDetails().getClientId());
 		
 	}
 
@@ -136,10 +142,14 @@ public class YoutubeAdapter {
 		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.force-ssl");
 		try {
 			// Authorization.
-			Credential credential = authorize(scopes);
+			if ((CREDENTIAL == null)||
+				(CREDENTIAL.getAccessToken() == null)){
+					authorize(scopes);
+			}
+			//Credential credential = authorize(scopes);
 
 			// YouTube object used to make all API requests.
-			youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+			youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, this.CREDENTIAL)
 					.setApplicationName("DSpace SEDICI").build();
 			
 			List<String> categories = new ArrayList<String>();
@@ -274,11 +284,16 @@ public class YoutubeAdapter {
 		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.force-ssl");
 
 	    try {
+	    	
+	    	if ((CREDENTIAL == null)||
+					(CREDENTIAL.getAccessToken() == null)){
+						authorize(scopes);
+				}	
 	      // Authorization.
-	      Credential credential = authorize(scopes);
+	      //Credential credential = authorize(scopes);
 
 	      // YouTube object used to make all API requests.
-	      youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY,credential).
+	      youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY,this.CREDENTIAL).
 	    		  setApplicationName("DSpace SEDICI").build();
 	      
 	      List<String> parts = new ArrayList<String>();
@@ -371,10 +386,14 @@ public class YoutubeAdapter {
 		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.force-ssl");
 	    try {
 	      // Authorization.
-	    	Credential credential = authorize(scopes);
+	    	if ((this.CREDENTIAL == null)||
+					(this.CREDENTIAL.getAccessToken() == null)){
+						authorize(scopes);
+				}
+	    	//Credential credential = authorize(scopes);
 
 	      // YouTube object used to make all API requests.
-	      youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).
+	      youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, this.CREDENTIAL).
 	    		  setApplicationName("DSpace SEDICI").build();
 	      
 	      List<String> lvideoId = new ArrayList<String>();

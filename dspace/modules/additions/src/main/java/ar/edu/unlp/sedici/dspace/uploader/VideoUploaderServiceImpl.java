@@ -25,7 +25,9 @@ import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 import org.dspace.curate.Curator;
 import org.dspace.eperson.EPerson;
+import org.dspace.utils.DSpace;
 import org.jsoup.Jsoup;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Service;
 import ar.edu.unlp.sedici.dspace.google.YoutubeAdapter;
@@ -39,13 +41,9 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	private final String MPEG_MIME_TYPE = "video/mpeg";
 	private final String QUICKTIME_MIME_TYPE = "video/quicktime";
 	private final String MP4_MIME_TYPE = "video/mp4";
-	private YoutubeAdapter vadapter;
 	
 	public VideoUploaderServiceImpl() {
-		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
-		applicationContext.scan("ar.edu.unlp.sedici.dspace.google");
-		vadapter = applicationContext.getBean(YoutubeAdapter.class);
-
+		super();
 	}
 
 	@Override
@@ -89,6 +87,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 						title = title + "- Parte " + cantV2;
 					}
         			try {
+        				YoutubeAdapter vadapter = new DSpace().getSingletonService(YoutubeAdapter.class);
 						String videoID =  vadapter.uploadVideo(bitstream.retrieve(), title, metadata, tags);		
 						if(videoID != null) {
 		            		log.info("Se subio el video con id "+videoID);
@@ -162,6 +161,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 					// En caso de que no exista se borra el video con id coreespondiente a el bitstream que no existe mas
 					if (existe == false) {
 						try {
+							YoutubeAdapter vadapter = new DSpace().getSingletonService(YoutubeAdapter.class);
 							vadapter.deleteVideo(mapeo[1]);
 							item.getBundles("YOUTUBE")[0].removeBitstream(map);
 						}catch(UploadExeption e){
@@ -198,6 +198,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 						        }
 						    }
 					String[] mapeo = textBuilder.toString().split(";");
+					YoutubeAdapter vadapter = new DSpace().getSingletonService(YoutubeAdapter.class);
 					vadapter.deleteVideo(mapeo[1]);
 					item.getBundles("YOUTUBE")[0].removeBitstream(map);
 				}
@@ -236,6 +237,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 						title = title + "-Parte " + cantV2;
 					}
         			try {
+        				YoutubeAdapter vadapter = new DSpace().getSingletonService(YoutubeAdapter.class);
         				String videoID = vadapter.updateMetadata(bitstream.getMetadata("sedici.identifier.youtubeId"), title, metadata, tags);
                 		log.info("Se actualizo el video con id "+videoID);
 						title="";
