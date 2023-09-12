@@ -68,6 +68,20 @@
 				</xsl:call-template>
 			</xsl:for-each>
 
+			<xsl:for-each select="doc:element[@name='sedici']/doc:element[@name='identifier']/doc:element[@name='uri']/doc:element/doc:field">
+				<xsl:call-template name="printAlternativeIdentifier">
+					<xsl:with-param name="type">url</xsl:with-param>
+					<xsl:with-param name="value"><xsl:value-of select="./text()"/></xsl:with-param>
+				</xsl:call-template>
+			</xsl:for-each>
+
+			<xsl:for-each select="doc:element[@name='sedici']/doc:element[@name='identifier']/doc:element[@name='doi']/doc:element/doc:field">
+				<xsl:call-template name="printAlternativeIdentifier">
+					<xsl:with-param name="type">doi</xsl:with-param>
+					<xsl:with-param name="value"><xsl:value-of select="./text()"/></xsl:with-param>
+				</xsl:call-template>
+			</xsl:for-each>
+
 			<!-- Ver "Idenficadores alternativos" en SNRD v.2015 -->
 			<!--  sedici.identifier.other -->
 			<xsl:for-each select="doc:element[@name='sedici']/doc:element[@name='identifier']/doc:element[@name='other']/doc:element/doc:field">
