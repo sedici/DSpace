@@ -163,7 +163,7 @@ public class YoutubeAdapter {
 			 * like in case you need to set it to "unlisted" or "private" via API.
 			 */
 			VideoStatus status = new VideoStatus();
-			status.setPrivacyStatus("public");
+			status.setPrivacyStatus(ConfigurationManager.getProperty("youtube.upload","youtube.upload.video.state"));
 			videoObjectDefiningMetadata.setStatus(status);
 			
 			// We set a majority of the metadata with the VideoSnippet object.
