@@ -178,6 +178,7 @@ public class YoutubeAdapter {
 
 			// Set your keywords.
 			snippet.setTags(tags);
+			snippet.setDefaultLanguage((String)metadata.get("language"));
 
 			// Set completed snippet to the video object.
 			videoObjectDefiningMetadata.setSnippet(snippet);
@@ -511,8 +512,9 @@ public class YoutubeAdapter {
 	
 	private String buildDescription(Map<String,Object> metadata) {
 		
-	    String description = (String) metadata.get("title") + "\n";
+	    //String description = (String) metadata.get("title") + "\n";
 	    //usar string buffer
+	    String description = "";
 	    StringBuffer desc = new StringBuffer(description);
 	    //Se obtienen los creadores
 	    List<Metadatum> creators = (List<Metadatum>) metadata.get("creators");
@@ -529,7 +531,7 @@ public class YoutubeAdapter {
 	    }
 	    
 	    desc.append("Tipo: "+metadata.get("subtype")+"\n");
-	    desc.append("Fecha de publicación: "+metadata.get("dateAvailable")+"\n");
+	    //desc.append("Fecha de publicación: "+metadata.get("dateAvailable")+"\n");
 	    desc.append("Enlace de la fuente: "+metadata.get("iUri")+"\n");
 	    
 	    //Se obtienen las keywords

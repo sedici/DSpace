@@ -51,7 +51,7 @@ public class VideoUploaderEventConsumer implements Consumer {
             return;
         }
             
-		log.info(event.toString());
+		log.debug(event.toString());
 		switch (evType){
 			case ADD:
 				
