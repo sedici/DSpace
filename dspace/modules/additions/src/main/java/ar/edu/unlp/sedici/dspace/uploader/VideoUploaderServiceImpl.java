@@ -272,11 +272,12 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 		
 		 	Map<String, Object> metadata = new HashMap<String, Object>();
 		 	
-		 	metadata.put("title", Jsoup.parse(item.getMetadata("dc.title")).text());
+		 	//metadata.put("title", Jsoup.parse(item.getMetadata("dc.title")).text());
 	        metadata.put("creators", item.getMetadata("sedici","creator","person",Item.ANY,Item.ANY));
 	        metadata.put("subtype", item.getMetadata("sedici.subtype"));
-	        metadata.put("dateAvailable", item.getMetadata("dc.date.available"));
+	        //metadata.put("dateAvailable", item.getMetadata("dc.date.available"));
 	        metadata.put("iUri", item.getMetadata("dc.identifier.uri"));
+	        metadata.put("language", item.getMetadata("dc.language"));
 	        metadata.put("subjects", item.getMetadata("dc","subject",Item.ANY,Item.ANY,Item.ANY));
 			if(item.getMetadata("dc.description.abstract") !=  null){
 				metadata.put("abstract", Jsoup.parse(item.getMetadata("dc.description.abstract")).text());
