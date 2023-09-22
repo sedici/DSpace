@@ -163,6 +163,7 @@ public class YoutubeAdapter {
 			 * like in case you need to set it to "unlisted" or "private" via API.
 			 */
 			VideoStatus status = new VideoStatus();
+			status.setLicense("creativeCommon");
 			status.setPrivacyStatus(ConfigurationManager.getProperty("youtube.upload","youtube.upload.video.state"));
 			videoObjectDefiningMetadata.setStatus(status);
 			
