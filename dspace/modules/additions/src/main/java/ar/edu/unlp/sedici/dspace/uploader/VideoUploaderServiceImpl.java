@@ -240,7 +240,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         				YoutubeAdapter vadapter = new DSpace().getSingletonService(YoutubeAdapter.class);
         				String videoID = vadapter.updateMetadata(bitstream.getMetadata("sedici.identifier.youtubeId"), title, metadata, tags);
                 		log.info("Se actualizo el video con id "+videoID);
-						title="";
+						title=Jsoup.parse(item.getMetadata("dc.title")).text();
         			}catch(UploadExeption e){
         				//log.error(e.getMessage()); Se loggea en el adapter
         				if(e.isResumable()) {

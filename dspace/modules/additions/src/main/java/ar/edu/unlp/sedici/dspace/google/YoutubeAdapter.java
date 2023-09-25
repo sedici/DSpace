@@ -164,6 +164,8 @@ public class YoutubeAdapter {
 			 */
 			VideoStatus status = new VideoStatus();
 			status.setLicense("creativeCommon");
+			status.setSelfDeclaredMadeForKids(false);
+			status.setMadeForKids(false);
 			status.setPrivacyStatus(ConfigurationManager.getProperty("youtube.upload","youtube.upload.video.state"));
 			videoObjectDefiningMetadata.setStatus(status);
 			
