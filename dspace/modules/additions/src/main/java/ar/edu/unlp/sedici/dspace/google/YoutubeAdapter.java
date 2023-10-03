@@ -548,10 +548,12 @@ public class YoutubeAdapter {
 	        }
 	        desc.append(subjects.get(cantCreadores).value+"\n");
 	    }
-	    if(metadata.containsKey("abstract")){
-	        desc.append("Resumen: " + metadata.get("abstract")+"\n");
-	    }
 	    desc.append("Licencia de uso: "+metadata.get("license")+"\n");
+	    if((metadata.containsKey("abstract"))&&(desc.length() + metadata.get("abstract").toString().length() + "\n".length() < 5000)){
+	        desc.append("Resumen: " + metadata.get("abstract")+"\n");
+	    }else {
+	    	logger.info("El item que se encuentra en "+metadata.get("iUri")+", supera el tamaño maximo de descripcion por el resumen");
+	    }
 	    description = desc.toString();
 	    return description;
 	}
