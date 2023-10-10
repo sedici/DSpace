@@ -140,7 +140,6 @@ public class YoutubeAdapter {
 	 * @param args video file.
 	 */
 	public String uploadVideo(InputStream videoFile, String tittle, Map <String, Object> metadata, List<String> tags) throws UploadExeption {
-		System.out.println(noQuota);
 		if (noQuota) {
 			throw new UploadExeption("No quota",true);
 		}
