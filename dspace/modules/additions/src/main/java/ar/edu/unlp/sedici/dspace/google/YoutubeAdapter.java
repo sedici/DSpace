@@ -88,6 +88,8 @@ public class YoutubeAdapter {
 	private String VIDEO_FILE_FORMAT = "video/*";
 	
 	private Credential CREDENTIAL;
+	
+	private boolean noQuota = false;
 
 	/**
 	 * Authorizes the installed application to access user's protected data.
@@ -138,6 +140,10 @@ public class YoutubeAdapter {
 	 * @param args video file.
 	 */
 	public String uploadVideo(InputStream videoFile, String tittle, Map <String, Object> metadata, List<String> tags) throws UploadExeption {
+		System.out.println(noQuota);
+		if (noQuota) {
+			throw new UploadExeption("No quota",true);
+		}
 		// Scope required to upload to YouTube.
 		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.force-ssl");
 		try {
@@ -259,7 +265,8 @@ public class YoutubeAdapter {
 					}
 				}
 			case 403:{
-					if(reason == "quotaExeded") {
+					if(reason.equals("quotaExceeded")) {
+						noQuota = true;
 						throw new UploadExeption("The daily quota of Youtube has exeded",true,e);
 					}
 				}
@@ -284,9 +291,10 @@ public class YoutubeAdapter {
 	}
 	
 	public String updateMetadata(String videoId, String tittle, Map<String,Object> metadata, List<String> tags) throws UploadExeption{
-		
+		if (noQuota) {
+			throw new UploadExeption("No quota",true);
+		}
 		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.force-ssl");
-
 	    try {
 	    	
 	    	if ((CREDENTIAL == null)||
@@ -362,7 +370,8 @@ public class YoutubeAdapter {
 					}
 				}
 			case 403:{
-					if(reason == "quotaExeded") {
+					if(reason.equals("quotaExceeded")) {
+						noQuota = true;
 						throw new UploadExeption("The daily quota of Youtube has exeded",true,e);
 					}
 				}
@@ -387,6 +396,9 @@ public class YoutubeAdapter {
 	}
 	
 	public String deleteVideo(String videoId) throws UploadExeption{
+		if (noQuota) {
+			throw new UploadExeption("No quota",true);
+		}
 		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.force-ssl");
 	    try {
 	      // Authorization.
@@ -431,7 +443,8 @@ public class YoutubeAdapter {
 					}
 				}
 			case 403:{
-					if(reason == "quotaExeded") {
+					if(reason.equals("quotaExceeded")) {
+						noQuota = true;
 						throw new UploadExeption("The daily quota of Youtube has exeded",true,e);
 					}
 			}
@@ -455,7 +468,7 @@ public class YoutubeAdapter {
 		}
 	}
 	
-	private String getEducationId() throws UploadExeption{
+	private String getEducationId() throws Throwable{
 		List<String> categories = new ArrayList<String>();
 	    categories.add("snippet");
 	    String cId = null;
@@ -469,47 +482,8 @@ public class YoutubeAdapter {
 				contadorLista++;
 			}
 			return cId;
-	    } catch (GoogleJsonResponseException e) {
-			logger.error("GoogleJsonResponseException: "+ e.getMessage());
-			JSONObject jsonObject = new JSONObject(e.getDetails());
-		    String reason = jsonObject.getJSONArray("errors").getJSONObject(0).getString("reason");
-			switch (e.getStatusCode()) {
-			case 400:{
-					if((reason.equals("invalidCategoryId"))|
-					   (reason.equals("invalidDescription"))|
-					   (reason.equals("invalidFilename"))|
-					   (reason.equals("invalidRecordingDetails"))|
-					   (reason.equals("invalidTags"))|
-					   (reason.equals("invalidTitle"))|
-					   (reason.equals("invalidVideoMetadata"))|
-					   (reason.equals("mediaBodyRequired"))) {
-							throw new UploadExeption("Youtube format problem: "+reason,false,e);
-					}else{
-						throw new UploadExeption(e.getStatusMessage(),true,e);
-					}
-				}
-			case 403:{
-					if(reason == "quotaExeded") {
-						throw new UploadExeption("The daily quota of Youtube has exeded",true,e);
-					}
-				}
-			default:{
-				throw new UploadExeption(e.getStatusMessage(),true,e);
-				}
-			}
-		} catch (TokenResponseException e) {
-			//System.err.println("IOException: " + e.getMessage());
-			//falta trabajar un poco el mensaje para hacer mas expresivo los errores de youtube ;(
-			logger.error("TokenResponseException: " + e.getMessage());
-			throw new UploadExeption(e.getMessage(),true,e);
-		} catch (IOException e) {
-			//System.err.println("IOException: " + e.getMessage());
-			logger.error("IOException: " + e.getMessage());
-			throw new UploadExeption(e.getMessage(),true,e);
 		}catch (Throwable t) {
-			//System.err.println("Throwable: " + t.getMessage());
-			logger.error("Throwable: " + t.getMessage());
-			throw new UploadExeption(t.getMessage(),true,t);
+			throw t;
 		}
 	}
 	
