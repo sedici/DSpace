@@ -92,6 +92,7 @@
 			<!-- Ver "Idenficadores alternativos" en SNRD v.2015 -->
 			<!--  sedici.identifier.other -->
 			<xsl:for-each select="doc:element[@name='sedici']/doc:element[@name='identifier']/doc:element[@name='other']/doc:element/doc:field">
+				<xsl:variable name="iden" select="substring-before(./text(), ':')"/>
 				<xsl:choose>
 					<xsl:when test="java:ar.edu.unlp.sedici.dspace.utils.Utils.isDoi(./text())">
 						<xsl:variable name="doiStartIndex"
@@ -123,6 +124,66 @@
 						<xsl:call-template name="printAlternativeIdentifier">
 							<xsl:with-param name="type">hdl</xsl:with-param>
 							<xsl:with-param name="value"><xsl:value-of select="substring-after(./text(),'hdl:')"/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:when test="$iden = 'ark'">
+						<xsl:call-template name="printAlternativeIdentifier">
+							<xsl:with-param name="type">ark</xsl:with-param>
+							<xsl:with-param name="value"><xsl:value-of select="substring-after(./text(),'ark:')"/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:when test="$iden = 'arXiv'">
+						<xsl:call-template name="printAlternativeIdentifier">
+							<xsl:with-param name="type">arxiv</xsl:with-param>
+							<xsl:with-param name="value"><xsl:value-of select="substring-after(./text(),'arXiv:')"/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:when test="$iden = 'url'">
+						<xsl:call-template name="printAlternativeIdentifier">
+							<xsl:with-param name="type">url</xsl:with-param>
+							<xsl:with-param name="value"><xsl:value-of select="substring-after(./text(),'url:')"/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:when test="$iden = 'isbn'">
+						<xsl:call-template name="printAlternativeIdentifier">
+							<xsl:with-param name="type">isbn</xsl:with-param>
+							<xsl:with-param name="value"><xsl:value-of select="substring-after(./text(),'isbn:')"/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:when test="$iden = 'pissn'">
+						<xsl:call-template name="printAlternativeIdentifier">
+							<xsl:with-param name="type">pissn</xsl:with-param>
+							<xsl:with-param name="value"><xsl:value-of select="substring-after(./text(),'pissn:')"/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:when test="$iden = 'eissn'">
+						<xsl:call-template name="printAlternativeIdentifier">
+							<xsl:with-param name="type">eissn</xsl:with-param>
+							<xsl:with-param name="value"><xsl:value-of select="substring-after(./text(),'eissn:')"/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:when test="$iden = 'pmid'">
+						<xsl:call-template name="printAlternativeIdentifier">
+							<xsl:with-param name="type">pmid</xsl:with-param>
+							<xsl:with-param name="value"><xsl:value-of select="substring-after(./text(),'pmid:')"/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:when test="$iden = 'purl'">
+						<xsl:call-template name="printAlternativeIdentifier">
+							<xsl:with-param name="type">purl</xsl:with-param>
+							<xsl:with-param name="value"><xsl:value-of select="substring-after(./text(),'purl:')"/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:when test="$iden = 'urn'">
+						<xsl:call-template name="printAlternativeIdentifier">
+							<xsl:with-param name="type">urn</xsl:with-param>
+							<xsl:with-param name="value"><xsl:value-of select="substring-after(./text(),'urn:')"/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:when test="$iden = 'wos'">
+						<xsl:call-template name="printAlternativeIdentifier">
+							<xsl:with-param name="type">wos</xsl:with-param>
+							<xsl:with-param name="value"><xsl:value-of select="substring-after(./text(),'wos:')"/></xsl:with-param>
 						</xsl:call-template>
 					</xsl:when>
 				</xsl:choose>
