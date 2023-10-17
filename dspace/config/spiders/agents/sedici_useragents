@@ -136,10 +136,10 @@ Hexometer
 Auto Spider [0-9]+\.[0-9]+
 SirdataBot
 MoodleBot\/[0-9]+\.[0-9]+
-newspaper/[0-9]+\.[0-9]+
+newspaper\/[0-9]+\.[0-9]+
 AspiegelBot
 NovichenkoBot
-FemtosearchBot/[0-9]+\.[0-9]+
+FemtosearchBot\/[0-9]+\.[0-9]+
 centuryb\.o\.t9
 Turnitin
 CrossrefEventDataBot
@@ -149,3 +149,4 @@ win10chrome76
 DarcyRipper
 PDFDriveCrawler
 netEstate NE Crawler
+YouBot
