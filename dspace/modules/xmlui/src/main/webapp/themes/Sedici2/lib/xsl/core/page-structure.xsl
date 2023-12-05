@@ -555,9 +555,9 @@ placeholders for header images -->
 
     <xsl:template name="addJavascript">
 
-        <script type="text/javascript" src="{concat($protocol, 'ajax.googleapis.com/ajax/libs/jquery/', $jqueryVersion ,'/jquery.min.js')}">&#160;</script>
+        <script type="text/javascript" src="{concat('https://', 'ajax.googleapis.com/ajax/libs/jquery/', $jqueryVersion ,'/jquery.min.js')}">&#160;</script>
 
-        <script type="text/javascript" src="{concat($protocol, 'ajax.googleapis.com/ajax/libs/jqueryui/', $jqueryuiVersion ,'/jquery-ui.min.js')}">&#160;</script>
+        <script type="text/javascript" src="{concat('https://', 'ajax.googleapis.com/ajax/libs/jqueryui/', $jqueryuiVersion ,'/jquery-ui.min.js')}">&#160;</script>
 
         <!-- Add theme javascipt  -->
         <xsl:for-each select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='javascript'][not(@qualifier)]">
