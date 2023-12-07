@@ -172,10 +172,10 @@
 			<!--No lo pongo -->
 			
 			<!-- thesis.degree.(name|grantor) =description -->
-			<xsl:for-each select="doc:metadata/doc:element[@name='tesis']/doc:element[@name='degree']/doc:element[@name='name']/doc:element/doc:field[@name='value']">
+			<xsl:for-each select="doc:metadata/doc:element[@name='thesis']/doc:element[@name='degree']/doc:element[@name='name']/doc:element/doc:field[@name='value']">
 				<dc:description><xsl:value-of select="." /></dc:description>
 			</xsl:for-each>
-			<xsl:for-each select="doc:metadata/doc:element[@name='tesis']/doc:element[@name='degree']/doc:element[@name='name']/doc:element/doc:field[@name='value']">
+			<xsl:for-each select="doc:metadata/doc:element[@name='thesis']/doc:element[@name='degree']/doc:element[@name='grantor']/doc:element/doc:field[@name='value']">
 				<dc:description><xsl:value-of select="." /></dc:description>
 			</xsl:for-each>
 			
