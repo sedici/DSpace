@@ -170,6 +170,11 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 		
 	}
 	
+	/*
+	 * Transform the relation between bitstream ID and Youtube ID, to a list of Strings
+	 * [0] Bitstream ID
+	 * [1] Youtube ID 
+	 */
 	private String[] parsearBitstream(Bitstream map) throws IOException, SQLException, AuthorizeException {
 		StringBuilder textBuilder = new StringBuilder();
 		try (Reader reader = new BufferedReader(new InputStreamReader
@@ -184,11 +189,6 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	
 	private String determinarBorradoDeBitstream(Bitstream relacionBY, Item item) throws IOException, SQLException, AuthorizeException {
 		Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
-		/*
-		 * Transform the relation between bitstream ID and Youtube ID, to a list of Strings
-		 * [0] Bitstream ID
-		 * [1] Youtube ID 
-		 */
 		String[] listaIDs = parsearBitstream(relacionBY);
 		Boolean existe = false;
 		for (Bitstream bitstream : bitstreams) {
