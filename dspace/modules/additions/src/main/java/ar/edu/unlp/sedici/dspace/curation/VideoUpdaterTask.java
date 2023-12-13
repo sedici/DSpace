@@ -35,16 +35,16 @@ public class VideoUpdaterTask extends AbstractCurationTask {
 			vuploader.modifyContent(item);
 			status = Curator.CURATE_SUCCESS;
 		} catch(SQLException e) {
-			log.error("Error de SQL en el update del item "+item.getID());
+			log.error("SQL error in the update of the item with ID "+item.getID());
 			log.error("SQLException: "+e.getMessage(),e);
 			throw new IOException(e);
 		} catch (IOException e) {
-			log.error("Error de lectura/escritura en el update del item "+item.getID());
+			log.error("IO error in the update of the item with ID "+item.getID());
 			log.error("IOException: "+e.getMessage(),e);
 			throw e;
 		} catch (AuthorizeException e) {
 			status = Curator.CURATE_ERROR;
-			log.error("Error de autorizacion en el update del item "+item.getID());
+			log.error("Autorization error in the update of the item with ID "+item.getID());
 			log.error("AuthorizeException: "+e.getMessage(),e);
 			throw new IOException(e);
 		}

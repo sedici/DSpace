@@ -56,10 +56,10 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	public void uploadContent(Item item) throws SQLException, IOException, AuthorizeException {
 		
         String handle = item.getHandle();
-        log.info("Upload del item " + handle +" a YouTube");
+        log.info("Starting the upload for the item with handle " + handle +" to YouTube");
         String itemTitle= Jsoup.parse(item.getMetadata("dc.title")).text();
 
-		//Se crea un bundle si es nescesario  
+		//Create the Bundle if necessary
         if (item.getBundles("YOUTUBE").length==0) {
         	item.createBundle("YOUTUBE");
         }
@@ -71,14 +71,13 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         			String title = itemTitle+" - "+bitstream.getMetadata("dc.description");
     				YoutubeAdapter vadapter = new DSpace().getSingletonService(YoutubeAdapter.class);
 					String videoID =  vadapter.uploadVideo(bitstream.retrieve(), title, this.buildMetadata(item), this.buildTags(item));
-    				//String videoID = null;
 					if(videoID != null) {
-	            		log.info("Se subio el video con id "+videoID);
+	            		log.info("The upload for the bitstream with ID "+bitstream.getID()+",contained in the item with handle "+handle+", finished successfully, uploading the video with Youtube ID "+videoID);
 	            		persistirId(videoID,item,bitstream);
 					}
             	}
         	}catch(UploadExeption e){
-				//log.error(e.getMessage()); Se loggea en el adapter
+				//log.error(e.getMessage()); YoutubeAdapter is responsible for the error log in this case
 				this.resolveExeption(e,"upload",item);
 			}
         }
@@ -100,12 +99,12 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         				condicion = true;
         			}
         		}else {
-        			log.warn("El video con id "+bitstream.getID()+" ya se encuentra replicado en youtube con el id "+bitstream.getMetadata("sedici.identifier.youtubeId"));
+        			log.warn("The bitstream with ID "+bitstream.getID()+" is allready replicated in Youtube "+bitstream.getMetadata("sedici.identifier.youtubeId"));
         		}
         	}
     	} else {
     		ctx.complete();
-    		log.warn("El bitstream con id "+bitstream.getID()+" no debe ser replicado ya que no es accesible por anonymous");
+    		log.warn("THe bitstream with ID "+bitstream.getID()+" shouldn't be replicated to YouTube due to it not being accessible to anonymous user");
     	}
     	return condicion;
 	}
@@ -125,13 +124,13 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 			bundle.createBitstream(targetStream).setName("Mapa bitstream - youtube");
 			bundle.update();
 		} catch (SQLException e) {
-			log.error("Error de SQL al persisir el id del video replicado");
+			log.error("SQL error occurred while saving the Youtube ID");
 			log.error("SQLException: " + e.getMessage());
 		} catch (AuthorizeException e) {
-			log.error("Error de Autorization al persisir el id del video replicado");
+			log.error("Autorization error occurred while saving the Youtube ID");
 			log.error("AuthorizeException: " + e.getMessage());
 		} catch (IOException e) {
-			log.error("Error de IO al persisir el id del video replicado");
+			log.error("IO error occurred while saving the Youtube ID");
 			log.error("IOException: " + e.getMessage());
 		}
 	}
@@ -149,13 +148,16 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 							vadapter.deleteVideo(idVideo);
 							item.getBundles("YOUTUBE")[0].removeBitstream(map);
 						}catch(UploadExeption e){
-	        				//log.error(e.getMessage()); Se loggea en el adapter
+	        				//log.error(e.getMessage()); YoutubeAdapter is responsible for the error log in this case
 							this.resolveExeption(e,"delete",item);
 	        			}
 					}
 				}
 			}else {
-				//Este caso existe ya que si se borra el ultimo video de ORIGINAL, se borra el bundle entero, por lo tanto se borra todo lo que exista en YOUTUBE
+				/*
+				 * If you remove the last item in the bundle ORIGINAL, it removes the bundle from the item. 
+				 * In this case, if the bundle YOUTUBE exists, you have to eliminate every video in this bundle
+				*/
 				for (Bitstream map : mapsYoutube) {
 					String[] mapeo = parsearBitstream(map);
 					YoutubeAdapter vadapter = new DSpace().getSingletonService(YoutubeAdapter.class);
@@ -180,19 +182,23 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 		return textBuilder.toString().split(";");
 	}
 	
-	private String determinarBorradoDeBitstream(Bitstream map, Item item) throws IOException, SQLException, AuthorizeException {
+	private String determinarBorradoDeBitstream(Bitstream relacionBY, Item item) throws IOException, SQLException, AuthorizeException {
 		Bitstream[] bitstreams = item.getBundles("ORIGINAL")[0].getBitstreams();
-		//Transformar el archivo en el bundle YOUTUBE a un string
-		String[] mapeo = parsearBitstream(map);
+		/*
+		 * Transform the relation between bitstream ID and Youtube ID, to a list of Strings
+		 * [0] Bitstream ID
+		 * [1] Youtube ID 
+		 */
+		String[] listaIDs = parsearBitstream(relacionBY);
 		Boolean existe = false;
 		for (Bitstream bitstream : bitstreams) {
-			//Compara todos los bitstreams_id para saber si existe el bitstream todavia en el item
-			if(mapeo[0].equals(Integer.toString(bitstream.getID())) ) {
+			//Checks if the bitstream replicated in YouTube has been deleted
+			if(listaIDs[0].equals(Integer.toString(bitstream.getID())) ) {
 				existe = true;
 			}
 		}
 		if (!existe){
-			return mapeo[1];
+			return listaIDs[1];
 		}
 		else {
 			return null;
@@ -215,7 +221,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         				String videoID = vadapter.updateMetadata(bitstream.getMetadata("sedici.identifier.youtubeId"), title, this.buildMetadata(item), this.buildTags(item));
                 		log.info("Se actualizo el video con id "+videoID);
         			}catch(UploadExeption e){
-        				//log.error(e.getMessage()); Se loggea en el adapter
+        				//log.error(e.getMessage()); YoutubeAdapter is responsible for the error log in this case
         				this.resolveExeption(e,"update",item);
         			}
         	}
@@ -234,9 +240,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	}
 	
 	private Map<String,Object> buildMetadata(Item item) {
-		
-			//falta derterminar si hay mas metadatos que agregar
-		
+				
 		 	Map<String, Object> metadata = new HashMap<String, Object>();
 		 	
 		 	//metadata.put("title", Jsoup.parse(item.getMetadata("dc.title")).text());
@@ -299,21 +303,22 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 				ctx.complete();
 	        }
 	        if(!e.isResumable()) {
-	        	MailReporter.reportUnknownException("Ocurrio un error no reasumible en el "+ contexto +" del item "+item.getHandle(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
+	        	MailReporter.reportUnknownException("Ocurrio un error no reasumible en el "+ contexto +" del item con handle "+item.getHandle(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
 	        }else if (e.getMessage().equals("The daily quota of Youtube has exeded")){
 	        	MailReporter.reportUnknownException("Ocurrio un error reasumible en el "+ contexto +" del item con handle "+item.getHandle()+". Se agoto la quota de Youtube", e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
 	        }else if (e.getMessage().equals("No quota")){
-	        	// En este caso no se avisa ya que, el servicio de youtube sabe que no tiene mas cuota, por lo tanto,
-	        	// ya se quiso hacer una operacion con youtube y le aviso que no tiene mas quota, por lo tanto
-	        	// ya se aviso que no se tiene mas quota. Este error existe para reencolar la cola de tareas de youtube
+	        	/* In this case, you don't have to send an email, as the email indicating
+	        	 * that the quota limit has already been reached has been sent
+	        	 * This case exist to re-queue the curation tasks
+	        	 */
 	        }else if (e.getMessage().equalsIgnoreCase("Bitstream sin nombre")){
-	        	MailReporter.reportUnknownException("Ocurrio un error reasumible en el "+ contexto +" del item con handle "+item.getHandle()+". Un bitstream del item no tiene titulo", e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
+	        	MailReporter.reportUnknownException("Ocurrio un error reasumible en el "+ contexto +" del item con handle "+item.getHandle()+". Un bitstream del item no tiene descripcion", e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
 	        }
 	        else {
-	        	MailReporter.reportUnknownException("Ocurrio un error no manejado en el "+ contexto +" del item con handle "+item.getHandle(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
+	        	MailReporter.reportUnknownException("An unhandled error as ocurred in the "+ contexto +" del item con handle "+item.getHandle(), e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
 	        }
 		} catch (Throwable t) {
-			log.error("Error en el manejo de exepciones del VideoUploaderService");
+			log.error("Error during exeption management in the VideoUploaderService");
 			log.error("Throwable: " + t.getMessage());
 		}
 	}

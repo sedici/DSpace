@@ -30,11 +30,12 @@ import com.google.api.services.youtube.YouTube;
 
 import org.dspace.curate.Curator;
 
-// Consumer encargado de detectar los eventos de DSpace y si afectan a un item con videos a replicar o ya replicados en Youtube.
-// Upload = ADD de coleccion sobre item(caso de original), o ADD de item sobre bundle
-// Update = MODIFY_METADATA sobre item
-// Delete = REMOVE de bitstream sobre bundle o de bundle sobre item(caso de REMOVE del ultimo bitstream del bundle ORIGINAL)
-
+/*  
+ *  Event listener that filters events that triggers on items with video bitstreams 
+ *  Upload = ADD item to collection(publish the ite,), or ADD bitstream to bundle(allready published)
+ *  Update = MODIFY_METADATA of item
+ *  Delete = REMOVE bitstream of bundle or bundle of item()
+*/
 public class VideoUploaderEventConsumer implements Consumer {
 	
     /**
@@ -101,7 +102,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 							String hdl = items[0].getHandle();
 							Bitstream[] bitstreams = bundle.getBitstreams();
 						
-							//Se comprueba que este publicado en dspace.
+							//Checks if published.
 							if(hdl != null){
 								//Se comprueba si el item original todavia no fue subido a youtube ya que en ese caso no habria que encolar. Analizar casos pre actualizacion
 								if(items[0].getBundles("YOUTUBE").length != 0){
@@ -116,7 +117,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 												curator.addTask("VideoUploaderTask").queue(ctx,hdl,QUEUE);
 												break;
 								    		}else {
-								    			log.info("El bitstream con id "+bitstream.getID()+" no esta autorizado para subirse");
+								    			log.info("The bitstream with ID "+bitstream.getID()+" is not autorized to upload");
 								    		}
 										}
 									}
@@ -135,7 +136,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 								String mimeType;
 								for (Bitstream bitstream : bitstreams) {
 									mimeType = bitstream.getFormat().getMIMEType();
-									//Se comprueba que el bitstream sea un video y que este publicado en youtube.
+									//Checks if the bitstream is a video and is published on Youtube.
 									if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata("sedici.identifier.youtubeId") != null)) {
 										Curator curator = new Curator();
 										curator.addTask("VideoUpdaterTask").queue(ctx,item.getHandle(),QUEUE);
@@ -149,7 +150,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 				case REMOVE:
 					if(st==Constants.BUNDLE ){
 						Bundle bundle = (Bundle) event.getSubject(ctx);
-						//Se comprueba que se el caso factible ya que si se borra el ultimo bitstream de un bundle este se elimina automaticamente
+						//If the bitstream eliminated is not the last one of the bundle, you can get the bundle
 						if(bundle != null) {
 							Item item = (Item) bundle.getParentObject(); 
 							if(item.getBundles("YOUTUBE").length > 0){
@@ -157,6 +158,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 								curator.addTask("VideoDeleteTask").queue(ctx,item.getHandle(),QUEUE);
 							} 
 						}
+					//If the bitstream eliminated is the last one of the bundle, you want the event that deletes the bundle from the item
 					}else if (st==Constants.ITEM) {
 						Item item = (Item) event.getSubject(ctx);
 						if(item.getBundles("YOUTUBE").length > 0){
@@ -168,10 +170,10 @@ public class VideoUploaderEventConsumer implements Consumer {
 	
 			}
 		}catch(SQLException e){
-			log.error("Error de SQL en el event consumer");
+			log.error("SQL error on event consumer");
 			log.error("SQLException: "+e.getMessage(),e);
 		} catch (IOException e) {
-			log.error("Error de lectura/escritura en el event consumer");
+			log.error("IO error on event consumer");
 			log.error("IOException: "+e.getMessage(),e);
 		}
 		
@@ -188,8 +190,9 @@ public class VideoUploaderEventConsumer implements Consumer {
 		
 	}
 	
-	// Se comprueba que dado un evento, se modifique algun metadato relevante para 
-	// la construccion del video a replicar
+	/*
+	 * Determines if at least one of the metadata used to build the description has been modified
+	 */
 	private boolean shouldUpdateMetadata(Event event) {
 		return ((event.getDetail().contains("dc.title")) || (event.getDetail().contains("dc.description.abstract"))
 						|| (event.getDetail().contains("sedici.creator.person")) || (event.getDetail().contains("sedici.subtype"))

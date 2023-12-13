@@ -64,10 +64,13 @@ import org.dspace.content.Metadatum;
 import org.dspace.core.ConfigurationManager;
 import org.springframework.stereotype.Service;
 
-// Servicio encargado de la comunicación con Youtube, particularmente la subida, actualización y
-// la eliminación de videos. Para todas estas operaciones, tambien se encarga de la autorización.
-// Cualquier código relacionado con Youtube debería encontrarse aqui y abstrarer a DSpace del 
-// detalle de la comunicación.
+/* 
+ * Servicio encargado de la comunicación con Youtube, particularmente la subida, actualización y
+ * la eliminación de videos. Para todas estas operaciones, tambien se encarga de la autorización.
+ * Cualquier código relacionado con Youtube debería encontrarse aqui y abstrarer a DSpace del 
+ * detalle de la comunicación.
+ */
+
 @Service
 public class YoutubeAdapter {
 	
@@ -116,8 +119,9 @@ public class YoutubeAdapter {
 				clientSecrets, scopes).setCredentialStore(credentialStore).setAccessType("offline").build();
 		
 		this.CREDENTIAL = flow.loadCredential(clientSecrets.getDetails().getClientId());
-		//Se verifica que si se tiene el refresh token y no esta expirado el acces token, se lo devuelve
-		//Caso contrario se debe de volver a autorizar y refrescar el acces token
+		/*Se verifica que si se tiene el refresh token y no esta expirado el acces token, se lo devuelve
+		 *Caso contrario se debe de volver a autorizar y refrescar el acces token
+		 */
 	    if (CREDENTIAL != null
 	          && (CREDENTIAL.getRefreshToken() != null
 	              || CREDENTIAL.getExpiresInSeconds() == null
@@ -227,19 +231,21 @@ public class YoutubeAdapter {
 				public void progressChanged(MediaHttpUploader uploader) throws IOException {
 					switch (uploader.getUploadState()) {
 						case INITIATION_STARTED:
-							//System.out.println("Initiation Started");
-							logger.info("Comienzo de la subida a Youtube del video con titulo"+ tittle);
+							logger.trace("Starting the upload for the video with the title '"+ tittle+"'");
 						break;
-					case INITIATION_COMPLETE:
-						//System.out.println("Initiation Completed");
-						break;
-					case MEDIA_COMPLETE:
-						//System.out.println("Upload Completed!");
-						logger.info("Subida del video a Youtube con titulo "+ tittle +" terminada");
-						break;
-					case NOT_STARTED:
-						//System.out.println("Upload Not Started!");
-						break;
+						case INITIATION_COMPLETE:
+							logger.trace("Initiation Completed");
+							break;
+						case MEDIA_COMPLETE:
+							logger.trace("The upload with title: '"+ tittle +"' has finished");
+							break;
+						case MEDIA_IN_PROGRESS:
+							 logger.trace("Upload in progress");
+							 logger.trace("Upload percentage: " + uploader.getProgress());
+							 break;
+						case NOT_STARTED:
+							logger.trace("Upload Not Started!");
+							break;
 					}
 				}
 			};
@@ -247,18 +253,14 @@ public class YoutubeAdapter {
 
 			// Execute upload.
 			Video returnedVideo = videoInsert.execute();
-			logger.info("Video upload executed -  new video Id: " + returnedVideo.getId());
 			return returnedVideo.getId();
 		} catch (GoogleJsonResponseException e) {
 			logger.error("GoogleJsonResponseException: "+ e.getMessage(),e);
 			throw manageGoogleExeption(e);
 		} catch (TokenResponseException e) {
-			//System.err.println("IOException: " + e.getMessage());
-			//falta trabajar un poco el mensaje para hacer mas expresivo los errores de youtube, por ejemplo que se tiene que cambiar las credenciales ;(
 			logger.error("TokenResponseException: " + e.getMessage(),e);
 			throw new UploadExeption(e.getMessage(),true,e);
 		} catch (IOException e) {
-			//System.err.println("IOException: " + e.getMessage());
 			logger.error("IOException: " + e.getMessage(),e);
 			throw new UploadExeption(e.getMessage(),true,e);
 		}
@@ -270,13 +272,11 @@ public class YoutubeAdapter {
 		}
 		List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.force-ssl");
 	    try {
-	    	
-	    	if ((CREDENTIAL == null)||
-					(CREDENTIAL.getAccessToken() == null)){
-						authorize(scopes);
-				}	
 	      // Authorization.
-	      //Credential credential = authorize(scopes);
+	      if ((CREDENTIAL == null)||
+			  (CREDENTIAL.getAccessToken() == null)){
+				  authorize(scopes);
+			  }	
 
 	      // YouTube object used to make all API requests.
 	      youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY,this.CREDENTIAL).
@@ -303,7 +303,7 @@ public class YoutubeAdapter {
 	      Video video = videoList.get(0);
 	      VideoSnippet snippet = video.getSnippet();
 	      
-	      //Cambios en los metadatos del video
+	      //Change metadata of Youtube
 	      
 	      snippet.setTitle(tittle);
 	      
@@ -318,14 +318,12 @@ public class YoutubeAdapter {
 
 	      // Request is executed and updated video is returned
 	      Video videoResponse = updateVideosRequest.execute();
-	      logger.info("Video " + videoResponse.getId()+ " was updated");
 	      return videoResponse.getId();
 	      
 	    } catch (GoogleJsonResponseException e) {
 			logger.error("GoogleJsonResponseException: "+ e.getMessage(),e);
 			throw manageGoogleExeption(e);
 		} catch (TokenResponseException e) {
-			//falta trabajar un poco el mensaje para hacer mas expresivo los errores de youtube ;(
 			logger.error("TokenResponseException: " + e.getMessage(),e);
 			throw new UploadExeption(e.getMessage(),true,e);
 		} catch (IOException e) {
@@ -353,7 +351,7 @@ public class YoutubeAdapter {
 	      List<String> lvideoId = new ArrayList<String>();
 	      lvideoId.add(videoId);
 
-	      // Create the video list request
+	      // Create the video delete request
 	      YouTube.Videos.Delete deleteRequest = youtube.videos().delete(videoId);
 	      deleteRequest.execute();
 	      logger.info("The video "+videoId+" was eliminated");
@@ -372,7 +370,7 @@ public class YoutubeAdapter {
 		}
 	}
 	
-	// Obtiene el id de la Categoria "Education" en Youtube para ponerlo en el snippet del video
+	// Get the "Education" Category ID on Youtube
 	private String getEducationId() throws IOException {
 		List<String> categories = new ArrayList<String>();
 	    categories.add("snippet");
@@ -382,7 +380,7 @@ public class YoutubeAdapter {
 		try {
 			list = youtube.videoCategories().list(categories).setRegionCode("ar").execute().getItems();
 		} catch (IOException e) {
-			logger.error("Error de IO al recuperar el id de la categoria Education en Youtube");
+			logger.error("IO error while retrieving the education id");
 			logger.error("IOException: " + e.getMessage(),e);
 			throw e;
 		}
@@ -397,14 +395,13 @@ public class YoutubeAdapter {
 		
 	}
 	
-	// Construye la descripcion del video de Youtbe a partir de los metadatos del item
+	// Builds the Youtube description using the metadata of the item
 	private String buildDescription(Map<String,Object> metadata) {
 		
 	    //String description = (String) metadata.get("title") + "\n";
-	    //usar string buffer
 	    String description = "";
 	    StringBuffer desc = new StringBuffer(description);
-	    //Se obtienen los creadores
+	    //Creators
 	    List<Metadatum> creators = (List<Metadatum>) metadata.get("creators");
 	    Integer cantCreadores = 1;
 	    if (creators.size() > 1) {
@@ -422,7 +419,7 @@ public class YoutubeAdapter {
 	    //desc.append("Fecha de publicación: "+metadata.get("dateAvailable")+"\n");
 	    desc.append("Enlace de la fuente: "+metadata.get("iUri")+"\n");
 	    
-	    //Se obtienen las keywords
+	    //Keywords
 	    List<Metadatum> subjects = (List<Metadatum>) metadata.get("subjects");
 	    if (subjects.size() > 0){
 	        desc.append("Palabras clave: ");
@@ -437,7 +434,7 @@ public class YoutubeAdapter {
 	    if((metadata.containsKey("abstract"))&&(desc.length() + metadata.get("abstract").toString().length() + "\n".length() < 5000)){
 	        desc.append("Resumen: " + metadata.get("abstract")+"\n");
 	    }else {
-	    	logger.info("El item que se encuentra en "+metadata.get("iUri")+", supera el tamaño maximo de descripcion por el resumen");
+	    	logger.info("The item in "+metadata.get("iUri")+", surpasses the maximum lenght set by Youtube for the description of the video");
 	    }
 	    return desc.toString();
 	}
