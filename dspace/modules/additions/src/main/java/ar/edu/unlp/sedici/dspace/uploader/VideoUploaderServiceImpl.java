@@ -104,7 +104,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
         	}
     	} else {
     		ctx.complete();
-    		log.warn("THe bitstream with ID "+bitstream.getID()+" shouldn't be replicated to YouTube due to it not being accessible to anonymous user");
+    		log.warn("The bitstream with ID "+bitstream.getID()+" shouldn't be replicated to YouTube due to it not being accessible to anonymous user");
     	}
     	return condicion;
 	}
@@ -154,10 +154,10 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 					}
 				}
 			}else {
-				/*
+				/**
 				 * If you remove the last item in the bundle ORIGINAL, it removes the bundle from the item. 
 				 * In this case, if the bundle YOUTUBE exists, you have to eliminate every video in this bundle
-				*/
+				 */
 				for (Bitstream map : mapsYoutube) {
 					String[] mapeo = parsearBitstream(map);
 					YoutubeAdapter vadapter = new DSpace().getSingletonService(YoutubeAdapter.class);
@@ -170,15 +170,14 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 		
 	}
 	
-	/*
+	/**
 	 * Transform the relation between bitstream ID and Youtube ID, to a list of Strings
-	 * [0] Bitstream ID
-	 * [1] Youtube ID 
+	 * @return String list [0] Bitstream ID [1] Youtube ID 
 	 */
-	private String[] parsearBitstream(Bitstream map) throws IOException, SQLException, AuthorizeException {
+	private String[] parsearBitstream(Bitstream bitstream) throws IOException, SQLException, AuthorizeException {
 		StringBuilder textBuilder = new StringBuilder();
 		try (Reader reader = new BufferedReader(new InputStreamReader
-			      (map.retrieve(), Charset.forName(StandardCharsets.UTF_8.name())))) {
+			      (bitstream.retrieve(), Charset.forName(StandardCharsets.UTF_8.name())))) {
 			        int c = 0;
 			        while ((c = reader.read()) != -1) {
 			            textBuilder.append((char) c);
@@ -307,7 +306,8 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	        }else if (e.getMessage().equals("The daily quota of Youtube has exeded")){
 	        	MailReporter.reportUnknownException("Ocurrio un error reasumible en el "+ contexto +" del item con handle "+item.getHandle()+". Se agoto la quota de Youtube", e, "http://sedici.unlp.edu.ar/handle/"+item.getHandle());
 	        }else if (e.getMessage().equals("No quota")){
-	        	/* In this case, you don't have to send an email, as the email indicating
+	        	/** 
+	        	 * In this case, you don't have to send an email, as the email indicating
 	        	 * that the quota limit has already been reached has been sent
 	        	 * This case exist to re-queue the curation tasks
 	        	 */

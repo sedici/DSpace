@@ -119,8 +119,9 @@ public class YoutubeAdapter {
 				clientSecrets, scopes).setCredentialStore(credentialStore).setAccessType("offline").build();
 		
 		this.CREDENTIAL = flow.loadCredential(clientSecrets.getDetails().getClientId());
-		/*Se verifica que si se tiene el refresh token y no esta expirado el acces token, se lo devuelve
-		 *Caso contrario se debe de volver a autorizar y refrescar el acces token
+		/**
+		 * Se verifica que si se tiene el refresh token y no esta expirado el acces token, se lo devuelve
+		 * Caso contrario se debe de volver a autorizar y refrescar el acces token
 		 */
 	    if (CREDENTIAL != null
 	          && (CREDENTIAL.getRefreshToken() != null
@@ -148,9 +149,10 @@ public class YoutubeAdapter {
 	/**
 	 * Uploads video to the user's YouTube account using OAuth2 for authentication.
 	 *
-	 * @param args video file.
+	 * @param videoFile
+	 * @return String Youtube ID
 	 */
-	public String uploadVideo(InputStream videoFile, final String tittle, Map <String, Object> metadata, List<String> tags) throws UploadExeption {
+	public String uploadVideo(InputStream videoFile, final String title, Map <String, Object> metadata, List<String> tags) throws UploadExeption {
 		if (noQuota) {
 			throw new UploadExeption("No quota",true);
 		}
@@ -173,7 +175,7 @@ public class YoutubeAdapter {
 			// Add extra information to the video before uploading.
 			Video videoObjectDefiningMetadata = new Video();
 
-			/*
+			/**
 			 * Set the video to public, so it is available to everyone (what most people
 			 * want). This is actually the default, but I wanted you to see what it looked
 			 * like in case you need to set it to "unlisted" or "private" via API.
@@ -188,7 +190,7 @@ public class YoutubeAdapter {
 			// We set a majority of the metadata with the VideoSnippet object.
 			VideoSnippet snippet = new VideoSnippet();
 			
-			snippet.setTitle(tittle);
+			snippet.setTitle(title);
 			String description = buildDescription(metadata);
 			snippet.setDescription(description);
 
@@ -205,7 +207,7 @@ public class YoutubeAdapter {
 			InputStreamContent mediaContent = new InputStreamContent(VIDEO_FILE_FORMAT,
 					new BufferedInputStream(videoFile));
 
-			/*
+			/**
 			 * The upload command includes: 1. Information we want returned after file is
 			 * successfully uploaded. 2. Metadata we want associated with the uploaded
 			 * video. 3. Video file itself.
@@ -220,7 +222,7 @@ public class YoutubeAdapter {
 			// Set the upload type and add event listener.
 			MediaHttpUploader uploader = videoInsert.getMediaHttpUploader();
 
-			/*
+			/**
 			 * Sets whether direct media upload is enabled or disabled. True = whole media
 			 * content is uploaded in a single request. False (default) = resumable media
 			 * upload protocol to upload in data chunks.
@@ -231,13 +233,13 @@ public class YoutubeAdapter {
 				public void progressChanged(MediaHttpUploader uploader) throws IOException {
 					switch (uploader.getUploadState()) {
 						case INITIATION_STARTED:
-							logger.trace("Starting the upload for the video with the title '"+ tittle+"'");
+							logger.trace("Starting the upload for the video with the title '"+ title+"'");
 						break;
 						case INITIATION_COMPLETE:
 							logger.trace("Initiation Completed");
 							break;
 						case MEDIA_COMPLETE:
-							logger.trace("The upload with title: '"+ tittle +"' has finished");
+							logger.trace("The upload with title: '"+ title +"' has finished");
 							break;
 						case MEDIA_IN_PROGRESS:
 							 logger.trace("Upload in progress");
@@ -266,7 +268,7 @@ public class YoutubeAdapter {
 		}
 	}
 	
-	public String updateMetadata(String videoId, String tittle, Map<String,Object> metadata, List<String> tags) throws UploadExeption{
+	public String updateMetadata(String videoId, String title, Map<String,Object> metadata, List<String> tags) throws UploadExeption{
 		if (noQuota) {
 			throw new UploadExeption("No quota",true);
 		}
@@ -305,7 +307,7 @@ public class YoutubeAdapter {
 	      
 	      //Change metadata of Youtube
 	      
-	      snippet.setTitle(tittle);
+	      snippet.setTitle(title);
 	      
 	      String description = buildDescription(metadata);
 	      snippet.setDescription(description);

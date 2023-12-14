@@ -30,11 +30,11 @@ import com.google.api.services.youtube.YouTube;
 
 import org.dspace.curate.Curator;
 
-/*  
- *  Event listener that filters events that triggers on items with video bitstreams 
- *  Upload = ADD item to collection(publish the ite,), or ADD bitstream to bundle(allready published)
- *  Update = MODIFY_METADATA of item
- *  Delete = REMOVE bitstream of bundle or bundle of item()
+/**
+ *  Event listener that filters events triggered by items with video bitstreams.
+ *  Upload = ADD item to collection(publish the item), or ADD bitstream to bundle(allready published).
+ *  Update = MODIFY_METADATA of item.
+ *  Delete = REMOVE bitstream of bundle or bundle of item(last bitstream of the bundle)
 */
 public class VideoUploaderEventConsumer implements Consumer {
 	
@@ -109,7 +109,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 									String mimeType;
 									for (Bitstream bitstream : bitstreams) {
 										mimeType = bitstream.getFormat().getMIMEType();
-										//Se comprueba que el bitstream sea un video y que no este subido en youtube para asi subirlo. 
+										//Checks that the bitstream is a video and that it is not uploaded on YouTube in order to upload it. 
 										if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata("sedici.identifier.youtubeId") == null)) {
 											Context contexto = new Context();
 								        	if(AuthorizeManager.authorizeActionBoolean(contexto, bitstream, 0, false)) {
