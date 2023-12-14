@@ -64,11 +64,11 @@ import org.dspace.content.Metadatum;
 import org.dspace.core.ConfigurationManager;
 import org.springframework.stereotype.Service;
 
-/* 
- * Servicio encargado de la comunicación con Youtube, particularmente la subida, actualización y
- * la eliminación de videos. Para todas estas operaciones, tambien se encarga de la autorización.
- * Cualquier código relacionado con Youtube debería encontrarse aqui y abstrarer a DSpace del 
- * detalle de la comunicación.
+/**
+ * The service responsible for communication with YouTube, specifically handling the uploading, 
+ * updating, and deletion of videos. For all these operations, it also takes care of authorization. 
+ * Any code related to YouTube should be found here and abstracted from DSpace 
+ * regarding the communication details
  */
 
 @Service
