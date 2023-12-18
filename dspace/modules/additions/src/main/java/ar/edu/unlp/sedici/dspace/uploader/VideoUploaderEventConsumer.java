@@ -102,21 +102,18 @@ public class VideoUploaderEventConsumer implements Consumer {
 						
 							//Checks if published.
 							if(hdl != null){
-								//Se comprueba si el item original todavia no fue subido a youtube ya que en ese caso no habria que encolar. Analizar casos pre actualizacion
-								if(items[0].getBundles("YOUTUBE").length != 0){
-									String mimeType;
-									for (Bitstream bitstream : bitstreams) {
-										mimeType = bitstream.getFormat().getMIMEType();
-										//Checks that the bitstream is a video and that it is not uploaded on YouTube in order to upload it. 
-										if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata("sedici.identifier.youtubeId") == null)) {
-								        	if(AuthorizeManager.authorizeActionBoolean(ctx, bitstream, 0, false)) {
-								        		Curator curator = new Curator();
-												curator.addTask("VideoUploaderTask").queue(ctx,hdl,QUEUE);
-												break;
-								    		}else {
-								    			log.info("The bitstream with ID "+bitstream.getID()+" is not autorized to upload");
-								    		}
-										}
+								String mimeType;
+								for (Bitstream bitstream : bitstreams) {
+									mimeType = bitstream.getFormat().getMIMEType();
+									//Checks that the bitstream is a video and that it is not uploaded on YouTube in order to upload it. 
+									if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata("sedici.identifier.youtubeId") == null)) {
+								        if(AuthorizeManager.authorizeActionBoolean(ctx, bitstream, 0, false)) {
+								        	Curator curator = new Curator();
+											curator.addTask("VideoUploaderTask").queue(ctx,hdl,QUEUE);
+											break;
+								    	}else {
+								    		log.info("The bitstream with ID "+bitstream.getID()+" is not autorized to upload");
+								    	}
 									}
 								}
 							}
