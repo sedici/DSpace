@@ -65,7 +65,6 @@ public class VideoUploaderEventConsumer implements Consumer {
             log.warn("VideoUploaderConsumer should not have been given this kind of Subject in an event, skipping: " + event.toString());
             return;
         }
-            
 		try {
 			switch (evType){
 				case ADD:
@@ -81,8 +80,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 							for (Bitstream bitstream : bitstreams) {
 								mimeType = bitstream.getFormat().getMIMEType();
 								if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))) {
-									Context contexto = new Context();
-						        	if(AuthorizeManager.authorizeActionBoolean(contexto, bitstream, 0, false)) {
+						        	if(AuthorizeManager.authorizeActionBoolean(ctx, bitstream, 0, false)) {
 						        		Curator curator = new Curator();
 										curator.addTask("VideoUploaderTask").queue(ctx,item.getHandle(),QUEUE);
 										break;
@@ -111,8 +109,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 										mimeType = bitstream.getFormat().getMIMEType();
 										//Checks that the bitstream is a video and that it is not uploaded on YouTube in order to upload it. 
 										if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata("sedici.identifier.youtubeId") == null)) {
-											Context contexto = new Context();
-								        	if(AuthorizeManager.authorizeActionBoolean(contexto, bitstream, 0, false)) {
+								        	if(AuthorizeManager.authorizeActionBoolean(ctx, bitstream, 0, false)) {
 								        		Curator curator = new Curator();
 												curator.addTask("VideoUploaderTask").queue(ctx,hdl,QUEUE);
 												break;
@@ -170,10 +167,8 @@ public class VideoUploaderEventConsumer implements Consumer {
 	
 			}
 		}catch(SQLException e){
-			log.error("SQL error on event consumer");
 			log.error("SQLException: "+e.getMessage(),e);
 		} catch (IOException e) {
-			log.error("IO error on event consumer");
 			log.error("IOException: "+e.getMessage(),e);
 		}
 		

@@ -12,7 +12,7 @@
  * the License.
  */
 
-package ar.edu.unlp.sedici.dspace.google;
+package ar.edu.unlp.sedici.dspace.uploader.youtube;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -256,15 +256,8 @@ public class YoutubeAdapter {
 			// Execute upload.
 			Video returnedVideo = videoInsert.execute();
 			return returnedVideo.getId();
-		} catch (GoogleJsonResponseException e) {
-			logger.error("GoogleJsonResponseException: "+ e.getMessage(),e);
-			throw manageGoogleExeption(e);
-		} catch (TokenResponseException e) {
-			logger.error("TokenResponseException: " + e.getMessage(),e);
-			throw new UploadExeption(e.getMessage(),true,e);
-		} catch (IOException e) {
-			logger.error("IOException: " + e.getMessage(),e);
-			throw new UploadExeption(e.getMessage(),true,e);
+		}catch (IOException e) {
+			throw manageException(e);
 		}
 	}
 	
@@ -322,15 +315,8 @@ public class YoutubeAdapter {
 	      Video videoResponse = updateVideosRequest.execute();
 	      return videoResponse.getId();
 	      
-	    } catch (GoogleJsonResponseException e) {
-			logger.error("GoogleJsonResponseException: "+ e.getMessage(),e);
-			throw manageGoogleExeption(e);
-		} catch (TokenResponseException e) {
-			logger.error("TokenResponseException: " + e.getMessage(),e);
-			throw new UploadExeption(e.getMessage(),true,e);
-		} catch (IOException e) {
-			logger.error("IOException: " + e.getMessage(),e);
-			throw new UploadExeption(e.getMessage(),true,e);
+	    }catch (IOException e) {
+			throw manageException(e);
 		}
 	}
 	
@@ -358,21 +344,16 @@ public class YoutubeAdapter {
 	      deleteRequest.execute();
 	      logger.info("The video "+videoId+" was eliminated");
 	      return videoId;
-
-	    } catch (GoogleJsonResponseException e) {
-			logger.error("GoogleJsonResponseException: "+ e.getMessage(),e);
-			throw manageGoogleExeption(e);
-		}catch (TokenResponseException e) {
-			//falta trabajar un poco el mensaje para hacer mas expresivo los errores de youtube ;(
-			logger.error("TokenResponseException: " + e.getMessage(),e);
-			throw new UploadExeption(e.getMessage(),true,e);
 		}catch (IOException e) {
-			logger.error("IOException: " + e.getMessage(),e);
-			throw new UploadExeption(e.getMessage(),true,e);
+			throw manageException(e);
 		}
 	}
 	
-	// Get the "Education" Category ID on Youtube
+	/**
+	 *  Get the "Education" Category ID on Youtube
+	 * @return String the id of the category "Education"
+	 * @throws IOException
+	 */
 	private String getEducationId() throws IOException {
 		List<String> categories = new ArrayList<String>();
 	    categories.add("snippet");
@@ -467,6 +448,20 @@ public class YoutubeAdapter {
 			}
 		}
 		return new UploadExeption(e.getStatusMessage(),true,e);
+	}
+	
+	private UploadExeption manageException(IOException e) {
+		if (e instanceof GoogleJsonResponseException) {
+			GoogleJsonResponseException ge = (GoogleJsonResponseException) e;
+			logger.error("GoogleJsonResponseException: "+ e.getMessage(),e);
+			return manageGoogleExeption(ge);
+		}else if(e instanceof TokenResponseException) {
+			logger.error("TokenResponseException: " + e.getMessage(),e);
+			return new UploadExeption(e.getMessage(),true,e);
+		}else {
+			logger.error("IOException: " + e.getMessage(),e);
+			return new UploadExeption(e.getMessage(),true,e);
+		}
 	}
 	
 

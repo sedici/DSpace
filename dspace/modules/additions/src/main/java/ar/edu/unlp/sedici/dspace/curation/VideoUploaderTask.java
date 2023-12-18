@@ -34,18 +34,9 @@ public class VideoUploaderTask extends AbstractCurationTask {
 		try {
 			vuploader.uploadContent(item);
 			status = Curator.CURATE_SUCCESS;
-		} catch(SQLException e) {
-			log.error("SQL error in the upload of the item with ID "+item.getID());
-			log.error("SQLException: "+e.getMessage(),e);
-			throw new IOException(e);
 		} catch (IOException e) {
-			log.error("IO error in the upload of the item with ID "+item.getID());
-			log.error("IOException: "+e.getMessage(),e);
+			log.error("IO error in the upload of the item with ID "+item.getID()+": "+e.getMessage(),e);
 			throw e;
-		} catch (AuthorizeException e) {
-			log.error("Autorization error in the upload of the item with ID "+item.getID());
-			log.error("AuthorizeException: "+e.getMessage(),e);
-			throw new IOException(e);
 		}
 		
 		return status;

@@ -24,8 +24,8 @@
           class="ar.edu.unlp.sedici.dspace.uploader.VideoUploaderServiceImpl"
           scope="singleton"/>
     
-    <bean id="ar.edu.unlp.sedici.dspace.google.YoutubeAdapter"
-          class="ar.edu.unlp.sedici.dspace.google.YoutubeAdapter"
+    <bean id="ar.edu.unlp.sedici.dspace.uploader.youtube.YoutubeAdapter"
+          class="ar.edu.unlp.sedici.dspace.uploader.youtube.YoutubeAdapter"
           scope="singleton"/>
 
 </beans>
