@@ -12,7 +12,7 @@
  * the License.
  */
 
-package ar.edu.unlp.sedici.dspace.uploader.youtube;
+package ar.edu.unlp.sedici.dspace.uploader.adapter;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -72,7 +72,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class YoutubeAdapter {
+public class YoutubeAdapter implements Adapter{
 	
 	public YoutubeAdapter() {
 		super();
@@ -112,7 +112,7 @@ public class YoutubeAdapter {
 
 		// Set up file credential store.
 		FileCredentialStore credentialStore = new FileCredentialStore(
-				new File(ConfigurationManager.getProperty("youtube.upload","youtube.upload.refresh")), JSON_FACTORY);
+				new File(ConfigurationManager.getProperty("upload","youtube.upload.refresh")), JSON_FACTORY);
 
 		// Set up authorization code flow.
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
@@ -131,7 +131,7 @@ public class YoutubeAdapter {
 	    }
 		
 	    // open in browser
-	    String redirectUri = ConfigurationManager.getProperty("youtube.upload.redirect_uri");
+	    String redirectUri = ConfigurationManager.getProperty("upload.redirect_uri");
 	    AuthorizationCodeRequestUrl authorizationUrl =
 	        flow.newAuthorizationUrl().setRedirectUri(redirectUri);
 
@@ -184,7 +184,7 @@ public class YoutubeAdapter {
 			status.setLicense("creativeCommon");
 			status.setSelfDeclaredMadeForKids(false);
 			status.setMadeForKids(false);
-			status.setPrivacyStatus(ConfigurationManager.getProperty("youtube.upload","youtube.upload.video.state"));
+			status.setPrivacyStatus(ConfigurationManager.getProperty("upload","youtube.upload.video.state"));
 			videoObjectDefiningMetadata.setStatus(status);
 			
 			// We set a majority of the metadata with the VideoSnippet object.

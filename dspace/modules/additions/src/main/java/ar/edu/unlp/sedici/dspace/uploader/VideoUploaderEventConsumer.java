@@ -11,6 +11,7 @@ import static org.dspace.event.Event.REMOVE;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 
 
@@ -46,7 +47,10 @@ public class VideoUploaderEventConsumer implements Consumer {
 	private final String MPEG_MIME_TYPE = "video/mpeg";
 	private final String QUICKTIME_MIME_TYPE = "video/quicktime";
 	private final String MP4_MIME_TYPE = "video/mp4";
-	private final String QUEUE = "youtube";
+	private final String QUEUE = "replicateVideo";
+
+	private final String REPLICATION_BUNDLE = "REPLICATION";
+	private final String REPLICATION_METADATA = ConfigurationManager.getProperty("upload","video.identifier.metadata");
 
     DSpace dspace = new DSpace();
 
@@ -105,8 +109,8 @@ public class VideoUploaderEventConsumer implements Consumer {
 								String mimeType;
 								for (Bitstream bitstream : bitstreams) {
 									mimeType = bitstream.getFormat().getMIMEType();
-									//Checks that the bitstream is a video and that it is not uploaded on YouTube in order to upload it. 
-									if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata("sedici.identifier.youtubeId") == null)) {
+									//Checks that the bitstream is a video and that it is not uploaded on an external service in order to upload it. 
+									if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata(REPLICATION_METADATA) == null)) {
 								        if(AuthorizeManager.authorizeActionBoolean(ctx, bitstream, 0, false)) {
 								        	Curator curator = new Curator();
 											curator.addTask("VideoUploaderTask").queue(ctx,hdl,QUEUE);
@@ -130,8 +134,8 @@ public class VideoUploaderEventConsumer implements Consumer {
 								String mimeType;
 								for (Bitstream bitstream : bitstreams) {
 									mimeType = bitstream.getFormat().getMIMEType();
-									//Checks if the bitstream is a video and is published on Youtube.
-									if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata("sedici.identifier.youtubeId") != null)) {
+									//Checks if the bitstream is a video and is published on an external service.
+									if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata(REPLICATION_METADATA) != null)) {
 										Curator curator = new Curator();
 										curator.addTask("VideoUpdaterTask").queue(ctx,item.getHandle(),QUEUE);
 										break;
@@ -147,7 +151,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 						//If the bitstream eliminated is not the last one of the bundle, you can get the bundle
 						if(bundle != null) {
 							Item item = (Item) bundle.getParentObject(); 
-							if(item.getBundles("YOUTUBE").length > 0){
+							if(item.getBundles(REPLICATION_BUNDLE).length > 0){
 								Curator curator = new Curator();
 								curator.addTask("VideoDeleteTask").queue(ctx,item.getHandle(),QUEUE);
 							} 
@@ -155,7 +159,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 					//If the bitstream eliminated is the last one of the bundle, you want the event that deletes the bundle from the item
 					}else if (st==Constants.ITEM) {
 						Item item = (Item) event.getSubject(ctx);
-						if(item.getBundles("YOUTUBE").length > 0){
+						if(item.getBundles(REPLICATION_BUNDLE).length > 0){
 							Curator curator = new Curator();
 							curator.addTask("VideoDeleteTask").queue(ctx,item.getHandle(),QUEUE);
 						} 
