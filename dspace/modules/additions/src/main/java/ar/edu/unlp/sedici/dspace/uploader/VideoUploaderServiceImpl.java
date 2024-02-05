@@ -107,7 +107,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	
 	private boolean autorizarSubida(Bitstream bitstream) throws UploadExeption, SQLException{
 		Context ctx = new Context();
-		String[] schemaL = this.getReplicationMetadataName().split(".");
+		String[] schemaL = this.getReplicationMetadataName().split("\\.");
     	if(AuthorizeManager.authorizeActionBoolean(ctx, bitstream, 0, false)) {
         	ctx.complete();
         	String mimeType = bitstream.getFormat().getMIMEType();
@@ -127,7 +127,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 	}
 	
 	private void persistirId(String id, Item item,Bitstream bitstream) {
-		String[] schemaL = this.getReplicationMetadataName().split(".");
+		String[] schemaL = this.getReplicationMetadataName().split("\\.");
 		String lang = null;
 		bitstream.addMetadata(schemaL[0],schemaL[1],schemaL[2],lang,id);
 		try {
@@ -155,7 +155,7 @@ public class VideoUploaderServiceImpl implements ContentUploaderService{
 				if(item.getBundles("ORIGINAL").length>0) {
 					for (Bitstream map : mapsReplication) {
 						String idVideo = determinarBorradoDeBitstream(map,item);
-						if (!idVideo.isEmpty()) {
+						if (idVideo != null) {
 								adapter.deleteVideo(idVideo);
 								item.getBundles(REPLICATION_BUNDLE)[0].removeBitstream(map);
 						}
