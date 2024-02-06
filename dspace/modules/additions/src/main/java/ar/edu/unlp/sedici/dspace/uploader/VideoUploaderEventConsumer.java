@@ -65,7 +65,7 @@ public class VideoUploaderEventConsumer implements Consumer {
 	public void consume(Context ctx, Event event) {
 		int evType = event.getEventType();
         int st = event.getSubjectType();
-        if (!(st == Constants.ITEM || st == Constants.BUNDLE || st == Constants.COLLECTION )) {
+        if (!(st == Constants.ITEM || st == Constants.BUNDLE || st == Constants.COLLECTION || st == Constants.BITSTREAM)) {
             log.warn("VideoUploaderConsumer should not have been given this kind of Subject in an event, skipping: " + event.toString());
             return;
         }
@@ -125,22 +125,34 @@ public class VideoUploaderEventConsumer implements Consumer {
 					}
 					break;
 				case MODIFY_METADATA:
-					if(((Item) event.getSubject(ctx)).getHandle() != null){
-						if(shouldUpdateMetadata(event)){ 
-							if(st==Constants.ITEM){
-								Item item = (Item) event.getSubject(ctx);
-								Bundle[] bundles = item.getBundles("ORIGINAL");
-								Bitstream[] bitstreams = bundles[0].getBitstreams();
-								String mimeType;
-								for (Bitstream bitstream : bitstreams) {
-									mimeType = bitstream.getFormat().getMIMEType();
-									//Checks if the bitstream is a video and is published on an external service.
-									if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata(REPLICATION_METADATA) != null)) {
-										Curator curator = new Curator();
-										curator.addTask("VideoUpdaterTask").queue(ctx,item.getHandle(),QUEUE);
-										break;
-									}
-								}					
+					if (st==Constants.ITEM) {
+						if(((Item) event.getSubject(ctx)).getHandle() != null){
+							if(shouldUpdateMetadata(event)){ 
+								if(st==Constants.ITEM){
+									Item item = (Item) event.getSubject(ctx);
+									Bundle[] bundles = item.getBundles("ORIGINAL");
+									Bitstream[] bitstreams = bundles[0].getBitstreams();
+									String mimeType;
+									for (Bitstream bitstream : bitstreams) {
+										mimeType = bitstream.getFormat().getMIMEType();
+										//Checks if the bitstream is a video and is published on an external service.
+										if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata(REPLICATION_METADATA) != null)) {
+											Curator curator = new Curator();
+											curator.addTask("VideoUpdaterTask").queue(ctx,item.getHandle(),QUEUE);
+											break;
+										}
+									}					
+								}
+							}
+						}
+					}else if (st == Constants.BITSTREAM) {
+						Bitstream bitstream = (Bitstream) event.getSubject(ctx);
+						String mimeType = bitstream.getFormat().getMIMEType();
+						//Checks if the bitstream is a video and is published on an external service.
+						if ((mimeType.equalsIgnoreCase(MP4_MIME_TYPE) | mimeType.equalsIgnoreCase(MPEG_MIME_TYPE) | mimeType.equalsIgnoreCase(QUICKTIME_MIME_TYPE))&&(bitstream.getMetadata(REPLICATION_METADATA) != null)) {
+							if(event.getDetail().contains("dc.description")) {
+								Curator curator = new Curator();
+								curator.addTask("VideoUpdaterTask").queue(ctx,bitstream.getParentObject().getHandle(),QUEUE);
 							}
 						}
 					}
