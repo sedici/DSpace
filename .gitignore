@@ -39,6 +39,7 @@ nb-configuration.xml
 
 ##Mac noise
 .DS_Store
+/install
 
 ##Ignore JRebel project configuration
 rebel.xml
@@ -46,3 +47,5 @@ rebel.xml
 
 ## Ignore jenv configuration
 .java-version
+
+bootstrap-dump.sql
