@@ -10,9 +10,8 @@
     <bean class="org.dspace.xmlworkflow.XmlWorkflowFactoryImpl">
         <property name="workflowMapping">
             <util:map>
-                <entry key="defaultWorkflow"
-                       value-ref="defaultWorkflow"/>
-<!--                <entry key="123456789/4" value-ref="selectSingleReviewer"/>-->
+                <entry key="defaultWorkflow" value-ref="defaultWorkflow"/>
+                <entry key="10915/50" value-ref="autoarchive"/>
 <!--                <entry key="123456789/5" value-ref="scoreReview"/>-->
             </util:map>
         </property>
@@ -195,5 +194,30 @@
     <bean id="scorereviewers" class="org.dspace.xmlworkflow.Role">
         <property name="scope" value="#{ T(org.dspace.xmlworkflow.Role.Scope).COLLECTION}"/>
         <property name="name" value="ScoreReviewers"/>
+    </bean>
+
+    <!-- Workflow para autoarchivo -->
+    <bean class="org.dspace.xmlworkflow.state.Workflow" name="autoarchive">
+        <property name="firstStep" ref="SEDICI-ADMIN_review_autoarchive"/>
+        <property name="steps">
+        <util:list>
+            <ref bean="SEDICI-ADMIN_review_autoarchive"/>
+        </util:list>
+        </property>
+    </bean>
+    <bean class="org.dspace.xmlworkflow.state.Step" name="SEDICI-ADMIN_review_autoarchive">
+        <property name="userSelectionMethod" ref="claimaction"/>
+        <property name="role">
+        <bean class="org.dspace.xmlworkflow.Role" name="SeDiCIAdmin">
+            <property name="scope" value="#{ T(org.dspace.xmlworkflow.Role.Scope).REPOSITORY}"/>
+            <property name="name" value="SeDiCIAdmin"/>
+            <property name="description" value="Rol asigando para las personas encargadas de gestionar el repositorio, principalmente a partir de la carga."/>
+        </bean>
+        </property>
+        <property name="actions">
+        <list>
+            <ref bean="editaction"/>
+        </list>
+        </property>
     </bean>
 </beans>

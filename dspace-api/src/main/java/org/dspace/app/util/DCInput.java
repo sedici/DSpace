@@ -517,17 +517,19 @@ public class DCInput {
     }
 
     /**
-     * Decides if this field is valid for the document type
+     * Decides if this field is valid for the document type. It verifies if an typeName is prohibited (!) or not.
      *
      * @param typeName Document type name
      * @return true when there is no type restriction or typeName is allowed
      */
     public boolean isAllowedFor(String typeName) {
-        if (typeBind.size() == 0) {
+        if(typeBind.isEmpty()) {
             return true;
+        } else if (typeBind.contains("!"+typeName)){
+            return false;
+        } else{
+            return typeBind.contains(typeName);
         }
-
-        return typeBind.contains(typeName);
     }
 
     public String getScope() {
