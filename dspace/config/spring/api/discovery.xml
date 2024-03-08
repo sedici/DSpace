@@ -151,6 +151,85 @@
                     <key><util:constant static-field="org.dspace.core.Constants.ITEM"/></key>
                     <list>
                         <value>dc.description.provenance</value>
+                        <value>sedici2003.padre</value>
+                        <value>sedici2003.abstract</value>
+                        <value>sedici2003.pais</value>
+                        <value>sedici2003.institucion</value>
+                        <value>sedici2003.dependencia</value>
+                        <value>sedici2003.unidad</value>
+                        <value>sedici2003.fecha-disponibilidad</value>
+                        <value>sedici2003.fecha-hora-actualizacion</value>
+                        <value>sedici2003.fecha-hora-creacion</value>
+                        <value>sedici2003.tipo-documento</value>
+                        <value>sedici2003.estado</value>
+                        <value>sedici2003.owner</value>
+                        <value>sedici2003.descargas</value>
+                        <value>sedici2003.asesor</value>
+                        <value>sedici2003.autoarchivo</value>
+                        <value>sedici2003.autor</value>
+                        <value>sedici2003.autor-institucional</value>
+                        <value>sedici2003.codirector-tesis</value>
+                        <value>sedici2003.colaboradores</value>
+                        <value>sedici2003.comite-redaccion</value>
+                        <value>sedici2003.comite-referato</value>
+                        <value>sedici2003.comite-editorial</value>
+                        <value>sedici2003.comite-organizador</value>
+                        <value>sedici2003.compilador</value>
+                        <value>sedici2003.consejo-asesor</value>
+                        <value>sedici2003.consejo-editorial</value>
+                        <value>sedici2003.coordinador</value>
+                        <value>sedici2003.descripcion-recurso</value>
+                        <value>sedici2003.descriptores</value>
+                        <value>sedici2003.dimensiones</value>
+                        <value>sedici2003.director</value>
+                        <value>sedici2003.director-tesis</value>
+                        <value>sedici2003.dossier</value>
+                        <value>sedici2003.editor</value>
+                        <value>sedici2003.editor-seccion-libros</value>
+                        <value>sedici2003.editor-Dossier</value>
+                        <value>sedici2003.editorial</value>
+                        <value>sedici2003.evento</value>
+                        <value>sedici2003.fecha</value>
+                        <value>sedici2003.fecha-presentacion</value>
+                        <value>sedici2003.fecha-publicacion</value>
+                        <value>sedici2003.frecuencia</value>
+                        <value>sedici2003.fulltext</value>
+                        <value>sedici2003.grado-alcanzado</value>
+                        <value>sedici2003.identificadores-geograficos</value>
+                        <value>sedici2003.idioma</value>
+                        <value>sedici2003.institucion-Otorgante</value>
+                        <value>sedici2003.isbn</value>
+                        <value>sedici2003.issn</value>
+                        <value>sedici2003.jurado</value>
+                        <value>sedici2003.licencia</value>
+                        <value>sedici2003.localizacion-electronica</value>
+                        <value>sedici2003.localizacion-fisica</value>
+                        <value>sedici2003.lugar</value>
+                        <value>sedici2003.lugar-desarrollo</value>
+                        <value>sedici2003.materias</value>
+                        <value>sedici2003.nombre-evento</value>
+                        <value>sedici2003.notas</value>
+                        <value>sedici2003.numero-serie</value>
+                        <value>sedici2003.numero-patente</value>
+                        <value>sedici2003.metadato-pais</value>
+                        <value>sedici2003.palabras-clave</value>
+                        <value>sedici2003.metadato-tipo-documento</value>
+                        <value>sedici2003.revisado-pares</value>
+                        <value>sedici2003.revista-indizada</value>
+                        <value>sedici2003.secretaria-redaccion</value>
+                        <value>sedici2003.subdirector</value>
+                        <value>sedici2003.subtitulo</value>
+                        <value>sedici2003.tecnica</value>
+                        <value>sedici2003.titulo-documento</value>
+                        <value>sedici2003.titulo-idioma-original</value>
+                        <value>sedici2003.traductor</value>
+                        <value>sedici2003.verificacion-referatos</value>
+                        <value>sedici2003.asesor</value>
+                        <value>sedici2003.tecnica</value>
+                        <value>sedici2003.ultima-revision</value>
+                        <value>sedici2003.coordinador</value>
+                        <value>sedici2003.titulo-serie</value>
+                        <value>sedici2003.subtitulo-serie</value>
                     </list>
                 </entry>
             </map>
@@ -162,11 +241,11 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="searchFilterAuthor" />
-                <ref bean="searchFilterSubject" />
+                <ref bean="searchFilterType" />
                 <ref bean="searchFilterIssued" />
-                <ref bean="searchFilterContentInOriginalBundle"/>
-                <ref bean="searchFilterEntityType"/>
+                <ref bean="searchFilterSubject" />
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterKeywords" />
             </list>
         </property>
         <!-- Set TagCloud configuration per discovery configuration -->
@@ -178,15 +257,10 @@
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
                 <ref bean="searchFilterIssued" />
-                <ref bean="searchFilterContentInOriginalBundle"/>
-                <ref bean="searchFilterFileNameInOriginalBundle" />
-                <ref bean="searchFilterFileDescriptionInOriginalBundle" />
-                <ref bean="searchFilterEntityType"/>
-                <ref bean="searchFilterIsAuthorOfPublicationRelation"/>
-                <ref bean="searchFilterIsProjectOfPublicationRelation"/>
-                <ref bean="searchFilterIsOrgUnitOfPublicationRelation"/>
-                <ref bean="searchFilterIsPublicationOfJournalIssueRelation"/>
-                <ref bean="searchFilterIsJournalOfPublicationRelation"/>
+                <ref bean="searchFilterPersona" />
+                <ref bean="searchFilterInstitucion" />
+                <ref bean="searchFilterType" />
+                <ref bean="searchFilterKeywords" />
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -196,8 +270,11 @@
                     <list>
                         <ref bean="sortScore" />
                         <ref bean="sortTitle" />
+                        <ref bean="sortTitleDesc" />
+                        <ref bean="sortDateIssuedAsc" />
                         <ref bean="sortDateIssued" />
-                        <ref bean="sortDateAccessioned"/>
+                        <ref bean="sortDateAccessionedAsc" />
+                        <ref bean="sortDateAccessioned" />
                     </list>
                 </property>
             </bean>
@@ -313,8 +390,6 @@
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
                 <ref bean="searchFilterIssued" />
-                <ref bean="searchFilterContentInOriginalBundle"/>
-                <ref bean="searchFilterEntityType"/>
             </list>
         </property>
         <!-- Set TagCloud configuration per discovery configuration -->
@@ -326,15 +401,6 @@
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
                 <ref bean="searchFilterIssued" />
-                <ref bean="searchFilterContentInOriginalBundle"/>
-                <ref bean="searchFilterFileNameInOriginalBundle" />
-                <ref bean="searchFilterFileDescriptionInOriginalBundle" />
-                <ref bean="searchFilterEntityType"/>
-                <ref bean="searchFilterIsAuthorOfPublicationRelation"/>
-                <ref bean="searchFilterIsProjectOfPublicationRelation"/>
-                <ref bean="searchFilterIsOrgUnitOfPublicationRelation"/>
-                <ref bean="searchFilterIsPublicationOfJournalIssueRelation"/>
-                <ref bean="searchFilterIsJournalOfPublicationRelation"/>
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -342,10 +408,8 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore" />
                         <ref bean="sortTitle" />
                         <ref bean="sortDateIssued" />
-                        <ref bean="sortDateAccessioned"/>
                     </list>
                 </property>
             </bean>
@@ -2294,8 +2358,12 @@
         <property name="indexFieldName" value="author"/>
         <property name="metadataFields">
             <list>
-                <value>dc.contributor.author</value>
-                <value>dc.creator</value>
+                <value>sedici.creator.person</value>
+                <value>sedici.creator.corporate</value>
+                <value>sedici.contributor.translator</value>
+                <value>sedici.contributor.compiler</value>
+                <value>sedici.contributor.editor</value>
+                <value>sedici.creator.interprete</value>
             </list>
         </property>
         <property name="facetLimit" value="5"/>
@@ -2324,7 +2392,7 @@
         <property name="indexFieldName" value="subject"/>
         <property name="metadataFields">
             <list>
-                <value>dc.subject.*</value>
+                <value>sedici.subject.materias</value>
             </list>
         </property>
         <property name="facetLimit" value="5"/>
@@ -2339,6 +2407,7 @@
         <property name="metadataFields">
             <list>
                 <value>dc.date.issued</value>
+                <value>dc.date.created</value>
             </list>
         </property>
         <property name="type" value="date"/>
@@ -2383,7 +2452,7 @@
         <property name="indexFieldName" value="itemtype" />
         <property name="metadataFields">
             <list>
-                <value>dc.type</value>
+                <value>sedici.subtype</value>
             </list>
         </property>
     </bean>
@@ -2848,6 +2917,49 @@
         </property>
     </bean>
 
+    <bean id="searchFilterKeywords" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="keywords"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.subject</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+        <property name="isOpenByDefault" value="false"/>
+        <property name="pageSize" value="10"/>
+        <property name="exposeMinAndMaxValue" value="true"/>
+
+    </bean>
+
+    <bean id="searchFilterPersona" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="persona"/>
+        <property name="metadataFields">
+            <list>
+                <value>sedici.creator.person</value>
+                <value>sedici.contributor.colaborator</value>
+                <value>sedici.contributor.editor</value>
+                <value>sedici.contributor.translator</value>
+                <value>sedici.contributor.compiler</value>
+                <value>sedici.contributor.director</value>
+                <value>sedici.contributor.codirector</value>
+                <value>sedici.contributor.juror</value>
+                <value>sedici.contributor.inscriber</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="searchFilterInstitucion" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="institucion"/>
+        <property name="metadataFields">
+            <list>
+                <value>sedici.institucionDesarrollo</value>   
+                <value>mods.originInfo.place</value>                 
+            </list>
+        </property>
+    </bean>
+
     <!--Sort properties-->
     <bean id="sortScore" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
         <property name="defaultSortOrder" value="desc"/>
@@ -2863,10 +2975,17 @@
         <property name="type" value="date"/>
         <property name="defaultSortOrder" value="desc"/>
     </bean>
+
     <bean id="sortDateAccessioned" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
         <property name="metadataField" value="dc.date.accessioned"/>
         <property name="type" value="date"/>
         <property name="defaultSortOrder" value="desc"/>
+    </bean>
+
+    <bean id="sortDateAccessionedAsc" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="dc.date.accessioned"/>
+        <property name="type" value="date"/>
+        <property name="defaultSortOrder" value="asc"/>
     </bean>
 
     <bean id="sortFamilyName" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
@@ -2933,10 +3052,21 @@
         <property name="defaultSortOrder" value="asc"/>
     </bean>
 
+    <bean id="sortTitleDesc" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="dc.title"/>
+        <property name="defaultSortOrder" value="desc"/>
+    </bean>
+
     <bean id="sortDateIssuedDesc" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
         <property name="metadataField" value="dc.date.issued"/>
         <property name="type" value="date"/>
         <property name="defaultSortOrder" value="desc"/>
+    </bean>
+
+    <bean id="sortDateIssuedAsc" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="dc.date.issued"/>
+        <property name="type" value="date"/>
+        <property name="defaultSortOrder" value="asc"/>
     </bean>
 
 </beans>
