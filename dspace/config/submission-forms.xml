@@ -62,7 +62,7 @@
 					<required>Debe indicar el tipo de documento</required>
 				</field>
             </row>
-            <!-- Subtipos
+            <!-- Subtipos -->
             <row>
                <field>
 					<dc-schema>sedici</dc-schema>
@@ -84,6 +84,7 @@
 					<visibility-on-group>Bibliotecarios</visibility-on-group>
 					<type-bind>Tesis</type-bind>
 				</field>
+
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -194,34 +195,6 @@
 					<hint>Seleccione el tipo de proyecto que desea cargar</hint>
 					<type-bind>Proyecto</type-bind>
 				</field>
-            </row>-->
-
-            <!-- Autor (persona) -->
-            <row>
-				<field>
-					<dc-schema>sedici</dc-schema>
-					<dc-element>creator</dc-element>
-					<dc-qualifier>person</dc-qualifier>
-					<repeatable>true</repeatable>
-					<label>Autor (*)</label>
-					<input-type>onebox</input-type>
-					<hint>Autores de la obra</hint>
-					<required>Debe indicarse el/los autores de la obra</required>
-					<type-bind>Objeto Fisico</type-bind>
-				</field>
-            </row>
-
-            <!-- Autor Institucional (institucion) -->
-            <row>
-				<field>
-					<dc-schema>sedici</dc-schema>
-					<dc-element>creator</dc-element>
-					<dc-qualifier>corporate</dc-qualifier>
-					<repeatable>true</repeatable>
-					<label>Autor Institucional</label>
-					<input-type>onebox</input-type>
-					<hint>Institución,empresa u organización creadora del recurso</hint>
-				</field>
             </row>
 
             <!-- Título (principal) -->
@@ -246,6 +219,45 @@
 					<label>Resumen</label>
 					<input-type>textarea</input-type>
 					<hint>Resumen de la obra</hint>
+				</field>
+            </row>
+
+            <!-- Autor (persona) -->
+            <row>
+                <field>
+					<dc-schema>sedici</dc-schema>
+					<dc-element>creator</dc-element>
+					<dc-qualifier>person</dc-qualifier>
+					<repeatable>true</repeatable>
+					<label>Autor (*)</label>
+					<input-type>onebox</input-type>
+					<hint>Autores de la obra</hint>
+					<required>Debe indicarse el/los autores de la obra</required>
+					<type-bind>!Objeto Fisico</type-bind>
+				</field>
+				<field>
+					<dc-schema>sedici</dc-schema>
+					<dc-element>creator</dc-element>
+					<dc-qualifier>person</dc-qualifier>
+					<repeatable>true</repeatable>
+					<label>Autor (*)</label>
+					<input-type>onebox</input-type>
+					<hint>Autores de la obra</hint>
+					<hint>Etnia o persona considerado como creador del objeto</hint>
+					<type-bind>Objeto Fisico</type-bind>
+				</field>
+            </row>
+
+            <!-- Autor Institucional (institucion) -->
+            <row>
+				<field>
+					<dc-schema>sedici</dc-schema>
+					<dc-element>creator</dc-element>
+					<dc-qualifier>corporate</dc-qualifier>
+					<repeatable>true</repeatable>
+					<label>Autor Institucional</label>
+					<input-type>onebox</input-type>
+					<hint>Institución,empresa u organización creadora del recurso</hint>
 				</field>
             </row>
 
