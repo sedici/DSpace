@@ -2,10 +2,15 @@ User-agent: *
 Crawl-delay: 8
 Allow: /
 Disallow: /themes
+Disallow: /browse
+Disallow: /*/browse
+Disallow: /community-list
 Disallow: /discover
+Disallow: /*/discover
 Disallow: /search-filter
+Disallow: /*/search-filter
 
-Sitemap:  http://sedici.unlp.edu.ar/sitemap
+Sitemap:  https://sedici.unlp.edu.ar/sitemap
 
 #No queremos crawling de estos bots 3296
 User-agent: BLEXBot
