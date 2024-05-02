@@ -19,9 +19,9 @@
     <properties>
         <!--=== GENERAL / DSPACE-API DEPENDENCIES ===-->
         <java.version>17</java.version>
-        <spring.version>6.1.5</spring.version>
-        <spring-boot.version>3.2.4</spring-boot.version>
-        <spring-security.version>6.2.3</spring-security.version> <!-- sync with version used by spring-boot-->
+        <spring.version>6.1.6</spring.version>
+        <spring-boot.version>3.2.5</spring-boot.version>
+        <spring-security.version>6.2.4</spring-security.version> <!-- sync with version used by spring-boot-->
         <hibernate.version>6.4.4.Final</hibernate.version>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
         <postgresql.driver.version>42.7.3</postgresql.driver.version>
@@ -102,7 +102,7 @@
                                         <version>${java.version}</version>
                                     </requireJavaVersion>
                                     <requireMavenVersion>
-                                        <version>[3.0.5,)</version>
+                                        <version>[3.8,)</version>
                                     </requireMavenVersion>
                                 </rules>
                             </configuration>
@@ -1990,15 +1990,6 @@
         <repository>
             <id>handle.net</id>
             <url>https://handle.net/maven</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <!-- For Jakarta EE version of "orcid-model". REMOVE once official "orcid-model" is updated to Jakarta,
-             see https://github.com/ORCID/orcid-model/issues/50-->
-        <repository>
-            <id>oicr.on.ca</id>
-            <url>https://artifacts.oicr.on.ca/artifactory/collab-release/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
