@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!--
+
+
+    The contents of this file are subject to the license and copyright
+    detailed in the LICENSE and NOTICE files at the root of the source
+    tree and available online at
+
+    http://www.dspace.org/license/
+    Developed by DSpace @ Lyncode <dspace@lyncode.com>
+
+ -->
 <xsl:stylesheet
         xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
         xmlns:doc="http://www.lyncode.com/xoai"
@@ -113,20 +124,6 @@
             <xsl:for-each select="doc:metadata/doc:element[@name='dc']/doc:element[@name='identifier']/doc:element[@name='uri']/doc:element/doc:field[@name='value']">
                 <dcterms:isReferencedBy><xsl:value-of select="." /></dcterms:isReferencedBy>
                 <!-- <dc:identifier xsi:type="dcterms:URI"><xsl:value-of select="." /></dc:identifier> -->
-            </xsl:for-each>
-
-            <!-- ******* Check access-status information to determine the item's access status ******* -->
-            <xsl:for-each select="doc:metadata/doc:element[@name='others']/doc:element[@name='access-status']/doc:field[@name='value']/text()">
-                <!-- Add access status information for embargo or restricted status only in uketdterms:embargotype -->
-                <xsl:if test=".='restricted' or .='embargo'">
-                    <uketdterms:embargotype><xsl:value-of select="." /></uketdterms:embargotype>
-                </xsl:if>
-            </xsl:for-each>
-
-            <!-- ******* Check access-status embargo information for embargoed content associated with this item ******* -->
-            <xsl:for-each select="doc:metadata/doc:element[@name='others']/doc:element[@name='access-status']/doc:field[@name='embargo']/text()">
-                <!-- Add embargo information -->
-                <uketdterms:embargodate><xsl:value-of select="." /></uketdterms:embargodate>
             </xsl:for-each>
 
             <!-- ******* URLs for digital object(s) (obtained from file 'bundles') ******* -->
