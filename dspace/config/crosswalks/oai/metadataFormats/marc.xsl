@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- http://www.loc.gov/marc/bibliographic/ecbdlist.html -->
+<!-- 
+
+
+    The contents of this file are subject to the license and copyright
+    detailed in the LICENSE and NOTICE files at the root of the source
+    tree and available online at
+
+    http://www.dspace.org/license/
+	Developed by DSpace @ Lyncode <dspace@lyncode.com>
+	
+	> http://www.loc.gov/marc/bibliographic/ecbdlist.html
+
+ -->
 <xsl:stylesheet 
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:doc="http://www.lyncode.com/xoai"

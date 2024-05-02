@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!-- 
+
+	The contents of this file are subject to the license and copyright detailed 
+	in the LICENSE and NOTICE files at the root of the source tree and available 
+	online at http://www.dspace.org/license/ 
+	
+	Developed by DSpace @ Lyncode <dspace@lyncode.com> 
+	
+-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:doc="http://www.lyncode.com/xoai"
                 xmlns:dim="http://www.dspace.org/xmlns/dspace/dim" version="1.0">
@@ -12,26 +21,26 @@
         </dim:dim>
     </xsl:template>
 
-    <xsl:template match="/doc:metadata/doc:element/doc:element/doc:element/doc:field[@name='value']">
+    <xsl:template match="/doc:metadata/doc:element[@name='dc']/doc:element/doc:element/doc:field[@name='value']">
         <xsl:call-template name="dimfield">
             <xsl:with-param name="mdschema" select="../../../@name"/>
             <xsl:with-param name="element" select="../../@name"/>
             <xsl:with-param name="qualifier"/>
             <xsl:with-param name="language" select="../@name"/>
-            <xsl:with-param name="authority" select="following-sibling::doc:field[1][@name='authority']"/>
-            <xsl:with-param name="confidence" select="following-sibling::doc:field[2][@name='confidence']"/>
+            <xsl:with-param name="authority" select="../doc:field[@name='authority']"/>
+            <xsl:with-param name="confidence" select="../doc:field[@name='confidence']"/>
             <xsl:with-param name="value" select="text()"/>
         </xsl:call-template>
     </xsl:template>
 
-    <xsl:template match="/doc:metadata/doc:element/doc:element/doc:element/doc:element/doc:field[@name='value']">
+    <xsl:template match="/doc:metadata/doc:element[@name='dc']/doc:element/doc:element/doc:element/doc:field[@name='value']">
         <xsl:call-template name="dimfield">
             <xsl:with-param name="mdschema" select="../../../../@name"/>
             <xsl:with-param name="element" select="../../../@name"/>
             <xsl:with-param name="qualifier" select="../../@name"/>
             <xsl:with-param name="language" select="../@name" />
-            <xsl:with-param name="authority" select="following-sibling::doc:field[1][@name='authority']"/>
-            <xsl:with-param name="confidence" select="following-sibling::doc:field[2][@name='confidence']"/>
+            <xsl:with-param name="authority" select="../doc:field[@name='authority']"/>
+            <xsl:with-param name="confidence" select="../doc:field[@name='confidence']"/>
             <xsl:with-param name="value" select="text()"/>
         </xsl:call-template>
     </xsl:template>
