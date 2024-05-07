@@ -28,6 +28,7 @@ import org.dspace.xmlworkflow.service.XmlWorkflowService;
 import org.dspace.xmlworkflow.state.Step;
 import org.dspace.xmlworkflow.state.actions.ActionResult;
 import org.dspace.xmlworkflow.state.actions.WorkflowActionConfig;
+import org.dspace.xmlworkflow.storedcomponents.ClaimedTask;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -110,7 +111,7 @@ public class AssignOriginalSubmitterAction extends UserSelectionAction {
             throw new IllegalStateException();
         }
         if (submitter != null) {
-            createTaskForEPerson(c, wfi, step, nextAction, submitter);
+        	createOrUpdateTaskForEPerson(c, wfi, step, nextAction, submitter);
         }
         //It is important that we return to the submission page since we will continue our actions with the submitter
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
@@ -141,5 +142,17 @@ public class AssignOriginalSubmitterAction extends UserSelectionAction {
                                      .createOwnedTask(c, wfi, step, actionConfig, user);
         }
     }
+    
+    protected void createOrUpdateTaskForEPerson(Context c, XmlWorkflowItem wfi, Step step, WorkflowActionConfig actionConfig,
+		            							EPerson user) throws SQLException, AuthorizeException, IOException {
+		List<ClaimedTask> ct = claimedTaskService.find(c, wfi, step.getId());
+    	if (ct != null) {
+    		ct.get(0).setActionID(actionConfig.getId());
+		} else {
+			workflowRequirementsService.addClaimedUser(c, wfi, step, user);
+			XmlWorkflowServiceFactory.getInstance().getXmlWorkflowService()
+			         .createOwnedTask(c, wfi, step, actionConfig, user);
+		}
+}
 
 }

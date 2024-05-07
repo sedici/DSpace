@@ -821,13 +821,19 @@ public class XmlWorkflowServiceImpl implements XmlWorkflowService {
     @Override
     public void createOwnedTask(Context context, XmlWorkflowItem wi, Step step, WorkflowActionConfig action, EPerson e)
         throws SQLException, AuthorizeException {
-        ClaimedTask task = claimedTaskService.create(context);
-        task.setWorkflowItem(wi);
-        task.setStepID(step.getId());
-        task.setActionID(action.getId());
-        task.setOwner(e);
-        task.setWorkflowID(step.getWorkflow().getID());
-        claimedTaskService.update(context, task);
+    	if (claimedTaskService.find(context, wi, step.getId()).size() > 0){
+    		ClaimedTask ct = claimedTaskService.find(context, wi, step.getId()).get(0);
+    		ct.setActionID(action.getId());
+    		claimedTaskService.update(context, ct);
+    	}else {
+    		ClaimedTask task = claimedTaskService.create(context);
+            task.setWorkflowItem(wi);
+            task.setStepID(step.getId());
+            task.setActionID(action.getId());
+            task.setOwner(e);
+            task.setWorkflowID(step.getWorkflow().getID());
+            claimedTaskService.update(context, task);
+    	}
         //Make sure this user has a task
         grantUserAllItemPolicies(context, wi.getItem(), e, ResourcePolicy.TYPE_WORKFLOW);
     }
