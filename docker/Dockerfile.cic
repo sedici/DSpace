@@ -1,5 +1,5 @@
 # NAME:     arieljlira/dspace
-FROM tomcat:9-jdk11
+FROM tomcat:10-jdk17
 
 LABEL maintainer "alira@sedici.unlp.edu.ar"
 
@@ -28,8 +28,13 @@ ENV BOOTSTRAP_DUMP "${DSPACE_BASE}/bootstrap-dump.sql"
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7
 
 RUN apt-get update && apt-get -y upgrade
-RUN apt-get install -y --no-install-recommends  git ant maven postgresql-client
+RUN apt-get install -y --no-install-recommends  git ant postgresql-client
 RUN apt-get install -y --no-install-recommends	procps curl sudo gpg
+
+ENV MAVEN_VERSION 3.8.8
+RUN curl -fsSL https://apache.osuosl.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
+    && mv /usr/share/apache-maven-$MAVEN_VERSION /usr/share/maven \
+    && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
 
 RUN apt-get autoremove -y && apt-get clean
 
