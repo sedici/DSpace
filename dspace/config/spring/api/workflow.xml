@@ -24,12 +24,11 @@
 
     <!--Standard DSpace workflow-->
     <bean name="defaultWorkflow" class="org.dspace.xmlworkflow.state.Workflow">
-        <property name="firstStep" ref="reviewstep"/>
+        <property name="firstStep" ref="collectionLevelReview"/>
         <property name="steps">
             <util:list>
-                <ref bean="reviewstep"/>
-                <ref bean="editstep"/>
-                <ref bean="finaleditstep"/>
+                <ref bean="collectionLevelReview"/>
+                <ref bean="sediciLevelReview"/>
             </util:list>
         </property>
     </bean>
@@ -205,6 +204,13 @@
         </util:list>
         </property>
     </bean>
+
+    <bean class="org.dspace.xmlworkflow.Role" name="SeDiCIAdmin">
+        <property name="scope" value="#{ T(org.dspace.xmlworkflow.Role.Scope).REPOSITORY}"/>
+        <property name="name" value="SeDiCIAdmin"/>
+        <property name="description" value="Rol asigando para las personas encargadas de gestionar el repositorio, principalmente a partir de la carga."/>
+    </bean>
+
     <bean class="org.dspace.xmlworkflow.state.Step" name="SEDICI-ADMIN_review_autoarchive">
         <property name="userSelectionMethod" ref="claimaction"/>
         <property name="role">
@@ -220,4 +226,38 @@
         </list>
         </property>
     </bean>
+
+    <bean class="org.dspace.xmlworkflow.state.Step" name="sediciLevelReview">
+        <property name="userSelectionMethod" ref="reviewIfNotAdmin"/>
+        <property name="role" ref="SeDiCIAdmin"/>
+        <property name="actions">
+        <list>
+            <ref bean="editaction"/>
+        </list>
+        </property>
+    </bean>
+    
+    <bean class="org.dspace.xmlworkflow.Role" name="CollectionAdmin">
+        <property name="scope" value="#{ T(org.dspace.xmlworkflow.Role.Scope).COLLECTION}"/>
+        <property name="name" value="CollectionAdmin"/>
+        <property name="description" value="Rol asigando para las personas encargadas de gestionar una coleccion en particular."/>
+    </bean>
+
+    
+    <bean name="collectionLevelReview" class="org.dspace.xmlworkflow.state.Step">
+        <property name="userSelectionMethod" ref="acceptRoleOrNotAdmin"/>
+        <property name="role" ref="CollectionAdmin"/>
+        <property name="outcomes">
+            <util:map>
+                <entry key="#{ T(org.dspace.xmlworkflow.state.actions.ActionResult).OUTCOME_COMPLETE}"
+                       value-ref="sediciLevelReview"/>
+            </util:map>
+        </property>
+        <property name="actions">
+            <list>
+                <ref bean="editaction"/>
+            </list>
+        </property>
+    </bean>
+
 </beans>
