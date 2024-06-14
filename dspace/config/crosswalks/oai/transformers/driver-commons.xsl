@@ -37,7 +37,7 @@
 
 		<!--sedici.rights.* = rights -->
 		<xsl:variable name="bitstreams" select="/doc:metadata/doc:element[@name='bundles']/doc:element[@name='bundle'][./doc:field/text()='ORIGINAL']/doc:element[@name='bitstreams']/doc:element[@name='bitstream']"/>
-		<xsl:variable name="embargoed" select="$bitstreams/doc:field[@name='embargo']"/>
+		<xsl:variable name="embargoed" select="$bitstreams/doc:element[@name='resourcePolicies']/doc:element[doc:field[@name='action']/text()='READ' and doc:field[@name='group']/text()='Anonymous' and doc:field[@name='start-date']/text()][position()=1]/doc:field[@name='start-date']"/>
 
 		<xsl:variable name="date-prefix">
 			<xsl:if test="($context-name = 'driver') or ($context-name = 'openaire') or ($context-name = 'snrd')">
@@ -82,7 +82,7 @@
 			<xsl:otherwise>
 <!-- 			es un embargoedAccess si o si -->
 			<xsl:for-each select="$embargoed">
-				<xsl:sort select="text()" />
+				<xsl:sort select="text()" order="descending" />
 				<xsl:if test="position() = 1">
 					<xsl:variable name="liftDate">
 						<xsl:value-of select="text()" />
