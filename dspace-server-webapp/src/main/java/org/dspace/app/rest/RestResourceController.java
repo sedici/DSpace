@@ -1004,7 +1004,8 @@ public class RestResourceController implements InitializingBean {
      */
     private void checkModelPluralForm(String apiCategory, String model) {
         if (StringUtils.equals(utils.makeSingular(model), model)) {
-            throw new RepositoryNotFoundException(apiCategory, model);
+            //throw new RepositoryNotFoundException(apiCategory, model); Comento throw de exepcion raro
+            log.info("Singular error: "+model);
         }
     }
 

@@ -131,4 +131,10 @@ public class XmlWorkflowItem implements WorkflowItem {
     public void setPublishedBefore(boolean b) {
         this.publishedBefore = b;
     }
+
+	@Override
+	public int getState() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

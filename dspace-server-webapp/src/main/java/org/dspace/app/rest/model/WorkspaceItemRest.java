@@ -20,7 +20,7 @@ import org.dspace.app.rest.RestResourceController;
         method = "getSupervisionOrders"
     )
 })
-public class WorkspaceItemRest extends AInprogressSubmissionRest {
+public class WorkspaceItemRest extends AInprogressSubmissionRest<Integer> {
     public static final String NAME = "workspaceitem";
     public static final String PLURAL_NAME = "workspaceitems";
     public static final String CATEGORY = RestAddressableModel.SUBMISSION;

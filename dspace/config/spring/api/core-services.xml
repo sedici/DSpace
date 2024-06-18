@@ -163,5 +163,7 @@
 
     <bean class="org.dspace.correctiontype.service.impl.CorrectionTypeServiceImpl"/>
 
+
+    <bean class="org.dspace.content.edit.service.impl.EditItemServiceImpl"/>
 </beans>
 
