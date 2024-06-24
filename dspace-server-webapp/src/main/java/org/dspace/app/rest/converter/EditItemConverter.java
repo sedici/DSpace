@@ -117,11 +117,11 @@ public class EditItemConverter
 
         }
  
-        rest.setCollection(collection != null ? converter.toRest(collection, projection) : null);
+        /*rest.setCollection(collection != null ? converter.toRest(collection, projection) : null);
         rest.setItem(converter.toRest(item, projection));
         if (Objects.nonNull(submitter)) {
             rest.setSubmitter(converter.toRest(submitter, projection));
-        }
+        }*/
     }
 
     /* (non-Javadoc)

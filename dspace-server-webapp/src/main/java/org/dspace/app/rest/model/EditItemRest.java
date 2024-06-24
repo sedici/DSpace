@@ -16,11 +16,33 @@ import org.dspace.app.rest.RestResourceController;
  * 
  * @author Danilo Di Nuzzo (danilo.dinuzzo at 4science.it)
  */
+@LinksRest(links = {
+        //@LinkRest(
+        //        name = EditItemRest.STEP,
+        //        method = "getStep"
+        //),
+        @LinkRest(
+                name = EditItemRest.SUBMITTER,
+                method = "getEditItemSubmitter"
+        ),
+        @LinkRest(
+                name = EditItemRest.ITEM,
+                method = "getEditItemItem"
+        ),
+        @LinkRest(
+                name = EditItemRest.COLLECTION,
+                method = "getEditItemCollection"
+        )
+})
 public class EditItemRest extends AInprogressSubmissionRest<UUID> {
 
     private static final long serialVersionUID = 964876735342568998L;
     public static final String NAME = "edititem";
     public static final String CATEGORY = RestAddressableModel.SUBMISSION;
+    //public static final String STEP = "step";
+    public static final String SUBMITTER = "submitter";
+    public static final String ITEM = "item";
+    public static final String COLLECTION = "collection";
 
     @Override
     public String getCategory() {
