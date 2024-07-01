@@ -205,6 +205,7 @@
         </property>
     </bean>
 
+
     <bean class="org.dspace.xmlworkflow.Role" name="SeDiCIAdmin">
         <property name="scope" value="#{ T(org.dspace.xmlworkflow.Role.Scope).REPOSITORY}"/>
         <property name="name" value="SeDiCIAdmin"/>
@@ -221,11 +222,13 @@
         </bean>
         </property>
         <property name="actions">
-        <list>
-            <ref bean="editaction"/>
-        </list>
+            <util:list>
+                <ref bean="editaction"/>
+                <ref bean="selectCollection"/>
+            </util:list>
         </property>
     </bean>
+
 
     <bean class="org.dspace.xmlworkflow.state.Step" name="sediciLevelReview">
         <property name="userSelectionMethod" ref="reviewIfNotAdmin"/>

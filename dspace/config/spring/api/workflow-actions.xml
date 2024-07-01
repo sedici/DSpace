@@ -28,6 +28,14 @@
     <bean id="autoassignactionAPI" class="org.dspace.xmlworkflow.state.actions.userassignment.AutoAssignAction" scope="prototype"/>
     <bean id="noUserSelectionActionAPI" class="org.dspace.xmlworkflow.state.actions.userassignment.NoUserSelectionAction" scope="prototype"/>
     <bean id="assignoriginalsubmitteractionAPI" class="org.dspace.xmlworkflow.state.actions.userassignment.AssignOriginalSubmitterAction" scope="prototype"/>
+    
+    <bean id="collectionSelectionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.SelectCollection" scope="prototype"/>
+
+    <bean id="selectCollection" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
+        <constructor-arg type="java.lang.String" value="selectCollection"/>
+        <property name="processingAction" ref="collectionSelectionAPI"/>
+        <property name="requiresUI" value="true"/>
+    </bean>
 
     <bean id="reviewaction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
         <constructor-arg type="java.lang.String" value="reviewaction"/>
