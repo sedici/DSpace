@@ -846,25 +846,8 @@ placeholders for header images -->
 					{var uv=document.createElement('script');
 					uv.type='text/javascript';
 					uv.async=true;
-					uv.src='//widget.uservoice.com/QIUtmn0eqp3spSPiyMziFg.js';
 					var s=document.getElementsByTagName('script')[0];
 					s.parentNode.insertBefore(uv,s)})()
-		</script>
-		
-		<!-- UserVoice JavaScript -->
-		<script type="text/javascript">
-			var options = {
-				mode: 'full',
-    			primary_color: '#cc6d00',
-    			link_color: '#007dbf',
-    			default_mode: 'support',
-    			forum_id: 150127,
-			};
-			
-			$("a.user_voice_feedback").click(function() {
-				UserVoice.push(['showLightbox', 'classic_widget', options]);
-				return false;
-			});
 		</script>
 		
 		<!-- Accordion Widget - JQueryUI -->
@@ -962,6 +945,57 @@ placeholders for header images -->
                 </xsl:text>
             </script>
         </xsl:if>
+
+        <xsl:if test="/dri:document/dri:body/dri:div[@id='aspect.artifactbrowser.FeedbackForm.div.feedback-form' or @id='aspect.eperson.StartRegistration.div.register']">
+            <script type="text/javascript">
+                function add_captcha (){
+                    if (document.getElementById("aspect_artifactbrowser_FeedbackForm_item_captcha")){
+                        li=document.getElementById("aspect_artifactbrowser_FeedbackForm_item_captcha");
+                    } else{
+                        li=document.getElementById("aspect_eperson_StartRegistration_item_captcha");
+                    }
+                    captcha=li.getElementsByTagName("div")[0];
+                    //Create captcha text
+                    if (document.getElementById("aspect_artifactbrowser_FeedbackForm_field_captcha_input")){
+                        captcha_input=document.getElementById("aspect_artifactbrowser_FeedbackForm_field_captcha_input");
+                    } else{
+                        captcha_input=document.getElementById("aspect_eperson_StartRegistration_field_captcha_input");
+                    }
+
+                    var number1=Math.floor((Math.random() * 20));
+                    var number2=Math.floor((Math.random() * 10));
+                    captcha_text=document.createElement("p");
+                    captcha_text.innerHTML="<b>"+ number1.toString()+" + "+number2.toString()+" = "+"</b>";
+                    captcha_text.setAttribute("class","captcha");
+                    captcha.insertBefore(captcha_text,captcha_input);
+
+                    var hidden_number1 = createHiddenNumber("number1",number1);
+                    var hidden_number2 = createHiddenNumber("number2",number2);
+
+                    captcha.appendChild(hidden_number1);
+                    captcha.appendChild(hidden_number2);
+
+                    setUserFeedbackInputsRequired();
+                }
+
+                function createHiddenNumber(name,value){
+                    hidden_number = document.createElement("input");
+                    hidden_number.setAttribute("type", "hidden");
+                    hidden_number.setAttribute("name", name);
+                    hidden_number.setAttribute("value", value);
+                    return hidden_number;
+                }
+
+                function setUserFeedbackInputsRequired(){
+                    document.getElementById("aspect_artifactbrowser_FeedbackForm_field_email").setAttribute("required","true");
+                    document.getElementById("aspect_artifactbrowser_FeedbackForm_field_comments").setAttribute("required","true");
+                    document.getElementById("aspect_artifactbrowser_FeedbackForm_field_captcha_input").setAttribute("required","true");
+                }
+
+                add_captcha();
+            </script>
+
+         </xsl:if>
 		
     </xsl:template>
 

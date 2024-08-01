@@ -267,6 +267,8 @@
 <message key="xmlui.ArtifactBrowser.FeedbackForm.email_help">Esta dirección será utilizada para seguimiento de su sugerencia.</message>
 <message key="xmlui.ArtifactBrowser.FeedbackForm.comments">Comentarios</message>
 <message key="xmlui.ArtifactBrowser.FeedbackForm.submit">Enviar</message>
+<message key="xmlui.ArtifactBrowser.FeedbackForm.captcha_help">Ingrese el resultado de la suma</message>
+<message key="xmlui.ArtifactBrowser.FeedbackForm.captcha_error">Resultado incorrecto, intente nuevamente</message>
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.FeedbackSent.java -->
 <message key="xmlui.ArtifactBrowser.FeedbackSent.title">Sugerencias</message>
@@ -624,6 +626,9 @@
 <message key="xmlui.EPerson.StartRegistration.email_address_help">Esta dirección será verificada y utilizada como su nombre de acceso.</message>
 <message key="xmlui.EPerson.StartRegistration.error_bad_email">Es imposible enviar un correo electrónico a esta dirección.</message>
 <message key="xmlui.EPerson.StartRegistration.submit_register">Registro</message>
+<message key="xmlui.EPerson.StartRegistration.captcha_help">Ingrese el resultado de la suma</message>
+<message key="xmlui.EPerson.StartRegistration.captcha_error">Resultado incorrecto, intente nuevamente</message>
+
 
 	<!-- org.dspace.app.xmlui.eperson.VerifyEmail.java -->
 <message key="xmlui.EPerson.VerifyEmail.title">Correo de verificación enviado</message>

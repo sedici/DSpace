@@ -78,7 +78,7 @@
 				</ul>
 			</li>
 			<li class="main">
-				<a href="#" class="user_voice_feedback"><i18n:text>sedici.menuSuperior.contacto</i18n:text></a>
+				<a href="feedback"><i18n:text>sedici.menuSuperior.contacto</i18n:text></a>
 			</li>
 
 			<!-- Genero la seccion administrativa -->
