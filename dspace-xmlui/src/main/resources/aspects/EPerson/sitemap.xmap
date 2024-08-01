@@ -209,6 +209,7 @@ registration, forgotten passwords, editing profiles, and changing passwords.
 						<map:parameter name="email" value="{flow-attribute:email}"/>
 						<map:parameter name="errors" value="{flow-attribute:errors}"/>
 						<map:parameter name="accountExists" value="{flow-attribute:accountExists}"/>
+						<map:parameter name="captchaError" value="{flow-attribute:captchaError}"/>
 					</map:transform>
 				</map:match>
 				

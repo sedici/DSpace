@@ -4090,3 +4090,21 @@ table.dropdown-table.ui-accordion tr:hover td{
 	display: block;
 	margin-left: 15px;
 }
+
+#aspect_artifactbrowser_FeedbackForm_item_captcha div .captcha{
+	padding: 1%;
+	font-size: 25px;
+	background-color: #7ea8c6;
+	border-style: solid;
+	border-width: 1px;
+	width:150px;
+}
+
+#aspect_eperson_StartRegistration_item_captcha div .captcha{
+	padding: 1%;
+	font-size: 25px;
+	background-color: #7ea8c6;
+	border-style: solid;
+	border-width: 1px;
+	width:150px;
+}

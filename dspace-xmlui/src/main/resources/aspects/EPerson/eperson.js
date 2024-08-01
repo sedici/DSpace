@@ -90,12 +90,14 @@ function doRegister()
         // and then send them a token.
         var accountExists = false;
         var errors = new Array();
+        var captchaError = false;
         do {
             var email = cocoon.request.getParameter("email");
         			
-            cocoon.sendPageAndWait("register/start",{"email" : email, "errors" : errors.join(','), "accountExists" : accountExists});
+            cocoon.sendPageAndWait("register/start",{"email" : email, "errors" : errors.join(','), "accountExists" : accountExists, "captchaError": captchaError});
             var errors = new Array();
             accountExists = false;
+            captchaError = false;
             
             var submit_forgot = cocoon.request.getParameter("submit_forgot");
             
@@ -112,6 +114,21 @@ function doRegister()
             
             email = cocoon.request.getParameter("email");
             email = email.toLowerCase(); // all emails should be lowercase
+
+            var number1 = cocoon.request.getParameter("number1");
+            var number2 = cocoon.request.getParameter("number2");
+            var captcha_input = cocoon.request.getParameter("captcha_input");
+            if(isNaN(number1) || isNaN(number2) || isNaN(captcha_input)){
+                captchaError = true;
+                continue;
+            }
+            if(number1!=null && number2!=null && captcha_input!=null) {
+                if (Number(number1)+Number(number2)!=Number(captcha_input)){
+                    captchaError = true;
+                    continue;
+                }
+            }
+
             var epersonFound = (EPerson.findByEmail(getDSContext(),email) != null);
             
             if (epersonFound) 
@@ -146,7 +163,7 @@ function doRegister()
                 return;
             }
            
-        } while (accountExists || errors.length > 0)
+        } while (accountExists || captchaError || errors.length > 0)
     } 
     else 
     {
