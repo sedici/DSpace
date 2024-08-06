@@ -1,9 +1,11 @@
 package org.dspace.xmlworkflow.state.actions.processingaction;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.core.Context;
+import org.dspace.eperson.Group;
 import org.dspace.xmlworkflow.WorkflowConfigurationException;
 import org.dspace.xmlworkflow.state.actions.userassignment.ClaimAction;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
@@ -27,7 +29,9 @@ public class ReviewIfNotAdmin extends ClaimAction{
 			ctx.restoreAuthSystemState();
 		}
 		boolean isValid;
-		if (authorizeService.isAdmin(ctx, wfi.getCollection()) && !authorizeService.isAdmin(ctx))
+		List<Group> groups = wfi.getSubmitter().getGroups();
+		boolean isSediciAdmin = groups.stream().anyMatch(g -> g.getName().equals(getParent().getStep().getRole().getName()));
+		if (authorizeService.isAdmin(ctx, wfi.getCollection()) && !authorizeService.isAdmin(ctx) && !isSediciAdmin)
 			isValid = super.isValidUserSelection(ctx, wfi, hasUI);
 		else
 			isValid = false;
