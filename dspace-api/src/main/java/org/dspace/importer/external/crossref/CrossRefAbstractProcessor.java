@@ -96,6 +96,9 @@ public class CrossRefAbstractProcessor implements JsonPathMetadataProcessor {
                     sb.append("\n");
                 }
                 sb.append("\n");
+            } else if (StringUtils.equals(nodeName, "jats:p")) {
+                sb.append(childElement.getTextContent());
+                sb.append("\n");
             }
         }
 

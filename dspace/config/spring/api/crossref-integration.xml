@@ -31,11 +31,15 @@
         <entry key-ref="crossref.issue" value-ref="crossrefIssue" />
         <entry key-ref="crossref.abstract" value-ref="crossrefAbstract" />
         <entry key-ref="crossref.publisher" value-ref="crossrefPublisher" />
+        <entry key-ref="crossref.page" value-ref="crossrefPage" />
+        <entry key-ref="crossref.language" value-ref="crossrefLanguage" />
+        <entry key-ref="crossref.volumeAndIssue" value-ref="crossrefVolumeAndIssue" />
+        <entry key-ref="crossref.identifierUri" value-ref="crossrefIdentifierUri" />
     </util:map>
 
     <bean id="crossrefIDContrib" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
         <property name="field" ref="crossref.id"/>
-        <property name="query" value="/DOI"/>
+        <property name="query" value="/URL"/>
     </bean>
     <bean id="crossref.id" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
         <constructor-arg value="dc.identifier.doi"/>
@@ -46,7 +50,7 @@
         <property name="query" value="/container-title"/>
     </bean>
     <bean id="crossref.journal" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
-        <constructor-arg value="dc.relation.ispartof"/>
+        <constructor-arg value="sedici.relation.journalTitle"/>
     </bean>
 
     <bean id="crossrefDoiTypeContrib" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
@@ -65,7 +69,7 @@
         <property name="pathToArray" value="/editor"></property>
 	</bean>
     <bean id="crossref.editors" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
-        <constructor-arg value="dc.contributor.editor"/>
+        <constructor-arg value="sedici.contributor.editor"/>
     </bean>
 
     <bean id="crossrefYearContrib" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
@@ -84,7 +88,7 @@
         <property name="query" value="/ISBN"/>
     </bean>
     <bean id="crossref.isbn" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
-        <constructor-arg value="dc.identifier.isbn"/>
+        <constructor-arg value="sedici.identifier.isbn"/>
     </bean>
 
     <bean id="crossrefAuthorContrib" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
@@ -95,7 +99,7 @@
 	    <property name="pathToArray" value="/author"></property>
 	</bean>
     <bean id="crossref.authors" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
-        <constructor-arg value="dc.contributor.author"/>
+        <constructor-arg value="sedici.creator.person"/>
     </bean>
 
     <bean id="crossrefTitleContrib" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
@@ -111,7 +115,7 @@
         <property name="query" value="/ISSN"/>
     </bean>
     <bean id="crossref.issn" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
-        <constructor-arg value="dc.identifier.issn"/>
+        <constructor-arg value="sedici.identifier.issn"/>
     </bean>
 
     <bean id="crossrefVolume" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
@@ -147,6 +151,44 @@
     </bean>
     <bean id="crossref.publisher" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
         <constructor-arg value="dc.publisher"/>
+    </bean>
+
+    <bean id="crossrefPage" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="crossref.page"/>
+        <property name="query" value="/page"/>
+    </bean>
+    <bean id="crossref.page" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.format.extent"/>
+    </bean>
+
+    <bean id="crossrefLanguage" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="crossref.language"/>
+        <property name="query" value="/language"/>
+    </bean>
+    <bean id="crossref.language" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.language"/>
+    </bean>
+
+    <bean id="crossrefVolumeAndIssue" class="org.dspace.importer.external.metadatamapping.contributor.CombinedJsonPathMetadataContributor">
+        <property name="field" ref="crossref.volumeAndIssue"/>
+        <property name="queries">
+            <list>
+                <value>/volume</value>
+                <value>/journal-issue/issue</value>
+            </list>
+        </property>
+        <property name="separator" value=", "/>
+    </bean>
+    <bean id="crossref.volumeAndIssue" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="sedici.relation.journalVolumeAndIssue"/>
+    </bean>
+
+    <bean id="crossrefIdentifierUri" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="crossref.identifierUri"/>
+        <property name="query" value="/resource/primary/URL"/>
+    </bean>
+    <bean id="crossref.identifierUri" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="sedici.identifier.uri"/>
     </bean>
 
     <bean class="java.lang.Integer" id="maxRetry">
