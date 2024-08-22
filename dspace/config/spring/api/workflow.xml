@@ -29,6 +29,7 @@
             <util:list>
                 <ref bean="collectionLevelReview"/>
                 <ref bean="sediciLevelReview"/>
+                <ref bean="postProceesStep"/>
             </util:list>
         </property>
     </bean>
@@ -223,7 +224,7 @@
         </property>
         <property name="actions">
             <util:list>
-                <ref bean="editaction"/>
+                <ref bean="autoarchiveEditaction"/>
                 <ref bean="selectCollection"/>
             </util:list>
         </property>
@@ -233,25 +234,38 @@
     <bean class="org.dspace.xmlworkflow.state.Step" name="sediciLevelReview">
         <property name="userSelectionMethod" ref="reviewIfNotAdmin"/>
         <property name="role" ref="SeDiCIAdmin"/>
+        <property name="outcomes">
+            <util:map>
+                <!-- Pensado para un aceptar sin cambiar de coleccion -->
+                <entry key="1"
+                       value-ref="postProceesStep"/>
+            </util:map>
+        </property>
         <property name="actions">
         <list>
-            <ref bean="editaction"/>
+            <ref bean="defaultEditaction"/>
+            <ref bean="selectCollection"/>
         </list>
         </property>
     </bean>
     
+    <!-- Cambiar name en caso de necesitar otro nombre del grupo -->
     <bean class="org.dspace.xmlworkflow.Role" name="CollectionAdmin">
         <property name="scope" value="#{ T(org.dspace.xmlworkflow.Role.Scope).COLLECTION}"/>
-        <property name="name" value="CollectionAdmin"/>
+        <property name="name" value="Editor"/>
         <property name="description" value="Rol asigando para las personas encargadas de gestionar una coleccion en particular."/>
     </bean>
 
     
+    <!-- Step para agregar un primer paso de revision por Collection Editors que queda implementado para un futuro -->
     <bean name="collectionLevelReview" class="org.dspace.xmlworkflow.state.Step">
         <property name="userSelectionMethod" ref="acceptRoleOrNotAdmin"/>
         <property name="role" ref="CollectionAdmin"/>
         <property name="outcomes">
             <util:map>
+                <!-- Pensado para un aceptar sin cambiar de coleccion -->
+                <entry key="1"
+                       value-ref="sediciLevelReview"/>
                 <entry key="#{ T(org.dspace.xmlworkflow.state.actions.ActionResult).OUTCOME_COMPLETE}"
                        value-ref="sediciLevelReview"/>
             </util:map>
@@ -259,6 +273,16 @@
         <property name="actions">
             <list>
                 <ref bean="editaction"/>
+                <ref bean="selectCollection"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean name="postProceesStep" class="org.dspace.xmlworkflow.state.Step">
+        <property name="userSelectionMethod" ref="noUserSelectionAction"/>
+        <property name="actions">
+            <list>
+                <ref bean="postprocessaction"/>
             </list>
         </property>
     </bean>

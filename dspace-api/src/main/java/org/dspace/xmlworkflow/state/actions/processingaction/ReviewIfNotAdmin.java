@@ -31,7 +31,7 @@ public class ReviewIfNotAdmin extends ClaimAction{
 		boolean isValid;
 		List<Group> groups = wfi.getSubmitter().getGroups();
 		boolean isSediciAdmin = groups.stream().anyMatch(g -> g.getName().equals(getParent().getStep().getRole().getName()));
-		if (authorizeService.isAdmin(ctx, wfi.getCollection()) && !authorizeService.isAdmin(ctx) && !isSediciAdmin)
+		if (!authorizeService.isAdmin(ctx) && !isSediciAdmin)
 			isValid = super.isValidUserSelection(ctx, wfi, hasUI);
 		else
 			isValid = false;

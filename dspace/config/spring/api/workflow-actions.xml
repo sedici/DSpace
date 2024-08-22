@@ -11,6 +11,8 @@
     <bean id="singleuserreviewactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.SingleUserReviewAction" scope="prototype"/>
     <bean id="acceptRoleOrNotAdminAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.SediciAccepRoleOrNotAdmin" scope="prototype"/>
     <bean id="reviewIfNotAdminAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.ReviewIfNotAdmin" scope="prototype"/>
+    <bean id="autoarchiveEditactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.AcceptEditRejectActionAutoarchive" scope="prototype"/>
+    <bean id="defaulteditAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.AccepEditRejectActionDefault" scope="prototype"/>
 
 
     <bean id="selectrevieweractionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.SelectReviewerAction" scope="prototype">
@@ -22,6 +24,8 @@
     </bean>
     <bean id="evaluationactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.ScoreEvaluationAction" scope="prototype">
         <property name="minimumAcceptanceScore" value="3" />
+    </bean>
+    <bean id="postprocessactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.PostProcessAction" scope="prototype">
     </bean>
 
 
@@ -46,6 +50,18 @@
     <bean id="editaction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
         <constructor-arg type="java.lang.String" value="editaction"/>
         <property name="processingAction" ref="editactionAPI"/>
+        <property name="requiresUI" value="true"/>
+    </bean>
+
+    <bean id="autoarchiveEditaction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
+        <constructor-arg type="java.lang.String" value="autoarchiveEditaction"/>
+        <property name="processingAction" ref="autoarchiveEditactionAPI"/>
+        <property name="requiresUI" value="true"/>
+    </bean>
+
+    <bean id="defaultEditaction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
+        <constructor-arg type="java.lang.String" value="defaultEditaction"/>
+        <property name="processingAction" ref="defaulteditAPI"/>
         <property name="requiresUI" value="true"/>
     </bean>
 
@@ -85,6 +101,12 @@
     <bean id="evaluationaction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
         <constructor-arg type="java.lang.String" value="evaluationaction"/>
         <property name="processingAction" ref="evaluationactionAPI" />
+        <property name="requiresUI" value="false"/>
+    </bean>
+
+    <bean id="postprocessaction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
+        <constructor-arg type="java.lang.String" value="postprocessaction"/>
+        <property name="processingAction" ref="postprocessactionAPI" />
         <property name="requiresUI" value="false"/>
     </bean>
 
