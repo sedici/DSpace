@@ -45,8 +45,6 @@ public abstract class ProcessingAction extends Action {
     protected static final String SUBMIT_REJECT = "submit_reject";
     protected static final String RETURN_TO_POOL = "return_to_pool";
     protected static final String REJECT_REASON = "reason";
-    protected static final String SUBMITT_APPROVE_NOT_SELECT = "submit_approve_not_select";
-    protected static final String SUBMITT_APPROVE_SELECT ="submit_approve_and_select";
 
     @Override
     public boolean isAuthorized(Context context, HttpServletRequest request, XmlWorkflowItem wfi) throws SQLException {

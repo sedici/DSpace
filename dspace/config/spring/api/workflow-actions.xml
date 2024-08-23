@@ -9,10 +9,17 @@
     <bean id="editactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.AcceptEditRejectAction" scope="prototype"/>
     <bean id="finaleditactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.FinalEditAction" scope="prototype"/>
     <bean id="singleuserreviewactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.SingleUserReviewAction" scope="prototype"/>
-    <bean id="acceptRoleOrNotAdminAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.SediciAccepRoleOrNotAdmin" scope="prototype"/>
-    <bean id="reviewIfNotAdminAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.ReviewIfNotAdmin" scope="prototype"/>
-    <bean id="autoarchiveEditactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.AcceptEditRejectActionAutoarchive" scope="prototype"/>
-    <bean id="defaulteditAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.AccepEditRejectActionDefault" scope="prototype"/>
+    <bean id="acceptRoleOrNotAdminAPI" class="ar.edu.unlp.sedici.dspace.dspace.xmlworkflow.state.actions.processingaction.SediciAccepRoleOrNotAdmin" scope="prototype"/>
+    <bean id="reviewIfNotAdminAPI" class="ar.edu.unlp.sedici.dspace.dspace.xmlworkflow.state.actions.processingaction.ReviewIfNotAdmin" scope="prototype"/>
+    
+    <!--Editaction de autoarchivo, cambiar de coleccion obligatorio-->
+    <bean id="autoarchiveEditactionAPI" class="ar.edu.unlp.sedici.dspace.dspace.xmlworkflow.state.actions.processingaction.SediciAcceptEditRejectAction" scope="prototype">
+        <property name="optionalSelectCollection" value="false" />
+    </bean>
+    <!--Editaction default, el cambiar de coleccion es opcional-->
+    <bean id="defaulteditAPI" class="ar.edu.unlp.sedici.dspace.dspace.xmlworkflow.state.actions.processingaction.SediciAcceptEditRejectAction" scope="prototype">
+        <property name="optionalSelectCollection" value="true" />
+    </bean>
 
 
     <bean id="selectrevieweractionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.SelectReviewerAction" scope="prototype">
@@ -25,7 +32,8 @@
     <bean id="evaluationactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.ScoreEvaluationAction" scope="prototype">
         <property name="minimumAcceptanceScore" value="3" />
     </bean>
-    <bean id="postprocessactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.PostProcessAction" scope="prototype">
+
+    <bean id="noopAPI" class="ar.edu.unlp.sedici.dspace.dspace.xmlworkflow.state.actions.processingaction.NoOpAction" scope="prototype">
     </bean>
 
 
@@ -33,7 +41,7 @@
     <bean id="noUserSelectionActionAPI" class="org.dspace.xmlworkflow.state.actions.userassignment.NoUserSelectionAction" scope="prototype"/>
     <bean id="assignoriginalsubmitteractionAPI" class="org.dspace.xmlworkflow.state.actions.userassignment.AssignOriginalSubmitterAction" scope="prototype"/>
     
-    <bean id="collectionSelectionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.SelectCollection" scope="prototype"/>
+    <bean id="collectionSelectionAPI" class="ar.edu.unlp.sedici.dspace.dspace.xmlworkflow.state.actions.processingaction.SelectCollection" scope="prototype"/>
 
     <bean id="selectCollection" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
         <constructor-arg type="java.lang.String" value="selectCollection"/>
@@ -104,9 +112,10 @@
         <property name="requiresUI" value="false"/>
     </bean>
 
-    <bean id="postprocessaction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
-        <constructor-arg type="java.lang.String" value="postprocessaction"/>
-        <property name="processingAction" ref="postprocessactionAPI" />
+    <!--Procesing action vacia para poder hacer actions opcionales-->
+    <bean id="noop" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
+        <constructor-arg type="java.lang.String" value="noop"/>
+        <property name="processingAction" ref="noopAPI" />
         <property name="requiresUI" value="false"/>
     </bean>
 

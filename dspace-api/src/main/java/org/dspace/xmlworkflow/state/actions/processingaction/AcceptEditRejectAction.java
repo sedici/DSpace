@@ -48,11 +48,6 @@ public class AcceptEditRejectAction extends ProcessingAction {
             switch (Util.getSubmitButton(request, SUBMIT_CANCEL)) {
                 case SUBMIT_APPROVE:
                     return processAccept(c, wfi);
-                case SUBMITT_APPROVE_SELECT:
-                	return processAccept(c, wfi);
-                case SUBMITT_APPROVE_NOT_SELECT:
-                	super.addApprovedProvenance(c, wfi);
-                    return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, 1);
                 case SUBMIT_REJECT:
                     return super.processRejectPage(c, wfi, request);
                 case SUBMITTER_IS_DELETED_PAGE:
