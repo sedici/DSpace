@@ -22,13 +22,14 @@
                          value='file:${dspace.dir}/config/workflow-curation.xml'/>
     </bean>
 
-    <!--Standard DSpace workflow-->
+    <!--Default workflow-->
     <bean name="defaultWorkflow" class="org.dspace.xmlworkflow.state.Workflow">
         <property name="firstStep" ref="collectionLevelReview"/>
         <property name="steps">
             <util:list>
                 <ref bean="collectionLevelReview"/>
                 <ref bean="sediciLevelReview"/>
+                <ref bean="noOpStep"/>
             </util:list>
         </property>
     </bean>
@@ -212,6 +213,7 @@
         <property name="description" value="Rol asigando para las personas encargadas de gestionar el repositorio, principalmente a partir de la carga."/>
     </bean>
 
+    <!--Step que define el workflow de autoarchivo-->
     <bean class="org.dspace.xmlworkflow.state.Step" name="SEDICI-ADMIN_review_autoarchive">
         <property name="userSelectionMethod" ref="claimaction"/>
         <property name="role">
@@ -223,42 +225,66 @@
         </property>
         <property name="actions">
             <util:list>
-                <ref bean="editaction"/>
+                <ref bean="autoarchiveEditaction"/>
                 <ref bean="selectCollection"/>
             </util:list>
         </property>
     </bean>
 
 
+    <!-- Edit step del workflow default -->
     <bean class="org.dspace.xmlworkflow.state.Step" name="sediciLevelReview">
         <property name="userSelectionMethod" ref="reviewIfNotAdmin"/>
         <property name="role" ref="SeDiCIAdmin"/>
+        <property name="outcomes">
+            <util:map>
+                <!-- Outcome devuelto por "defaultEditaction" en caso de que no se deba cambiar de coleccion-->
+                <!-- "noOpStep" es un step vacio debido a que el outcome se debe mapear con un step si o si
+                , en un futuro se puede agregar funcionalidad si se precisa-->
+                <entry key="1"
+                       value-ref="noOpStep"/>
+            </util:map>
+        </property>
         <property name="actions">
         <list>
-            <ref bean="editaction"/>
+            <ref bean="defaultEditaction"/>
+            <ref bean="selectCollection"/>
         </list>
         </property>
     </bean>
     
+    <!-- Cambiar name en caso de necesitar otro nombre del grupo -->
     <bean class="org.dspace.xmlworkflow.Role" name="CollectionAdmin">
         <property name="scope" value="#{ T(org.dspace.xmlworkflow.Role.Scope).COLLECTION}"/>
-        <property name="name" value="CollectionAdmin"/>
+        <property name="name" value="Editor"/>
         <property name="description" value="Rol asigando para las personas encargadas de gestionar una coleccion en particular."/>
     </bean>
 
     
+    <!-- Step para agregar un primer paso de revision por Collection Editors que queda implementado para un futuro -->
     <bean name="collectionLevelReview" class="org.dspace.xmlworkflow.state.Step">
         <property name="userSelectionMethod" ref="acceptRoleOrNotAdmin"/>
         <property name="role" ref="CollectionAdmin"/>
         <property name="outcomes">
             <util:map>
-                <entry key="#{ T(org.dspace.xmlworkflow.state.actions.ActionResult).OUTCOME_COMPLETE}"
+                <!-- Pensado para un aceptar sin cambiar de coleccion -->
+                <entry key="1"
                        value-ref="sediciLevelReview"/>
             </util:map>
         </property>
         <property name="actions">
             <list>
                 <ref bean="editaction"/>
+                <ref bean="selectCollection"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean name="noOpStep" class="org.dspace.xmlworkflow.state.Step">
+        <property name="userSelectionMethod" ref="noUserSelectionAction"/>
+        <property name="actions">
+            <list>
+                <ref bean="noop"/>
             </list>
         </property>
     </bean>
