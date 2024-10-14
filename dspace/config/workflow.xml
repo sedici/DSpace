@@ -4,6 +4,8 @@
         <name-map collection="default" workflow="default"/>
         <name-map collection="10915/50" workflow="autoarchive"/>
         <name-map collection="10915/28975" workflow="autoarchive"/>
+        <!-- Poner en la lista las colecciones a las que se le quiera posibilitar la carga directa -->
+        <name-map collection="10915/83756" workflow="noReview"/>
     </workflow-map>
 
     <!--Workflow modificado para SeDiCI-->
@@ -76,6 +78,20 @@
                 <action id="selectcollectionaction"/>
             </actions>
         </step>
+    </workflow>
+
+    <!-- Workflow pensado para hacer carga directa o delegada, en caso de que existan admins -->
+    <workflow start="CollectionLevelReview" id="noReview">
+        <roles>
+            <role id="Admin" name="Admin" scope="collection" description="Este paso le permite a un administrador de una coleccion, editar los metadatos y aceptar o rechazar el envío"/>
+        </roles>
+
+        <step id="CollectionLevelReview" role="Admin" userSelectionMethod="claimaction">
+            <actions>
+                <action id="editaction"/>
+            </actions>
+        </step>
+
     </workflow>
 
 </wf-config>
