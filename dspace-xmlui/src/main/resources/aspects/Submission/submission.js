@@ -738,7 +738,7 @@ function showCompleteConfirmation(handle, item){
         }
 	} else {
 		cocoon.sendPage("submit/finalize");
-		cocoon.redirectTo("/submit", true);
+		cocoon.redirectTo("/submissions", true);
 		//Genera error item.getHandle() por lo que se comenta y se redirije a submission
 		//cocoon.redirectTo(cocoon.request.getContextPath()+"/handle/"+item.getHandle(), true);
 	}
