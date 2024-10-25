@@ -1240,10 +1240,9 @@
 					<dc-element>creator</dc-element>
 					<dc-qualifier>person</dc-qualifier>
 					<repeatable>true</repeatable>
-					<label>Autor (*)</label>
+					<label>Autor</label>
 					<input-type>onebox</input-type>
 					<hint>Autores de la obra</hint>
-					<required>Debe indicarse el/los autores de la obra</required>
 					<type-bind>!Objeto Fisico</type-bind>
 				</field>
 				<field> <!-- Ok -->	<!-- Duplicado para Red de Museos -->

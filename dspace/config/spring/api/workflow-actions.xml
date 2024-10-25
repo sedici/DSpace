@@ -7,6 +7,7 @@
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
     <bean id="claimactionAPI" class="org.dspace.xmlworkflow.state.actions.userassignment.ClaimAction" scope="prototype"/>
+    <bean id="selectIfAdminAPI" class="ar.edu.unlp.sedici.dspace.xmlworkflow.state.actions.userassignment.SelectIfAdmin" scope="prototype"/>
     <bean id="reviewactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.ReviewAction" scope="prototype"/>
     <bean id="editactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.AcceptEditRejectAction" scope="prototype"/>
     <bean id="finaleditactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.FinalEditAction" scope="prototype"/>
@@ -98,6 +99,12 @@
     <bean id="claimaction" class="org.dspace.xmlworkflow.state.actions.UserSelectionActionConfig" scope="prototype">
         <constructor-arg type="java.lang.String" value="claimaction"/>
         <property name="processingAction" ref="claimactionAPI"/>
+        <property name="requiresUI" value="true"/>
+    </bean>
+
+    <bean id="selectIfAdmin" class="org.dspace.xmlworkflow.state.actions.UserSelectionActionConfig" scope="prototype">
+        <constructor-arg type="java.lang.String" value="selectIfAdmin"/>
+        <property name="processingAction" ref="selectIfAdminAPI"/>
         <property name="requiresUI" value="true"/>
     </bean>
 
