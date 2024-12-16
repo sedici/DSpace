@@ -260,7 +260,7 @@
 					<input-type>textarea</input-type>
 					<hint>El título principal de la obra </hint>
 					<required>Debe indicar el título principal de la obra</required>
-                    <i18n>true</i18n>
+                    <language value-pairs-name="common_iso_languages">true</language>
 				</field>
             </row>
 
@@ -274,7 +274,7 @@
 					<input-type>textarea</input-type>
 					<hint>Si el título de la obra se compone de título y subtítulo, éste último debe ingresarse en este campo</hint>
 					<visibility>workflow</visibility>
-                    <i18n>true</i18n>
+                    <language value-pairs-name="common_iso_languages">true</language>
 				</field>
             </row>
 
@@ -289,7 +289,7 @@
 					<input-type>onebox</input-type>
 					<hint>Otros títulos con los que se conoce la obra, traducciones del título, etc. Si el título alternativo incluye un subtítulo, éste debe indicarse usando "::" (ej: titulo alternativo :: subtitulo)</hint>
 					<visibility>workflow</visibility>
-					<i18n>true</i18n>
+					<language value-pairs-name="common_iso_languages">true</language>
 				</field>
             </row>
 
@@ -519,7 +519,7 @@
 					<label>Resumen</label>
 					<input-type>textarea</input-type>
 					<hint>Resumen de la obra</hint>
-                    <i18n>true</i18n>
+                    <language value-pairs-name="common_iso_languages">true</language>
 					<type-bind>Articulo,Libro,Objeto Fisico,Objeto de aprendizaje,Objeto de conferencia,Documento institucional,Imagen fija,Imagen en movimiento,Audio,Publicacion seriada,Conjunto de datos,Proyecto</type-bind>
 				</field>
 
@@ -532,7 +532,7 @@
 					<label>Resumen</label>
 					<input-type>textarea</input-type>
 					<hint>Resumen de la obra</hint>
-					<i18n>true</i18n>
+					<language value-pairs-name="common_iso_languages">true</language>
 					<required>Debe indicar un resumen para la obra</required>
 					<type-bind>Tesis</type-bind>
 				</field>
@@ -1311,7 +1311,7 @@
 					<input-type>textarea</input-type>
 					<hint>El título principal de la obra </hint>
 					<required>Debe indicar el título principal de la obra</required>
-                    <i18n>true</i18n>
+                    <language value-pairs-name="common_iso_languages">true</language>
 				</field>
             </row>
 
@@ -1324,7 +1324,7 @@
 					<label>Subtítulo</label>
 					<input-type>textarea</input-type>
 					<hint>Si el título de la obra se compone de título y subtítulo, éste último debe ingresarse en este campo</hint>
-                    <i18n>true</i18n>
+                    <language value-pairs-name="common_iso_languages">true</language>
 				</field>
             </row>
 
@@ -1338,7 +1338,7 @@
 					<label>Título alternativo</label>
 					<input-type>onebox</input-type>
 					<hint>Otros títulos con los que se conoce la obra, traducciones del título, etc. Si el título alternativo incluye un subtítulo, éste debe indicarse usando "::" (ej: titulo alternativo :: subtitulo)</hint>
-					<i18n>true</i18n>
+					<language value-pairs-name="common_iso_languages">true</language>
 				</field>
             </row>
 
@@ -1561,7 +1561,7 @@
 					<label>Resumen</label>
 					<input-type>textarea</input-type>
 					<hint>Resumen de la obra</hint>
-                    <i18n>true</i18n>
+                    <language value-pairs-name="common_iso_languages">true</language>
 					<type-bind>Articulo,Libro,Objeto Fisico,Objeto de aprendizaje,Objeto de conferencia,Documento institucional,Imagen fija,Imagen en movimiento,Audio,Publicacion seriada,Conjunto de datos,Proyecto</type-bind>
 				</field>
 
@@ -1574,7 +1574,7 @@
 					<label>Resumen</label>
 					<input-type>textarea</input-type>
 					<hint>Resumen de la obra</hint>
-					<i18n>true</i18n>
+					<language value-pairs-name="common_iso_languages">true</language>
 					<required>Debe indicar un resumen para la obra</required>
 					<type-bind>Tesis</type-bind>
 				</field>
