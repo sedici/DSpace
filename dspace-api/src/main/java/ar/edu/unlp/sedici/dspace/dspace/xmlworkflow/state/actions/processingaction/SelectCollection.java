@@ -1,4 +1,4 @@
-package org.dspace.xmlworkflow.state.actions.processingaction;
+package ar.edu.unlp.sedici.dspace.dspace.xmlworkflow.state.actions.processingaction;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -19,6 +19,7 @@ import org.dspace.core.Context;
 import org.dspace.workflow.WorkflowException;
 import org.dspace.xmlworkflow.state.Step;
 import org.dspace.xmlworkflow.state.actions.ActionResult;
+import org.dspace.xmlworkflow.state.actions.processingaction.ProcessingAction;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.dspace.handle.factory.HandleServiceFactory;
 import org.dspace.handle.service.HandleService;

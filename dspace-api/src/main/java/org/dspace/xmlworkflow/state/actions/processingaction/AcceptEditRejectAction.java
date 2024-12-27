@@ -66,7 +66,6 @@ public class AcceptEditRejectAction extends ProcessingAction {
         options.add(SUBMIT_REJECT);
         options.add(ProcessingAction.SUBMIT_EDIT_METADATA);
         options.add(RETURN_TO_POOL);
-        options.add("approve-and-select");
         return options;
     }
 
