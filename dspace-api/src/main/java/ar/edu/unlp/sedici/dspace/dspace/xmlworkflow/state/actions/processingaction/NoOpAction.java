@@ -17,6 +17,12 @@ import org.dspace.xmlworkflow.state.actions.ActionResult;
 import org.dspace.xmlworkflow.state.actions.processingaction.ProcessingAction;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 
+/* 
+   Clase usada en aquellos casos donde se deba mapear alguna accion, 
+   pero realmente se quiera terminar la ejecucion del workflow.
+   Esto se debe a que cuando se mapean distintos outcomes en el workflow, 
+   no se puede mapear al final de la ejecucion ni a una accion vacia, solo se puede mapear acciones
+*/
 public class NoOpAction extends ProcessingAction {
 
 
