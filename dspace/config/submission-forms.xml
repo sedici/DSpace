@@ -224,7 +224,9 @@
 					<required>Debe indicarse el/los autores de la obra</required>
 					<type-bind>Articulo,Tesis,Libro,Objeto de aprendizaje,Objeto de conferencia,Documento institucional,Imagen fija,Imagen en movimiento,Audio,Publicacion seriada,Conjunto de datos,Proyecto</type-bind>
 				</field>
-				<field> <!-- Ok -->	<!-- Duplicado para Red de Museos -->
+            </row>
+            <row>
+                <field>	<!-- Duplicado para Red de Museos -->
 					<dc-schema>sedici</dc-schema>
 					<dc-element>creator</dc-element>
 					<dc-qualifier>person</dc-qualifier>
@@ -329,7 +331,7 @@
 					<dc-qualifier>issued</dc-qualifier>
 					<label>Fecha de Publicación</label>
 					<input-type>date</input-type>
-					<hint>Fecha en la que la obra fue publicada en una revista, libro, etc. No debe confundirse con la fecha de entrega o defensa de una tesis, que debe cargarse en el campo Fecha de Presentación. Los valores posibles para este campo son día/mes, mes/año o día/mes/año.</hint>
+					<hint>Fecha en la que la obra fue publicada en una revista, libro, etc. No debe confundirse con la fecha de defensa/aprobación de una tesis, que debe cargarse en el campo Fecha de Presentación. Los valores posibles para este campo son día/mes, mes/año o día/mes/año.</hint>
                     <visibility>submission</visibility> <!-- se cambia el submit por submission-->
 					<type-bind>Articulo,Tesis,Libro,Objeto de aprendizaje,Documento institucional,Imagen fija,Imagen en movimiento,Audio,Publicacion seriada,Proyecto</type-bind>
 				</field>
@@ -343,7 +345,7 @@
 					<dc-qualifier>issued</dc-qualifier>
 					<label>Fecha de Publicación</label>
 					<input-type>date</input-type>
-					<hint>Fecha en la que la obra fue publicada en una revista, libro, etc. No debe confundirse con la fecha de entrega o defensa de una tesis, que debe cargarse en el campo Fecha de Presentación. Los valores posibles para este campo son día/mes, mes/año o día/mes/año.</hint>
+					<hint>Fecha en la que la obra fue publicada en una revista, libro, etc. No debe confundirse con la fecha de defensa/aprobación de una tesis, que debe cargarse en el campo Fecha de Presentación. Los valores posibles para este campo son día/mes, mes/año o día/mes/año.</hint>
 					<visibility>workflow</visibility>
 					<type-bind>Articulo,Tesis,Libro,Objeto de aprendizaje,Objeto de conferencia,Documento institucional,Imagen fija,Imagen en movimiento,Audio,Publicacion seriada,Proyecto</type-bind>
 				</field>
@@ -427,8 +429,9 @@
 					<hint>Inscripciones existentes en el objeto, observaciones  sobre las piezas, etc.</hint>
 					<type-bind>Objeto Fisico</type-bind>
 				</field>
-				
-				<field>
+            </row>
+            <row>
+                <field>
 					<dc-schema>dc</dc-schema>
 					<dc-element>format</dc-element>
 					<repeatable>true</repeatable>
@@ -522,7 +525,8 @@
                     <i18n>true</i18n>
 					<type-bind>Articulo,Libro,Objeto Fisico,Objeto de aprendizaje,Objeto de conferencia,Documento institucional,Imagen fija,Imagen en movimiento,Audio,Publicacion seriada,Conjunto de datos,Proyecto</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <!-- Abstract / Obligatorio sólo para Tesistas -->
 				<field>
 					<dc-schema>dc</dc-schema>
@@ -730,7 +734,7 @@
 					<dc-qualifier>exposure</dc-qualifier>
 					<label>Fecha de presentación</label>
 					<input-type>date</input-type>
-					<hint>Fecha en la que se expuso el trabajo para su aprobación</hint>
+					<hint>Para el caso tesis de posgrado, ingresar la fecha en que fue defendida públicamente o bien aprobada por dictamen</hint>
 					<type-bind>Tesis,Objeto de conferencia, Audio</type-bind>
 					<required>Debe indicar la fecha de presentación del trabajo</required>
 				</field>
@@ -1093,7 +1097,9 @@
 					<required>Debe indicar la filiación</required>
 					<visibility>workflow</visibility>
 				</field>
-				<!-- Filiacion -->
+            </row>
+            <row>
+                <!-- Filiacion -->
 				<field>
 					<dc-schema>dc</dc-schema>
 					<dc-element>description</dc-element>
@@ -1276,7 +1282,9 @@
 					<required>Debe indicarse el/los autores de la obra</required>
 					<type-bind>Articulo,Tesis,Libro,Objeto de aprendizaje,Objeto de conferencia,Documento institucional,Imagen fija,Imagen en movimiento,Audio,Publicacion seriada,Conjunto de datos,Proyecto</type-bind>
 				</field>
-				<field> <!-- Ok -->	<!-- Duplicado para Red de Museos -->
+            </row>
+            <row>
+                <field> <!-- Duplicado para Red de Museos -->
 					<dc-schema>sedici</dc-schema>
 					<dc-element>creator</dc-element>
 					<dc-qualifier>person</dc-qualifier>
@@ -1376,7 +1384,7 @@
 					<dc-qualifier>issued</dc-qualifier>
 					<label>Fecha de Publicación</label>
 					<input-type>date</input-type>
-					<hint>Fecha en la que la obra fue publicada en una revista, libro, etc. No debe confundirse con la fecha de entrega o defensa de una tesis, que debe cargarse en el campo Fecha de Presentación. Los valores posibles para este campo son día/mes, mes/año o día/mes/año.</hint>
+					<hint>Fecha en la que la obra fue publicada en una revista, libro, etc. No debe confundirse con la fecha de defensa/aprobación de una tesis, que debe cargarse en el campo Fecha de Presentación. Los valores posibles para este campo son día/mes, mes/año o día/mes/año.</hint>
                     <visibility>submission</visibility> <!-- se cambia el submit por submission-->
 					<type-bind>Articulo,Tesis,Libro,Objeto de aprendizaje,Documento institucional,Imagen fija,Imagen en movimiento,Audio,Publicacion seriada,Proyecto</type-bind>
 				</field>
@@ -1390,7 +1398,7 @@
 					<dc-qualifier>issued</dc-qualifier>
 					<label>Fecha de Publicación</label>
 					<input-type>date</input-type>
-					<hint>Fecha en la que la obra fue publicada en una revista, libro, etc. No debe confundirse con la fecha de entrega o defensa de una tesis, que debe cargarse en el campo Fecha de Presentación. Los valores posibles para este campo son día/mes, mes/año o día/mes/año.</hint>
+					<hint>Fecha en la que la obra fue publicada en una revista, libro, etc. No debe confundirse con la fecha de defensa/aprobación de una tesis, que debe cargarse en el campo Fecha de Presentación. Los valores posibles para este campo son día/mes, mes/año o día/mes/año.</hint>
 					<type-bind>Articulo,Tesis,Libro,Objeto de aprendizaje,Objeto de conferencia,Documento institucional,Imagen fija,Imagen en movimiento,Audio,Publicacion seriada,Proyecto</type-bind>
                     <visibility>workflow</visibility>
                 </field>
@@ -1472,8 +1480,9 @@
 					<hint>Inscripciones existentes en el objeto, observaciones  sobre las piezas, etc.</hint>
 					<type-bind>Objeto Fisico</type-bind>
 				</field>
-				
-				<field>
+            </row>
+            <row>
+                <field>
 					<dc-schema>dc</dc-schema>
 					<dc-element>format</dc-element>
 					<repeatable>true</repeatable>
@@ -1564,7 +1573,8 @@
                     <i18n>true</i18n>
 					<type-bind>Articulo,Libro,Objeto Fisico,Objeto de aprendizaje,Objeto de conferencia,Documento institucional,Imagen fija,Imagen en movimiento,Audio,Publicacion seriada,Conjunto de datos,Proyecto</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <!-- Abstract / Obligatorio sólo para Tesistas -->
 				<field>
 					<dc-schema>dc</dc-schema>
@@ -1767,7 +1777,7 @@
 					<dc-qualifier>exposure</dc-qualifier>
 					<label>Fecha de presentación</label>
 					<input-type>date</input-type>
-					<hint>Fecha en la que se expuso el trabajo para su aprobación</hint>
+					<hint>Para el caso tesis de posgrado, ingresar la fecha en que fue defendida públicamente o bien aprobada por dictamen</hint>
 					<type-bind>Tesis,Objeto de conferencia, Audio</type-bind>
 					<required>Debe indicar la fecha de presentación del trabajo</required>
 				</field>
@@ -2114,7 +2124,9 @@
 					<type-bind>Conjunto de datos</type-bind>
 					<required>Debe indicar la filiación</required>
 				</field>
-				<!-- Filiacion -->
+            </row>
+            <row>
+                <!-- Filiacion -->
 				<field>
 					<dc-schema>dc</dc-schema>
 					<dc-element>description</dc-element>
