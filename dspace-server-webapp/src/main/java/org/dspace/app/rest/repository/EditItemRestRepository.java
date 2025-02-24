@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.UUID;
 import jakarta.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dspace.app.rest.Parameter;
 import org.dspace.app.rest.SearchRestMethod;
 import org.dspace.app.rest.exception.DSpaceBadRequestException;
@@ -53,7 +54,7 @@ import org.dspace.app.rest.submit.AbstractProcessingStep;
 @Component(EditItemRest.CATEGORY + "." + EditItemRest.NAME)
 public class EditItemRestRepository extends DSpaceRestRepository<EditItemRest, UUID> {
 
-    private static final Logger log = Logger.getLogger(EditItemRestRepository.class);
+    private static final Logger log = LogManager.getLogger(EditItemRestRepository.class);
 
     public static final String OPERATION_PATH_SECTIONS = "sections";
 

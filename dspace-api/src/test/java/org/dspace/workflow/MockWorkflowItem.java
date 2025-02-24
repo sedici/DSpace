@@ -59,4 +59,10 @@ public class MockWorkflowItem implements WorkflowItem {
     public void setPublishedBefore(boolean b) {
         isPublishedBefore = b;
     }
+
+    @Override
+	public int getState() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
