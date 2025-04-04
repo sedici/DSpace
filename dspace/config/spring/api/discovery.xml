@@ -266,9 +266,8 @@
             <list>
                 <ref bean="searchFilterType" />
                 <ref bean="searchFilterIssued" />
-                <ref bean="searchFilterSubject" />
                 <ref bean="searchFilterAuthor" />
-                <ref bean="searchFilterKeywords" />
+                <ref bean="searchFilterSubject" />
             </list>
         </property>
         <!-- Set TagCloud configuration per discovery configuration -->
