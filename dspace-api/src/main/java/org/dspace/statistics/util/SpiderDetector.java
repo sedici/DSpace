@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.dspace.core.ConfigurationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * SpiderDetector is used to find IP's that are spiders...
@@ -235,6 +236,7 @@ public class SpiderDetector {
                 }
                 for (String pattern : patterns)
                 {
+                	pattern = StringUtils.lowerCase(pattern);
                     patternList.add(Pattern.compile(pattern));
                 }
                 log.info("Loaded pattern file:  {}", file.getPath());
@@ -269,6 +271,8 @@ public class SpiderDetector {
                 if (agents.isEmpty())
                     loadPatterns("agents", agents);
             }
+            agent = StringUtils.lowerCase(agent);
+            hostname = StringUtils.lowerCase(hostname);
             for (Pattern candidate : agents)
             {
 		// prevent matcher() invocation from a null Pattern object

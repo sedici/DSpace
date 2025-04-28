@@ -48,9 +48,10 @@ public class SolrLoggerUsageEventListener extends AbstractUsageEventListener {
                     UsageSearchEvent usageSearchEvent = (UsageSearchEvent) ue;
                     //Only log if the user has already filled in a query !
                     if(!CollectionUtils.isEmpty(((UsageSearchEvent) ue).getQueries())){
-                        SolrLogger.postSearch(ue.getObject(), ue.getRequest(), currentUser,
-                                usageSearchEvent.getQueries(), usageSearchEvent.getRpp(), usageSearchEvent.getSortBy(),
-                                usageSearchEvent.getSortOrder(), usageSearchEvent.getPage(), usageSearchEvent.getScope());
+                        //Comento esta linea para evitar guardar eventos de busqueda
+                    	//SolrLogger.postSearch(ue.getObject(), ue.getRequest(), currentUser,
+                        //        usageSearchEvent.getQueries(), usageSearchEvent.getRpp(), usageSearchEvent.getSortBy(),
+                        //        usageSearchEvent.getSortOrder(), usageSearchEvent.getPage(), usageSearchEvent.getScope());
                     }
                 }else
                 if(UsageEvent.Action.WORKFLOW == ue.getAction()){
