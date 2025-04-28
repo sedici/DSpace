@@ -335,7 +335,7 @@
 					<dc-qualifier>issued</dc-qualifier>
 					<label>Fecha de Publicación</label>
 					<input-type>date</input-type>
-					<hint>Fecha en la que la obra fue publicada en una revista, libro, etc. No debe confundirse con la fecha de entrega o defensa de una tesis, que debe cargarse en el campo Fecha de Presentación. Los valores posibles para este campo son día/mes, mes/año o día/mes/año.</hint>
+					<hint>Fecha en la que la obra fue publicada en una revista, libro, etc. No debe confundirse con la fecha de defensa/aprobación de una tesis, que debe cargarse en el campo Fecha de Presentación. Los valores posibles para este campo son día/mes, mes/año o día/mes/año.</hint>
 					<visibility>submit</visibility>
 					<type-bind>!Objeto Fisico,Objeto de conferencia,Conjunto de datos</type-bind>
 				</field>
@@ -347,7 +347,7 @@
 					<dc-qualifier>issued</dc-qualifier>
 					<label>Fecha de Publicación</label>
 					<input-type>date</input-type>
-					<hint>Fecha en la que la obra fue publicada en una revista, libro, etc. No debe confundirse con la fecha de entrega o defensa de una tesis, que debe cargarse en el campo Fecha de Presentación. Los valores posibles para este campo son día/mes, mes/año o día/mes/año.</hint>
+					<hint>Fecha en la que la obra fue publicada en una revista, libro, etc. No debe confundirse con la fecha de defensa/aprobación de una tesis, que debe cargarse en el campo Fecha de Presentación. Los valores posibles para este campo son día/mes, mes/año o día/mes/año.</hint>
 					<visibility>workflow</visibility>
 					<visibility-on-group>Bibliotecarios</visibility-on-group>
 					<type-bind>!Objeto Fisico,Conjunto de datos</type-bind>
@@ -694,7 +694,7 @@
 					<dc-qualifier>exposure</dc-qualifier>
 					<label>Fecha de presentación (*)</label>
 					<input-type>date</input-type>
-					<hint>Fecha en la que se expuso el trabajo para su aprobación</hint>
+					<hint>Para el caso tesis de posgrado, ingresar la fecha en que fue defendida públicamente o bien aprobada por dictamen</hint>
 					<type-bind>Tesis,Objeto de conferencia, Audio</type-bind>
 					<required>Debe indicar la fecha de presentación del trabajo</required>
 				</field>
@@ -1330,7 +1330,7 @@
 					<dc-qualifier>issued</dc-qualifier>
 					<label>Fecha de Publicación</label>
 					<input-type>date</input-type>
-					<hint>Fecha en la que la obra fue publicada en una revista, libro, etc. No debe confundirse con la fecha de entrega o defensa de una tesis, que debe cargarse en el campo Fecha de Presentación. Los valores posibles para este campo son día/mes, mes/año o día/mes/año.</hint>
+					<hint>Fecha en la que la obra fue publicada en una revista, libro, etc. No debe confundirse con la fecha de defensa/aprobación de una tesis, que debe cargarse en el campo Fecha de Presentación. Los valores posibles para este campo son día/mes, mes/año o día/mes/año.</hint>
 					<type-bind>!Objeto Fisico,Objeto de conferencia,Conjunto de datos</type-bind>
 				</field>
 
@@ -1666,7 +1666,7 @@
 					<dc-qualifier>exposure</dc-qualifier>
 					<label>Fecha de presentación (*)</label>
 					<input-type>date</input-type>
-					<hint>Fecha en la que se expuso el trabajo para su aprobación</hint>
+					<hint>Para el caso tesis de posgrado, ingresar la fecha en que fue defendida públicamente o bien aprobada por dictamen</hint>
 					<type-bind>Tesis,Objeto de conferencia, Audio</type-bind>
 					<required>Debe indicar la fecha de presentación del trabajo</required>
 				</field>
