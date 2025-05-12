@@ -516,38 +516,53 @@ placeholders for header images -->
     <xsl:template name="buildLRStatisticsBox">
         <div id="ds-LRstatistics-box" class="statisticsbox">
             <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='focus'][@qualifier='containerType']/text() = 'type:item'">
-                <div id="usage-stats" class="usagestats">
-                    <script type="text/javascript">
-                        (function(w, d, s, o, p, f, js, fjs) {
-                        w[o] = w[o] || function() {
-                                (w[o][p] = w[o][p] || {});
-                                Object.assign(w[o][p], arguments[0] || {});
+                <div id="usage-stats">
+                    <script>
+                        (function (window, document, scriptTag, globalVar, paramsKey, cdnUrl) {
+                            window[globalVar] =
+                            window[globalVar] ||
+                            function () {
+                                window[globalVar][paramsKey] = window[globalVar][paramsKey] || {};
+                                Object.assign(window[globalVar][paramsKey], arguments[0] || {});
                             };
-                            js = d.createElement(s), fjs = d.getElementsByTagName(s)[0];
-                            js.id = o;
-                            js.src = f;
-                            js.async = 1;
-                            fjs.parentNode.insertBefore(js, fjs);
-                        }(window, document, 'script', 'lrw', 'parameters', 'https://cdn.jsdelivr.net/gh/lareferencia/lrw@1.1.5/dist/lrw.js'));
-                        lrw({
-                            widget_div_id: 'usage-stats',
-                            identifier_prefix: 'oai:sedici.unlp.edu.ar:10915/',
-                            identifier_regex: '\/handle\/[0-9\.]+\/([0-9]+)\/?', // build the identifier from the url
-                            event_labels: {
-                                'view': 'Vistas',
-                                'download': 'Descargas',
-                                'outlink': 'Enlaces'
-                            },
+
+                            const scriptElement = document.createElement(scriptTag);
+                            scriptElement.id = globalVar;
+                            scriptElement.src = cdnUrl;
+                            scriptElement.type = "module";
+                            scriptElement.defer = true; 
+
+                            scriptElement.onerror = function () {
+                            console.error(`Failed to load script ${scriptElement.src}`);
+                            };
+
+                            const firstScript = document.getElementsByTagName(scriptTag)[0];
+                            firstScript.parentNode.insertBefore(scriptElement, firstScript);
+                        })(
+                            window,
+                            document,
+                            "script",
+                            "lrw",
+                            "parameters",
+                            "https://cdn.jsdelivr.net/gh/lareferencia/lrw@2.1.4/dist/lrw.js"
+                        );
+                        window["lrw"]({
+                            widget_div_id: "usage-stats",
+
+                            //identifier: "",
+                            identifier_meta_field: "citation_abstract_html_url",
+                            identifier_prefix: "oai:sedici.unlp.edu.ar:10915/",
+                            identifier_regex: '\/handle\/[0-9\.]+\/([0-9]+)\/?',
+                            
                             scope_labels: {
-                                'L': 'LA Referencia',
-                                'N': 'SNRD',
-                                'R': 'SEDICI'
+                                N: "SNRD",
+                                R: "SEDICI",
                             },
-                            country: 'AR',
-                            national_source: 'SITEID::59',
-                            repository_source: 'OPENDOAR::1329'
+                            country: "AR",
+                            repository_source: "OPENDOAR::1329",
+                            lang: "es",
                         });
-                    </script>
+                    </script> 
                 </div>
             </xsl:if>
         </div>
