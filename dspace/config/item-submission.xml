@@ -178,7 +178,7 @@
         </step-definition>
 
         <!-- This optional step may allow the user to select a Creative Commons license -->
-        <step-definition id="cclicense" mandatory="false">
+        <step-definition id="cclicense" mandatory="true">
             <heading>submit.progressbar.CClicense</heading>
             <processing-class>org.dspace.app.rest.submit.step.CCLicenseStep</processing-class>
 	        <type>cclicense</type>
