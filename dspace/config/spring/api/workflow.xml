@@ -270,6 +270,8 @@
                 <!-- Pensado para un aceptar sin cambiar de coleccion -->
                 <entry key="1"
                        value-ref="sediciLevelReview"/>
+                <entry key="0"
+                       value-ref="sediciLevelReview"/>
             </util:map>
         </property>
         <property name="actions">
