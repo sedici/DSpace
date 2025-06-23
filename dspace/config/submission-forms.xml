@@ -74,6 +74,8 @@
 					<visibility>workflow</visibility>
 					<type-bind>Articulo</type-bind>
 				</field>
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -84,7 +86,8 @@
 					<visibility>workflow</visibility>
 					<type-bind>Tesis</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -95,7 +98,8 @@
 					<visibility>workflow</visibility>
 					<type-bind>Libro</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -106,7 +110,8 @@
 					<visibility>workflow</visibility>
 					<type-bind>Objeto Fisico</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -117,7 +122,8 @@
 					<visibility>workflow</visibility>
 					<type-bind>Objeto de aprendizaje</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -128,7 +134,8 @@
 					<visibility>workflow</visibility>
 					<type-bind>Objeto de conferencia</type-bind>
 				</field>
-                
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -139,7 +146,8 @@
 					<visibility>workflow</visibility>
 					<type-bind>Documento institucional</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -150,7 +158,8 @@
 					<visibility>workflow</visibility>
 					<type-bind>Imagen fija</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -159,7 +168,8 @@
 					<hint>Seleccione el tipo de imagen en movimiento que desea cargar</hint>
 					<type-bind>Imagen en movimiento</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -168,7 +178,8 @@
 					<hint>Seleccione el tipo de audio que desea cargar</hint>
 					<type-bind>Audio</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -177,7 +188,8 @@
 					<hint>Seleccione el tipo de publicación periódica que desea cargar</hint>
 					<type-bind>Publicacion seriada</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -186,7 +198,8 @@
 					<hint>Seleccione el tipo de conjunto de datos que desea cargar</hint>
 					<type-bind>Conjunto de datos</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -1139,6 +1152,8 @@
 					<required>Debe indicar el tipo de artículo</required>
 					<type-bind>Articulo</type-bind>
 				</field>
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -1148,7 +1163,8 @@
 					<required>Debe indicar el tipo de tesis</required>
 					<type-bind>Tesis</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -1158,7 +1174,8 @@
 					<required>Debe indicar el tipo de libro</required>
 					<type-bind>Libro</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -1168,7 +1185,8 @@
 					<required>Debe indicar el tipo de objeto físico</required>
 					<type-bind>Objeto Fisico</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -1178,7 +1196,8 @@
 					<required>Debe indicar el tipo de objeto de aprendizaje</required>
 					<type-bind>Objeto de aprendizaje</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -1188,7 +1207,8 @@
 					<required>Debe indicar el tipo de objeto de conferencia</required>
 					<type-bind>Objeto de conferencia</type-bind>
 				</field>
-                
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -1198,7 +1218,8 @@
 					<required>Debe indicar el tipo de documento institucional</required>
 					<type-bind>Documento institucional</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -1208,7 +1229,8 @@
 					<required>Debe indicar el tipo de imagen fija</required>
 					<type-bind>Imagen fija</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -1217,7 +1239,8 @@
 					<hint>Seleccione el tipo de imagen en movimiento que desea cargar</hint>
 					<type-bind>Imagen en movimiento</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -1226,7 +1249,8 @@
 					<hint>Seleccione el tipo de audio que desea cargar</hint>
 					<type-bind>Audio</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -1235,7 +1259,8 @@
 					<hint>Seleccione el tipo de publicación periódica que desea cargar</hint>
 					<type-bind>Publicacion seriada</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
@@ -1244,7 +1269,8 @@
 					<hint>Seleccione el tipo de conjunto de datos que desea cargar</hint>
 					<type-bind>Conjunto de datos</type-bind>
 				</field>
-
+            </row>
+            <row>
                 <field>
 					<dc-schema>sedici</dc-schema>
 					<dc-element>subtype</dc-element>
