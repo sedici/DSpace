@@ -1018,6 +1018,7 @@
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
                 <ref bean="searchFilterIssued" />
+                <ref bean="searchFilterCollection" />
                 <ref bean="searchFilterSubmitter" />
             </list>
         </property>
@@ -1027,6 +1028,7 @@
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
                 <ref bean="searchFilterIssued" />
+                <ref bean="searchFilterCollection" />
                 <ref bean="searchFilterSubmitter" />
             </list>
         </property>
@@ -3395,6 +3397,16 @@
             <list>
                 <value>sedici.institucionDesarrollo</value>   
                 <value>mods.originInfo.place</value>                 
+            </list>
+        </property>
+    </bean>
+
+    <bean id="searchFilterCollection" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="location.coll" />
+        <property name="type" value="standard" />
+        <property name="metadataFields">
+            <list>
+                <!-- Se deja vacío porque es un campo generado por el sistema -->
             </list>
         </property>
     </bean>
