@@ -73,12 +73,16 @@ public class VersionedHandleIdentifierProviderWithCanonicalHandlesIT extends Abs
     }
 
     private void createVersions() throws SQLException, AuthorizeException {
+        context.turnOffAuthorisationSystem();
+
         itemV1 = ItemBuilder.createItem(context, collection)
                             .withTitle("First version")
                             .build();
         firstHandle = itemV1.getHandle();
         itemV2 = VersionBuilder.createVersion(context, itemV1, "Second version").build().getItem();
         itemV3 = VersionBuilder.createVersion(context, itemV1, "Third version").build().getItem();
+
+        context.restoreAuthSystemState();
     }
 
     @Test
@@ -99,8 +103,7 @@ public class VersionedHandleIdentifierProviderWithCanonicalHandlesIT extends Abs
 
     @Test
     public void testCollectionHandleMetadata() {
-        registerProvider(VersionedHandleIdentifierProviderWithCanonicalHandles.class);
-
+        context.turnOffAuthorisationSystem();
         Community testCommunity = CommunityBuilder.createCommunity(context)
                                                   .withName("Test community")
                                                   .build();
@@ -108,6 +111,7 @@ public class VersionedHandleIdentifierProviderWithCanonicalHandlesIT extends Abs
         Collection testCollection = CollectionBuilder.createCollection(context, testCommunity)
                                                      .withName("Test Collection")
                                                      .build();
+        context.restoreAuthSystemState();
 
         List<MetadataValue> metadata = ContentServiceFactory.getInstance().getDSpaceObjectService(testCollection)
                                                             .getMetadata(testCollection, "dc", "identifier", "uri",
@@ -119,11 +123,11 @@ public class VersionedHandleIdentifierProviderWithCanonicalHandlesIT extends Abs
 
     @Test
     public void testCommunityHandleMetadata() {
-        registerProvider(VersionedHandleIdentifierProviderWithCanonicalHandles.class);
-
+        context.turnOffAuthorisationSystem();
         Community testCommunity = CommunityBuilder.createCommunity(context)
                                                   .withName("Test community")
                                                   .build();
+        context.restoreAuthSystemState();
 
         List<MetadataValue> metadata = ContentServiceFactory.getInstance().getDSpaceObjectService(testCommunity)
                                                             .getMetadata(testCommunity, "dc", "identifier", "uri",

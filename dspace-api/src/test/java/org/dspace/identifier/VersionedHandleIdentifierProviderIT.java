@@ -51,15 +51,21 @@ public class VersionedHandleIdentifierProviderIT extends AbstractIdentifierProvi
         collection = CollectionBuilder.createCollection(context, parentCommunity)
                                       .withName("Collection")
                                       .build();
+
+        context.restoreAuthSystemState();
     }
 
     private void createVersions() throws SQLException, AuthorizeException {
+        context.turnOffAuthorisationSystem();
+
         itemV1 = ItemBuilder.createItem(context, collection)
                 .withTitle("First version")
                 .build();
         firstHandle = itemV1.getHandle();
         itemV2 = VersionBuilder.createVersion(context, itemV1, "Second version").build().getItem();
         itemV3 = VersionBuilder.createVersion(context, itemV1, "Third version").build().getItem();
+
+        context.restoreAuthSystemState();
     }
 
     @Test
@@ -79,8 +85,7 @@ public class VersionedHandleIdentifierProviderIT extends AbstractIdentifierProvi
 
     @Test
     public void testCollectionHandleMetadata() {
-        registerProvider(VersionedHandleIdentifierProvider.class);
-
+        context.turnOffAuthorisationSystem();
         Community testCommunity = CommunityBuilder.createCommunity(context)
                                                   .withName("Test community")
                                                   .build();
@@ -88,6 +93,7 @@ public class VersionedHandleIdentifierProviderIT extends AbstractIdentifierProvi
         Collection testCollection = CollectionBuilder.createCollection(context, testCommunity)
                                                      .withName("Test Collection")
                                                      .build();
+        context.restoreAuthSystemState();
 
         List<MetadataValue> metadata = ContentServiceFactory.getInstance().getDSpaceObjectService(testCollection)
                                                             .getMetadata(testCollection, "dc", "identifier", "uri",
@@ -99,11 +105,11 @@ public class VersionedHandleIdentifierProviderIT extends AbstractIdentifierProvi
 
     @Test
     public void testCommunityHandleMetadata() {
-        registerProvider(VersionedHandleIdentifierProvider.class);
-
+        context.turnOffAuthorisationSystem();
         Community testCommunity = CommunityBuilder.createCommunity(context)
                                                   .withName("Test community")
                                                   .build();
+        context.restoreAuthSystemState();
 
         List<MetadataValue> metadata = ContentServiceFactory.getInstance().getDSpaceObjectService(testCommunity)
                                                             .getMetadata(testCommunity, "dc", "identifier", "uri",

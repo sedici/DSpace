@@ -57,6 +57,18 @@
         </xsl:call-template>
     </xsl:template>
 
+    <xsl:template match="/doc:metadata/doc:element/doc:element/doc:field[@name='value']">
+        <xsl:call-template name="dimfield">
+            <xsl:with-param name="mdschema" select="../../@name"/>
+            <xsl:with-param name="element" select="../@name"/>
+            <xsl:with-param name="qualifier" />
+            <xsl:with-param name="language" />
+            <xsl:with-param name="authority" />
+            <xsl:with-param name="confidence" />
+            <xsl:with-param name="value" select="text()"/>
+        </xsl:call-template>
+    </xsl:template>
+
     <xsl:template name="dimfield">
         <xsl:param name="mdschema"/>
         <xsl:param name="element"/>

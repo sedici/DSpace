@@ -17,9 +17,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
@@ -420,8 +420,8 @@ public class Email {
         body = writer.toString();
 
         // Set some message header fields
-        Date date = new Date();
-        message.setSentDate(date);
+        Instant date = Instant.now();
+        message.setSentDate(java.util.Date.from(date));
         message.setFrom(new InternetAddress(from));
 
         for (String headerName : templateHeaders) {

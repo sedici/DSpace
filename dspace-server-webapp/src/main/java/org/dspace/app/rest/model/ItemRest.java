@@ -7,7 +7,7 @@
  */
 package org.dspace.app.rest.model;
 
-import java.util.Date;
+import java.time.Instant;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -25,7 +25,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
     @LinkRest(name = ItemRest.RELATIONSHIPS, method = "getRelationships"),
     @LinkRest(name = ItemRest.VERSION, method = "getItemVersion"),
     @LinkRest(name = ItemRest.TEMPLATE_ITEM_OF, method = "getTemplateItemOf"),
-    @LinkRest(name = ItemRest.THUMBNAIL, method = "getThumbnail")
+    @LinkRest(name = ItemRest.THUMBNAIL, method = "getThumbnail"),
+    @LinkRest(name = ItemRest.SUBMITTER, method = "getItemSubmitter")
 })
 public class ItemRest extends DSpaceObjectRest {
     public static final String NAME = "item";
@@ -42,10 +43,12 @@ public class ItemRest extends DSpaceObjectRest {
     public static final String TEMPLATE_ITEM_OF = "templateItemOf";
     public static final String THUMBNAIL = "thumbnail";
 
+    public static final String SUBMITTER = "submitter";
+
     private boolean inArchive = false;
     private boolean discoverable = false;
     private boolean withdrawn = false;
-    private Date lastModified = new Date();
+    private Instant lastModified = Instant.now();
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String entityType = null;
 
@@ -89,11 +92,11 @@ public class ItemRest extends DSpaceObjectRest {
         this.withdrawn = withdrawn;
     }
 
-    public Date getLastModified() {
+    public Instant getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Date lastModified) {
+    public void setLastModified(Instant lastModified) {
         this.lastModified = lastModified;
     }
 
