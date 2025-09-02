@@ -4,7 +4,7 @@ version: "3.7"
 #    name: ${DOCKER_EXTERNAL_NETWORK_NAME}
 services:
   dspacedb:
-    image: postgres:11-alpine
+    image: postgres:17-alpine
     environment:
       POSTGRES_DB: "dspace"
       POSTGRES_USER: dspace
@@ -15,7 +15,7 @@ services:
     image: dspace:dspace_${COMPOSE_PROJECT_NAME}_latest
     build:
       context: ./
-      dockerfile: Dockerfile.cic
+      dockerfile: Dockerfile.sedici
     command: start
     environment:
       CATALINA_OPTS: "-Xmx1024m -Xms512m"
@@ -33,7 +33,14 @@ services:
     depends_on:
       - dspacedb
   dspacesolr:
-    image: solr:8.11-slim
+    image: "${DOCKER_REGISTRY:-docker.io}/${DOCKER_OWNER:-dspace}/dspace-solr:${DSPACE_VER:-dspace-9_x}"
+    build:
+      context: ../dspace/src/main/docker/dspace-solr/
+      # Provide path to Solr configs necessary to build Docker image
+      additional_contexts:
+        solrconfigs: ../dspace/solr/
+      args:
+        SOLR_VERSION: "${SOLR_VER:-9.8}"
     ports:
     - published: 8983
       target: 8983
@@ -50,6 +57,9 @@ services:
     - ../dspace/solr/suggestion:/opt/solr/server/solr/configsets/suggestion
     # Keep Solr data directory between reboots
     - solr_data:/var/solr/data
+    # NOTE: We are not running Solr as "root", but we need root permissions to copy our cores to the mounted
+    # /var/solr/data directory. Then we start Solr as the "solr" user.
+    user: root
     # Initialize all DSpace Solr cores using the mounted local configsets (see above), then start Solr
     entrypoint:
     - /bin/bash
@@ -62,7 +72,8 @@ services:
       precreate-core statistics /opt/solr/server/solr/configsets/statistics
       precreate-core qaevent /opt/solr/server/solr/configsets/qaevent
       precreate-core suggestion /opt/solr/server/solr/configsets/suggestion
-      exec solr -f
+      chown -R solr:solr /var/solr
+      runuser -u solr -- solr-foreground
 volumes:
   assetstore:
   solr_data:

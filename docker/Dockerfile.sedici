@@ -1,17 +1,17 @@
 # NAME:     arieljlira/dspace
-FROM tomcat:10-jdk17
+FROM tomcat:10-jdk21
 
-LABEL maintainer "alira@sedici.unlp.edu.ar"
+LABEL maintainer="alira@sedici.unlp.edu.ar"
 
 # DEBIAN_FRONTEND can be set during build but not in ENV (https://github.com/moby/moby/issues/4032)
 ARG DEBIAN_FRONTEND=noninteractive
 
 # TODO revisar si estos ENVs de postgres tienen que estar en el dockerfile o no
-ENV POSTGRES_DB_HOST "dspacedb"
-ENV POSTGRES_DB_PORT "5432"
-ENV POSTGRES_DB_NAME "dspace"
-ENV POSTGRES_DB_USER "dspace"
-ENV POSTGRES_DB_PASS "dspace"
+ENV POSTGRES_DB_HOST="dspacedb"
+ENV POSTGRES_DB_PORT="5432"
+ENV POSTGRES_DB_NAME="dspace"
+ENV POSTGRES_DB_USER="dspace"
+ENV POSTGRES_DB_PASS="dspace"
 
 ENV DSPACE_WEBAPPS="api oai rest rdf server-webapp services sword swordv2"
 ENV DSPACE_ROOT_WEBAPP=""
@@ -21,7 +21,7 @@ ENV DSPACE_BASE=/dspace
 ENV PATH=${CATALINA_HOME}/bin:${DSPACE_BASE}/install/bin:$PATH \
 	CATALINA_OPTS="-Xmx512M -Dfile.encoding=UTF-8"
 
-ENV BOOTSTRAP_DUMP "${DSPACE_BASE}/bootstrap-dump.sql"
+ENV BOOTSTRAP_DUMP="${DSPACE_BASE}/bootstrap-dump.sql"
 
 #workaround for slim issue https://github.com/debuerreotype/debuerreotype/issues/10
 #workaround for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=866729
@@ -31,7 +31,7 @@ RUN apt-get update && apt-get -y upgrade
 RUN apt-get install -y --no-install-recommends  git ant postgresql-client
 RUN apt-get install -y --no-install-recommends	procps curl sudo gpg
 
-ENV MAVEN_VERSION 3.8.8
+ENV MAVEN_VERSION=3.8.8
 RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
     && mv /usr/share/apache-maven-$MAVEN_VERSION /usr/share/maven \
     && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
