@@ -56,13 +56,14 @@ public class SolrLoggerUsageEventListener extends AbstractUsageEventListener {
                                                    currentUser, ue.getReferrer());
                     }
                 } else if (UsageEvent.Action.SEARCH == ue.getAction()) {
-                    UsageSearchEvent usageSearchEvent = (UsageSearchEvent) ue;
-                    List<String> queries = new ArrayList<>();
-                    queries.add(usageSearchEvent.getQuery());
-                    solrLoggerService.postSearch(usageSearchEvent.getObject(), usageSearchEvent.getRequest(),
-                                    currentUser, queries, usageSearchEvent.getPage().getSize(),
-                                    usageSearchEvent.getSort().getBy(), usageSearchEvent.getSort().getOrder(),
-                                    usageSearchEvent.getPage().getNumber(), usageSearchEvent.getScope());
+                    //Caso comentado para no loguear búsquedas
+                    //UsageSearchEvent usageSearchEvent = (UsageSearchEvent) ue;
+                    //List<String> queries = new ArrayList<>();
+                    //queries.add(usageSearchEvent.getQuery());
+                    //solrLoggerService.postSearch(usageSearchEvent.getObject(), usageSearchEvent.getRequest(),
+                    //                currentUser, queries, usageSearchEvent.getPage().getSize(),
+                    //                usageSearchEvent.getSort().getBy(), usageSearchEvent.getSort().getOrder(),
+                    //                usageSearchEvent.getPage().getNumber(), usageSearchEvent.getScope());
                 } else if (UsageEvent.Action.WORKFLOW == ue.getAction()) {
                     UsageWorkflowEvent usageWorkflowEvent = (UsageWorkflowEvent) ue;
 
