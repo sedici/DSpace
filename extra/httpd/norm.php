@@ -58,12 +58,86 @@ function special_htmlentities ($utf2html_string)
 $remove_whitespaces = empty($_POST['remove_whitespaces']);
 $remove_enters = empty($_POST['remove_enters']);
 $remove_multiple_enters = empty($_POST['remove_multiple_enters']);
+$add_accents = empty($_POST['add_accents']);
+
+function add_accents_to_text($text) {
+    $text = preg_replace_callback(
+        '/\s*[˜´¨\x{00B4}]\s*(?<!\n)([aeiouAEIOUnN])/u',
+        function($matches) {
+            $accents = [
+                'a' => 'á', 'e' => 'é', 'i' => 'í', 'o' => 'ó', 'u' => 'ú',
+                'A' => 'Á', 'E' => 'É', 'I' => 'Í', 'O' => 'Ó', 'U' => 'Ú',
+                'n' => 'ñ', 'N' => 'Ñ'
+            ];
+            $result = $accents[$matches[1]] ?? $matches[1]; 
+            return $result;
+        },
+        $text   
+    );
+
+    // Eliminar ´ que NO están seguidos de salto de línea
+    $text = preg_replace("/\s*´(?![\n])/", "", $text);
+    // Manejar ´ al final de línea (sin espacios intermedios)
+    $text = preg_replace("/´\s*\n\s*/", " ", $text);
+    // Manejar ´ seguido de espacios/tabs y luego salto de línea
+    $text = preg_replace("/´[ \t]+\n\s*/", " ", $text);
+
+    
+
+    // Este simbolo raro parece una i pero no lo es ı
+    $text = str_replace('ı', 'í', $text);
+
+    // Comillas inglesas
+    $text = str_replace('“', '"', $text);
+
+    // Elimina el caracter ~ que a veces al final de las lineas donde hay palabras con ñ
+    $text = trim(preg_replace("/\s*[˜]\s*/", "", $text));
+
+    // Elimina guiones y ´ al final de la linea, pero sin dejar  espacio extra
+    //$text2 = preg_replace("/[\s\-´]+$/m", "", $text2);
+
+    // Reemplaza diéresis mal puestas
+    $text = preg_replace("/¨(u)/i", "ü", $text);
+
+    //Maneja espacios opcionales alrededor del acento, ejemplo: est ´ e el aire = esté el aire
+    $text = preg_replace('/\s*[´¨]\n([aeiouAEIOU])/u', "Alo", $text);
+
+    $text = preg_replace_callback(
+    '/\s*[˜´¨\x{00B4}]\s*(?<!\n)([aeiouAEIOUnN])/u',
+        function($matches) {
+            $accents = [
+                'a' => 'á', 'e' => 'é', 'i' => 'í', 'o' => 'ó', 'u' => 'ú',
+                'A' => 'Á', 'E' => 'É', 'I' => 'Í', 'O' => 'Ó', 'U' => 'Ú',
+                'n' => 'ñ', 'N' => 'Ñ'
+            ];
+            $result = $accents[$matches[1]] ?? $matches[1]; // Return unaccented character if no match
+            return $result;
+        },
+        $text
+    );
+
+    // Eliminar ´ que NO están seguidos de salto de línea
+    $text = preg_replace("/\s*´(?![\n])/", "", $text);
+    // Manejar ´ al final de línea (sin espacios intermedios)
+    $text = preg_replace("/´\s*\n\s*/", " ", $text);
+    // Manejar ´ seguido de espacios/tabs y luego salto de línea
+    $text = preg_replace("/´[ \t]+\n\s*/", " ", $text);
+
+    return $text;
+}
 
 if (isset($_POST['text'])){
 	$text = $_POST['text'];
-//	$text2 = htmlspecialchars(special_htmlentities($text),ENT_NOQUOTES);
+
+ 	$text2 = htmlspecialchars(special_htmlentities($text),ENT_NOQUOTES);
 	$text2 = htmlspecialchars(htmlspecialchars($text,ENT_NOQUOTES));
 
+    if ($add_accents)
+        // Casos de acregar tilde:
+        // 1: tíldes o diéresis al lado de la letra correspondiente. Ejemplo: canci´ón = canción, ping¨uino= pingüino
+        // 2: tilde o virgulilla al final de una linea, que no se conoce a que palabra pertenece. Ejemplo: La cancion mas bonita es la del manana ´ ~ = La canción más bonita es la del mañana
+        // 3: tilde al final de una linea con un salto de linea que no debería estar. Ejemplo: de la temperatura para ´ /n poder evapotranspirar. = de la temperatura para poder evapotranspirar.
+        $text2 = add_accents_to_text($text2);
 	if ($remove_multiple_enters)
 		$text2 = preg_replace("/[\r\n]+/", "\n", $text2);
 	if ($remove_enters)
@@ -89,6 +163,7 @@ if (isset($_POST['text'])){
 	<br/>
 	<textarea name="text" cols="100" rows="15"><?php echo $text?></textarea>
 	<br/>
+    <input type="checkbox" <?php if (!$add_accents) echo 'checked="checked"';?> value="1" name="add_accents"/> NO! Solucionar tildes
 	<input type="checkbox" <?php if (!$remove_whitespaces) echo 'checked="checked"';?> value="1" name="remove_whitespaces"/> No quitar espacios multiples
 	<input type="checkbox" <?php if (!$remove_enters) echo 'checked="checked"';?> value="1" name="remove_enters"/> No quitar saltos de linea
 	<input type="checkbox" <?php if (!$remove_multiple_enters) echo 'checked="checked"';?> value="1" name="remove_multiple_enters"/> No quitar saltos de linea multiples
