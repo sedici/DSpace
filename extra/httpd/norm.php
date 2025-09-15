@@ -62,7 +62,7 @@ $add_accents = empty($_POST['add_accents']);
 
 function add_accents_to_text($text) {
     $text = preg_replace_callback(
-        '/\s*[˜´¨\x{00B4}]\s*(?<!\n)([aeiouAEIOUnN])/u',
+        '/\s*[˜´\x{00B4}]\s*(?<!\n)([aeiouAEIOUnN])/u',
         function($matches) {
             $accents = [
                 'a' => 'á', 'e' => 'é', 'i' => 'í', 'o' => 'ó', 'u' => 'ú',
@@ -94,7 +94,14 @@ function add_accents_to_text($text) {
     $text = trim(preg_replace("/\s*[˜]\s*/", "", $text));
 
     // Reemplaza diéresis mal puestas
-    $text = preg_replace("/¨(u)/i", "ü", $text);
+    $text = preg_replace_callback("/¨([uU])/i", function($matches) {
+            $accents = [
+                'u' => 'ü','U' => 'Ü'
+            ];
+            $result = $accents[$matches[1]] ?? $matches[1]; 
+            return $result;
+    }, $text);
+
     
     return $text;
 }
