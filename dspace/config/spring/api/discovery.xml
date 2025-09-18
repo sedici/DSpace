@@ -273,6 +273,7 @@
         <property name="sidebarFacets">
             <list>
                 <ref bean="searchFilterType" />
+                <ref bean="searchFilterSubType" />
                 <ref bean="searchFilterIssued" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
@@ -290,6 +291,7 @@
                 <ref bean="searchFilterPersona" />
                 <ref bean="searchFilterInstitucion" />
                 <ref bean="searchFilterType" />
+                <ref bean="searchFilterSubType" />
                 <ref bean="searchFilterKeywords" />
             </list>
         </property>
@@ -874,6 +876,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
+                <ref bean="searchFilterSubType" />
                 <ref bean="searchFilterIssued" />
             </list>
         </property>
@@ -882,6 +885,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
+                <ref bean="searchFilterSubType" />
                 <ref bean="searchFilterIssued" />
             </list>
         </property>
@@ -950,6 +954,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
+                <ref bean="searchFilterSubType" />
                 <ref bean="searchFilterIssued" />
             </list>
         </property>
@@ -958,6 +963,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
+                <ref bean="searchFilterSubType" />
                 <ref bean="searchFilterIssued" />
             </list>
         </property>
@@ -1025,6 +1031,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
+                <ref bean="searchFilterSubType" />
                 <ref bean="searchFilterIssued" />
                 <ref bean="searchFilterCollection" />
                 <ref bean="searchFilterSubmitter" />
@@ -1035,6 +1042,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
+                <ref bean="searchFilterSubType" />
                 <ref bean="searchFilterIssued" />
                 <ref bean="searchFilterCollection" />
                 <ref bean="searchFilterSubmitter" />
@@ -1103,6 +1111,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
+                <ref bean="searchFilterSubType" />
                 <ref bean="searchFilterIssued" />
                 <ref bean="searchFilterSubmitter" />
             </list>
@@ -1112,6 +1121,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
+                <ref bean="searchFilterSubType" />
                 <ref bean="searchFilterIssued" />
                 <ref bean="searchFilterSubmitter" />
             </list>
@@ -1176,6 +1186,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
+                <ref bean="searchFilterSubType" />
                 <ref bean="searchFilterIssued" />
                 <ref bean="searchFilterSubmitter" />
                 <ref bean="searchFilterSupervision" />
@@ -1186,6 +1197,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
+                <ref bean="searchFilterSubType" />
                 <ref bean="searchFilterIssued" />
                 <ref bean="searchFilterSubmitter" />
                 <ref bean="searchFilterSupervision" />
@@ -2809,6 +2821,15 @@
 
     <bean id="searchFilterType" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
         <property name="indexFieldName" value="itemtype" />
+        <property name="metadataFields">
+            <list>
+                <value>dc.type</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="searchFilterSubType" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="itemsubtype" />
         <property name="metadataFields">
             <list>
                 <value>sedici.subtype</value>
