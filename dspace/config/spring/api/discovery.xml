@@ -2709,7 +2709,7 @@
                 <value>sedici.creator.interprete</value>
             </list>
         </property>
-        <property name="facetLimit" value="5"/>
+        <property name="facetLimit" value="8"/>
         <property name="sortOrderSidebar" value="COUNT"/>
         <property name="sortOrderFilterPage" value="COUNT"/>
         <property name="isOpenByDefault" value="true"/>
