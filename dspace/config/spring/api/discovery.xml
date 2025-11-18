@@ -2826,6 +2826,7 @@
                 <value>dc.type</value>
             </list>
         </property>
+        <property name="isOpenByDefault" value="true"/>
     </bean>
 
     <bean id="searchFilterSubType" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
@@ -3526,6 +3527,7 @@
                 <!-- Se deja vacío porque es un campo generado por el sistema -->
             </list>
         </property>
+        <property name="isOpenByDefault" value="true"/>
     </bean>
 
     <!--Sort properties-->
