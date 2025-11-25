@@ -233,7 +233,7 @@
 					<repeatable>true</repeatable>
 					<label>Autor</label>
 					<input-type>onebox</input-type>
-					<hint>Autores de la obra</hint>
+					<hint>Autor/es de la obra; ingrese primero el apellido y luego el nombre. En caso de no figurar en la base de datos, un administrador lo agregará</hint>
 					<required>Debe indicarse el/los autores de la obra</required>
 					<type-bind>Articulo,Tesis,Libro,Objeto de aprendizaje,Objeto de conferencia,Documento institucional,Imagen fija,Imagen en movimiento,Audio,Publicacion seriada,Conjunto de datos,Proyecto</type-bind>
 				</field>
@@ -246,7 +246,7 @@
 					<repeatable>true</repeatable>
 					<label>Autor</label>
 					<input-type>onebox</input-type>
-                    <hint>Autores de la obra</hint>
+                    <hint>Autor/es de la obra; ingrese primero el apellido y luego el nombre. En caso de no figurar en la base de datos, un administrador lo agregará</hint>
 					<hint>Etnia o persona considerado como creador del objeto</hint>
 					<type-bind>Objeto Fisico</type-bind>
 				</field>
@@ -261,7 +261,7 @@
 					<repeatable>true</repeatable>
 					<label>Autor Institucional</label>
 					<input-type>onebox</input-type>
-					<hint>Institución,empresa u organización creadora del recurso</hint>
+					<hint>Institución, empresa u organización creadora de la obra</hint>
 					<visibility>workflow</visibility>
 				</field>
             </row>
@@ -302,7 +302,7 @@
 					<repeatable>true</repeatable>
 					<label>Título alternativo</label>
 					<input-type>onebox</input-type>
-					<hint>Otros títulos con los que se conoce la obra, traducciones del título, etc. Si el título alternativo incluye un subtítulo, éste debe indicarse usando "::" (ej: titulo alternativo :: subtitulo)</hint>
+					<hint>Traducciones del título de la obra a otros idiomas, si los tuviera</hint>
 					<visibility>workflow</visibility>
 					<language value-pairs-name="common_iso_languages">true</language>
 				</field>
@@ -520,7 +520,7 @@
 					<label>Entidad de origen</label>
 					<input-type>onebox</input-type>
 					<repeatable>true</repeatable>
-					<hint>Institución donde el documento fue creado</hint>
+					<hint>Institución donde la obra fue creada</hint>
 					<required>Debe indicar la entidad donde el documento fue creado</required>
 				</field>
             </row>
@@ -564,7 +564,7 @@
 					<repeatable>true</repeatable>
 					<label>Localización electrónica</label>
 					<input-type>onebox</input-type>
-					<hint>URL de acceso al recurso</hint>
+					<hint>URL de acceso a la obra</hint>
 					<visibility>workflow</visibility>
 				</field>
             </row>
@@ -627,7 +627,7 @@
 					<repeatable>true</repeatable>
 					<label>ISSN</label>
 					<input-type>onebox</input-type>
-					<hint>ISSN de la revista en la que el artículo fué publicado</hint>
+					<hint>ISSN de la publicación</hint>
 					<type-bind>Libro,Articulo,Objeto de conferencia,Publicacion seriada</type-bind>
 				</field>
             </row>
@@ -655,7 +655,7 @@
 					<repeatable>true</repeatable>
 					<label>ISBN</label>
 					<input-type>onebox</input-type>
-					<hint>El código ISBN correspondiente al libro</hint>
+					<hint>ISBN del libro</hint>
 					<required>Debe indicar el código ISBN al libro</required>
 					<type-bind>Libro</type-bind>
 				</field>
@@ -670,7 +670,7 @@
 					<repeatable>true</repeatable>
 					<label>Otros identificadores</label>
 					<input-type>onebox</input-type>
-					<hint>Identificadores del recurso, como ser DOI (https://doi.org/12.3456/nnnnn), handle (http://hdl.handle.net/12345/6789) u otros identificadores internos como ser números de expediente, etc. Indicar códigos con letras, números, dos puntos y guiones SIN espacios.</hint>
+					<hint> Identificadores persistentes de la obra, como DOI (https://doi.org/12.3456/nnnnn), handle (http://hdl.handle.net/12345/6789) u otros. Incluye identificadores internos como números de expediente, etc. Indicar códigos con letras, números, dos puntos y guiones SIN espacios.</hint>
 				</field>
             </row>
 
@@ -695,7 +695,7 @@
 					<dc-qualifier>journalTitle</dc-qualifier>
 					<label>Título de la serie</label>
 					<input-type>onebox</input-type>
-					<hint>Título de la serie en la que el documento fué publicado</hint>
+					<hint>Nombre de la publicación donde se incluye la obra</hint>
 					<type-bind>Articulo,Publicacion seriada</type-bind>
 				</field>
             </row>
@@ -708,7 +708,7 @@
 					<dc-qualifier>journalVolumeAndIssue</dc-qualifier>
 					<label>Volúmen y número de la serie</label>
 					<input-type>onebox</input-type>
-					<hint>Volúmen y número de la serie en la que el documento fué publicado</hint>
+					<hint>Volumen y número de la publicación</hint>
 					<type-bind>Articulo,Publicacion seriada</type-bind>
 				</field>
             </row>
@@ -720,7 +720,7 @@
 					<dc-qualifier>ispartof</dc-qualifier>
 					<label>Titulo de la serie o colección</label>
 					<input-type>onebox</input-type>
-					<hint>Titulo y número de la serie o colección en la que el libro fué publicado.</hint>
+					<hint>Nombre de la colección y número si lo tuviera en la que el libro está incluido</hint>
 					<type-bind>Libro</type-bind>
 				</field>
             </row>
@@ -733,7 +733,7 @@
 					<dc-qualifier>peerReview</dc-qualifier>
 					<label>Evaluación</label>
 					<input-type value-pairs-name="common_evaluations">dropdown</input-type>
-					<hint>Tipo de evaluación a la que el recurso fue sometido</hint>
+					<hint>Indique si la obra fue sometida a evaluación por pares o no</hint>
 					<type-bind>Articulo,Objeto de conferencia,Publicacion seriada,Proyecto</type-bind>
 					<visibility>workflow</visibility>
 				</field>
@@ -761,7 +761,7 @@
 					<dc-qualifier>event</dc-qualifier>
 					<label>Nombre del evento</label>
 					<input-type>textarea</input-type>
-					<hint>Nombre del congreso o conferencia en el que este objeto fue presentado</hint>
+					<hint>Nombre del congreso o conferencia en el que esta obra fue presentada</hint>
 					<type-bind>Objeto de conferencia</type-bind>
 					<required>Debe indicar el nombre del evento donde el objeto fue presentado</required>
 				</field>
@@ -775,7 +775,7 @@
 					<dc-qualifier>event</dc-qualifier>
 					<label>Nombre del evento</label>
 					<input-type>onebox</input-type>
-					<hint>Nombre del congreso o conferencia en el que este documento fue presentado</hint>
+					<hint>Nombre del congreso o conferencia en el que esta obra fue presentada</hint>
 					<type-bind>Articulo,Publicacion seriada</type-bind>
 				</field>
             </row>
@@ -861,7 +861,7 @@
 					<repeatable>true</repeatable>
 					<label>Lugar de desarrollo</label>
 					<input-type>onebox</input-type>
-					<hint>Institución en donde se desarrollo el trabajo de tesis</hint>
+					<hint>Institución (laboratorio, centro, instituto) en el que se desarrolló la tesis</hint>
 					<type-bind>Tesis</type-bind>
 					<visibility>workflow</visibility>
 				</field>
@@ -948,7 +948,7 @@
 					<repeatable>true</repeatable>
 					<label>Traductor del artículo</label>
 					<input-type>onebox</input-type>
-					<hint>Traductores del artículo</hint>
+					<hint>Nombre del traductor de la obra</hint>
 					<type-bind>Articulo</type-bind>
 					<visibility>workflow</visibility>
 				</field>
@@ -1046,7 +1046,7 @@
 					<repeatable>true</repeatable>
 					<label>Se relaciona con</label>
 					<input-type>onebox</input-type>
-					<hint>Link a un documento (puede ser externo a SeDiCI) con el cual este documento está relacionado</hint>
+					<hint>Enlace a un sitio web u otro recurso con el que esta obra está relacionada</hint>
 					<visibility>workflow</visibility>
 				</field>
             </row>
@@ -1061,7 +1061,7 @@
 					<label>Otras notas</label>
 					<input-type>textarea</input-type>
 					<hint>
-					   Agregue aquí cualquier otra información que considere pertinente para una mejor catalogación de este item
+					   Agregue aquí cualquier otra información que considere pertinente para una mejor catalogación de esta obra
 				    </hint>
 				    <type-bind>Articulo,Tesis,Libro,Objeto de aprendizaje,Objeto de conferencia,Documento institucional,Imagen fija,Imagen en movimiento,Audio,Publicacion seriada,Conjunto de datos,Proyecto</type-bind>
 				</field>
@@ -1304,7 +1304,7 @@
 					<repeatable>true</repeatable>
 					<label>Autor</label>
 					<input-type>onebox</input-type>
-					<hint>Autores de la obra</hint>
+					<hint>Autor/es de la obra; ingrese primero el apellido y luego el nombre. En caso de no figurar en la base de datos, un administrador lo agregará</hint>
 					<required>Debe indicarse el/los autores de la obra</required>
 					<type-bind>Articulo,Tesis,Libro,Objeto de aprendizaje,Objeto de conferencia,Documento institucional,Imagen fija,Imagen en movimiento,Audio,Publicacion seriada,Conjunto de datos,Proyecto</type-bind>
 				</field>
@@ -1317,7 +1317,7 @@
 					<repeatable>true</repeatable>
 					<label>Autor</label>
 					<input-type>onebox</input-type>
-                    <hint>Autores de la obra</hint>
+                    <hint>Autor/es de la obra; ingrese primero el apellido y luego el nombre. En caso de no figurar en la base de datos, un administrador lo agregará</hint>
 					<hint>Etnia o persona considerado como creador del objeto</hint>
 					<type-bind>Objeto Fisico</type-bind>
 				</field>
@@ -1332,7 +1332,7 @@
 					<repeatable>true</repeatable>
 					<label>Autor Institucional</label>
 					<input-type>onebox</input-type>
-					<hint>Institución,empresa u organización creadora del recurso</hint>
+					<hint>Institución, empresa u organización creadora de la obra</hint>
 				</field>
             </row>
 
@@ -1371,7 +1371,7 @@
 					<repeatable>true</repeatable>
 					<label>Título alternativo</label>
 					<input-type>onebox</input-type>
-					<hint>Otros títulos con los que se conoce la obra, traducciones del título, etc. Si el título alternativo incluye un subtítulo, éste debe indicarse usando "::" (ej: titulo alternativo :: subtitulo)</hint>
+					<hint>Traducciones del título de la obra a otros idiomas, si los tuviera</hint>
 					<language value-pairs-name="common_iso_languages">true</language>
 				</field>
             </row>
@@ -1581,7 +1581,7 @@
 					<label>Entidad de origen</label>
 					<input-type>onebox</input-type>
 					<repeatable>true</repeatable>
-					<hint>Institución donde el documento fue creado</hint>
+					<hint>Institución donde la obra fue creada</hint>
 					<required>Debe indicar la entidad donde el documento fue creado</required>
 				</field>
             </row>
@@ -1625,7 +1625,7 @@
 					<repeatable>true</repeatable>
 					<label>Localización electrónica</label>
 					<input-type>onebox</input-type>
-					<hint>URL de acceso al recurso</hint>
+					<hint>URL de acceso a la obra</hint>
 				</field>
             </row>
         </form>
@@ -1684,7 +1684,7 @@
 					<repeatable>true</repeatable>
 					<label>ISSN</label>
 					<input-type>onebox</input-type>
-					<hint>ISSN de la revista en la que el artículo fué publicado</hint>
+					<hint>ISSN de la publicación</hint>
 					<type-bind>Libro,Articulo,Objeto de conferencia,Publicacion seriada</type-bind>
 				</field>
             </row>
@@ -1712,7 +1712,7 @@
 					<repeatable>true</repeatable>
 					<label>ISBN</label>
 					<input-type>onebox</input-type>
-					<hint>El código ISBN correspondiente al libro</hint>
+					<hint>ISBN del libro</hint>
 					<required>Debe indicar el código ISBN al libro</required>
 					<type-bind>Libro</type-bind>
 				</field>
@@ -1727,7 +1727,7 @@
 					<repeatable>true</repeatable>
 					<label>Otros identificadores</label>
 					<input-type>onebox</input-type>
-					<hint>Identificadores del recurso, como ser DOI (https://doi.org/12.3456/nnnnn), handle (http://hdl.handle.net/12345/6789) u otros identificadores internos como ser números de expediente, etc. Indicar códigos con letras, números, dos puntos y guiones SIN espacios.</hint>
+					<hint> Identificadores persistentes de la obra, como DOI (https://doi.org/12.3456/nnnnn), handle (http://hdl.handle.net/12345/6789) u otros. Incluye identificadores internos como números de expediente, etc. Indicar códigos con letras, números, dos puntos y guiones SIN espacios.</hint>
 				</field>
             </row>
 
@@ -1752,7 +1752,7 @@
 					<dc-qualifier>journalTitle</dc-qualifier>
 					<label>Título de la serie</label>
 					<input-type>onebox</input-type>
-					<hint>Título de la serie en la que el documento fué publicado</hint>
+					<hint>Nombre de la publicación donde se incluye la obra</hint>
 					<type-bind>Articulo,Publicacion seriada</type-bind>
 				</field>
             </row>
@@ -1765,7 +1765,7 @@
 					<dc-qualifier>journalVolumeAndIssue</dc-qualifier>
 					<label>Volúmen y número de la serie</label>
 					<input-type>onebox</input-type>
-					<hint>Volúmen y número de la serie en la que el documento fué publicado</hint>
+					<hint>Volumen y número de la publicación</hint>
 					<type-bind>Articulo,Publicacion seriada</type-bind>
 				</field>
             </row>
@@ -1777,7 +1777,7 @@
 					<dc-qualifier>ispartof</dc-qualifier>
 					<label>Titulo de la serie o colección</label>
 					<input-type>onebox</input-type>
-					<hint>Titulo y número de la serie o colección en la que el libro fué publicado.</hint>
+					<hint>Nombre de la colección y número si lo tuviera en la que el libro está incluido</hint>
 					<type-bind>Libro</type-bind>
 				</field>
             </row>
@@ -1790,7 +1790,7 @@
 					<dc-qualifier>peerReview</dc-qualifier>
 					<label>Evaluación</label>
 					<input-type value-pairs-name="common_evaluations">dropdown</input-type>
-					<hint>Tipo de evaluación a la que el recurso fue sometido</hint>
+					<hint>Indique si la obra fue sometida a evaluación por pares o no</hint>
 					<type-bind>Articulo,Objeto de conferencia,Publicacion seriada,Proyecto</type-bind>
 				</field>
             </row>
@@ -1817,7 +1817,7 @@
 					<dc-qualifier>event</dc-qualifier>
 					<label>Nombre del evento</label>
 					<input-type>textarea</input-type>
-					<hint>Nombre del congreso o conferencia en el que este objeto fue presentado</hint>
+					<hint>Nombre del congreso o conferencia en el que esta obra fue presentada</hint>
 					<type-bind>Objeto de conferencia</type-bind>
 					<required>Debe indicar el nombre del evento donde el objeto fue presentado</required>
 				</field>
@@ -1831,7 +1831,7 @@
 					<dc-qualifier>event</dc-qualifier>
 					<label>Nombre del evento</label>
 					<input-type>onebox</input-type>
-					<hint>Nombre del congreso o conferencia en el que este documento fue presentado</hint>
+					<hint>Nombre del congreso o conferencia en el que esta obra fue presentada</hint>
 					<type-bind>Articulo,Publicacion seriada</type-bind>
 				</field>
             </row>
@@ -1914,7 +1914,7 @@
 					<repeatable>true</repeatable>
 					<label>Lugar de desarrollo</label>
 					<input-type>onebox</input-type>
-					<hint>Institución en donde se desarrollo el trabajo de tesis</hint>
+					<hint>Institución (laboratorio, centro, instituto) en el que se desarrolló la tesis</hint>
 					<type-bind>Tesis</type-bind>
 				</field>
             </row>
@@ -1997,7 +1997,7 @@
 					<repeatable>true</repeatable>
 					<label>Traductor del artículo</label>
 					<input-type>onebox</input-type>
-					<hint>Traductores del artículo</hint>
+					<hint>Nombre del traductor de la obra</hint>
 					<type-bind>Articulo</type-bind>
 				</field>
             </row>
@@ -2088,7 +2088,7 @@
 					<repeatable>true</repeatable>
 					<label>Se relaciona con</label>
 					<input-type>onebox</input-type>
-					<hint>Link a un documento (puede ser externo a SeDiCI) con el cual este documento está relacionado</hint>
+					<hint>Enlace a un sitio web u otro recurso con el que esta obra está relacionada</hint>
 				</field>
             </row>
 
@@ -2102,7 +2102,7 @@
 					<label>Otras notas</label>
 					<input-type>textarea</input-type>
 					<hint>
-					   Agregue aquí cualquier otra información que considere pertinente para una mejor catalogación de este item
+					   Agregue aquí cualquier otra información que considere pertinente para una mejor catalogación de esta obra
 				    </hint>
 				    <type-bind>Articulo,Tesis,Libro,Objeto de aprendizaje,Objeto de conferencia,Documento institucional,Imagen fija,Imagen en movimiento,Audio,Publicacion seriada,Conjunto de datos,Proyecto</type-bind>
 				</field>
