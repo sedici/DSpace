@@ -1,0 +1,18 @@
+# E-mail sent to DSpace users when new items appear in collections they are
+# subscribed to
+#
+# Parameters: ${params[0]} is the details of the new collections and items
+# See org.dspace.core.Email for information on the format of this file.
+#
+Subject: SeDiCI - Suscripciones
+Hay nuevos items disponibles en las colecciones a las que usted se suscribió:
+
+${params[0]}
+
+Cordialmente, 
+
+Servicio de Difusión de la Creación Intelectual (https://sedici.unlp.edu.ar)
+Universidad Nacional de La Plata
+Ubicación: 49 y 115 s/n, 1er piso, Departamento de Ciencias Básicas, Facultad de Ingeniería.
+Mapa: https://maps.app.goo.gl/JPvcfR4MmNSsbPoz6
+Tel 0221- 644-7282

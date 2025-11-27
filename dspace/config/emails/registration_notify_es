@@ -1,0 +1,23 @@
+# Registration notification email
+#
+# Parameters: ${params[0]} The name of the DSpace instance
+#             ${params[1]} The URL of the DSpace instance 
+#             ${params[2]} Name:
+#             ${params[3]} Email:
+#             ${params[4]} Registration Date:
+#
+# See org.dspace.core.Email for information on the format of this file.
+#
+Subject: SeDiCI - Notificación de registro
+
+Un nuevo usuario se ha registrado en ${params[0]} de ${params[1]}:
+
+Nombre:                   ${params[2]}
+Email:                  ${params[3]}
+Fecha:                   ${params[4]}
+
+Servicio de Difusión de la Creación Intelectual (https://sedici.unlp.edu.ar)
+Universidad Nacional de La Plata
+Ubicación: 49 y 115 s/n, 1er piso, Departamento de Ciencias Básicas, Facultad de Ingeniería.
+Mapa: https://maps.app.goo.gl/JPvcfR4MmNSsbPoz6
+Tel 0221- 644-7282

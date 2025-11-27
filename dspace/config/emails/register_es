@@ -1,0 +1,23 @@
+# E-mail sent to DSpace users when they register for an account
+#
+# Parameters: ${params[0]} is expanded to a special registration URL
+#
+# See org.dspace.core.Email for information on the format of this file.
+#
+Subject: Repositorio SeDiCI, UNLP - Alta de usuario 
+
+Para completar el proceso de registro en SeDiCI y activar su cuenta, por favor haga click en el siguiente enlace:
+  ${params[0]}
+
+Si lo desea, una vez que haya activado su cuenta, podrá incorporar materiales generados en la UNLP al respositorio SeDiCI desde https://sedici.unlp.edu.ar/mydspace?configuration=workspace
+ 
+Si necesita ayuda con su cuenta, por favor envíe un e-mail a info@sedici.unlp.edu.ar.
+
+Muchas gracias. 
+Cordialmente,
+
+Servicio de Difusión de la Creación Intelectual (https://sedici.unlp.edu.ar)
+Universidad Nacional de La Plata
+Ubicación: 49 y 115 s/n, 1er piso, Departamento de Ciencias Básicas, Facultad de Ingeniería.
+Mapa: https://maps.app.goo.gl/JPvcfR4MmNSsbPoz6
+Tel 0221- 644-7282

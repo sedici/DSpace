@@ -1,0 +1,27 @@
+# Workflow curation task notification email message
+#
+# ${params[0]}  Title of submission
+# ${params[1]}  Name of collection
+# ${params[2]}  Submitter's name
+# ${params[3]}  Name of task operating
+# ${params[4]}  Task result
+# ${params[5]}  Workflow action taken
+#
+Subject: SeDiCI - Reporte de tareas de preservación
+
+Título:         ${params[0]}
+Colección:    ${params[1]}
+Enviado por:  ${params[2]}
+
+La tarea de preservación ${params[3]} ha sido realizada con el 
+siguiente resultado:
+
+${params[4]}
+
+Acción tomada con el envío: ${params[5]}
+
+Servicio de Difusión de la Creación Intelectual (https://sedici.unlp.edu.ar)
+Universidad Nacional de La Plata
+Ubicación: 49 y 115 s/n, 1er piso, Departamento de Ciencias Básicas, Facultad de Ingeniería.
+Mapa: https://maps.app.goo.gl/JPvcfR4MmNSsbPoz6
+Tel 0221- 644-7282

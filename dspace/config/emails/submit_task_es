@@ -1,0 +1,26 @@
+# Workflow task email message
+#
+# ${params[0]}  Title of submission
+# ${params[1]}  Name of collection
+# ${params[2]}  submitter's name
+# ${params[3]}  Description of task
+# ${params[4]}  link to 'my DSpace' page 
+#
+Subject: [Dspace@SeDiCI] Nuevo recurso en ${params[1]}
+
+Un nuevo recurso ha sido depositado en el repositorio:
+
+Título:      ${params[0]}
+Enviado por: ${params[2]}
+Colección:   ${params[1]}
+
+Para tomar esta tarea, visite https://sedici.unlp.edu.ar/mydspace?configuration=workflow
+
+Muchas gracias.
+Cordialmente,
+
+Servicio de Difusión de la Creación Intelectual (https://sedici.unlp.edu.ar)
+Universidad Nacional de La Plata
+Ubicación: 49 y 115 s/n, 1er piso, Departamento de Ciencias Básicas, Facultad de Ingeniería.
+Mapa: https://maps.app.goo.gl/JPvcfR4MmNSsbPoz6
+Tel 0221- 644-7282

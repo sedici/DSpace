@@ -1,0 +1,37 @@
+# Item Archived email message
+#
+# ${params[0]}  Title of submission
+# ${params[1]}  Name of collection
+# ${params[2]}  handle 
+
+Subject: Repositorio SEDICI-UNLP - Su envío fue aprobado y publicado
+
+Estimado usuario:
+
+Por la presente le comunicamos que la obra denominada "${params[0]}" ha sido incorporada y publicada en el Repositorio SEDICI.
+
+A partir de este momento, la obra se encontrará siempre disponible en el repositorio bajo el siguiente enlace:
+   ${params[2]}
+
+Por favor, sírvase utilizarlo toda vez que necesite citar su obra para obtener mayor visibilidad para la misma.
+
+SEDICI es el repositorio institucional de la UNLP y por ello aloja toda la producción generada en el ámbito de nuestra casa de estudios desde su creación. Lo invitamos a explorar el contenido del repositorio y a aportar todos los materiales que considere como ser artículos, tesis de grado y posgrado, ponencias y otros documentos que sean de su autoría o que hayan sido producidos bajo su dirección, como ser eventos, revistas y libros de compilaciones.
+
+Por otra parte, lo invitamos a seguirnos en todas nuestras redes sociales:
+
+Facebook: https://www.facebook.com/sedici.unlp
+
+X: https://x.com/sedici_unlp
+
+Instagram: https://www.instagram.com/sedici_unlp
+
+Estamos a su disposición para lo que necesite. Cualquier inquietud que desee comunicarnos puede escribirnos a info@sedici.unlp.edu.ar.
+
+Muchas gracias por su aporte.
+Cordialmente,
+
+Servicio de Difusión de la Creación Intelectual de la UNLP (https://sedici.unlp.edu.ar)
+Universidad Nacional de La Plata
+Ubicación: 49 y 115 s/n, 1er piso, Edificio ex-Liceo.
+Mapa: https://maps.app.goo.gl/JPvcfR4MmNSsbPoz6
+Tel 0221- 644-7282

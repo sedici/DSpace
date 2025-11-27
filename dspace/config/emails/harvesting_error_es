@@ -1,0 +1,26 @@
+# E-mail sent to designated address when a harvest process fails
+#
+# Parameters: ${params[0]} Collection id
+#             ${params[1]} Date & time
+#             ${params[2]} Status flag
+#             ${params[3]} Exception message
+#             ${params[4]} Exception stack trace
+#
+# See org.dspace.core.Email for information on the format of this file.
+#
+Subject: SeDiCI - Error de cosecha
+La colección ${params[0]} falló en la cosecha:
+
+Fecha: ${params[1]}
+Status: ${params[2]}
+
+${params[3]}
+
+Excepción:
+${params[4]}
+
+Servicio de Difusión de la Creación Intelectual (https://sedici.unlp.edu.ar)
+Universidad Nacional de La Plata
+Ubicación: 49 y 115 s/n, 1er piso, Departamento de Ciencias Básicas, Facultad de Ingeniería.
+Mapa: https://maps.app.goo.gl/JPvcfR4MmNSsbPoz6
+Tel 0221- 644-7282

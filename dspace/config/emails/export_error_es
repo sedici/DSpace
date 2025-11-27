@@ -1,0 +1,22 @@
+# Email sent to DSpace users when they successfully export an item or collection.
+#
+# Parameters: ${params[0]} the export error
+#             ${params[1]} the URL to the feedback page
+#             
+#
+# See org.dspace.core.Email for information on the format of this file.
+#
+Subject: SeDiCI - El ítem de exportación que solicitó no ha sido completado
+El ítem de exportación que usted solicitó no ha sido completado, debido a la siguiente razón:
+
+ ${params[0]}
+
+Para más información, por favor contacte al administrador del sistema:
+ ${params[1]}
+
+
+Servicio de Difusión de la Creación Intelectual (https://sedici.unlp.edu.ar)
+Universidad Nacional de La Plata
+Ubicación: 49 y 115 s/n, 1er piso, Departamento de Ciencias Básicas, Facultad de Ingeniería.
+Mapa: https://maps.app.goo.gl/JPvcfR4MmNSsbPoz6
+Tel 0221- 644-7282
