@@ -1,15 +1,15 @@
-# E-mail sent to designated address when an internal server error occurs
-#
-# Parameters: ${params[0]} DSpace server URL
-#             ${params[1]} Date & time
-#             ${params[2]} Session ID + IP address
-#             ${params[3]} User details
-#             ${params[4]} FieldName
-#             ${params[5]} Offending Key
-#
-# See org.dspace.core.Email for information on the format of this file.
-#
-Subject: [Dspace@SeDiCI] Authority no encontrada para ${params[4]}
+## E-mail sent to designated address when an internal server error occurs
+##
+## Parameters: ${params[0]} DSpace server URL
+##             ${params[1]} Date & time
+##             ${params[2]} Session ID + IP address
+##             ${params[3]} User details
+##             ${params[4]} FieldName
+##             ${params[5]} Offending Key
+##
+## See org.dspace.core.Email for information on the format of this file.
+##
+#set($subject = "[Dspace@SeDiCI] Authority no encontrada para ${params[4]}")
 La clave ${params[5]} no se encuentra en la authority definida para el campo ${params[4]}.
 
 - Fecha: ${params[1]}

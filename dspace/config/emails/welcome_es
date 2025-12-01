@@ -1,0 +1,18 @@
+## E-mail sent to a DSpace user after a new account is registered.
+##
+## See org.dspace.core.Email for information on the format of this file.
+##
+#set($subject = "Bienvenido a SEDICI!")
+Muchas gracias por registrar una cuenta de usuario en SEDICI.
+
+Su nueva cuenta puede ser utilizada inmediatamente para enviar materiales al repositorio o para recibir notificaciones de nuevo contenido que lleguen a las colecciones de su elección.
+
+Para enviar su obra al repositorio, visite la documentacion actualizada de este proceso en https://sedici.gitbook.io/sedici-docs/circuitos-de-deposito
+
+Si necesita asistencia con su cuenta o por cualquier otra consulta, por favor escriba a info@sedici.unlp.edu.ar o verfique si puede encontrar la pregunta y su respuesta en la seccion de preguntas frecuentes en https://sedici.gitbook.io/sedici-docs/preguntas
+
+Servicio de Difusión de la Creación Intelectual de la UNLP (https://sedici.unlp.edu.ar)
+Universidad Nacional de La Plata
+Ubicación: 49 y 115 s/n, 1er piso, Edificio ex-Liceo.
+Mapa: https://maps.app.goo.gl/JPvcfR4MmNSsbPoz6
+Tel 0221- 644-7282

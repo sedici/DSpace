@@ -1,13 +1,13 @@
-# Workflow curation task notification email message
-#
-# ${params[0]}  Title of submission
-# ${params[1]}  Name of collection
-# ${params[2]}  Submitter's name
-# ${params[3]}  Name of task operating
-# ${params[4]}  Task result
-# ${params[5]}  Workflow action taken
-#
-Subject: SeDiCI - Reporte de tareas de preservación
+## Workflow curation task notification email message
+##
+## ${params[0]}  Title of submission
+## ${params[1]}  Name of collection
+## ${params[2]}  Submitter's name
+## ${params[3]}  Name of task operating
+## ${params[4]}  Task result
+## ${params[5]}  Workflow action taken
+##
+#set($subject = "SeDiCI - Reporte de tareas de preservación")
 
 Título:         ${params[0]}
 Colección:    ${params[1]}

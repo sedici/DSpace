@@ -1,12 +1,12 @@
-# Workflow task email message
-#
-# ${params[0]}  Title of submission
-# ${params[1]}  Name of collection
-# ${params[2]}  submitter's name
-# ${params[3]}  Description of task
-# ${params[4]}  link to 'my DSpace' page 
-#
-Subject: [Dspace@SeDiCI] Nuevo recurso en ${params[1]}
+## Workflow task email message
+##
+## ${params[0]}  Title of submission
+## ${params[1]}  Name of collection
+## ${params[2]}  submitter's name
+## ${params[3]}  Description of task
+## ${params[4]}  link to 'my DSpace' page 
+##
+#set($subject = "[Dspace@SeDiCI] Nuevo recurso en ${params[1]}")
 
 Un nuevo recurso ha sido depositado en el repositorio:
 

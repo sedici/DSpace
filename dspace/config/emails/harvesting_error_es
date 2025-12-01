@@ -1,14 +1,14 @@
-# E-mail sent to designated address when a harvest process fails
-#
-# Parameters: ${params[0]} Collection id
-#             ${params[1]} Date & time
-#             ${params[2]} Status flag
-#             ${params[3]} Exception message
-#             ${params[4]} Exception stack trace
-#
-# See org.dspace.core.Email for information on the format of this file.
-#
-Subject: SeDiCI - Error de cosecha
+## E-mail sent to designated address when a harvest process fails
+##
+## Parameters: ${params[0]} Collection id
+##             ${params[1]} Date & time
+##             ${params[2]} Status flag
+##             ${params[3]} Exception message
+##             ${params[4]} Exception stack trace
+##
+## See org.dspace.core.Email for information on the format of this file.
+##
+#set($subject = "SeDiCI - Error de cosecha")
 La colección ${params[0]} falló en la cosecha:
 
 Fecha: ${params[1]}

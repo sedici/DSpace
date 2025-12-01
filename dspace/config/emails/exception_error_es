@@ -1,16 +1,16 @@
-# E-mail sent to designated address when an internal server error occurs
-#
-# Parameters:  ${params[0]} DSpace server URL
-#             ${params[1]} Date & time
-#             ${params[2]} Session ID + IP address
-#             ${params[3]} User details
-#             ${params[4]} URL + HTTP parameters, if any
-#             ${params[5]} Cause
-#             ${params[6]} Exception stack trace
-#
-# See org.dspace.core.Email for information on the format of this file.
-#
-Subject: [Dspace@SeDiCI] Excepción ${params[5]}
+## E-mail sent to designated address when an internal server error occurs
+##
+## Parameters:  ${params[0]} DSpace server URL
+##             ${params[1]} Date & time
+##             ${params[2]} Session ID + IP address
+##             ${params[3]} User details
+##             ${params[4]} URL + HTTP parameters, if any
+##             ${params[5]} Cause
+##             ${params[6]} Exception stack trace
+##
+## See org.dspace.core.Email for information on the format of this file.
+##
+#set($subject = "[Dspace@SeDiCI] Excepción ${params[5]}")
 * Ruta completa: ${params[0]}${params[4]}
 * Fecha: ${params[1]}
 * Usuario: ${params[3]}

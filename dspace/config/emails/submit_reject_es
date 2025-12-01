@@ -1,11 +1,11 @@
-# Rejection email message
-#
-# ${params[0]}  Title of submission
-# ${params[1]}  Name of collection
-# ${params[2]}  Name of the rejector
-# ${params[3]}  Reason for the rejection
-#
-Subject: Repositorio SeDiCI, UNLP - Su envío no fue aceptado 
+## Rejection email message
+##
+## ${params[0]}  Title of submission
+## ${params[1]}  Name of collection
+## ${params[2]}  Name of the rejector
+## ${params[3]}  Reason for the rejection
+##
+#set($subject = "Repositorio SeDiCI, UNLP - Su envío no fue aceptado")
 
 Estimado usuario, 
 

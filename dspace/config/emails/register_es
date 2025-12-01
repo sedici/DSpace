@@ -1,10 +1,10 @@
-# E-mail sent to DSpace users when they register for an account
-#
-# Parameters: ${params[0]} is expanded to a special registration URL
-#
-# See org.dspace.core.Email for information on the format of this file.
-#
-Subject: Repositorio SeDiCI, UNLP - Alta de usuario 
+## E-mail sent to DSpace users when they register for an account
+##
+## Parameters: ${params[0]} is expanded to a special registration URL
+##
+## See org.dspace.core.Email for information on the format of this file.
+##
+#set($subject = "Repositorio SeDiCI, UNLP - Alta de usuario")
 
 Para completar el proceso de registro en SeDiCI y activar su cuenta, por favor haga click en el siguiente enlace:
   ${params[0]}

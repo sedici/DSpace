@@ -1,10 +1,10 @@
-# Item Archived email message
-#
-# ${params[0]}  Title of submission
-# ${params[1]}  Name of collection
-# ${params[2]}  handle 
+## Item Archived email message
+##
+## ${params[0]}  Title of submission
+## ${params[1]}  Name of collection
+## ${params[2]}  handle 
 
-Subject: Repositorio SEDICI-UNLP - Su envío fue aprobado y publicado
+#set($subject = "Repositorio SEDICI-UNLP - Su envío fue aprobado y publicado")
 
 Estimado usuario:
 

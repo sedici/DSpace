@@ -1,11 +1,11 @@
-# Email sent to DSpace users when they successfully export an item or collection.
-#
-# Parameters: ${params[0]} is expanded to a special URL
-#             ${params[1]} configurable time (hours) an export file will be kept
-#
-# See org.dspace.core.Email for information on the format of this file.
-#
-Subject: SeDiCI - Item de exportación solicitado listo para descarga
+## Email sent to DSpace users when they successfully export an item or collection.
+##
+## Parameters: ${params[0]} is expanded to a special URL
+##             ${params[1]} configurable time (hours) an export file will be kept
+##
+## See org.dspace.core.Email for information on the format of this file.
+##
+#set($subject = "SeDiCI - Item de exportación solicitado listo para descarga")
 El item de exportación del repositorio que usted ha solicitado se encuentra listo para su descarga.
 
 Usted puede descargar el archivo comprimido usando el siguiente enlace:

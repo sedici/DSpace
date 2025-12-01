@@ -1,14 +1,14 @@
-# Registration notification email
-#
-# Parameters: ${params[0]} The name of the DSpace instance
-#             ${params[1]} The URL of the DSpace instance 
-#             ${params[2]} Name:
-#             ${params[3]} Email:
-#             ${params[4]} Registration Date:
-#
-# See org.dspace.core.Email for information on the format of this file.
-#
-Subject: SeDiCI - Notificación de registro
+## Registration notification email
+##
+## Parameters: ${params[0]} The name of the DSpace instance
+##             ${params[1]} The URL of the DSpace instance 
+##             ${params[2]} Name:
+##             ${params[3]} Email:
+##             ${params[4]} Registration Date:
+##
+## See org.dspace.core.Email for information on the format of this file.
+##
+#set($subject = "SeDiCI - Notificación de registro")
 
 Un nuevo usuario se ha registrado en ${params[0]} de ${params[1]}:
 

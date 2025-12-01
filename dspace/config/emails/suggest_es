@@ -1,16 +1,16 @@
-# E-mail sent with the information filled out in a suggest form.
-#
-# Parameters: ${params[0]} recipient name
-#             ${params[1]} sender name
-#             ${params[2]} repository name
-#             ${params[3]} item title
-#             ${params[4]} item handle URI
-#             ${params[5]} item local URL - may be used in lieu of {4} if not using handle server
-#             ${params[6]} collection name
-#             ${params[7]} sender message 
-# See org.dspace.core.Email for information on the format of this file.
-#
-Subject: Items de interés en SeDiCI
+## E-mail sent with the information filled out in a suggest form.
+##
+## Parameters: ${params[0]} recipient name
+##             ${params[1]} sender name
+##             ${params[2]} repository name
+##             ${params[3]} item title
+##             ${params[4]} item handle URI
+##             ${params[5]} item local URL - may be used in lieu of {4} if not using handle server
+##             ${params[6]} collection name
+##             ${params[7]} sender message 
+## See org.dspace.core.Email for information on the format of this file.
+##
+#set($subject = "Items de interés en SeDiCI")
 
 Hola ${params[0]}:
 

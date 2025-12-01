@@ -1,10 +1,10 @@
-# E-mail sent to DSpace users when new items appear in collections they are
-# subscribed to
-#
-# Parameters: ${params[0]} is the details of the new collections and items
-# See org.dspace.core.Email for information on the format of this file.
-#
-Subject: SeDiCI - Suscripciones
+## E-mail sent to DSpace users when new items appear in collections they are
+## subscribed to
+##
+## Parameters: ${params[0]} is the details of the new collections and items
+## See org.dspace.core.Email for information on the format of this file.
+##
+#set($subject = "SeDiCI - Suscripciones")
 Hay nuevos items disponibles en las colecciones a las que usted se suscribió:
 
 ${params[0]}
