@@ -58,7 +58,7 @@
 					<dc-element>type</dc-element>
 					<label>Tipo de documento</label>
 					<input-type value-pairs-name="common_types">dropdown</input-type>
-					<hint>Seleccione el Tipo de Documento que desea cargar</hint>
+					<hint>Seleccione el Tipo de Documento que desea enviar. Si se trata de un trabajo de especialización, seleccione "Tesis"</hint>
 					<required>Debe indicar el tipo de documento</required>
 				</field>
             </row>
@@ -273,7 +273,7 @@
 					<dc-element>title</dc-element>
 					<label>Título</label>
 					<input-type>textarea</input-type>
-					<hint>El título principal de la obra </hint>
+					<hint>Ingrese el título principal de la obra</hint>
 					<required>Debe indicar el título principal de la obra</required>
                     <language value-pairs-name="common_iso_languages">true</language>
 				</field>
@@ -582,7 +582,7 @@
 					<repeatable>true</repeatable>
 					<label>Palabras claves</label>
 					<input-type>onebox</input-type>
-					<hint>Descriptores</hint>
+					<hint>Ingrese las palabras clave de la obra</hint>
 				</field>
             </row>
 
@@ -641,7 +641,7 @@
 					<repeatable>true</repeatable>
 					<label>ISBN</label>
 					<input-type>onebox</input-type>
-					<hint>Introduzca aquí el número de ISBN de su obra sólo si ésta ya lo tiene</hint>
+					<hint>Introduzca aquí el número de ISBN de la obra sólo si ésta ya lo tiene</hint>
 					<type-bind>Tesis,Objeto de conferencia,Publicacion seriada</type-bind>
 				</field>
             </row>
@@ -706,7 +706,7 @@
 					<dc-schema>sedici</dc-schema>
 					<dc-element>relation</dc-element>
 					<dc-qualifier>journalVolumeAndIssue</dc-qualifier>
-					<label>Volúmen y número de la serie</label>
+					<label>Volumen y número de la serie</label>
 					<input-type>onebox</input-type>
 					<hint>Volumen y número de la publicación</hint>
 					<type-bind>Articulo,Publicacion seriada</type-bind>
@@ -1137,7 +1137,7 @@
 					<dc-element>type</dc-element>
 					<label>Tipo de documento</label>
 					<input-type value-pairs-name="common_types">dropdown</input-type>
-					<hint>Seleccione el Tipo de Documento que desea cargar</hint>
+					<hint>Seleccione el Tipo de Documento que desea enviar. Si se trata de un trabajo de especialización, seleccione "Tesis"</hint>
 					<required>Debe indicar el tipo de documento</required>
 				</field>
             </row>
@@ -1343,7 +1343,7 @@
 					<dc-element>title</dc-element>
 					<label>Título</label>
 					<input-type>textarea</input-type>
-					<hint>El título principal de la obra </hint>
+					<hint>Ingrese el título principal de la obra</hint>
 					<required>Debe indicar el título principal de la obra</required>
                     <language value-pairs-name="common_iso_languages">true</language>
 				</field>
@@ -1642,7 +1642,7 @@
 					<repeatable>true</repeatable>
 					<label>Palabras claves</label>
 					<input-type>onebox</input-type>
-					<hint>Descriptores</hint>
+					<hint>Ingrese las palabras clave de la obra</hint>
 				</field>
             </row>
 
@@ -1698,7 +1698,7 @@
 					<repeatable>true</repeatable>
 					<label>ISBN</label>
 					<input-type>onebox</input-type>
-					<hint>Introduzca aquí el número de ISBN de su obra sólo si ésta ya lo tiene</hint>
+					<hint>Introduzca aquí el número de ISBN de la obra sólo si ésta ya lo tiene</hint>
 					<type-bind>Tesis,Objeto de conferencia,Publicacion seriada</type-bind>
 				</field>
             </row>
@@ -1763,7 +1763,7 @@
 					<dc-schema>sedici</dc-schema>
 					<dc-element>relation</dc-element>
 					<dc-qualifier>journalVolumeAndIssue</dc-qualifier>
-					<label>Volúmen y número de la serie</label>
+					<label>Volumen y número de la serie</label>
 					<input-type>onebox</input-type>
 					<hint>Volumen y número de la publicación</hint>
 					<type-bind>Articulo,Publicacion seriada</type-bind>
