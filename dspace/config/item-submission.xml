@@ -170,6 +170,11 @@
             <processing-class>org.dspace.app.rest.submit.step.UploadStep</processing-class>
             <type>upload</type>
         </step-definition>
+        <step-definition id="uploadAutoarchivo">
+            <heading>submit.progressbar.upload</heading>
+            <processing-class>org.dspace.app.rest.submit.step.UploadStep</processing-class>
+            <type>upload</type>
+        </step-definition>
         <step-definition id="license">
             <heading>submit.progressbar.license</heading>
             <processing-class>org.dspace.app.rest.submit.step.LicenseStep</processing-class>
@@ -311,7 +316,7 @@
             <!-- <step id="coarnotify"/> -->
 
             <!--Step will be to Upload the item -->
-            <step id="upload"/>
+            <step id="uploadAutoarchivo"/>
 
             <!-- <step id="extractionstep"/> -->
 

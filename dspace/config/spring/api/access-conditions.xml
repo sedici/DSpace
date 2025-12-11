@@ -18,6 +18,18 @@
         </property>
     </bean>
 
+    <bean id="uploadConfigurationAutoarchivo" class="org.dspace.submit.model.RestrictedUploadConfiguration">
+		<property name="name" value="uploadAutoarchivo"/>
+		<property name="metadata" value="bitstream-metadata" />
+        <property name="options">
+            <list>
+                <ref bean="openAccess"/>
+                <ref bean="embargoed" />
+                <ref bean="administrator"/>
+            </list>
+        </property>
+    </bean>
+
     <bean id="openAccess" class="org.dspace.submit.model.AccessConditionOption">
         <property name="groupName" value="Anonymous"/>
         <property name="name" value="openaccess"/>
@@ -55,6 +67,7 @@
         <property name="map">
             <map>
                 <entry key="upload" value-ref="uploadConfigurationDefault" />
+                <entry key="uploadAutoarchivo" value-ref="uploadConfigurationAutoarchivo" />
             </map>
         </property>
     </bean>
