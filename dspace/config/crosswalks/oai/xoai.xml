@@ -205,6 +205,25 @@
 			<Namespace>http://doaj.org/</Namespace>
 			<SchemaLocation>http://doaj.org/static/doaj/doajArticles.xsd</SchemaLocation>
 		</Format>
+        <!-- Metadata format based on the OpenAIRE 4.0 guidelines
+             https://openaire-guidelines-for-literature-repository-managers.readthedocs.io/en/4.0.1/use_of_oai_pmh.html
+        -->
+        <Format id="oaiopenaire">
+            <Prefix>oai_openaire</Prefix>
+            <XSLT>metadataFormats/oai_openaire.xsl</XSLT>
+            <Namespace>http://namespace.openaire.eu/schema/oaire/</Namespace>
+            <SchemaLocation>https://www.openaire.eu/schema/repo-lit/4.0/openaire.xsd</SchemaLocation>
+        </Format>
+        <!-- Metadata format based on the Rioxx Application Profile Version 3.0 Final
+             - https://www.rioxx.net/profiles/v3-0-final
+        -->
+        <Format id="rioxx">
+            <Prefix>rioxx</Prefix>
+            <XSLT>metadataFormats/rioxx.xsl</XSLT>
+            <Namespace>http://www.rioxx.net/schema/v3.0/rioxx/</Namespace>
+            <SchemaLocation>http://www.rioxx.net/schema/v3.0/rioxx/ http://www.rioxx.net/schema/v3.0/rioxx/rioxx.xsd</SchemaLocation>
+            <Filter ref="rioxxFilter"/>
+        </Format>
     </Formats>
 
     <Transformers>

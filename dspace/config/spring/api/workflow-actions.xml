@@ -79,7 +79,6 @@
         <property name="requiresUI" value="true"/>
     </bean>
 
-
     <!--Action for the select single reviewer workflow -->
     <bean id="selectrevieweraction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
         <constructor-arg type="java.lang.String" value="selectrevieweraction"/>
@@ -99,13 +98,7 @@
         <property name="requiresUI" value="true"/>
     </bean>
 
-    <bean id="ratingreviewaction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
-        <constructor-arg type="java.lang.String" value="ratingreviewaction"/>
-        <property name="processingAction" ref="ratingreviewactionAPI" />
-        <property name="requiresUI" value="true"/>
-    </bean>
-
-    <!--Autmatic step that evaluates scores (workflow.score) and checks if they match the configured minimum for archiving -->
+    <!--Automatic step that evaluates scores (workflow.score) and checks if they match the configured minimum for archiving -->
     <bean id="evaluationaction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
         <constructor-arg type="java.lang.String" value="evaluationaction"/>
         <property name="processingAction" ref="evaluationactionAPI" />
