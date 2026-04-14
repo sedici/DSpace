@@ -84,6 +84,9 @@ public class ItemIndexFactoryImpl extends DSpaceObjectIndexFactoryImpl<Indexable
     public static final String STORE_SEPARATOR = "\n|||\n";
     public static final String STATUS_FIELD = "database_status";
     public static final String STATUS_FIELD_PREDB = "predb";
+    private static final String DATE_ISSUED_OR_CREATED_SORT_FIELD = "dc.date.issued_or_created";
+    private static final String DATE_ISSUED_FIELD = "dc.date.issued";
+    private static final String DATE_CREATED_FIELD = "dc.date.created";
 
 
     @Autowired
@@ -565,6 +568,7 @@ public class ItemIndexFactoryImpl extends DSpaceObjectIndexFactoryImpl<Indexable
                     "Item identifier: " + item.getID()), e);
         }
 
+        addIssuedOrCreatedSortField(doc, item);
 
         log.debug("  Added Metadata");
 
@@ -590,6 +594,41 @@ public class ItemIndexFactoryImpl extends DSpaceObjectIndexFactoryImpl<Indexable
 
 
         log.debug("  Added Grouping");
+    }
+
+    private void addIssuedOrCreatedSortField(SolrInputDocument doc, Item item) {
+        ZonedDateTime sortDate = null;
+
+        List<MetadataValue> issuedValues = itemService.getMetadataByMetadataString(item, DATE_ISSUED_FIELD);
+        if (issuedValues != null) {
+            sortDate = firstParsableDate(issuedValues);
+        }
+
+        if (sortDate == null) {
+            List<MetadataValue> createdValues = itemService.getMetadataByMetadataString(item, DATE_CREATED_FIELD);
+            if (createdValues != null) {
+                sortDate = firstParsableDate(createdValues);
+            }
+        }
+
+        if (sortDate != null) {
+            doc.addField(DATE_ISSUED_OR_CREATED_SORT_FIELD + "_dt", SolrUtils.getDateFormatter().format(sortDate));
+        }
+    }
+
+    private ZonedDateTime firstParsableDate(List<MetadataValue> metadataValues) {
+        for (MetadataValue metadataValue : metadataValues) {
+            if (metadataValue == null || StringUtils.isBlank(metadataValue.getValue())) {
+                continue;
+            }
+
+            ZonedDateTime parsedDate = MultiFormatDateParser.parse(metadataValue.getValue());
+            if (parsedDate != null) {
+                return parsedDate;
+            }
+        }
+
+        return null;
     }
 
     @Override
