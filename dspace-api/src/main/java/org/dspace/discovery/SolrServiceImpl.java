@@ -635,8 +635,6 @@ public class SolrServiceImpl implements SearchService, IndexingService {
                     if (i != (communitiesPolicies.size() - 1)) {
                         locationQuery.append(" OR ");
                     }
-                    allCollections.addAll(ContentServiceFactory.getInstance().getCommunityService()
-                                                               .getAllCollections(context, community));
                 }
 
                 Iterator<Collection> collIter = allCollections.iterator();
