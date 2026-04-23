@@ -769,6 +769,7 @@
                         <ref bean="sortScore" />
                         <ref bean="sortTitle" />
                         <ref bean="sortDateIssued" />
+                        <ref bean="sortDateCreated" />
                         <ref bean="sortDateAccessioned"/>
                     </list>
                 </property>
@@ -3667,14 +3668,20 @@
         <property name="defaultSortOrder" value="asc"/>
     </bean>
 
+    <bean id="sortDateCreated" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="dc.date.created"/>
+        <property name="type" value="date"/>
+        <property name="defaultSortOrder" value="desc"/>
+    </bean>
+
     <bean id="sortDateIssuedOrCreatedDesc" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
-        <property name="metadataField" value="dc.date.issued_or_created"/>
+        <property name="metadataField" value="sortDate"/>
         <property name="type" value="date"/>
         <property name="defaultSortOrder" value="desc"/>
     </bean>
 
     <bean id="sortDateIssuedOrCreatedAsc" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
-        <property name="metadataField" value="dc.date.issued_or_created"/>
+        <property name="metadataField" value="sortDate"/>
         <property name="type" value="date"/>
         <property name="defaultSortOrder" value="asc"/>
     </bean>

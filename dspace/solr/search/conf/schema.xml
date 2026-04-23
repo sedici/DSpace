@@ -295,6 +295,11 @@
      <!-- The database status of the current item -->
      <field name="database_status" type="string" indexed="true" stored="true" omitNorms="true" docValues="true" />
 
+    <!-- Campo para unificar las fechas de publicación y de creación al momento de indexar -->
+    <field name="sortDate_dt" type="date" indexed="true" stored="true" multiValued="true" omitNorms="true" docValues="true" />
+    <copyField source="dc.date.issued_dt" dest="sortDate_dt" />
+    <copyField source="dc.date.created_dt" dest="sortDate_dt" />
+
      <!-- Dynamic field used to store the relation metadata as a keywordFilter -->
      <dynamicField name="relation.*" type="keywordFilter" indexed="true" stored="true" omitNorms="true" multiValued="true"/>
 
