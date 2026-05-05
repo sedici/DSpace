@@ -480,6 +480,19 @@
 					<visibility-on-group>Bibliotecarios</visibility-on-group>
 				</field>
 
+				<!-- Resumen -->
+				<field>
+					<dc-schema>sedici</dc-schema>
+					<dc-element>description</dc-element>
+					<dc-qualifier>resumen</dc-qualifier>
+					<label>Resumen (*)</label>
+					<input-type value-pairs-name="boolean_values">dropdown</input-type>
+					<hint>Indica si la obra es un resumen</hint>
+					<required-on-group>Bibliotecarios</required-on-group>
+					<visibility-on-group>Bibliotecarios</visibility-on-group>
+					<type-bind>Articulo,Objeto de conferencia</type-bind>
+				</field>
+
 				<!-- Entidad de origen -->
 				<field>
 					<dc-schema>mods</dc-schema>
@@ -651,7 +664,7 @@
 					<label>Título de la serie</label>
 					<input-type>onebox</input-type>
 					<hint>Título de la serie en la que el documento fué publicado</hint>
-					<type-bind>Articulo,Publicacion seriada</type-bind>
+					<type-bind>Articulo,Publicacion seriada, Objeto de conferencia</type-bind>
 				</field>
 				
 				<!-- Volumen y numero de la revista -->
@@ -662,7 +675,7 @@
 					<label>Volúmen y número de la serie</label>
 					<input-type>onebox</input-type>
 					<hint>Volúmen y número de la serie en la que el documento fué publicado</hint>
-					<type-bind>Articulo,Publicacion seriada</type-bind>
+					<type-bind>Articulo,Publicacion seriada, Objeto de conferencia</type-bind>
 				</field>
 
 				<field>
@@ -695,7 +708,7 @@
 					<label>Fecha de presentación (*)</label>
 					<input-type>date</input-type>
 					<hint>Para el caso tesis de posgrado, ingresar la fecha en que fue defendida públicamente o bien aprobada por dictamen</hint>
-					<type-bind>Tesis,Objeto de conferencia, Audio</type-bind>
+					<type-bind>Tesis,Objeto de conferencia, Audio, Articulo</type-bind>
 					<required>Debe indicar la fecha de presentación del trabajo</required>
 				</field>
 
@@ -1455,6 +1468,19 @@
 					<hint>Indica si se cuenta con el texto completo de la obra</hint>
 					<required>Texto completo</required>
 				</field>
+				
+				<!-- Resumen -->
+				<field>
+					<dc-schema>sedici</dc-schema>
+					<dc-element>description</dc-element>
+					<dc-qualifier>resumen</dc-qualifier>
+					<label>Resumen (*)</label>
+					<input-type value-pairs-name="boolean_values">dropdown</input-type>
+					<hint>Indica si la obra es un resumen</hint>
+					<required-on-group>Bibliotecarios</required-on-group>
+					<visibility-on-group>Bibliotecarios</visibility-on-group>
+					<type-bind>Articulo,Objeto de conferencia</type-bind>
+				</field>
 
 				<!-- Entidad de origen -->
 				<field>
@@ -1624,7 +1650,7 @@
 					<label>Título de la serie</label>
 					<input-type>onebox</input-type>
 					<hint>Título de la serie en la que el documento fué publicado</hint>
-					<type-bind>Articulo,Publicacion seriada</type-bind>
+					<type-bind>Articulo,Publicacion seriada, Objeto de conferencia</type-bind>
 				</field>
 				
 				<!-- Volumen y numero de la revista -->
@@ -1635,7 +1661,7 @@
 					<label>Volúmen y número de la serie</label>
 					<input-type>onebox</input-type>
 					<hint>Volúmen y número de la serie en la que el documento fué publicado</hint>
-					<type-bind>Articulo,Publicacion seriada</type-bind>
+					<type-bind>Articulo,Publicacion seriada, Objeto de conferencia</type-bind>
 				</field>
 
 				<field>
@@ -1667,7 +1693,7 @@
 					<label>Fecha de presentación (*)</label>
 					<input-type>date</input-type>
 					<hint>Para el caso tesis de posgrado, ingresar la fecha en que fue defendida públicamente o bien aprobada por dictamen</hint>
-					<type-bind>Tesis,Objeto de conferencia, Audio</type-bind>
+					<type-bind>Tesis,Objeto de conferencia, Audio, Articulo</type-bind>
 					<required>Debe indicar la fecha de presentación del trabajo</required>
 				</field>
 
@@ -2228,10 +2254,6 @@
             <pair>
 				<displayed-value>Objeto de conferencia</displayed-value>
 				<stored-value>Objeto de conferencia</stored-value>
-			</pair>
-			<pair>
-				<displayed-value>Resumen</displayed-value>
-				<stored-value>Resumen</stored-value>
 			</pair>
 		</value-pairs>
 
