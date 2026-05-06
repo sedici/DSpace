@@ -486,7 +486,7 @@
 					<dc-element>description</dc-element>
 					<dc-qualifier>resumen</dc-qualifier>
 					<label>Resumen (*)</label>
-					<input-type value-pairs-name="boolean_values">dropdown</input-type>
+					<input-type value-pairs-name="boolean_values_no_default">dropdown</input-type>
 					<hint>Indica si la obra es un resumen</hint>
 					<required-on-group>Bibliotecarios</required-on-group>
 					<visibility-on-group>Bibliotecarios</visibility-on-group>
@@ -708,10 +708,20 @@
 					<label>Fecha de presentación (*)</label>
 					<input-type>date</input-type>
 					<hint>Para el caso tesis de posgrado, ingresar la fecha en que fue defendida públicamente o bien aprobada por dictamen</hint>
-					<type-bind>Tesis,Objeto de conferencia, Audio, Articulo</type-bind>
+					<type-bind>Tesis,Objeto de conferencia, Audio</type-bind>
 					<required>Debe indicar la fecha de presentación del trabajo</required>
 				</field>
 
+				<!-- Fecha de exposición no obligatoria para articulos -->
+				<field>
+					<dc-schema>sedici</dc-schema>
+					<dc-element>date</dc-element>
+					<dc-qualifier>exposure</dc-qualifier>
+					<label>Fecha de presentación</label>
+					<input-type>date</input-type>
+					<hint>Para el caso tesis de posgrado, ingresar la fecha en que fue defendida públicamente o bien aprobada por dictamen</hint>
+					<type-bind>Articulo</type-bind>
+				</field>
 
 				<!-- Nombre del evento (Obligatorio para Objetos de Conferencia) -->
 				<field>
@@ -1475,7 +1485,7 @@
 					<dc-element>description</dc-element>
 					<dc-qualifier>resumen</dc-qualifier>
 					<label>Resumen (*)</label>
-					<input-type value-pairs-name="boolean_values">dropdown</input-type>
+					<input-type value-pairs-name="boolean_values_no_default">dropdown</input-type>
 					<hint>Indica si la obra es un resumen</hint>
 					<required-on-group>Bibliotecarios</required-on-group>
 					<visibility-on-group>Bibliotecarios</visibility-on-group>
@@ -1693,8 +1703,19 @@
 					<label>Fecha de presentación (*)</label>
 					<input-type>date</input-type>
 					<hint>Para el caso tesis de posgrado, ingresar la fecha en que fue defendida públicamente o bien aprobada por dictamen</hint>
-					<type-bind>Tesis,Objeto de conferencia, Audio, Articulo</type-bind>
+					<type-bind>Tesis,Objeto de conferencia, Audio</type-bind>
 					<required>Debe indicar la fecha de presentación del trabajo</required>
+				</field>
+
+				<!-- Fecha de exposición no obligatoria para articulos -->
+				<field>
+					<dc-schema>sedici</dc-schema>
+					<dc-element>date</dc-element>
+					<dc-qualifier>exposure</dc-qualifier>
+					<label>Fecha de presentación</label>
+					<input-type>date</input-type>
+					<hint>Para el caso tesis de posgrado, ingresar la fecha en que fue defendida públicamente o bien aprobada por dictamen</hint>
+					<type-bind>Articulo</type-bind>
 				</field>
 
 
@@ -2031,6 +2052,17 @@
 			<pair>
 				<displayed-value>NO</displayed-value>
 				<stored-value>false</stored-value>
+			</pair>
+		</value-pairs>
+
+		<value-pairs value-pairs-name="boolean_values_no_default">
+			<pair>
+				<displayed-value>No</displayed-value>
+				<stored-value>false</stored-value>
+			</pair>
+			<pair>
+				<displayed-value>SI</displayed-value>
+				<stored-value>true</stored-value>
 			</pair>
 		</value-pairs>
 		
