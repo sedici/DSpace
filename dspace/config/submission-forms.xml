@@ -511,6 +511,20 @@
 				</field>
             </row>
 
+            <!-- Resumen -->
+	        <row>
+				<field>
+					<dc-schema>sedici</dc-schema>
+					<dc-element>description</dc-element>
+					<dc-qualifier>resumen</dc-qualifier>
+                    <label>Resumen (*)</label>
+                    <input-type value-pairs-name="boolean_values_no_default">dropdown</input-type>
+					<hint>Indica si la obra es un resumen</hint>
+					<visibility>workflow</visibility>
+					<type-bind>Articulo,Objeto de conferencia</type-bind>
+				</field>
+            </row>
+
             <!-- Entidad de origen -->
             <row>
 				<field>
@@ -696,7 +710,7 @@
 					<label>Título de la serie</label>
 					<input-type>onebox</input-type>
 					<hint>Nombre de la publicación donde se incluye la obra</hint>
-					<type-bind>Articulo,Publicacion seriada</type-bind>
+					<type-bind>Articulo,Publicacion seriada, Objeto de conferencia</type-bind>
 				</field>
             </row>
 
@@ -709,7 +723,7 @@
 					<label>Volumen y número de la serie</label>
 					<input-type>onebox</input-type>
 					<hint>Volumen y número de la publicación</hint>
-					<type-bind>Articulo,Publicacion seriada</type-bind>
+					<type-bind>Articulo,Publicacion seriada, Objeto de conferencia</type-bind>
 				</field>
             </row>
 
@@ -749,6 +763,20 @@
 					<input-type>date</input-type>
 					<hint>Para el caso tesis de posgrado, ingresar la fecha en que fue defendida públicamente o bien aprobada por dictamen</hint>
 					<type-bind>Tesis,Objeto de conferencia, Audio</type-bind>
+					<required>Debe indicar la fecha de presentación del trabajo</required>
+				</field>
+            </row>
+
+            <!-- Fecha de exposición de tesis  no obligatoria para articulos-->
+            <row>
+				<field>
+					<dc-schema>sedici</dc-schema>
+					<dc-element>date</dc-element>
+					<dc-qualifier>exposure</dc-qualifier>
+					<label>Fecha de presentación</label>
+					<input-type>date</input-type>
+					<hint>Para el caso tesis de posgrado, ingresar la fecha en que fue defendida públicamente o bien aprobada por dictamen</hint>
+					<type-bind>Articulo</type-bind>
 					<required>Debe indicar la fecha de presentación del trabajo</required>
 				</field>
             </row>
@@ -1572,6 +1600,20 @@
 				</field>
             </row>
 
+            <!-- Resumen -->
+	        <row>
+				<field>
+					<dc-schema>sedici</dc-schema>
+					<dc-element>description</dc-element>
+					<dc-qualifier>resumen</dc-qualifier>
+                    <label>Resumen (*)</label>
+                    <input-type value-pairs-name="boolean_values_no_default">dropdown</input-type>
+					<hint>Indica si la obra es un resumen</hint>
+					<visibility>workflow</visibility>
+					<type-bind>Articulo,Objeto de conferencia</type-bind>
+				</field>
+            </row>
+
             <!-- Entidad de origen -->
             <row>
 				<field>
@@ -1753,7 +1795,7 @@
 					<label>Título de la serie</label>
 					<input-type>onebox</input-type>
 					<hint>Nombre de la publicación donde se incluye la obra</hint>
-					<type-bind>Articulo,Publicacion seriada</type-bind>
+					<type-bind>Articulo,Publicacion seriada, Objeto de conferencia</type-bind>
 				</field>
             </row>
 
@@ -1766,7 +1808,7 @@
 					<label>Volumen y número de la serie</label>
 					<input-type>onebox</input-type>
 					<hint>Volumen y número de la publicación</hint>
-					<type-bind>Articulo,Publicacion seriada</type-bind>
+					<type-bind>Articulo,Publicacion seriada, Objeto de conferencia</type-bind>
 				</field>
             </row>
 
@@ -1805,6 +1847,20 @@
 					<input-type>date</input-type>
 					<hint>Para el caso tesis de posgrado, ingresar la fecha en que fue defendida públicamente o bien aprobada por dictamen</hint>
 					<type-bind>Tesis,Objeto de conferencia, Audio</type-bind>
+					<required>Debe indicar la fecha de presentación del trabajo</required>
+				</field>
+            </row>
+
+            <!-- Fecha de exposición de tesis  no obligatoria para articulos-->
+            <row>
+				<field>
+					<dc-schema>sedici</dc-schema>
+					<dc-element>date</dc-element>
+					<dc-qualifier>exposure</dc-qualifier>
+					<label>Fecha de presentación</label>
+					<input-type>date</input-type>
+					<hint>Para el caso tesis de posgrado, ingresar la fecha en que fue defendida públicamente o bien aprobada por dictamen</hint>
+					<type-bind>Articulo</type-bind>
 					<required>Debe indicar la fecha de presentación del trabajo</required>
 				</field>
             </row>
@@ -3280,6 +3336,17 @@
 				<stored-value>false</stored-value>
 			</pair>
 		</value-pairs>
+
+        <value-pairs value-pairs-name="boolean_values_no_default">
+			<pair>
+				<displayed-value>NO</displayed-value>
+				<stored-value>false</stored-value>
+			</pair>
+			<pair>
+				<displayed-value>SI</displayed-value>
+				<stored-value>true</stored-value>
+			</pair>
+		</value-pairs>
 		
 		<value-pairs value-pairs-name="common_libro_oa_contributors" dc-term="identifier">
 			<pair>
@@ -3497,10 +3564,6 @@
             <pair>
 				<displayed-value>Objeto de conferencia</displayed-value>
 				<stored-value>Objeto de conferencia</stored-value>
-			</pair>
-			<pair>
-				<displayed-value>Resumen</displayed-value>
-				<stored-value>Resumen</stored-value>
 			</pair>
 		</value-pairs>
 
