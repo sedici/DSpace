@@ -3485,6 +3485,10 @@
 				<displayed-value>Trabajo de especialización</displayed-value>
 				<stored-value>Trabajo de especializacion</stored-value>
 			</pair>
+            <pair>
+				<displayed-value>Trabajo final de grado</displayed-value>
+				<stored-value>Trabajo final de grado</stored-value>
+			</pair>
 		</value-pairs>
 		
 		<value-pairs value-pairs-name="common_subtypes_libro" dc-term="type">
