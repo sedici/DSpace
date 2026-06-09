@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -600,6 +602,12 @@ public class SolrServiceImpl implements SearchService, IndexingService {
      * current user based on a clause containing the e-person and group IDs.
      * Builds and returns the "location" query part for these DSO's.
      *
+     * SEDICI (DSpace 9.3) Fix:
+     * En vez de enumerar todas las comunidades/colecciones administrables (que pueden
+     * producir una cláusula de consulta que excede el límite de 200 000 caracteres de Solr),
+     * esta versión mantiene solo el contenedor más externo en cada rama de la jerarquía
+     * de administración.
+     *
      * @param epersonAndGroupClause A Solr filter clause containing one or more IDs combined with OR,
      *                 e.g. {@code "eUUIDe1 OR gUUIDg2 OR gUUIDg3 OR ..."}.
      *
@@ -608,38 +616,102 @@ public class SolrServiceImpl implements SearchService, IndexingService {
      */
     @Override
     public String createLocationQueryForAdministrableDSOs(String epersonAndGroupClause) {
-        StringBuilder locationQuery = new StringBuilder();
         try {
+            
+            // Lista final para Solr
+            List<String> containerUUIDs = new ArrayList<>();
+            
+            // Set para guardar los UUIDs de TODAS las comunidades que el usuario administra
+            Set<String> allAdminCommUUIDs = new HashSet<>();
+            List<SolrDocument> adminCommDocs = new ArrayList<>();
 
-            SolrQuery solrQuery = new SolrQuery();
+            SolrQuery allCommQuery = new SolrQuery("*:*");
+            allCommQuery.addField(SearchUtils.RESOURCE_ID_FIELD);
+            allCommQuery.addField("location.comm");
+            allCommQuery.addFilterQuery(SearchUtils.RESOURCE_TYPE_FIELD + ":" + IndexableCommunity.TYPE);
+            allCommQuery.addFilterQuery("admin:(" + epersonAndGroupClause + ")");
+            allCommQuery.setRows(Integer.MAX_VALUE);
 
-            String query = "*:*";
-            solrQuery.setQuery(query);
-            solrQuery.addField(SearchUtils.RESOURCE_ID_FIELD);
-            solrQuery.addField(SearchUtils.RESOURCE_TYPE_FIELD);
-            solrQuery.addFilterQuery("(" + SearchUtils.RESOURCE_TYPE_FIELD + ":" + IndexableCommunity.TYPE + " OR "
-                + SearchUtils.RESOURCE_TYPE_FIELD + ":" + IndexableCollection.TYPE + ")");
-            solrQuery.addFilterQuery("admin:(" + epersonAndGroupClause + ")");
-            solrQuery.setRows(Integer.MAX_VALUE);
-
-            QueryResponse solrQueryResponse = solrSearchCore.getSolr().query(solrQuery,
+            QueryResponse allCommResponse = solrSearchCore.getSolr().query(allCommQuery,
                 solrSearchCore.REQUEST_METHOD);
-            if (solrQueryResponse != null) {
-                List<String> containerUUIDs = new ArrayList<>();
-                for (SolrDocument doc : solrQueryResponse.getResults()) {
-                    String type = (String) doc.getFieldValue(SearchUtils.RESOURCE_TYPE_FIELD);
+
+            if (allCommResponse != null) {
+                for (SolrDocument doc : allCommResponse.getResults()) {
                     String uniqueID = (String) doc.getFieldValue(SearchUtils.RESOURCE_ID_FIELD);
-                    if (IndexableCommunity.TYPE.equals(type)) {
-                        containerUUIDs.add("m" + uniqueID);
-                    } else if (IndexableCollection.TYPE.equals(type)) {
-                        containerUUIDs.add("l" + uniqueID);
+                    if (uniqueID != null) {
+                        allAdminCommUUIDs.add(uniqueID);
+                        adminCommDocs.add(doc);
                     }
                 }
-                if (!containerUUIDs.isEmpty()) {
-                    locationQuery.append("location:(");
-                    locationQuery.append(String.join(" OR ", containerUUIDs));
-                    return locationQuery.append(")").toString();
+            }
+
+            // ---------------------------------------------------------------
+            // Caso 2: Eliminar comunidades cuyos ancestros ya están en allAdminCommUUIDs.
+            //
+            //   Caso 2.1 – admin de comunidad raíz   : location.comm es vacío ->
+            //            no tiene ancestros -> se mantiene.
+            //   Caso 2.2 – admin de sub-comunidad    : se mantiene solo si
+            //            ninguno de sus ancestros está en allAdminCommUUIDs.
+            // ---------------------------------------------------------------
+            for (SolrDocument commDoc : adminCommDocs) {
+                String uuid = (String) commDoc.getFieldValue(SearchUtils.RESOURCE_ID_FIELD);
+                Set<String> ancestors = new HashSet<>();
+                Object locComm = commDoc.getFieldValue("location.comm");
+                if (locComm instanceof java.util.Collection) {
+                    for (Object v : (java.util.Collection<?>) locComm) {
+                        ancestors.add(v.toString());
+                    }
+                } else if (locComm != null) {
+                    ancestors.add(locComm.toString());
                 }
+                // Eliminar comunidades cuyos ancestros ya están en containerUUIDs.
+                boolean hasHigherAdminAncestor = ancestors.stream()
+                    .anyMatch(allAdminCommUUIDs::contains);
+                if (!hasHigherAdminAncestor) {
+                    containerUUIDs.add("m" + uuid);
+                }
+            }
+
+            // ---------------------------------------------------------------
+            // Caso 3: Get colecciones con acceso directo de admin.
+            //         Incluir solo una colección si NINGUNO de sus ancestros 
+            //         ya están representados en containerUUIDs.
+            // ---------------------------------------------------------------
+            SolrQuery collQuery = new SolrQuery("*:*");
+            collQuery.addField(SearchUtils.RESOURCE_ID_FIELD);
+            collQuery.addField("location.comm");
+            collQuery.addFilterQuery(SearchUtils.RESOURCE_TYPE_FIELD + ":" + IndexableCollection.TYPE);
+            collQuery.addFilterQuery("admin:(" + epersonAndGroupClause + ")");
+            collQuery.setRows(Integer.MAX_VALUE);
+
+            QueryResponse collResponse = solrSearchCore.getSolr().query(collQuery,
+                solrSearchCore.REQUEST_METHOD);
+            if (collResponse != null) {
+                for (SolrDocument doc : collResponse.getResults()) {
+                    String uuid = (String) doc.getFieldValue(SearchUtils.RESOURCE_ID_FIELD);
+                    if (uuid == null) {
+                        continue;
+                    }
+                    Set<String> ancestors = new HashSet<>();
+                    Object locComm = doc.getFieldValue("location.comm");
+                    if (locComm instanceof java.util.Collection) {
+                        for (Object v : (java.util.Collection<?>) locComm) {
+                            ancestors.add(v.toString());
+                        }
+                    } else if (locComm != null) {
+                        ancestors.add(locComm.toString());
+                    }
+                    // Incluir colección solo si no está cubierta por una comunidad
+                    boolean coveredByComm = ancestors.stream()
+                        .anyMatch(allAdminCommUUIDs::contains);
+                    if (!coveredByComm) {
+                        containerUUIDs.add("l" + uuid);
+                    }
+                }
+            }
+
+            if (!containerUUIDs.isEmpty()) {
+                return "location:(" + String.join(" OR ", containerUUIDs) + ")";
             }
         } catch (Exception e) {
             log.error("Failed to retrieve administrable communities and collections from Solr:", e);
@@ -687,6 +759,9 @@ public class SolrServiceImpl implements SearchService, IndexingService {
                     if (i != (communitiesPolicies.size() - 1)) {
                         locationQuery.append(" OR ");
                     }
+                    // Lineas eliminadas para el fix de 9.2:
+                    // allCollections.addAll(ContentServiceFactory.getInstance().getCommunityService()
+                    // .getAllCollections(context, community));
                 }
 
                 Iterator<Collection> collIter = allCollections.iterator();
