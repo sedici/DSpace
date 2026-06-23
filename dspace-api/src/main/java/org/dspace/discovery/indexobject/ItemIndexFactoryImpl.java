@@ -85,7 +85,6 @@ public class ItemIndexFactoryImpl extends DSpaceObjectIndexFactoryImpl<Indexable
     public static final String STATUS_FIELD = "database_status";
     public static final String STATUS_FIELD_PREDB = "predb";
 
-
     @Autowired
     protected HandleService handleService;
     @Autowired
@@ -564,7 +563,6 @@ public class ItemIndexFactoryImpl extends DSpaceObjectIndexFactoryImpl<Indexable
             log.error(LogHelper.getHeader(context, "item_metadata_discovery_error",
                     "Item identifier: " + item.getID()), e);
         }
-
 
         log.debug("  Added Metadata");
 

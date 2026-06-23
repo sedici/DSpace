@@ -301,8 +301,8 @@
                         <ref bean="sortScore" />
                         <ref bean="sortTitle" />
                         <ref bean="sortTitleDesc" />
-                        <ref bean="sortDateIssuedAsc" />
-                        <ref bean="sortDateIssued" />
+                        <ref bean="sortDateIssuedOrCreatedAsc" />
+                        <ref bean="sortDateIssuedOrCreatedDesc" />
                         <ref bean="sortDateAccessionedAsc" />
                         <ref bean="sortDateAccessioned" />
                     </list>
@@ -423,8 +423,8 @@
                         <ref bean="sortScore" />
                         <ref bean="sortTitle" />
                         <ref bean="sortTitleDesc" />
-                        <ref bean="sortDateIssuedAsc" />
-                        <ref bean="sortDateIssued" />
+                        <ref bean="sortDateIssuedOrCreatedAsc" />
+                        <ref bean="sortDateIssuedOrCreatedDesc" />
                         <ref bean="sortDateAccessionedAsc" />
                         <ref bean="sortDateAccessioned" />
                     </list>
@@ -443,8 +443,8 @@
                         <ref bean="sortScore" />
                         <ref bean="sortTitle" />
                         <ref bean="sortTitleDesc" />
-                        <ref bean="sortDateIssuedAsc" />
-                        <ref bean="sortDateIssued" />
+                        <ref bean="sortDateIssuedOrCreatedAsc" />
+                        <ref bean="sortDateIssuedOrCreatedDesc" />
                         <ref bean="sortDateAccessionedAsc" />
                         <ref bean="sortDateAccessioned" />
                     </list>
@@ -767,6 +767,7 @@
                         <ref bean="sortScore" />
                         <ref bean="sortTitle" />
                         <ref bean="sortDateIssued" />
+                        <ref bean="sortDateCreated" />
                         <ref bean="sortDateAccessioned"/>
                     </list>
                 </property>
@@ -3661,6 +3662,24 @@
 
     <bean id="sortDateIssuedAsc" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
         <property name="metadataField" value="dc.date.issued"/>
+        <property name="type" value="date"/>
+        <property name="defaultSortOrder" value="asc"/>
+    </bean>
+
+    <bean id="sortDateCreated" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="dc.date.created"/>
+        <property name="type" value="date"/>
+        <property name="defaultSortOrder" value="desc"/>
+    </bean>
+
+    <bean id="sortDateIssuedOrCreatedDesc" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="sortDate"/>
+        <property name="type" value="date"/>
+        <property name="defaultSortOrder" value="desc"/>
+    </bean>
+
+    <bean id="sortDateIssuedOrCreatedAsc" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="sortDate"/>
         <property name="type" value="date"/>
         <property name="defaultSortOrder" value="asc"/>
     </bean>
