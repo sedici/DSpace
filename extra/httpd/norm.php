@@ -119,11 +119,11 @@ if (isset($_POST['text'])){
         // 3: tilde al final de una linea con un salto de linea que no debería estar. Ejemplo: de la temperatura para ´ /n poder evapotranspirar. = de la temperatura para poder evapotranspirar.
         $text2 = add_accents_to_text($text2);
 	if ($remove_multiple_enters)
-		$text2 = preg_replace("/[\r\n]+/", "\n", $text2);
+		$text2 = preg_replace("/[\r\n]+/u", "\n", $text2);
 	if ($remove_enters)
-		$text2 = preg_replace("/([^\.:])\n/", '$1 ', $text2);
+		$text2 = preg_replace("/([^\.])\n/u", '$1 ', $text2);
 	if ($remove_whitespaces)
-		$text2 = trim(preg_replace("/\h+/", ' ', $text2));
+		$text2 = trim(preg_replace("/\h+/u", ' ', $text2));
 }else{
 	$text = "";
 	$text2 = '';
@@ -151,4 +151,3 @@ if (isset($_POST['text'])){
 <textarea cols="100" rows="15"><?php echo $text2?></textarea>
 </body>
 </html>
-
