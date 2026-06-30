@@ -16,15 +16,13 @@ xmlns:i18n="http://apache.org/cocoon/i18n/2.1" version="1.1">
 
 	<h1>Dirección PREBI-SEDICI</h1>
 	<ul>
-		<li>
-			<a href="http://sedici.unlp.edu.ar/discover?filtertype=author&amp;filter_relational_operator=authority&amp;filter=http://voc.sedici.unlp.edu.ar/node/55359" title="Marisa R. De Giusti">Marisa R. De Giusti</a> &lt;marisa.degiusti @ sedici.unlp.edu.ar&gt;
-		</li>
+		<li>Gonzalo Villarreal &lt;gonzalo @ prebi.unlp.edu.ar&gt;</li>
+		<li>Ariel Lira &lt;alira @ sedici.unlp.edu.ar&gt;</li>
 	</ul>
 	<h1>Equipo de Catalogación</h1>
 	<ul>
 		<li>Analía Pinto &lt;analia @ sedici.unlp.edu.ar&gt;</li>
-		<li>Bernarda Malpere &lt;bernarda @ sedici.unlp.edu.ar&gt;</li>
-		<li>Carlos Nusch &lt;carlosnusch @ prebi.unlp.edu.ar&gt;</li>
+		<li>Agustina Fernandez Agostegui &lt;fagostegui.a @ sedici.unlp.edu.ar&gt;</li>
 		<li>Silvia Peloche &lt;silvia @ sedici.unlp.edu.ar&gt;</li>
 	</ul>
 
@@ -45,26 +43,32 @@ xmlns:i18n="http://apache.org/cocoon/i18n/2.1" version="1.1">
 		<li>Enzo Golfetto &lt;enzogolfetto @ prebi.unlp.edu.ar&gt;</li>
 	</ul>
 	
-	<h1>Portal de Revistas UNLP <a href="http://revistas.unlp.edu.ar">http://revistas.unlp.edu.ar</a></h1>
+	<h1>Portal de Revistas UNLP <a href="https://revistas.unlp.edu.ar">https://revistas.unlp.edu.ar</a></h1>
 	<ul>
 		<li>Dolores garcía &lt;dolores.garcia @ sedici.unlp.edu.ar&gt;</li>
-		<li>Gonzalo Villarreal &lt;gonzalo @ prebi.unlp.edu.ar&gt;</li>
+	</ul>
+
+	<h1>Repositorio de Datos de Investigación <a href=" https://datos.unlp.edu.ar/">https://datos.unlp.edu.ar/</a></h1>
+	<ul>
+		<li>Jeremías Salsamendi &lt;jeremias @ sedici.unlp.edu.ar&gt;</li>
 	</ul>
 
 	<h1>Equipo informático</h1>
 	<ul>
-		<li>Ariel Lira &lt;alira @ sedici.unlp.edu.ar&gt;</li>
 		<li>Ariel Sobrado &lt;asobrado @ sedici.unlp.edu.ar&gt;</li>
 		<li>Ezequiel Manzur &lt;ezemanzur @ sedici.unlp.edu.ar&gt;</li>
-		<li>Gonzalo Villarreal &lt;gonzalo @ prebi.unlp.edu.ar&gt;</li>
 		<li>María Marta Vila &lt;vilamm @ sedici.unlp.edu.ar&gt;</li>
 		<li>Pablo de Albuquerque &lt;pablo @ sedici.unlp.edu.ar&gt;</li>
 		<li>Rafael Bértoli &lt;bertoli.rafa @ sedici.unlp.edu.ar&gt;</li>
 		<li>Manuel Rojas &lt;rojasmanuel @ sedici.unlp.edu.ar&gt;</li>
 		<li>Felipe Mosqueira Jurado &lt;feli.mosqueira @ sedici.unlp.edu.ar&gt;</li>
 		<li>Santiago Soler &lt;santiago.soler @ sedici.unlp.edu.ar&gt;</li>
-		<li>Pablo Terrone &lt;pabloterrone @ sedici.unlp.edu.ar&gt;</li>
 		<li>Lautaro Josin Saller &lt;lautaro.josin @ sedici.unlp.edu.ar&gt;</li>
+		<li>Juan Cruz Mazullo &lt;juan.mazullo @ sedici.unlp.edu.ar&gt;</li>
+		<li>Santiago Fernandez &lt;santiago.fernandez @ sedici.unlp.edu.ar&gt;</li>
+		<li>Santiago Fierro &lt;santiago.fierro @ sedici.unlp.edu.ar&gt;</li>
+		<li>Ignacio Gallardo &lt;ignacio.gallardo @ sedici.unlp.edu.ar&gt;</li>
+		<li>Tomas Messineo &lt;tomasmessineo @ sedici.unlp.edu.ar&gt;</li>
 	</ul>
 
 
