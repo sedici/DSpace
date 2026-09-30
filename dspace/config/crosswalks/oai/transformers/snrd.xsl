@@ -200,10 +200,10 @@
 							<xsl:with-param name="value"><xsl:value-of select="substring(./text(),$doiStartIndex)" /></xsl:with-param>
 						</xsl:call-template>
 					</xsl:when>
-					<xsl:when test="contains(./text(),'http://sedici.unlp.edu.ar/handle/')">
+					<xsl:when test="contains(./text(),'sedici.unlp.edu.ar/handle/')">
 						<xsl:call-template name="printRelatedPublication">
 							<xsl:with-param name="type">hdl</xsl:with-param>
-							<xsl:with-param name="value"><xsl:value-of select="substring-after(./text(),'http://sedici.unlp.edu.ar/handle/')"/></xsl:with-param>
+							<xsl:with-param name="value"><xsl:value-of select="substring-after(./text(),'sedici.unlp.edu.ar/handle/')"/></xsl:with-param>
 						</xsl:call-template>
 					</xsl:when>
 					<xsl:otherwise>

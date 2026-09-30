@@ -51,7 +51,7 @@
 		    <xsl:call-template name="noticias"/>
 		</xsl:for-each>
 		
-		<a class="showall" href="http://sedici.unlp.edu.ar/blog/" target="_blank">
+		<a class="showall" href="https://sedici.unlp.edu.ar/blog/" target="_blank">
 			<i18n:text>sedici.noticias.verTodas</i18n:text>
 		</a>
     </xsl:template>

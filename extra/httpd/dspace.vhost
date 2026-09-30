@@ -17,7 +17,7 @@ NameVirtualHost *:80
   RewriteEngine On
   #Redireccion de www.sedici.unlp.edu.ar
   RewriteCond %{HTTP_HOST} ^www\.sedici\.unlp\.edu\.ar$
-  RewriteRule ^.*$ http://sedici.unlp.edu.ar%{REQUEST_URI} [R=permanent,L]
+  RewriteRule ^.*$ https://sedici.unlp.edu.ar%{REQUEST_URI} [R=permanent,L]
 
   #se deshabilita forward-proxy
   ProxyRequests Off

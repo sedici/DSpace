@@ -240,7 +240,7 @@
             <name>Ariel J. Lira</name>
             <email>arieljlira@gmail.com</email>
             <organization>SeDiCI</organization>
-            <organizationUrl>http://sedici.unlp.edu.ar</organizationUrl>
+            <organizationUrl>https://sedici.unlp.edu.ar</organizationUrl>
         </developer>
     </developers>
 </project>

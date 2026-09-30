@@ -30,7 +30,7 @@
 			</div>
 
 			<div class="slide">
-				<a href="http://sedici.unlp.edu.ar/blog/2012/05/02/migracion-a-dspace/" target="_blank">
+				<a href="https://sedici.unlp.edu.ar/blog/2012/05/02/migracion-a-dspace/" target="_blank">
 		    		<img>
 		    			<xsl:attribute name="src">
 		    				<xsl:value-of select="//dri:pageMeta/dri:metadata[@element='contextPath']"/>
@@ -46,7 +46,7 @@
 			
 			
 			<div class="slide">
-				<a href="http://sedici.unlp.edu.ar/blog/2012/04/25/libro-electronico-supera-las-3000-descargas/" target="_blank">
+				<a href="https://sedici.unlp.edu.ar/blog/2012/04/25/libro-electronico-supera-las-3000-descargas/" target="_blank">
 		    		<img>
 		    			<xsl:attribute name="src">
 		    				<xsl:value-of select="//dri:pageMeta/dri:metadata[@element='contextPath']"/>

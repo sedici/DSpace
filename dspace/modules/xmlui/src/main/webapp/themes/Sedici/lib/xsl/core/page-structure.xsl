@@ -381,7 +381,7 @@ placeholders for header images -->
                     </xsl:attribute>
                 </area>
                 <area target="_blank" title="Twitter" alt="Twitter - Sedici" href="http://twitter.com/sedici_unlp" coords="72,0,136,74" shape="rect" />
-                <area title="Blog" alt="Blog- Sedici" href="http://sedici.unlp.edu.ar/blog/" target="_blank" coords="139,0,195,74" shape="rect" />
+                <area title="Blog" alt="Blog- Sedici" href="https://sedici.unlp.edu.ar/blog/" target="_blank" coords="139,0,195,74" shape="rect" />
                 <area target="_blank" title="Facebook" alt="Facebook - Sedici" href="http://www.facebook.com/home.php#!/pages/SeDiCI/106194779404955?ref=ts" coords="198,0,266,74" shape="rect" />
             </map>
         </div>
@@ -397,7 +397,7 @@ placeholders for header images -->
 	                    <strong>
 		                    <a href="http://prebi.unlp.edu.ar/" target="_blank">PrEBi</a>
 		                    <span> - </span>
-		                    <a href="http://sedici.unlp.edu.ar/" target="_blank">SeDiCI</a>
+		                    <a href="https://sedici.unlp.edu.ar/" target="_blank">SeDiCI</a>
 		                    <br/>
 		                    <a href="http://www.unlp.edu.ar" target="_blank">Universidad Nacional de La Plata</a>
 	                    </strong>

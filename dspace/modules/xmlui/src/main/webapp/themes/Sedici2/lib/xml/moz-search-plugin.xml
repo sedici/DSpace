@@ -4,12 +4,12 @@
   <ShortName>SEDICI para Firefox</ShortName>
   <Description>Buscar dentro del Repositorio Institucional de la Universidad Nacional de La Plata</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <Image width="16" height="16" type="image/x-icon">http://sedici.unlp.edu.ar/themes/Sedici2/images/logo_s.png</Image>
-  <Url type="text/html" method="GET" template="http://sedici.unlp.edu.ar/discover">
+  <Image width="16" height="16" type="image/x-icon">https://sedici.unlp.edu.ar/themes/Sedici2/images/logo_s.png</Image>
+  <Url type="text/html" method="GET" template="https://sedici.unlp.edu.ar/discover">
     <Param name="query" value="{searchTerms}"/>
     <Param name="submit" value=""/>
     <Param name="origin" value="moz-search-plugin" />
   </Url>
   <Url type="application/x-suggestions+json" template="suggestionURL"/>
-  <moz:SearchForm>http://sedici.unlp.edu.ar/discover</moz:SearchForm>
+  <moz:SearchForm>https://sedici.unlp.edu.ar/discover</moz:SearchForm>
 </OpenSearchDescription>

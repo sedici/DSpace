@@ -23,7 +23,7 @@
 			<doc:element name='identifier'>
 				<doc:element name='handle'>
 					<doc:element>
-						<doc:field name="value">http://sedici.unlp.edu.ar/handle/<xsl:value-of select="$handle"/></doc:field>
+						<doc:field name="value">https://sedici.unlp.edu.ar/handle/<xsl:value-of select="$handle"/></doc:field>
 					</doc:element>
 				</doc:element>
 			</doc:element>

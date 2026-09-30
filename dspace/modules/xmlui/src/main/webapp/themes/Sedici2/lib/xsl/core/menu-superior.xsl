@@ -128,7 +128,7 @@
 	     			</xsl:attribute>
 	     		</img>
 	     	</a>
-	     	<a href="http://sedici.unlp.edu.ar/blog" title="Visite el blog de SEDICI">
+			<a href="https://sedici.unlp.edu.ar/blog" title="Visite el blog de SEDICI">
 	     		<img>
 	     			<xsl:attribute name="src">
 		                <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>

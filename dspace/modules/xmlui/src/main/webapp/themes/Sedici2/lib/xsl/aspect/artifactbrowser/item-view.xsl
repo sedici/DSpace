@@ -108,7 +108,7 @@
     
     <xsl:template name="showSocialBar">
     	<xsl:variable name="title" select="dim:field[@element='title' and @mdschema='dc']/text()"/>
-    	<xsl:variable name="sedici_url" select="concat('http://sedici.unlp.edu.ar/handle/', substring-after(dim:field[@element='identifier' and @qualifier='uri' and @mdschema='dc']/text(),'http://hdl.handle.net/'))"/>
+	<xsl:variable name="sedici_url" select="concat('https://sedici.unlp.edu.ar/handle/', substring-after(dim:field[@element='identifier' and @qualifier='uri' and @mdschema='dc']/text(),'http://hdl.handle.net/'))"/>
     	<div class="share-bar">
 		        <div id="fb-root">
 		        	<xsl:comment>&#160;</xsl:comment>

@@ -163,7 +163,7 @@
 	                    <strong>
 		                    <a href="http://prebi.unlp.edu.ar/" target="_blank">PREBI</a>
 		                    <span> - </span>
-		                    <a href="http://sedici.unlp.edu.ar/" target="_blank">SEDICI</a>
+		                    <a href="https://sedici.unlp.edu.ar/" target="_blank">SEDICI</a>
 		                    &#xA9; 2003-<xsl:value-of select="date:year()"/>
 		                    <br/>
 		                    <a href="http://www.unlp.edu.ar" target="_blank">Universidad Nacional de La Plata</a>
